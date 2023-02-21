@@ -4,6 +4,7 @@ namespace App\Http\Controllers\settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -39,10 +40,19 @@ class RolesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+     public function roleNameValidation(Request $request)
+     {
+       
+         $model = Role::where('name',$request->name)->where('id', '!=', $request->id)->get();
+//   dd($model);
+         $response = (count($model))?false:true;
+         return response()->json(['response'=>$response]);
+     }
     public function store(Request $request)
     {
-       
       
+        Log::info('RoleController->Store:-Inside ' . json_encode($request->all()));
         $input = $request->all();
       
         $input['guard_name'] = 'web';
@@ -50,10 +60,12 @@ class RolesController extends Controller
         $permissionitems = array();
         $permissionsDatas = $input['permission'];
        
-
+        Log::info('ProjectController->Store:-Inside $permissionsDatas' . json_encode($permissionsDatas));
         foreach ($permissionsDatas as $permissionsData) {
            
+            Log::info('ProjectController->Store:-Inside $permissionsData' . json_encode($permissionsData));
             $permissionitems[] = Permission::where('name', $permissionsData)->first()->id;
+            Log::info('ProjectController->Store:-Inside $$permissionitems[]' . json_encode($permissionitems));
 
             // $values = array('permission_id' =>  $permissionitemsId, 'role_id' => $role->id);
             // DB::table('role_has_permissions')->insert($values);

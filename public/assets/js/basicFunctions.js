@@ -19,11 +19,12 @@ $(document).ready(
         if (type == "0") {
             $('.fullWorkflow').hide();
             $('.partialWorkflow').show();
+            $('.fullWorkflow .designation ').removeAttr('required');
 
 
         } else {
             $('.partialWorkflow').hide();
             $('.fullWorkflow').show();
-
+            $('.fullWorkflow .designation ').attr('required',true);
         }
     }

@@ -44,6 +44,20 @@
         overflow: hidden;
         transition: max-height 0.2s ease-out;
     }
+
+    .checkboxes {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        vertical-align: middle;
+        word-wrap: break-word;
+
+    }
+
+    .checkAll {
+        width: 25px;
+        height: 25px;
+    }
 </style>
 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
     <!--begin::Content wrapper-->
@@ -147,7 +161,7 @@
                                             <h2 class="fw-bold">Add</h2>
                                             <!--end::Modal title-->
                                             <!--begin::Close-->
-                                            <div class="btn btn-icon btn-sm btn-active-icon-danger" data-bs-dismiss="modal">
+                                            <div class="btn btn-icon btn-sm btn-active-icon-danger" data-bs-dismiss="modal" onclick=" document.location.reload();">
                                                 <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
                                                 <span class="svg-icon svg-icon-1">
                                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -174,8 +188,9 @@
                                                         <label class="required fs-6 fw-semibold mb-2">Name</label>
                                                         <!--end::Label-->
                                                         <!--begin::Input-->
-                                                        <input required class="form-control form-control-solid" placeholder="Enter Privilages" name="name" />
+                                                        <input required class="form-control form-control-solid roleName" placeholder="Enter Privilages" name="name" fieldData="" />
                                                         <!--end::Input-->
+                                                        <p id="roleNameAlert" class="notifyAlert"></p>
                                                     </div>
                                                     <!--end::Col-->
 
@@ -218,6 +233,9 @@
                                                 <div class="col-md-12 col-sm-12">
                                                     <button type="button" class="accordion">Permission</button>
                                                     <div class="panel">
+                                                        <br>
+                                                        <label for="checkbox1" class="checkboxes"><input type="checkbox" id="checkbox1" name="checkAll" value="" class="checkboxes checkAll" />
+                                                            Check All</label>
                                                         <table class="table table-striped">
                                                             <thead>
                                                                 <th scope="col" width="1%">S.No</th>
@@ -236,83 +254,83 @@
                                                                 <tr>
                                                                     <td>1</td>
                                                                     <td>Department</td>
-                                                                    <td><input type="checkbox" name="permission[]" value="department-view" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="department-create" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="department-edit" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="department-delete" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="department-upload" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="department-print" class='permission'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="department-view" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="department-create" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="department-edit" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="department-delete" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="department-upload" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="department-download" class='permission permisionCreate'></td>
 
                                                                 </tr>
                                                                 <tr>
                                                                     <td>2</td>
                                                                     <td>Designation</td>
-                                                                    <td><input type="checkbox" name="permission[]" value="designation-view" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="designation-create" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="designation-edit" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="designation-delete" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="designation-upload" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="designation-print" class='permission'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="designation-view" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="designation-create" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="designation-edit" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="designation-delete" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="designation-upload" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="designation-download" class='permission permisionCreate'></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>3</td>
                                                                     <td>Document Type</td>
-                                                                    <td><input type="checkbox" name="permission[]" value="document-type-view" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="document-type-create" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="document-type-edit" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="document-type-delete" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="document-type-upload" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="document-type-print" class='permission'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="document-type-view" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="document-type-create" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="document-type-edit" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="document-type-delete" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="document-type-upload" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="document-type-download" class='permission permisionCreate'></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>4</td>
                                                                     <td>Employee</td>
-                                                                    <td><input type="checkbox" name="permission[]" value="employee-view" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="employee-create" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="employee-edit" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="employee-delete" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="employee-upload" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="employee-print" class='permission'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="employee-view" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="employee-create" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="employee-edit" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="employee-delete" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="employee-upload" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="employee-download" class='permission permisionCreate'></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>5</td>
                                                                     <td>Projects</td>
-                                                                    <td><input type="checkbox" name="permission[]" value="project-view" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="project-create" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="project-edit" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="project-delete" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="project-upload" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="project-print" class='permission'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="project-view" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="project-create" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="project-edit" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="project-delete" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="project-upload" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="project-download" class='permission permisionCreate'></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>6</td>
                                                                     <td>WorkFlow</td>
-                                                                    <td><input type="checkbox" name="permission[]" value="workflow-view" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="workflow-create" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="workflow-edit" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="workflow-delete" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="workflow-upload" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="workflow-print" class='permission'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="workflow-view" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="workflow-create" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="workflow-edit" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="workflow-delete" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="workflow-upload" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="workflow-download" class='permission permisionCreate'></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>7</td>
                                                                     <td>Role</td>
-                                                                    <td><input type="checkbox" name="permission[]" value="role-view" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="role-create" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="role-edit" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="role-delete" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="role-upload" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="role-print" class='permission'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="role-view" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="role-create" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="role-edit" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="role-delete" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="role-upload" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="role-download" class='permission permisionCreate'></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>8</td>
                                                                     <td>User</td>
-                                                                    <td><input type="checkbox" name="permission[]" value="user-view" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="user-create" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="user-edit" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="user-delete" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="user-upload" class='permission'></td>
-                                                                    <td><input type="checkbox" name="permission[]" value="user-print" class='permission'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="user-view" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="user-create" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="user-edit" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="user-delete" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="user-upload" class='permission permisionCreate'></td>
+                                                                    <td><input type="checkbox" name="permission[]" value="user-download" class='permission permisionCreate'></td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -321,7 +339,7 @@
                                                 {{-- FORM --}}
                                                 <div class="text-center pt-15">
                                                     <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Reset</button>
-                                                    <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
+                                                    <button type="submit" id="submitBtn" class="btn btn-primary" data-kt-users-modal-action="submit">
                                                         <span class="indicator-label">Save and Exit</span>
                                                         <span class="indicator-progress">Please wait...
                                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -433,7 +451,7 @@
                 <h2 class="fw-bold">Edit</h2>
                 <!--end::Modal title-->
                 <!--begin::Close-->
-                <div class="btn btn-icon btn-sm btn-active-icon-danger" data-bs-dismiss="modal">
+                <div class="btn btn-icon btn-sm btn-active-icon-danger" data-bs-dismiss="modal" onclick=" document.location.reload();">
                     <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
                     <span class="svg-icon svg-icon-1">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -451,7 +469,7 @@
 
                 <form id="department_form1" method="post" action="{{url('roles')}}">
                     @csrf
-                    <input type="hidden" name="id" value="{{$d['id']}}">
+                    <input type="hidden" class="editid" name="id" value="{{$d['id']}}">
                     @php $rolem = Spatie\Permission\Models\Role::findorFail($d['id']);
                     $roleP =json_decode($rolem->permissions);
                     $allroles = [];
@@ -473,8 +491,10 @@
                             <label class="required fs-6 fw-semibold mb-2">Name</label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <input class="form-control form-control-solid" placeholder="Enter Privilage Name" name="name" value="{{$d['name']}}" />
+                            <input class="form-control form-control-solid roleName" placeholder="Enter Privilage Name" name="name" value="{{$d['name']}}" fieldData="{{$d['id']}}" />
                             <!--end::Input-->
+                            <p id="roleNameAlert" class="notifyAlert"></p>
+                            <p id="roleNameaddAlert" class="notifyAlert"></p>
                         </div>
                         <!--end::Col-->
                     </div>
@@ -491,7 +511,7 @@
                                 <!--begin::Checkbox-->
                                 <label class="form-radio form-radio-custom form-radio-solid me-6">
                                     <!--begin::Input-->
-                                    <input class="form-radio-input h-20px w-20px authority_type" type="radio" value="1" name="authority_type" <?php echo($d['authority_type'] ==1)?"checked":""?> />
+                                    <input class="form-radio-input h-20px w-20px authority_type" type="radio" value="1" name="authority_type" <?php echo ($d['authority_type'] == 1) ? "checked" : "" ?> />
                                     <!--end::Input-->
                                     <!--begin::Label-->
                                     <span class="form-radio-label fw-semibold">Admin/HOD</span>
@@ -501,7 +521,7 @@
                                 <!--begin::Checkbox-->
                                 <label class="form-radio form-radio-custom form-radio-solid">
                                     <!--begin::Input-->
-                                    <input class="form-radio-input h-20px w-20px authority_type" type="radio" value="2" name="authority_type" <?php echo($d['authority_type'] ==2)?"checked":""?>/>
+                                    <input class="form-radio-input h-20px w-20px authority_type" type="radio" value="2" name="authority_type" <?php echo ($d['authority_type'] == 2) ? "checked" : "" ?> />
                                     <!--end::Input-->
                                     <!--begin::Label-->
                                     <span class="form-radio-label fw-semibold">Employee</span>
@@ -516,7 +536,9 @@
                     <label for="permissions" class="form-label">Assign Permissions</label>
                     <div class="col-md-12 col-sm-12">
                         <button type="button" class="accordion">Permission</button>
+
                         <div class="panel">
+
                             <table class="table table-striped">
                                 <thead>
                                     <th scope="col" width="1%">S.No</th>
@@ -534,88 +556,88 @@
                                     <tr>
                                         <td>1</td>
                                         <td>Department</td>
-                                        <td><input type="checkbox" name="permission[]" value="department-view" class='permission' <?php echo (in_array("department-view", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="department-create" class='permission' <?php echo (in_array("department-create", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="department-edit" class='permission' <?php echo (in_array("department-edit", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="department-delete" class='permission' <?php echo (in_array("department-delete", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="department-upload" class='permission' <?php echo (in_array("department-upload", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="department-download" class='permission' <?php echo (in_array("department-download", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="department-view" class='permission permissionEdit' <?php echo (in_array("department-view", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="department-create" class='permission permissionEdit' <?php echo (in_array("department-create", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="department-edit" class='permission permissionEdit' <?php echo (in_array("department-edit", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="department-delete" class='permission permissionEdit' <?php echo (in_array("department-delete", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="department-upload" class='permission permissionEdit' <?php echo (in_array("department-upload", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="department-download" class='permission permissionEdit' <?php echo (in_array("department-download", $allroles) ? "checked" : ''); ?>></td>
                                     </tr>
                                     <tr>
                                         <td>2</td>
                                         <td>Designation</td>
-                                        <td><input type="checkbox" name="permission[]" value="designation-view" class='permission' <?php echo (in_array("designation-view", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="designation-create" class='permission' <?php echo (in_array("designation-create", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="designation-edit" class='permission' <?php echo (in_array("designation-edit", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="designation-delete" class='permission' <?php echo (in_array("designation-delete", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="designation-upload" class='permission' <?php echo (in_array("designation-upload", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="designation-download" class='permission' <?php echo (in_array("designation-download", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="designation-view" class='permission permissionEdit' <?php echo (in_array("designation-view", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="designation-create" class='permission permissionEdit' <?php echo (in_array("designation-create", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="designation-edit" class='permission permissionEdit' <?php echo (in_array("designation-edit", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="designation-delete" class='permission permissionEdit' <?php echo (in_array("designation-delete", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="designation-upload" class='permission permissionEdit' <?php echo (in_array("designation-upload", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="designation-download" class='permission permissionEdit' <?php echo (in_array("designation-download", $allroles) ? "checked" : ''); ?>></td>
 
                                     </tr>
                                     <tr>
                                         <td>3</td>
                                         <td>Document Type</td>
-                                        <td><input type="checkbox" name="permission[]" value="document-type-view" class='permission' <?php echo (in_array("document-type-view", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="document-type-create" class='permission' <?php echo (in_array("document-type-create", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="document-type-edit" class='permission' <?php echo (in_array("document-type-edit", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="document-type-delete" class='permission' <?php echo (in_array("document-type-delete", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="document-type-upload" class='permission' <?php echo (in_array("document-type-upload", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="document-type-download" class='permission' <?php echo (in_array("document-type-download", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="document-type-view" class='permission permissionEdit' <?php echo (in_array("document-type-view", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="document-type-create" class='permission permissionEdit' <?php echo (in_array("document-type-create", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="document-type-edit" class='permission permissionEdit' <?php echo (in_array("document-type-edit", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="document-type-delete" class='permission permissionEdit' <?php echo (in_array("document-type-delete", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="document-type-upload" class='permission permissionEdit' <?php echo (in_array("document-type-upload", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="document-type-download" class='permission permissionEdit' <?php echo (in_array("document-type-download", $allroles) ? "checked" : ''); ?>></td>
 
                                     </tr>
                                     <tr>
                                         <td>4</td>
                                         <td>Employee</td>
-                                        <td><input type="checkbox" name="permission[]" value="employee-view" class='permission' <?php echo (in_array("employee-view", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="employee-create" class='permission' <?php echo (in_array("employee-create", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="employee-edit" class='permission' <?php echo (in_array("employee-edit", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="employee-delete" class='permission' <?php echo (in_array("employee-delete", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="employee-upload" class='permission' <?php echo (in_array("employee-upload", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="employee-download" class='permission' <?php echo (in_array("employee-download", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="employee-view" class='permission permissionEdit' <?php echo (in_array("employee-view", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="employee-create" class='permission permissionEdit' <?php echo (in_array("employee-create", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="employee-edit" class='permission permissionEdit' <?php echo (in_array("employee-edit", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="employee-delete" class='permission permissionEdit' <?php echo (in_array("employee-delete", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="employee-upload" class='permission permissionEdit' <?php echo (in_array("employee-upload", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="employee-download" class='permission permissionEdit' <?php echo (in_array("employee-download", $allroles) ? "checked" : ''); ?>></td>
 
                                     </tr>
                                     <tr>
                                         <td>5</td>
                                         <td>Projects</td>
-                                        <td><input type="checkbox" name="permission[]" value="project-view" class='permission' <?php echo (in_array("project-view", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="project-create" class='permission' <?php echo (in_array("project-create", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="project-edit" class='permission' <?php echo (in_array("project-edit", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="project-delete" class='permission' <?php echo (in_array("project-delete", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="project-upload" class='permission' <?php echo (in_array("project-upload", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="project-download" class='permission' <?php echo (in_array("project-download", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="project-view" class='permission permissionEdit' <?php echo (in_array("project-view", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="project-create" class='permission permissionEdit' <?php echo (in_array("project-create", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="project-edit" class='permission permissionEdit' <?php echo (in_array("project-edit", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="project-delete" class='permission permissionEdit' <?php echo (in_array("project-delete", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="project-upload" class='permission permissionEdit' <?php echo (in_array("project-upload", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="project-download" class='permission permissionEdit' <?php echo (in_array("project-download", $allroles) ? "checked" : ''); ?>></td>
 
                                     </tr>
                                     <tr>
                                         <td>6</td>
                                         <td>WorkFlow</td>
-                                        <td><input type="checkbox" name="permission[]" value="workflow-view" class='permission' <?php echo (in_array("workflow-view", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="workflow-create" class='permission' <?php echo (in_array("workflow-create", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="workflow-edit" class='permission' <?php echo (in_array("workflow-edit", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="workflow-delete" class='permission' <?php echo (in_array("workflow-delete", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="workflow-upload" class='permission' <?php echo (in_array("workflow-upload", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="workflow-download" class='permission' <?php echo (in_array("workflow-download", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="workflow-view" class='permission permissionEdit' <?php echo (in_array("workflow-view", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="workflow-create" class='permission permissionEdit' <?php echo (in_array("workflow-create", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="workflow-edit" class='permission permissionEdit' <?php echo (in_array("workflow-edit", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="workflow-delete" class='permission permissionEdit' <?php echo (in_array("workflow-delete", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="workflow-upload" class='permission permissionEdit' <?php echo (in_array("workflow-upload", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="workflow-download" class='permission permissionEdit' <?php echo (in_array("workflow-download", $allroles) ? "checked" : ''); ?>></td>
 
                                     </tr>
                                     <tr>
                                         <td>7</td>
                                         <td>Role</td>
-                                        <td><input type="checkbox" name="permission[]" value="role-view" class='permission' <?php echo (in_array("role-view", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="role-create" class='permission' <?php echo (in_array("role-create", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="role-edit" class='permission' <?php echo (in_array("role-edit", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="role-delete" class='permission' <?php echo (in_array("role-delete", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="role-upload" class='permission' <?php echo (in_array("role-upload", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="role-download" class='permission' <?php echo (in_array("role-download", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="role-view" class='permission permissionEdit' <?php echo (in_array("role-view", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="role-create" class='permission permissionEdit' <?php echo (in_array("role-create", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="role-edit" class='permission permissionEdit' <?php echo (in_array("role-edit", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="role-delete" class='permission permissionEdit' <?php echo (in_array("role-delete", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="role-upload" class='permission permissionEdit' <?php echo (in_array("role-upload", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="role-download" class='permission permissionEdit' <?php echo (in_array("role-download", $allroles) ? "checked" : ''); ?>></td>
 
                                     </tr>
                                     <tr>
                                         <td>8</td>
                                         <td>User</td>
-                                        <td><input type="checkbox" name="permission[]" value="user-view" class='permission' <?php echo (in_array("user-view", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="user-create" class='permission' <?php echo (in_array("user-create", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="user-edit" class='permission' <?php echo (in_array("user-edit", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="user-delete" class='permission' <?php echo (in_array("user-delete", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="user-upload" class='permission' <?php echo (in_array("user-upload", $allroles) ? "checked" : ''); ?>></td>
-                                        <td><input type="checkbox" name="permission[]" value="user-download" class='permission' <?php echo (in_array("user-download", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="user-view" class='permission permissionEdit' <?php echo (in_array("user-view", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="user-create" class='permission permissionEdit' <?php echo (in_array("user-create", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="user-edit" class='permission permissionEdit' <?php echo (in_array("user-edit", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="user-delete" class='permission permissionEdit' <?php echo (in_array("user-delete", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="user-upload" class='permission permissionEdit' <?php echo (in_array("user-upload", $allroles) ? "checked" : ''); ?>></td>
+                                        <td><input type="checkbox" name="permission[]" value="user-download" class='permission permissionEdit' <?php echo (in_array("user-download", $allroles) ? "checked" : ''); ?>></td>
 
                                     </tr>
                                 </tbody>
@@ -624,8 +646,8 @@
                     </div>
                     {{-- FORM --}}
                     <div class="text-center pt-15">
-                        <button type="reset" class="btn btn-light-danger me-3" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
+                        <button type="reset" class="btn btn-light-danger me-3" data-bs-dismiss="modal" onclick=" document.location.reload();">Cancel</button>
+                        <button type="submit" id="updateBtn" class="btn btn-primary" data-kt-users-modal-action="submit">
                             <span class="indicator-label">Update and Exit</span>
                             <span class="indicator-progress">Please wait...
                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -729,4 +751,79 @@
             }
         });
     }
+
+    $(document).on('click', '.checkAll', function() {
+        if ($(this).prop('checked') == true) {
+            $('.permisionCreate').each(function() {
+                this.checked = true;
+            });
+        } else {
+            $('.permisionCreate').each(function() {
+                this.checked = false;
+            });
+        }
+
+
+    });
+    $(document).on('click', '.permission', function() {
+        $(this).attr('checked', false);
+        var a = document.forms["department_form"];
+        var x = a.querySelectorAll('input[name="permission[]"]:checked');       
+        if (x.length == 48) {
+            $('.checkAll').prop('checked', true);
+        }else{
+            $('.checkAll').prop('checked', false);
+        }
+
+    });
+    $(document).on('click', '.permissionEdit', function() {
+
+        var a = document.forms["department_form1"];
+        var x = a.querySelectorAll('input[type="checkbox"]:checked');
+
+    });
+    $(document).on('blur', '.roleName', function() {
+        console.log($(this).attr('fieldData'));
+        
+
+        $.ajax({
+            url: "{{ route('roleNameValidation') }}",
+            type: 'ajax',
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                name: $(this).val(),
+                id: $(this).attr('fieldData'),
+            },
+            success: function(data) {
+                var alertName = 'roleNameAlert';
+                console.log(data.response);
+                console.log(alertName);
+
+                if (data.response == false) {
+                    $('#submitBtn').attr('disabled', true);
+                    $('#updateBtn').attr('disabled', true);
+
+                    document.getElementById(alertName).style.display = "block";
+                    document.getElementById(alertName).style.color = "red";
+                    document.getElementById(alertName).innerHTML = 'Role Is Exists*';
+                    
+                    document.getElementById('roleNameAddAlert').style.display = "block";
+                    document.getElementById('roleNameAddAlert').style.color = "red";
+                    document.getElementById('roleNameAddAlert').innerHTML = 'Role Is Exists*';
+                    return false;
+                }
+                document.getElementById(alertName).style.display = "none";
+                $('#submitBtn').attr('disabled', false);
+                return true;
+
+
+            },
+            error: function() {
+                $("#otp_error").text("Update Error");
+            }
+
+        });
+
+    });
 </script>

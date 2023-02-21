@@ -14,12 +14,16 @@ use Illuminate\Support\Facades\DB;
 
 class WorkflowController extends Controller
 {
-
+ public function changeWorkflowActiveStatus(Request $request)
+ {
+    $model = Workflow::where("id", $request->id)->update(["is_active" => $request->status]);
+    echo json_encode($model);
+ }
     public function index()
     {
         $designation = Designation::where('is_active', 1)->where('delete_flag', 1)->get()->toArray();
         $designation_edit = Designation::where('is_active', 1)->where('delete_flag', 1)->get();
-        $workflow = Workflow::where('is_active', 1)->where('delete_flag', 1)->get()->toArray();
+        $workflow = Workflow::whereNull('deleted_at')->get()->toArray();
         $allwork_flow = $this->get_all_workflow();
         return view('Workflow/list', ['designation_edit' => $designation_edit, 'all_workflow' => $allwork_flow, 'workflow' => $workflow, 'designation' => $designation]);
     }
@@ -40,7 +44,7 @@ class WorkflowController extends Controller
     {
         $designationDatas = Designation::where('is_active', 1)->where('is_active', 1)->get();
         $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $id)->get();
-        
+
         $modelWorkflow = Workflow::find($id);
         $entities = collect($models)->map(function ($model) {
             $levelDetails = $model['workflowLevelDetail'];
@@ -68,13 +72,13 @@ class WorkflowController extends Controller
             ->join('workflow_levels as wl', 'wl.workflow_id', '=', 'w.id')
             ->join('designations as d', 'd.id', '=', 'wl.approver_designation')
             ->get();
-       
+
         return $workflow;
     }
 
     public function store(Request $request)
     {
-        $input = $request->all();
+        $input = $request->all();       
 
         if ($input['workflow_type'] == 1) {
             $levels = array();
@@ -109,7 +113,7 @@ class WorkflowController extends Controller
                     $workflow_levels->save();
                     if ($input['workflow_type'] == 1) {
                         $totDesignation = $input['fapprover_designation' . $levels];
-                    }else{
+                    } else {
                         $totDesignation = $input['approver_designation' . $levels];
                     }
                     for ($j = 0; $j < count($totDesignation); $j++) {
@@ -118,11 +122,11 @@ class WorkflowController extends Controller
                         $workflow_level_details->workflow_level_id = $workflow_levels->id;
                         if ($input['workflow_type'] == 1) {
                             $workflow_level_details->designation_id = $input['fapprover_designation' . $levels][$j];
-                        }else{
+                        } else {
                             $workflow_level_details->designation_id = $input['approver_designation' . $levels][$j];
                         }
-                       
-                        
+
+
                         $workflow_level_details->save();
                     }
                 }
@@ -162,33 +166,38 @@ class WorkflowController extends Controller
         $workflow_id = $request->workflow_id;
         $workflow = Workflow::where('id', $workflow_id)->get()->first();
 
-        $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $workflow_id)->get();
-     
-        $entities = collect($models)->map(function ($model) {
-            $levelDetails = $model['workflowLevelDetail'];
+        
 
-            $e = collect($levelDetails)->map(function ($levelDetail) {
-                $designationId = $levelDetail->designation_id;
-               
-                $designationName = Designation::with('employee')->where('id',$designationId)->first();
-                $desEmployee =$designationName->employee;
-             
-                $desData = ['desName'=>$designationName->name,'desEmployee'=>$desEmployee];
-
-                return $desData;
-            });
-      
-            $designationArray =  $e;
-           
-
-            $datas = ['levelId' => $model->levels, 'designationId' => $designationArray];
-
-            return $datas;
-        });
-//dd($entities);
-        echo json_encode(["workflow"=>$workflow,'workflow_level'=>$entities]);
+        $entities =$this->getLevelLooping($workflow_id);
+        //dd($entities);
+        echo json_encode(["workflow" => $workflow, 'workflow_level' => $entities]);
     }
+public function getLevelLooping($workflow_id)
+{
+    $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $workflow_id)->get();
+    $entities = collect($models)->map(function ($model) {
+        $levelDetails = $model['workflowLevelDetail'];
 
+        $e = collect($levelDetails)->map(function ($levelDetail) {
+            $designationId = $levelDetail->designation_id;
+
+            $designationName = Designation::with('employee')->where('id', $designationId)->first();
+            $desEmployee = $designationName->employee;
+
+            $desData = ['desName' => $designationName->name, 'desEmployee' => $desEmployee];
+
+            return $desData;
+        });
+
+        $designationArray =  $e;
+
+
+        $datas = ['levelId' => $model->levels, 'designationId' => $designationArray];
+
+        return $datas;
+    });
+    return $entities;
+}
     public function getWorkflowLevels(Request $request)
     {
         $workflow_id = $request->workflow_id;
@@ -210,23 +219,23 @@ class WorkflowController extends Controller
         foreach ($arr as $levels) {
             $arr1[] = Workflowlevels::where('levels', $levels)->pluck('approver_designation');
         }
-       
-        
+
+
 
         $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $workflow_id)->get();
-      
+
         $entities = collect($models)->map(function ($model) {
             $levelDetails = $model['workflowLevelDetail'];
 
             $e = collect($levelDetails)->map(function ($levelDetail) {
                 $designationId = $levelDetail->designation_id;
-                $designationName = Designation::where('id',$designationId)->first()->name;
+                $designationName = Designation::where('id', $designationId)->first()->name;
 
                 return $designationName;
             });
-      
+
             $designationArray =  $e;
-           
+
 
             $datas = ['levelId' => $model->levels, 'designationId' => $designationArray];
 
@@ -241,8 +250,16 @@ class WorkflowController extends Controller
             'designation' => $designation,
             'approver' => $arr1,
             'workflow_levels_details' => $workflow_levels,
-            'entities'=>$entities
+            'entities' => $entities
         );
         return response()->json($output);
+    }
+    public function workflowValidation(Request $request)
+    {
+       
+        $model = Workflow::where('workflow_code',$request->code)->where('id', '!=', $request->id)->first();
+ 
+        $response = ($model)?false:true;
+        return response()->json(['response'=>$response]);
     }
 }

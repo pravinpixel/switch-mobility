@@ -14,28 +14,34 @@
     table.table-bordered>tbody>tr>td {
         border: 1px solid black;
     }
-    .Partial-input-container .select2-selection__choice__remove{
+
+    .Partial-input-container .select2-selection__choice__remove {
         display: none !important;
 
     }
-    .Partial-input-container:not(:last-child) .select2{
-    pointer-events: none;
-}
-.addEvents{
-    pointer-events: unset !important;
-}
 
-.Partial-input-container:last-child .select2-selection__choice__remove{
+    .Partial-input-container:not(:last-child) .select2 {
+        pointer-events: none;
+    }
+
+    .addEvents {
+        pointer-events: unset !important;
+    }
+
+    .Partial-input-container:last-child .select2-selection__choice__remove {
         display: block !important;
-       
-     }
-     .Partial-input-container:not(:last-child) .select2-selection__clear{
+
+    }
+
+    .Partial-input-container:not(:last-child) .select2-selection__clear {
         display: none !important;
-     }
-     .select2-selection__choice__remove.addBlock , .Partial-input-container button.select2-selection__clear.addBlock{
-    display: block !important;
-}
-     </style>
+    }
+
+    .select2-selection__choice__remove.addBlock,
+    .Partial-input-container button.select2-selection__clear.addBlock {
+        display: block !important;
+    }
+</style>
 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
     <!--begin::Content wrapper-->
     <div class="d-flex flex-column flex-column-fluid">
@@ -109,8 +115,9 @@
                                     <label class="required fs-6 fw-semibold mb-2">Workflow Code</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input class="form-control form-control-solid" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" />
+                                    <input class="form-control form-control-solid wfCode" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" />
                                     <!--end::Input-->
+                                    <p id="wfCodeAlert" class="notifyAlert"></p>
                                 </div>
                                 <!--end::Col-->
                                 <!--begin::Col-->
@@ -171,14 +178,14 @@
                                                                 <div class="col-md-6 ">
                                                                     <select class="form-select product_option2" name="levels[]" data-placeholder="Select a variation" data-kt-ecommerce-catalog-add-product="product_option" disabled>
                                                                         <option value="">Select Level</option>
-                                                                        @for($i=1;$i<12;$i++) <option value="{{$i}}" <?php echo ($i == $a+1) ? "selected" : "" ?>>Level {{$i}}</option>
+                                                                        @for($i=1;$i<12;$i++) <option value="{{$i}}" <?php echo ($i == $a + 1) ? "selected" : "" ?>>Level {{$i}}</option>
                                                                             @endfor
                                                                     </select>
                                                                 </div>
                                                                 <!--end::Select2-->
                                                                 <!--begin::Input-->
                                                                 <div class="col-md-6 fv-row">
-                                                                    <select class="form-select mb-2 designation" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="fapprover_designation{{$a+1}}[]">
+                                                                    <select class="form-select mb-2 designation" required data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="fapprover_designation{{$a+1}}[]">
                                                                         @foreach($designationDatas as $designationData)
                                                                         <option value="{{$designationData->id}}">{{$designationData->name}}</option>
                                                                         @endforeach
@@ -291,7 +298,7 @@
                 {{-- FORM --}}
                 <div class="text-center mb-5">
                     <button type="reset" class="btn btn-light me-3">Reset</button>
-                    <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
+                    <button type="submit" class="btn btn-primary " id="submitBtn" data-kt-users-modal-action="submit">
                         <span class="indicator-label">Save and Exit</span>
                         <span class="indicator-progress">Please wait...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -306,11 +313,10 @@
 </div>
 </div>
 <script>
-
     $("form").on("reset", function() {
-  // code to run when form is reset
-  $(".append-elements").remove();
-});
+        // code to run when form is reset
+        $(".append-elements").remove();
+    });
 </script>
 @endsection
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
@@ -335,7 +341,43 @@
         });
         $('select[multiple]').multiselect();
     });
+    $(document).on('blur', '.wfCode', function() {
+        console.log($(this).val());
+        $.ajax({
+            url: "{{ route('workflowValidation') }}",
+            type: 'ajax',
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                code: $(this).val(),
+                id:"",
+            },
+            success: function(data) {
+                var alertName = 'wfCodeAlert';
+                console.log(data.response);
+                console.log(alertName);
 
+                if (data.response == false) {
+                    $('#submitBtn').attr('disabled', true);
+
+                    document.getElementById(alertName).style.display = "block";
+                    document.getElementById(alertName).style.color = "red";
+                    document.getElementById(alertName).innerHTML = 'Code Is Exists*';
+                    return false;
+                }
+                document.getElementById(alertName).style.display = "none";
+                $('#submitBtn').attr('disabled', false);
+                return true;
+
+
+            },
+            error: function() {
+                $("#otp_error").text("Update Error");
+            }
+
+        });
+
+    });
     $(document).on('change', '.btn-check', function() {
         console.log($(this).val());
         workFlowType($(this).val());
@@ -353,304 +395,298 @@
 
     var partialLevelSelect;
     var selectedOptions;
-    
+
     $(document).on('change', '.product_option1', function() {
         $(".addLevel").attr("disabled", true);
         // console.log($(this).val());
         if ($(this).val()) {
-         
+
             $('.addLevel').removeAttr('disabled');
-      
+
             $(this).parent().next().find('.designation').attr("name", "approver_designation" + this.value + "[]").end();
         }
 
 
-        partialLevelSelect = $(".product_option1") ; 
+        partialLevelSelect = $(".product_option1");
         selectedOptions = partialLevelSelect.map(function() {
             return $(this).val();
         }).get();
         if (selectedOptions[selectedOptions.length - 1] === "") {
-    selectedOptions.pop();
-}
-
-        for (let i = 0; i < partialLevelSelect.length; i++) {
-           if (i == 0) {
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let nextArray = parseInt(selectedOptions[ya]) - 1;
-            let newArray = [];
-for (let i = 1; i <= nextArray; i++) {
-  newArray.push(i.toString());
-}
-
-
-if (newArray.length != 0) {
-    
-
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-   
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
-
-
-});
-}
-    
-
-           } 
-           else if(i == partialLevelSelect.length - 1){
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let xa=i-1;
-            // let nextArray = parseInt(selectedOptions[ya]) - 1 ;
-           
-            let prevArray = parseInt(selectedOptions[xa]) + 1;
-          
-            let newArray = [];
-for (let i = prevArray ; i <= 11; i++) {
-  newArray.push(i.toString());
-}
-
-
-
-if (newArray.length != 0) {
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-    
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
-
-
-});
-}
-    
-           }
-           else{
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let xa=i-1;
-            let nextArray = parseInt(selectedOptions[ya]) - 1 ;
-           if (isNaN(nextArray)) {
-            nextArray = 11 ; 
-           }
-            let prevArray = parseInt(selectedOptions[xa]) + 1;
-            console.log(nextArray);
-            console.log(prevArray);
-            let newArray = [];
-for (let i = prevArray ; i <= nextArray; i++) {
-  newArray.push(i.toString());
-}
-
-
-if (newArray.length != 0) {
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-    
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
-
-
-});
-}
-    
-           }
+            selectedOptions.pop();
         }
 
-        var checkOption=$(".product_option1");
-if($(this).val() == 11){
-   
-    
+        for (let i = 0; i < partialLevelSelect.length; i++) {
+            if (i == 0) {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let nextArray = parseInt(selectedOptions[ya]) - 1;
+                let newArray = [];
+                for (let i = 1; i <= nextArray; i++) {
+                    newArray.push(i.toString());
+                }
 
-  
-if (checkOption.length != 1 ) {
-    
 
-    $(".addLevel").hide();
-    $(".addLevel").prev(".removeBtnsm").css("visibility","hidden").css("pointer-events","none");
-    $(".addLevel").after(`<button type="button" data-repeater-create="" class="btn btn-sm btn-light-danger  " onclick="RemoveFunctionb(this)" > <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg--> <span class="svg-icon svg-icon-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="currentColor" /><rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor" /></svg> </span> <!--end::Svg Icon-->Remove</button>`);  
-}
-else{
-    $(".addLevel").hide(); 
-}
- 
-}else if($(checkOption[checkOption.length - 1]).val() != "11"){
-  
+                if (newArray.length != 0) {
 
-if (checkOption.length != 1  ) {
-    $(".addLevel").prev(".removeBtnsm").css("visibility","visible").css("pointer-events","all");
-    $(".addLevel").show();
-    $(".addLevel").next().remove();
-}
-else{
-    $(".addLevel").show(); 
-}
 
-}
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
+
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
+
+
+                    });
+                }
+
+
+            } else if (i == partialLevelSelect.length - 1) {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let xa = i - 1;
+                // let nextArray = parseInt(selectedOptions[ya]) - 1 ;
+
+                let prevArray = parseInt(selectedOptions[xa]) + 1;
+
+                let newArray = [];
+                for (let i = prevArray; i <= 11; i++) {
+                    newArray.push(i.toString());
+                }
+
+
+
+                if (newArray.length != 0) {
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
+
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
+
+
+                    });
+                }
+
+            } else {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let xa = i - 1;
+                let nextArray = parseInt(selectedOptions[ya]) - 1;
+                if (isNaN(nextArray)) {
+                    nextArray = 11;
+                }
+                let prevArray = parseInt(selectedOptions[xa]) + 1;
+                console.log(nextArray);
+                console.log(prevArray);
+                let newArray = [];
+                for (let i = prevArray; i <= nextArray; i++) {
+                    newArray.push(i.toString());
+                }
+
+
+                if (newArray.length != 0) {
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
+
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
+
+
+                    });
+                }
+
+            }
+        }
+
+        var checkOption = $(".product_option1");
+        if ($(this).val() == 11) {
+
+
+
+
+            if (checkOption.length != 1) {
+
+
+                $(".addLevel").hide();
+                $(".addLevel").prev(".removeBtnsm").css("visibility", "hidden").css("pointer-events", "none");
+                $(".addLevel").after(`<button type="button" data-repeater-create="" class="btn btn-sm btn-light-danger  " onclick="RemoveFunctionb(this)" > <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg--> <span class="svg-icon svg-icon-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="currentColor" /><rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor" /></svg> </span> <!--end::Svg Icon-->Remove</button>`);
+            } else {
+                $(".addLevel").hide();
+            }
+
+        } else if ($(checkOption[checkOption.length - 1]).val() != "11") {
+
+
+            if (checkOption.length != 1) {
+                $(".addLevel").prev(".removeBtnsm").css("visibility", "visible").css("pointer-events", "all");
+                $(".addLevel").show();
+                $(".addLevel").next().remove();
+            } else {
+                $(".addLevel").show();
+            }
+
+        }
     });
 
     $(document).on('click', '.addLevel', function() {
 
-    if($(this).prev().prev().children("select").val() == ""){
-return false;
-    }
+        if ($(this).prev().prev().children("select").val() == "") {
+            return false;
+        }
 
 
         $(this).after(`<button type="button" data-repeater-create="" class="btn btn-sm btn-light-danger removeBtn" onclick="RemoveFunction(this)" > <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg--> <span class="svg-icon svg-icon-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="currentColor" /><rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor" /></svg> </span> <!--end::Svg Icon-->Remove</button>`);
 
-   $(this).prev().css("visibility","hidden");
-      
+        $(this).prev().css("visibility", "hidden");
 
-        
+
+
         var uniqueId = Date.now();
         $(".partialLevelFlow").last().append('<div id="kt_ecommerce_add_product_options" class="Partial-input-container append-elements"> <!--begin::Form group--> <div class="form-group"> <div data-repeater-list="kt_ecommerce_add_product_options" class="d-flex flex-column gap-3"> <div data-repeater-item="" class="form-group d-flex flex-wrap align-items-center justify-content-center gap-5"> <!--begin::Select2--> <div class="col-md-4"> <select class="form-select product_option1" name="levels[]" data-placeholder="Select a variation" data-kt-ecommerce-catalog-add-product="product_option" required> <option value=""  selected disabled>Select Level</option> @for($i=1;$i<12;$i++) <option value="{{$i}}">Level {{$i}}</option> @endfor </select> </div> <!--end::Select2--> <!--begin::Input--> <div class="col-md-4 fv-row"> <select class="form-select mb-2 designation" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple"  name="approver_designation[]" required> @foreach($designationDatas as $designationData) <option value="{{$designationData->id}}">{{$designationData->name}}</option> @endforeach </select> </div> <!--end::Input--> <button type="button" data-repeater-delete="" class="btn btn-sm btn-icon btn-light-danger removeBtnsm" onclick="RemoveFunctionc(this)" > <!--begin::Svg Icon | path: icons/duotune/arrows/arr088.svg--> <span class="svg-icon svg-icon-1"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="currentColor" /> <rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor" /> </svg> </span> <!--end::Svg Icon--> </button> <button type="button" data-repeater-create="" class="btn btn-sm btn-light-primary addLevel" disabled> <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg--> <span class="svg-icon svg-icon-2"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11" y="18" width="12" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" /> <rect x="6" y="11" width="12" height="2" rx="1" fill="currentColor" /> </svg> </span> <!--end::Svg Icon-->Add Level</button> </div> </div> </div> <!--end::Form group--> <!--begin::Form group--> <!--end::Form group--> </div>');
         $("#" + uniqueId).select2();
         $(this).remove();
-     $(".addBlock").toggleClass("addBlock");
-     $(".addEvents").toggleClass("addEvents");
-    
-         partialLevelSelect = $(".product_option1") ; 
+        $(".addBlock").toggleClass("addBlock");
+        $(".addEvents").toggleClass("addEvents");
+
+        partialLevelSelect = $(".product_option1");
         selectedOptions = partialLevelSelect.map(function() {
             return $(this).val();
         }).get();
         if (selectedOptions[selectedOptions.length - 1] === "") {
-    selectedOptions.pop();
-}
+            selectedOptions.pop();
+        }
 
         for (let i = 0; i < partialLevelSelect.length; i++) {
-           if (i == 0) {
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let nextArray = parseInt(selectedOptions[ya]) - 1;
-            let newArray = [];
-for (let i = 1; i <= nextArray; i++) {
-  newArray.push(i.toString());
-}
+            if (i == 0) {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let nextArray = parseInt(selectedOptions[ya]) - 1;
+                let newArray = [];
+                for (let i = 1; i <= nextArray; i++) {
+                    newArray.push(i.toString());
+                }
 
 
-if (newArray.length != 0) {
-    
-
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-   
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
+                if (newArray.length != 0) {
 
 
-});
-}
-    
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
 
-           } 
-           else if(i == partialLevelSelect.length - 1){
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let xa=i-1;
-            // let nextArray = parseInt(selectedOptions[ya]) - 1 ;
-           
-            let prevArray = parseInt(selectedOptions[xa]) + 1;
-            
-            let newArray = [];
-for (let i = prevArray ; i <= 11; i++) {
-  newArray.push(i.toString());
-}
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
 
 
-if (newArray.length != 0) {
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-    
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
-
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
+                    });
+                }
 
 
-});
-}
-    
-           }
-           else{
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let xa=i-1;
-            let nextArray = parseInt(selectedOptions[ya]) - 1 ;
-         
-            let prevArray = parseInt(selectedOptions[xa]) + 1;
-          
-            let newArray = [];
-for (let i = prevArray ; i <= nextArray; i++) {
-  newArray.push(i.toString());
-}
+            } else if (i == partialLevelSelect.length - 1) {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let xa = i - 1;
+                // let nextArray = parseInt(selectedOptions[ya]) - 1 ;
+
+                let prevArray = parseInt(selectedOptions[xa]) + 1;
+
+                let newArray = [];
+                for (let i = prevArray; i <= 11; i++) {
+                    newArray.push(i.toString());
+                }
 
 
-if (newArray.length != 0) {
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-    
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
+                if (newArray.length != 0) {
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
 
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
 
 
-});
-}
-    
-           }
+                    });
+                }
+
+            } else {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let xa = i - 1;
+                let nextArray = parseInt(selectedOptions[ya]) - 1;
+
+                let prevArray = parseInt(selectedOptions[xa]) + 1;
+
+                let newArray = [];
+                for (let i = prevArray; i <= nextArray; i++) {
+                    newArray.push(i.toString());
+                }
+
+
+                if (newArray.length != 0) {
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
+
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
+
+
+                    });
+                }
+
+            }
         }
 
     });
@@ -714,388 +750,382 @@ $(partialLevelSelect[i]).find("option").each(function() {
     function RemoveFunction(e) {
 
         $(e).parent().parent().parent().parent().remove();
-   
-$(".Partial-input-container").first().find(".removeBtnsm").css("visibility","hidden").css("pointer-events","none");
-        partialLevelSelect = $(".product_option1") ; 
+
+        $(".Partial-input-container").first().find(".removeBtnsm").css("visibility", "hidden").css("pointer-events", "none");
+        partialLevelSelect = $(".product_option1");
         selectedOptions = partialLevelSelect.map(function() {
             return $(this).val();
         }).get();
         if (selectedOptions[selectedOptions.length - 1] === "") {
-    selectedOptions.pop();
-      }
+            selectedOptions.pop();
+        }
 
         for (let i = 0; i < partialLevelSelect.length; i++) {
-           if (i == 0) {
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let nextArray = parseInt(selectedOptions[ya]) - 1;
-            if (isNaN(nextArray)) {
-            nextArray = 11 ; 
-           }
-            let newArray = [];
-for (let i = 1; i <= nextArray; i++) {
-  newArray.push(i.toString());
-}
+            if (i == 0) {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let nextArray = parseInt(selectedOptions[ya]) - 1;
+                if (isNaN(nextArray)) {
+                    nextArray = 11;
+                }
+                let newArray = [];
+                for (let i = 1; i <= nextArray; i++) {
+                    newArray.push(i.toString());
+                }
 
 
-if (newArray.length != 0) {
-    
-
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-   
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
+                if (newArray.length != 0) {
 
 
-});
-}
-    
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
 
-           } 
-           else if(i == partialLevelSelect.length - 1){
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let xa=i-1;
-            // let nextArray = parseInt(selectedOptions[ya]) - 1 ;
-            
-            let prevArray = parseInt(selectedOptions[xa]) + 1;
-            
-            let newArray = [];
-for (let i = prevArray ; i <= 11; i++) {
-  newArray.push(i.toString());
-}
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
 
 
-if (newArray.length != 0) {
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-    
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
+                    });
+                }
 
 
-});
-}
-    
-           }
-           else{
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let xa=i-1;
-            let nextArray = parseInt(selectedOptions[ya]) - 1 ;
-           
-            let prevArray = parseInt(selectedOptions[xa]) + 1;
-            
-            let newArray = [];
-for (let i = prevArray ; i <= nextArray; i++) {
-  newArray.push(i.toString());
-}
+            } else if (i == partialLevelSelect.length - 1) {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let xa = i - 1;
+                // let nextArray = parseInt(selectedOptions[ya]) - 1 ;
+
+                let prevArray = parseInt(selectedOptions[xa]) + 1;
+
+                let newArray = [];
+                for (let i = prevArray; i <= 11; i++) {
+                    newArray.push(i.toString());
+                }
 
 
-if (newArray.length != 0) {
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-    
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
+                if (newArray.length != 0) {
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
+
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
 
 
-});
-}
-    
-           }
+                    });
+                }
+
+            } else {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let xa = i - 1;
+                let nextArray = parseInt(selectedOptions[ya]) - 1;
+
+                let prevArray = parseInt(selectedOptions[xa]) + 1;
+
+                let newArray = [];
+                for (let i = prevArray; i <= nextArray; i++) {
+                    newArray.push(i.toString());
+                }
+
+
+                if (newArray.length != 0) {
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
+
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
+
+
+                    });
+                }
+
+            }
         }
     }
+
     function RemoveFunctionb(e) {
         $(".removeBtn").last().after(`<button type="button" data-repeater-create="" class="btn btn-sm btn-light-primary addLevel" > <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg--> <span class="svg-icon svg-icon-2"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11" y="18" width="12" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" /> <rect x="6" y="11" width="12" height="2" rx="1" fill="currentColor" /> </svg> </span> <!--end::Svg Icon-->Add Level</button>`);
-    $(".removeBtn").last().remove();
+        $(".removeBtn").last().remove();
         $(e).parent().parent().parent().parent().remove();
-        $(".Partial-input-container").first().find(".removeBtnsm").css("visibility","hidden").css("pointer-events","none");
-   
+        $(".Partial-input-container").first().find(".removeBtnsm").css("visibility", "hidden").css("pointer-events", "none");
 
-        partialLevelSelect = $(".product_option1") ; 
+
+        partialLevelSelect = $(".product_option1");
         selectedOptions = partialLevelSelect.map(function() {
             return $(this).val();
         }).get();
         if (selectedOptions[selectedOptions.length - 1] === "") {
-    selectedOptions.pop();
-      }
-
-        for (let i = 0; i < partialLevelSelect.length; i++) {
-           if (i == 0) {
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let nextArray = parseInt(selectedOptions[ya]) - 1;
-            if (isNaN(nextArray)) {
-            nextArray = 11 ; 
-           }
-            let newArray = [];
-for (let i = 1; i <= nextArray; i++) {
-  newArray.push(i.toString());
-}
-
-
-if (newArray.length != 0) {
-    
-
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-   
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
-
-
-});
-}
-    
-
-           } 
-           else if(i == partialLevelSelect.length - 1){
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let xa=i-1;
-            // let nextArray = parseInt(selectedOptions[ya]) - 1 ;
-            
-            let prevArray = parseInt(selectedOptions[xa]) + 1;
-            
-            let newArray = [];
-for (let i = prevArray ; i <= 11; i++) {
-  newArray.push(i.toString());
-}
-
-
-if (newArray.length != 0) {
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-    
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
-
-
-});
-}
-    
-           }
-           else{
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let xa=i-1;
-            let nextArray = parseInt(selectedOptions[ya]) - 1 ;
-           
-            let prevArray = parseInt(selectedOptions[xa]) + 1;
-            
-            let newArray = [];
-for (let i = prevArray ; i <= nextArray; i++) {
-  newArray.push(i.toString());
-}
-
-
-if (newArray.length != 0) {
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-    
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
-
-
-});
-}
-    
-           }
+            selectedOptions.pop();
         }
 
-       
+        for (let i = 0; i < partialLevelSelect.length; i++) {
+            if (i == 0) {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let nextArray = parseInt(selectedOptions[ya]) - 1;
+                if (isNaN(nextArray)) {
+                    nextArray = 11;
+                }
+                let newArray = [];
+                for (let i = 1; i <= nextArray; i++) {
+                    newArray.push(i.toString());
+                }
+
+
+                if (newArray.length != 0) {
+
+
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
+
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
+
+
+                    });
+                }
+
+
+            } else if (i == partialLevelSelect.length - 1) {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let xa = i - 1;
+                // let nextArray = parseInt(selectedOptions[ya]) - 1 ;
+
+                let prevArray = parseInt(selectedOptions[xa]) + 1;
+
+                let newArray = [];
+                for (let i = prevArray; i <= 11; i++) {
+                    newArray.push(i.toString());
+                }
+
+
+                if (newArray.length != 0) {
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
+
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
+
+
+                    });
+                }
+
+            } else {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let xa = i - 1;
+                let nextArray = parseInt(selectedOptions[ya]) - 1;
+
+                let prevArray = parseInt(selectedOptions[xa]) + 1;
+
+                let newArray = [];
+                for (let i = prevArray; i <= nextArray; i++) {
+                    newArray.push(i.toString());
+                }
+
+
+                if (newArray.length != 0) {
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
+
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
+
+
+                    });
+                }
+
+            }
+        }
+
+
     }
 
 
     function RemoveFunctionc(e) {
-     $(".removeBtn").last().after(`<button type="button" data-repeater-create="" class="btn btn-sm btn-light-primary addLevel" > <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg--> <span class="svg-icon svg-icon-2"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11" y="18" width="12" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" /> <rect x="6" y="11" width="12" height="2" rx="1" fill="currentColor" /> </svg> </span> <!--end::Svg Icon-->Add Level</button>`);
-     $(".removeBtn").last().prev(".removeBtnsm").css("visibility","visible").prop("disabled",false);
-     $(".removeBtn").last().remove();
-     $(e).parent().parent().parent().parent().remove();
-     $(".Partial-input-container").first().find(".removeBtnsm").css("visibility","hidden").css("pointer-events","none");
+        $(".removeBtn").last().after(`<button type="button" data-repeater-create="" class="btn btn-sm btn-light-primary addLevel" > <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg--> <span class="svg-icon svg-icon-2"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11" y="18" width="12" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" /> <rect x="6" y="11" width="12" height="2" rx="1" fill="currentColor" /> </svg> </span> <!--end::Svg Icon-->Add Level</button>`);
+        $(".removeBtn").last().prev(".removeBtnsm").css("visibility", "visible").prop("disabled", false);
+        $(".removeBtn").last().remove();
+        $(e).parent().parent().parent().parent().remove();
+        $(".Partial-input-container").first().find(".removeBtnsm").css("visibility", "hidden").css("pointer-events", "none");
 
-    //  let lastContainer=$(".Partial-input-container").last();
-   $(".select2").last().addClass("addEvents");
+        //  let lastContainer=$(".Partial-input-container").last();
+        $(".select2").last().addClass("addEvents");
 
-     $(" .select2-selection__choice__remove").last().addClass("addBlock");
+        $(" .select2-selection__choice__remove").last().addClass("addBlock");
 
-     $( " .select2-selection__clear").last().addClass("addBlock");
-        
-   
+        $(" .select2-selection__clear").last().addClass("addBlock");
 
-        partialLevelSelect = $(".product_option1") ; 
+
+
+        partialLevelSelect = $(".product_option1");
         selectedOptions = partialLevelSelect.map(function() {
             return $(this).val();
         }).get();
         if (selectedOptions[selectedOptions.length - 1] === "") {
-    selectedOptions.pop();
-      }
+            selectedOptions.pop();
+        }
 
         for (let i = 0; i < partialLevelSelect.length; i++) {
-           if (i == 0) {
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let nextArray = parseInt(selectedOptions[ya]) - 1;
-            if (isNaN(nextArray)) {
-            nextArray = 11 ; 
-           }
-            let newArray = [];
-for (let i = 1; i <= nextArray; i++) {
-  newArray.push(i.toString());
-}
+            if (i == 0) {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let nextArray = parseInt(selectedOptions[ya]) - 1;
+                if (isNaN(nextArray)) {
+                    nextArray = 11;
+                }
+                let newArray = [];
+                for (let i = 1; i <= nextArray; i++) {
+                    newArray.push(i.toString());
+                }
 
 
-if (newArray.length != 0) {
-    
-
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-   
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
+                if (newArray.length != 0) {
 
 
-});
-}
-    
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
 
-           } 
-           else if(i == partialLevelSelect.length - 1){
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let xa=i-1;
-            // let nextArray = parseInt(selectedOptions[ya]) - 1 ;
-            
-            let prevArray = parseInt(selectedOptions[xa]) + 1;
-            
-            let newArray = [];
-for (let i = prevArray ; i <= 11; i++) {
-  newArray.push(i.toString());
-}
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
 
 
-if (newArray.length != 0) {
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-    
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
+                    });
+                }
 
 
-});
-}
-    
-           }
-           else{
-            let element = partialLevelSelect[i];
-           // let selectedValue = selectedOptions[i];
-           let selectedValue = selectedOptions[i];
-            let ya=i+1;
-            let xa=i-1;
-            let nextArray = parseInt(selectedOptions[ya]) - 1 ;
-           
-            let prevArray = parseInt(selectedOptions[xa]) + 1;
-            
-            let newArray = [];
-for (let i = prevArray ; i <= nextArray; i++) {
-  newArray.push(i.toString());
-}
+            } else if (i == partialLevelSelect.length - 1) {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let xa = i - 1;
+                // let nextArray = parseInt(selectedOptions[ya]) - 1 ;
+
+                let prevArray = parseInt(selectedOptions[xa]) + 1;
+
+                let newArray = [];
+                for (let i = prevArray; i <= 11; i++) {
+                    newArray.push(i.toString());
+                }
 
 
-if (newArray.length != 0) {
-$(partialLevelSelect[i]).find("option").each(function() {
-    let Value=$(this).val().toString();
-    
-   if(Value != ""){
-    if (newArray.includes(Value)) {
-        $(this).prop("disabled", false);
-     $(this).css("display", "block");
-} else {
-    $(this).prop("disabled", true);
-     $(this).css("display", "none");
-}
-   }
+                if (newArray.length != 0) {
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
+
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
 
 
-});
-}
-    
-           }
+                    });
+                }
+
+            } else {
+                let element = partialLevelSelect[i];
+                // let selectedValue = selectedOptions[i];
+                let selectedValue = selectedOptions[i];
+                let ya = i + 1;
+                let xa = i - 1;
+                let nextArray = parseInt(selectedOptions[ya]) - 1;
+
+                let prevArray = parseInt(selectedOptions[xa]) + 1;
+
+                let newArray = [];
+                for (let i = prevArray; i <= nextArray; i++) {
+                    newArray.push(i.toString());
+                }
+
+
+                if (newArray.length != 0) {
+                    $(partialLevelSelect[i]).find("option").each(function() {
+                        let Value = $(this).val().toString();
+
+                        if (Value != "") {
+                            if (newArray.includes(Value)) {
+                                $(this).prop("disabled", false);
+                                $(this).css("display", "block");
+                            } else {
+                                $(this).prop("disabled", true);
+                                $(this).css("display", "none");
+                            }
+                        }
+
+
+                    });
+                }
+
+            }
         }
     }
-
 </script>

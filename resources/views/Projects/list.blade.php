@@ -11,7 +11,7 @@
         float: left;
         border: 1px solid #ccc;
         background-color: #f1f1f1;
-        height: 745px;
+        height: 1100px;
         width: 30%;
     }
 
@@ -47,7 +47,7 @@
         border: 1px solid #ccc;
         width: 70%;
         border-left: none;
-        height: 770px;
+        height: 1100px;
     }
 
     #critical {
@@ -68,7 +68,7 @@
 
     #low {
         border: 2px solid white;
-        box-shadow: 0 0 0 1px yellow;
+        box-shadow: 0 0 0 1px green;
         appearance: none;
         border-radius: 50%;
         width: 12px;
@@ -79,7 +79,7 @@
     }
 
     #low:checked {
-        background-color: yellow;
+        background-color: green;
     }
 
     #medium {
@@ -100,7 +100,7 @@
 
     #high {
         border: 2px solid white;
-        box-shadow: 0 0 0 1px green;
+        box-shadow: 0 0 0 1px black;
         appearance: none;
         border-radius: 50%;
         width: 12px;
@@ -111,7 +111,82 @@
     }
 
     #high:checked {
-        background-color: green;
+        background-color: black;
+    }
+
+    .pdf_upload {
+        cursor: pointer;
+        border: 1px solid lightgrey;
+
+    }
+
+    .pfdf-upload input {
+        background-color: lightgrey;
+    }
+
+    .plus-pdf {
+        background-color: skyblue;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .delete-pdf {
+        /* background-color: red !important; */
+        background-image: linear-gradient(195deg, #CF0D03, #6E0100) !important;
+        padding: 10px 15px !important;
+        cursor: pointer;
+        color: white;
+    }
+
+    .delete-pdf i {
+        color: white;
+    }
+
+    .pdf-iframe {
+        width: 100px;
+        height: 100px;
+
+    }
+
+    .pdf_delete_btn {
+        width: 100px !important;
+    }
+
+    .pdf-view {
+        border: 1px solid black;
+        padding: 5px;
+    }
+
+    .pdf {
+        margin: 0 10px;
+        width: 100px;
+    }
+
+    .pdf label {
+        width: 100%;
+    }
+
+    .pdf-view .upload-text {
+        margin: 40px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .pdf-view .upload-text i {
+        display: block;
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        color: #5C67FF;
+    }
+
+    .pdf-view .upload-text span {
+        display: block;
+    }
+
+    .pdf-view:has(.pdf) .upload-text {
+        display: none;
     }
 </style>
 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -261,98 +336,7 @@
                                 <!--end::Svg Icon-->
                                 <input type="text" id="searchInput" data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="Search" />
                                 <!--begin::Actions-->
-                                <div class="d-flex align-items-center gap-2 gap-lg-3">
-                                    <!--begin::Filter menu-->
-                                    <div class="m-0">
-                                        <!--begin::Menu toggle-->
-                                        <a href="#" style="background-color:black" class="btn btn-sm btn-flex bg-body btn-color-gray-700 btn-active-color-primary fw-bold" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                            <!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
-                                            <span class="svg-icon svg-icon-6 svg-icon-muted me-1">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
-                                                </svg>
-                                            </span>
-                                            <!--end::Svg Icon-->Filter</a>
-                                        <!--end::Menu toggle-->
-                                        <!--begin::Menu 1-->
-                                        <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="kt_menu_637dc78d8451e">
-                                            <!--begin::Header-->
-                                            <div class="px-7 py-5">
-                                                <div class="fs-5 text-dark fw-bold">Filter Options</div>
-                                            </div>
-                                            <!--end::Header-->
-                                            <!--begin::Menu separator-->
-                                            <div class="separator border-gray-200"></div>
-                                            <!--end::Menu separator-->
-                                            <!--begin::Form-->
-                                            <div class="px-7 py-5">
-                                                <!--begin::Input group-->
-                                                <div class="mb-10">
-                                                    <!--begin::Label-->
-                                                    <label class="form-label fw-semibold">Status:</label>
-                                                    <!--end::Label-->
-                                                    <!--begin::Input-->
-                                                    <div>
-                                                        <select class="form-select form-select-solid" data-kt-select2="true" data-placeholder="Select option" data-dropdown-parent="#kt_menu_637dc78d8451e" data-allow-clear="true">
-                                                            <option></option>
-                                                            <option value="1">Approved</option>
-                                                            <option value="2">Pending</option>
-                                                            <option value="2">In Process</option>
-                                                            <option value="2">Rejected</option>
-                                                        </select>
-                                                    </div>
-                                                    <!--end::Input-->
-                                                </div>
-                                                <!--end::Input group-->
-                                                <!--begin::Input group-->
-                                                <div class="mb-10">
-                                                    <!--begin::Label-->
-                                                    <label class="form-label fw-semibold">Member Type:</label>
-                                                    <!--end::Label-->
-                                                    <!--begin::Options-->
-                                                    <div class="d-flex">
-                                                        <!--begin::Options-->
-                                                        <label class="form-check form-check-sm form-check-custom form-check-solid me-5">
-                                                            <input class="form-check-input" type="checkbox" value="1" />
-                                                            <span class="form-check-label">Author</span>
-                                                        </label>
-                                                        <!--end::Options-->
-                                                        <!--begin::Options-->
-                                                        <label class="form-check form-check-sm form-check-custom form-check-solid">
-                                                            <input class="form-check-input" type="checkbox" value="2" checked="checked" />
-                                                            <span class="form-check-label">Customer</span>
-                                                        </label>
-                                                        <!--end::Options-->
-                                                    </div>
-                                                    <!--end::Options-->
-                                                </div>
-                                                <!--end::Input group-->
-                                                <!--begin::Input group-->
-                                                <div class="mb-10">
-                                                    <!--begin::Label-->
-                                                    <label class="form-label fw-semibold">Notifications:</label>
-                                                    <!--end::Label-->
-                                                    <!--begin::Switch-->
-                                                    <div class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="checkbox" value="" name="notifications" checked="checked" />
-                                                        <label class="form-check-label">Enabled</label>
-                                                    </div>
-                                                    <!--end::Switch-->
-                                                </div>
-                                                <!--end::Input group-->
-                                                <!--begin::Actions-->
-                                                <div class="d-flex justify-content-end">
-                                                    <button type="reset" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Reset</button>
-                                                    <button type="submit" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true">Apply</button>
-                                                </div>
-                                                <!--end::Actions-->
-                                            </div>
-                                            <!--end::Form-->
-                                        </div>
-                                        <!--end::Menu 1-->
-                                    </div>
-                                    <!--end::Filter menu-->
-                                </div>
+
                                 <!--end::Actions-->
                             </div>
 
@@ -486,7 +470,7 @@
                                 <!-- Projects Tab -->
 
                                 @csrf
-                                <div class="fv-row mb-7">
+                                <div class="fv-row mb-7" style="display:none">
                                     <!--begin::Wrapper-->
                                     <div class="d-flex flex-stack">
                                         <!--begin::Label-->
@@ -521,6 +505,7 @@
                                         <!--begin::Input-->
                                         <input type="text" class="form-control form-control-solid project_code" placeholder="Enter Project Code" name="project_code" required />
                                         <!--end::Input-->
+                                        <p id="projectCodeAlert" class="notifyAlert1"></p>
                                     </div>
                                     <!--begin::Col-->
                                     <div class="col-md-6 fv-row">
@@ -546,18 +531,25 @@
                                         <!--begin::Input-->
                                         <input type="text" class="form-control form-control-solid project_name" placeholder="Enter Project Name" name="project_name" required />
                                         <!--end::Input-->
+                                        <p id="projectNameAlert" class="notifyAlert1"></p>
                                     </div>
-
-                                    <!--end::Col-->
-                                    <!--begin::Col-->
                                     <div class="col-md-6 fv-row">
                                         <!--begin::Label-->
-                                        <label class="required fs-6 fw-semibold mb-2">SAP-id</label>
+                                        <label class="required fs-6 fw-semibold mb-2">Department</label>
                                         <!--end::Label-->
                                         <!--begin::Input-->
-                                        <input type="text" class="form-control form-control-solid sap_id" placeholder="Enter SAP-id" name="sap_id" readonly required />
+                                        <input type="text" class="form-control form-control-solid department" placeholder="Enter Department" name="department_id" readonly required />
                                         <!--end::Input-->
                                     </div>
+                                    <!--end::Col-->
+                                    <!--begin::Col-->
+                                    <!-- <div class="col-md-6 fv-row">
+                                      
+                                        <label class="required fs-6 fw-semibold mb-2">SAP-id</label>
+                                      
+                                        <input type="text" class="form-control form-control-solid sap_id" placeholder="Enter SAP-id" name="sap_id" readonly required />
+                                      
+                                    </div> -->
                                     <!--end::Col-->
 
 
@@ -587,10 +579,10 @@
                                     <!--begin::Col-->
                                     <div class="col-md-6 fv-row">
                                         <!--begin::Label-->
-                                        <label class="required fs-6 fw-semibold mb-2">Department</label>
+                                        <label class="required fs-6 fw-semibold mb-2">Designation</label>
                                         <!--end::Label-->
                                         <!--begin::Input-->
-                                        <input type="text" class="form-control form-control-solid department" placeholder="Enter Department" name="department_id" readonly required />
+                                        <input type="text" class="form-control form-control-solid designation" placeholder="Enter Designation" name="designation_id" required readonly />
                                         <!--end::Input-->
                                     </div>
                                     <!--end::Col-->
@@ -612,23 +604,8 @@
                                     <!--end::Col-->
 
                                     <!--begin::Col-->
-                                    <div class="col-md-6 fv-row">
-                                        <!--begin::Label-->
-                                        <label class="required fs-6 fw-semibold mb-2">Designation</label>
-                                        <!--end::Label-->
-                                        <!--begin::Input-->
-                                        <input type="text" class="form-control form-control-solid designation" placeholder="Enter Designation" name="designation_id" required readonly />
-                                        <!--end::Input-->
-                                    </div>
+
                                     <!--end::Col-->
-
-
-
-
-
-
-
-
 
                                     <div class="col-md-6 fv-row">
                                         <!--begin::Label-->
@@ -795,16 +772,10 @@
                                 <button type="submit" class="btn btn-lg btn-primary " data-kt-stepper-action="submit">
                                     <span class="indicator-label  ">Submit
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
-                                        <span class="svg-icon svg-icon-3 ms-2 me-0">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <rect opacity="0.5" x="18" y="13" width="13" height="2" rx="1" transform="rotate(-180 18 13)" fill="currentColor" />
-                                                <path d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z" fill="currentColor" />
-                                            </svg>
-                                        </span>
+
                                         <!--end::Svg Icon-->
                                     </span>
-                                    <span class="indicator-progress">Please wait...
-                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+
                                 </button>
                                 <button type="button" class="btn btn-lg btn-primary btn-tab-switch" data-kt-stepper-action="next" validate="need">Continue
                                     <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
@@ -831,7 +802,129 @@
 </div>
 <!--end::Modal - Create Campaign-->
 
+<script>
+    $(document).on('blur', '.project_code', function() {
+        console.log("$(this).val()");
 
+
+        $.ajax({
+            url: "{{ route('projectCodeValidation') }}",
+            type: 'ajax',
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                code: $('.project_code').val(),
+                id: $('.project_id').val(),
+            },
+            success: function(data) {
+                console.log(data);
+
+
+                var alertName = 'projectCodeAlert';
+                console.log(data.response);
+                console.log(alertName);
+
+                if (data.response == false) {
+                    $('#submitBtn').attr('disabled', true);
+
+                    document.getElementById(alertName).style.display = "block";
+                    document.getElementById(alertName).style.color = "red";
+                    document.getElementById(alertName).innerHTML = 'Code Is Exists*';
+                    return false;
+                }
+                document.getElementById(alertName).style.display = "none";
+                $('#submitBtn').attr('disabled', false);
+                return true;
+
+
+            },
+            error: function() {
+                $("#otp_error").text("Update Error");
+            }
+
+        });
+
+    });
+    $(document).on('blur', '.project_name', function() {
+        console.log("$(this).val()");
+
+
+        $.ajax({
+            url: "{{ route('projectNameValidation') }}",
+            type: 'ajax',
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                id: $('.project_id').val(),
+                name: $('.project_name').val(),
+            },
+            success: function(data) {
+                console.log(data);
+
+
+                var alertName = 'projectNameAlert';
+                console.log(data.response);
+                console.log(alertName);
+
+                if (data.response == false) {
+                    $('#submitBtn').attr('disabled', true);
+
+                    document.getElementById(alertName).style.display = "block";
+                    document.getElementById(alertName).style.color = "red";
+                    document.getElementById(alertName).innerHTML = 'Name Is Exists*';
+                    return false;
+                }
+                document.getElementById(alertName).style.display = "none";
+                $('#submitBtn').attr('disabled', false);
+                return true;
+
+
+            },
+            error: function() {
+                $("#otp_error").text("Update Error");
+            }
+
+        });
+
+    });
+
+    $(function() {
+        $('.multi-field-wrapper').each(function() {
+            var $wrapper = $('.multi-fields', this);
+
+            $(".add-field", $(this)).click(function(e) {
+
+                var length = $(".multi-field").length;
+                var inputAppends = $(".multi-field input[required]");
+                let identity;
+                $(".notifyAlert").remove();
+
+                $.each(inputAppends, function(index, inputAppend) {
+                    var inputValue = inputAppend.value;
+                    // Do something with the input value in each iteration, such as calling a function
+                    if (inputValue == "") {
+                        identity = $(inputAppend).prev().html();
+                        $(inputAppend).parent().append(`<p class="notifyAlert" style="display: block; color: red;">` + identity + ` Is Mandatory*</p> `);
+                    }
+
+                });
+                if ($(".notifyAlert").length == 0) {
+                    if (length <= 11) {
+                        $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper).find(
+                            'input').val('').focus();
+                    }
+                }
+
+            });
+
+
+            $('.multi-field .remove-field', $wrapper).click(function() {
+                if ($('.multi-field', $wrapper).length > 1)
+                    $(this).parent('.multi-field').remove();
+            });
+        });
+    });
+</script>
 
 
 @endsection
@@ -858,6 +951,9 @@
             $(this).find('input[type=checkbox]:not(:checked)').prop('checked', true).val(0);
         })
     })
+    setTimeout(function() {
+        $('.alert').fadeOut('fast');
+    }, 5000);
 
     $(document).ready(function() {
         $('.modal').each(function() {
@@ -899,88 +995,104 @@
     function openCity(evt, cityName, level) {
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById("London" + level).style.display = "block";
-        evt.currentTarget.className += " active";
-        var project_id = $(".project_id").val();
-        var workflow_id = $('.workflow_id').find(":selected").val();
-        if (project_id === '' && workflow_id != '') {
+        var $Blocktab = $(tabcontent).filter(function() {
+            return $(this).css("display") === "block";
+        });
 
-            $.ajax({
-                url: "{{ url('getEmployeeByWorkFlow') }}",
-                method: "POST",
-                type: "ajax",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    workflow_id: workflow_id,
-                    level: level
-                },
-                success: function(result) {
-                    var data = JSON.parse(result);
-                    console.log(data);
-                    if (data.designation_name) {
-                        $(".staff_label").html(data.designation_name);
+        if ($Blocktab.length) {
+            $Blocktab.find("input[required]").each(function() {
+                if ($(this).val().trim() === "") {
+                    $(".error-msg").remove();
+                    $(this).after("<span class='error-msg'>This field is required.</span>");
+
+                } else {
+                    for (i = 0; i < tabcontent.length; i++) {
+                        tabcontent[i].style.display = "none";
                     }
-                    if (data.employees) {
-                        $('.employee_append' + level)
-                            .find('option')
-                            .remove();
-                        $(".employee_append" + level).prepend("<option value=''></option>").val('');
-                        $.each(data.employees, function(key, value) {
-                            var option = '<option value="' + value.id + '">' + value.first_name + " " + value.last_name +
-                                '</option>';
-                            $('.employee_append' + level).append(option);
+                    tablinks = document.getElementsByClassName("tablinks");
+                    for (i = 0; i < tablinks.length; i++) {
+                        tablinks[i].className = tablinks[i].className.replace(" active", "");
+                    }
+                    document.getElementById("London" + level).style.display = "block";
+                    evt.currentTarget.className += " active";
+                    var project_id = $(".project_id").val();
+                    var workflow_id = $('.workflow_id').find(":selected").val();
+                    if (project_id === '' && workflow_id != '') {
+
+                        $.ajax({
+                            url: "{{ url('getEmployeeByWorkFlow') }}",
+                            method: "POST",
+                            type: "ajax",
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                workflow_id: workflow_id,
+                                level: level
+                            },
+                            success: function(result) {
+                                var data = JSON.parse(result);
+                                console.log(data);
+                                if (data.designation_name) {
+                                    $(".staff_label").html(data.designation_name);
+                                }
+                                if (data.employees) {
+                                    $('.employee_append' + level)
+                                        .find('option')
+                                        .remove();
+                                    $(".employee_append" + level).prepend("<option value=''></option>").val('');
+                                    $.each(data.employees, function(key, value) {
+                                        var option = '<option value="' + value.id + '">' + value.first_name + " " + value.last_name +
+                                            '</option>';
+                                        $('.employee_append' + level).append(option);
+                                    });
+                                }
+
+                            },
+                            error: function(error) {
+                                console.log(error);
+                            }
+                        });
+                    } else {
+                        $.ajax({
+                            url: "{{ route('getProjectDetailsById') }}",
+                            type: 'ajax',
+                            method: 'post',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                project_id: project_id,
+                                level: level
+                            },
+                            success: function(result) {
+                                var data = JSON.parse(result);
+                                console.log(data.main_documents);
+                                // $(".main_document"+level).empty();
+                                $.each(data.main_documents, function(key2, value2) {
+                                    var n = level - 1;
+                                    $(".main_document" + n).empty();
+                                    if (value2.document) {
+                                        var file = "{{ URL::to('/') }}" + value2.document;
+                                        var attachment = '<a href="' + file + '" target="_blank" class="main_document" style="">Click to Open</a>&nbsp;<a href="javascript:void(0);" onclick="delete_document(' + value2.id + ');"><i style="color: red;" class="fas fa-trash"></i></a><br>';
+                                        $(".main_document" + n).append(attachment);
+                                    }
+                                });
+                                console.log(data.aux_documents);
+
+                                $.each(data.aux_documents, function(key3, value3) {
+                                    var n = level - 1;
+                                    $(".auxillary_document" + n).empty();
+                                    if (value3.document) {
+                                        var file = "{{ URL::to('/') }}" + value3.document;
+                                        var attachment = '<a href="' + file + '" target="_blank" class="main_document" style="">Click to Open</a>&nbsp;<a href="javascript:void(0);" onclick="delete_document(' + value3.id + ');"><i style="color: red;" class="fas fa-trash"></i></a><br>';
+                                        $(".auxillary_document" + n).append(attachment);
+                                    }
+                                });
+                            }
                         });
                     }
-
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        } else {
-            $.ajax({
-                url: "{{ route('getProjectDetailsById') }}",
-                type: 'ajax',
-                method: 'post',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    project_id: project_id,
-                    level: level
-                },
-                success: function(result) {
-                    var data = JSON.parse(result);
-                    console.log(data.main_documents);
-                    // $(".main_document"+level).empty();
-                    $.each(data.main_documents, function(key2, value2) {
-                        var n = level - 1;
-                        $(".main_document" + n).empty();
-                        if (value2.document) {
-                            var file = "{{ URL::to('/') }}" + value2.document;
-                            var attachment = '<a href="' + file + '" target="_blank" class="main_document" style="">Click to Open</a>&nbsp;<a href="javascript:void(0);" onclick="delete_document(' + value2.id + ');"><i style="color: red;" class="fas fa-trash"></i></a><br>';
-                            $(".main_document" + n).append(attachment);
-                        }
-                    });
-                    console.log(data.aux_documents);
-
-                    $.each(data.aux_documents, function(key3, value3) {
-                        var n = level - 1;
-                        $(".auxillary_document" + n).empty();
-                        if (value3.document) {
-                            var file = "{{ URL::to('/') }}" + value3.document;
-                            var attachment = '<a href="' + file + '" target="_blank" class="main_document" style="">Click to Open</a>&nbsp;<a href="javascript:void(0);" onclick="delete_document(' + value3.id + ');"><i style="color: red;" class="fas fa-trash"></i></a><br>';
-                            $(".auxillary_document" + n).append(attachment);
-                        }
-                    });
                 }
             });
         }
+
+
     }
     $(function() {
 
@@ -995,42 +1107,6 @@
     });
 
 
-    $(function() {
-        $('.multi-field-wrapper').each(function() {
-            var $wrapper = $('.multi-fields', this);
-
-            $(".add-field", $(this)).click(function(e) {
-
-                var length = $(".multi-field").length;
-                var inputAppends = $(".multi-field input[required]");
-                let identity;
-                $(".notifyAlert").remove();
-
-                $.each(inputAppends, function(index, inputAppend) {
-                    var inputValue = inputAppend.value;
-                    // Do something with the input value in each iteration, such as calling a function
-                    if (inputValue == "") {
-                        identity = $(inputAppend).prev().html();
-                        $(inputAppend).parent().append(`<p class="notifyAlert" style="display: block; color: red;">` + identity + ` Is Mandatory*</p> `);
-                    }
-
-                });
-                if ($(".notifyAlert").length == 0) {
-                    if (length <= 11) {
-                        $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper).find(
-                            'input').val('').focus();
-                    }
-                }
-
-            });
-
-
-            $('.multi-field .remove-field', $wrapper).click(function() {
-                if ($('.multi-field', $wrapper).length > 1)
-                    $(this).parent('.multi-field').remove();
-            });
-        });
-    });
 
 
     function get_document_workflow(document_type_id) {
@@ -1065,6 +1141,7 @@
 
 
     function get_workflow_type(workflow_id) {
+        console.log("Old function done");
         $.ajax({
             url: "{{ url('getWorkflowById') }}",
             type: 'ajax',
@@ -1087,7 +1164,7 @@
                         console.log(WFLevelBtn[wfl].designationId);
                         var levelDesignation = WFLevelBtn[wfl].designationId;
 
-                        var levelBtnRow = '<button type="button" class="tablinks"  onclick="openCity(event, London' + WFLevelBtn[wfl].levelId + ',' + WFLevelBtn[wfl].levelId + ')" id="defaultOpen">Level' + WFLevelBtn[wfl].levelId + '</button>';
+                        var levelBtnRow = '<button type="button" class="tablinks"  onclick="openCity(event, London' + WFLevelBtn[wfl].levelId + ',' + WFLevelBtn[wfl].levelId + ')" id="defaultOpen" >Level' + WFLevelBtn[wfl].levelId + '</button>';
                         $('.tab').append(levelBtnRow);
                         var contentshow = "";
                         if (wfl != 0) {
@@ -1101,25 +1178,27 @@
 
                         levelTabContentData += '<div class="col-md-12 fv-row">';
                         levelTabContentData += '<label class="required fs-6 fw-semibold mb-2">Due Date</label>';
-                        levelTabContentData += '<input type="date" class="form-control duedate due_date' + WFLevelBtn[wfl].levelId + '" name="due_date[]" onclick="set_min_max_value_due_date();" />';
-                        levelTabContentData += '</div>';
+                        levelTabContentData += '<input type="date" required class="form-control w-50 duedate due_date' + WFLevelBtn[wfl].levelId + '" name="due_date[]" onclick="set_min_max_value_due_date();" />';
+                        levelTabContentData += '</div><br><br>';
                         levelTabContentData += '<div class="col-md-12 fv-row"><label class="required fs-6 fw-semibold mb-2">Priority</label><br>';
 
-                        levelTabContentData += '<input id="critical" type="checkbox" class="priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1">&nbsp;&nbsp;';
-                        levelTabContentData += '<input id="low" type="checkbox" class="priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2">&nbsp;&nbsp;';
-                        levelTabContentData += '<input id="medium" type="checkbox" class="priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3">&nbsp;&nbsp;';
-                        levelTabContentData += '<input id="high" type="checkbox" class="priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4">';
+                        levelTabContentData += 'Important <input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1">&nbsp;&nbsp;';
+                        levelTabContentData += 'Medium <input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2">&nbsp;&nbsp;';
+                        levelTabContentData += 'Low <input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3">&nbsp;&nbsp;';
+                        levelTabContentData += 'High <input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" checked>';
 
-                        levelTabContentData += '</div>';
+                        levelTabContentData += '</div><br><br>';
                         levelTabContentData += '<h4>Approvers</h4>';
                         levelTabContentData += ' <div class="col-md-6 fv-row">';
                         for (var lvldesc = 0; lvldesc < levelDesignation.length; lvldesc++) {
                             var levelApprovers = levelDesignation[lvldesc].desEmployee;
 
-                            levelTabContentData += '<h4>' + levelDesignation[lvldesc].desName + '</h4>';
+                            levelTabContentData += '<br><br><h4>' + levelDesignation[lvldesc].desName + '</h4>';
                             var uniqueId = "SelectLevel" + wfl + lvldesc;
+                            var uniqueApproverName = "approver_" + WFLevelBtn[wfl].levelId + "_" + lvldesc;
+                            console.log("uniqueApproverName >" + uniqueApproverName);
                             SelectId.push(uniqueId);
-                            levelTabContentData += '<select class="form-select form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
+                            levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
                             levelTabContentData += '<option></option>';
                             for (var lvlApvrs = 0; lvlApvrs < levelApprovers.length; lvlApvrs++) {
 
@@ -1129,7 +1208,18 @@
                             levelTabContentData += '</select>';
 
                         }
+                        levelTabContentData += '</div><br><br>';
+
+                        levelTabContentData += '<div class="col-md-12 fv-row">';
+                        levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Documents</label><br>';
+                        levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
                         levelTabContentData += '</div';
+
+                        levelTabContentData += '<br><br><div class="col-md-12 fv-row">';
+                        levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Auxillary Documents</label><br>';
+                        levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                        levelTabContentData += '</div';
+
                         levelTabContentData += '</div>';
 
                         $('.LevelTabContent').append(levelTabContentData);
@@ -1145,7 +1235,7 @@
                     $('.levels_to_be_crossed')
                         .find('option')
                         .remove();
-                        for (var i = 0; i < WFLevelBtn.length; i++) {
+                    for (var i = 0; i < WFLevelBtn.length; i++) {
                         console.log("LevelData " + WFLevelBtn[i].levelId);
                         var option = '<option selected value="' + +WFLevelBtn[i].levelId + '">' + +WFLevelBtn[i].levelId +
                             '</option>';
@@ -1161,7 +1251,7 @@
         });
 
         var project_id = $(".project_id").val();
-
+        console.log("project_id" + project_id);
         if (project_id === "") {
             $.ajax({
                 url: "{{ url('getEmployeeByWorkFlow') }}",
@@ -1198,6 +1288,166 @@
 
     }
 
+    function get_workflow_typeEdit(workflow_id) {
+        console.log("this function done");
+        $.ajax({
+            url: "{{ url('getWorkflowByProjectId') }}",
+            type: 'ajax',
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                workflow_id: workflow_id,
+                project_id: $(".project_id").val(),
+            },
+            success: function(result) {
+
+                $('.tab').html("");
+                $('.LevelTabContent').html("");
+                var data = result.response;
+
+                var WFLevelBtn = data.workflow_level;
+
+                var SelectId = [];
+                if (WFLevelBtn) {
+
+                    for (var wfl = 0; wfl < WFLevelBtn.length; wfl++) {
+                       
+                        var levelDesignation = WFLevelBtn[wfl].designationId;
+
+                        var masterData = WFLevelBtn[wfl].projectMasterData;
+                        var projectApprovers = WFLevelBtn[wfl].projectApprovers;
+                     
+                        var priority = masterData.priority;
+                        var due_date = masterData.due_date;
+                        console.log(projectApprovers);
+
+                        var levelBtnRow = '<button type="button" class="tablinks"  onclick="openCity(event, London' + WFLevelBtn[wfl].levelId + ',' + WFLevelBtn[wfl].levelId + ')" id="defaultOpen" >Level' + WFLevelBtn[wfl].levelId + '</button>';
+                        $('.tab').append(levelBtnRow);
+                        var contentshow = "";
+                        if (wfl != 0) {
+                            contentshow = "style='display:none'";
+                        }
+
+                        var levelTabContentData = '<div id="London' + WFLevelBtn[wfl].levelId + '" class="tabcontent" ' + contentshow + '>';
+                        levelTabContentData += '<br><h4 style="text-align:center;">Level' + WFLevelBtn[wfl].levelId + '</h4>';
+
+                        levelTabContentData += '<input type="hidden" class="project_level' + WFLevelBtn[wfl].levelId + '" name="project_level[]" value="' + WFLevelBtn[wfl].levelId + '">';
+
+                        levelTabContentData += '<div class="col-md-12 fv-row">';
+                        levelTabContentData += '<label class="required fs-6 fw-semibold mb-2">Due Date</label>';
+                        levelTabContentData += '<input type="date" required class="form-control w-50 duedate due_date' + WFLevelBtn[wfl].levelId + '" name="due_date[]" onclick="set_min_max_value_due_date();" value="'+due_date+'"/>';
+                        levelTabContentData += '</div><br><br>';
+                        levelTabContentData += '<div class="col-md-12 fv-row"><label class="required fs-6 fw-semibold mb-2">Priority</label><br>';
+                        var check1 = (priority ==1)?"checked":"";
+                        var check2 = (priority ==2)?"checked":"";
+                        var check3 = (priority ==3)?"checked":"";
+                        var check4 = (priority == 4)?"checked":"";
+
+                        levelTabContentData += 'Important <input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1" '+check1+'>&nbsp;&nbsp;';
+                        levelTabContentData += 'Medium <input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2" '+check2+'>&nbsp;&nbsp;';
+                        levelTabContentData += 'Low <input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3" '+check3+'>&nbsp;&nbsp;';
+                        levelTabContentData += 'High <input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" '+check4+'>';
+
+                        levelTabContentData += '</div><br><br>';
+                        levelTabContentData += '<h4>Approvers</h4>';
+                        levelTabContentData += ' <div class="col-md-6 fv-row">';
+                        for (var lvldesc = 0; lvldesc < levelDesignation.length; lvldesc++) {
+                            var levelApprovers = levelDesignation[lvldesc].desEmployee;
+
+                            levelTabContentData += '<br><br><h4>' + levelDesignation[lvldesc].desName + '</h4>';
+                            var uniqueId = "SelectLevel" + wfl + lvldesc;
+                            var uniqueApproverName = "approver_" + WFLevelBtn[wfl].levelId + "_" + lvldesc;
+                            console.log("uniqueApproverName >" + uniqueApproverName);
+                            SelectId.push(uniqueId);
+                            levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
+                            levelTabContentData += '<option></option>';
+                            for (var lvlApvrs = 0; lvlApvrs < levelApprovers.length; lvlApvrs++) {
+                                var selectedStatus = (projectApprovers.includes( levelApprovers[lvlApvrs].id))?"selected":"";
+                                levelTabContentData += '<option value="' + levelApprovers[lvlApvrs].id + '" '+selectedStatus+'>' + levelApprovers[lvlApvrs].first_name + '</option>';
+
+                            }
+                            levelTabContentData += '</select>';
+
+                        }
+                        levelTabContentData += '</div><br><br>';
+
+                        levelTabContentData += '<div class="col-md-12 fv-row">';
+                        levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Documents</label><br>';
+                        levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                        levelTabContentData += '</div';
+
+                        levelTabContentData += '<br><br><div class="col-md-12 fv-row">';
+                        levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Auxillary Documents</label><br>';
+                        levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                        levelTabContentData += '</div';
+
+                        levelTabContentData += '</div>';
+
+                        $('.LevelTabContent').append(levelTabContentData);
+
+                    }
+                    SelectId.forEach(function(selectId) {
+                        $("#" + selectId).select2();
+                    });
+
+                }
+
+                if (WFLevelBtn.length) {
+                    $('.levels_to_be_crossed')
+                        .find('option')
+                        .remove();
+                    for (var i = 0; i < WFLevelBtn.length; i++) {
+                        console.log("LevelData " + WFLevelBtn[i].levelId);
+                        var option = '<option selected value="' + +WFLevelBtn[i].levelId + '">' + +WFLevelBtn[i].levelId +
+                            '</option>';
+                        $('.levels_to_be_crossed').append(option);
+                    }
+
+
+                    $(".total_levels").val(WFLevelBtn.length);
+                } else {
+                    $(".total_levels").val(0);
+                }
+            }
+        });
+
+        var project_id = $(".project_id").val();
+
+        if (project_id === "") {
+            $.ajax({
+                url: "{{ url('getEmployeeByWorkFlow') }}",
+                method: "POST",
+                type: "ajax",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    workflow_id: workflow_id,
+                    level: 1,
+                },
+                success: function(employee) {
+                    var data1 = JSON.parse(employee);
+                    console.log(data1);
+                    if (data1.designation_name) {
+                        $(".staff_label").html(data1.designation_name);
+                    }
+                    if (data1.employees) {
+                        $('.employee_append1')
+                            .find('option')
+                            .remove();
+                        $(".employee_append1").prepend("<option value=''>Select</option>").val('');
+                        $.each(data1.employees, function(key1, value1) {
+                            var option = '<option value="' + value1.id + '">' + value1.first_name + " " + value1.last_name +
+                                '</option>';
+                            $('.employee_append1').append(option);
+                        });
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+    }
 
     function clear_form() {
         $(".sap_id").val("");
@@ -1227,7 +1477,9 @@
 
         });
 
-
+    $(document).on('change', '.priority', function() {
+        $('input[name="priority[]"]').not(this).prop('checked', false);
+    });
 
     function delete_item(id) {
         Swal.fire({
@@ -1269,7 +1521,7 @@
     function get_employee_details(emp_id) {
         var workflow_id = $(".workflow_edit").find(":selected").val();
         if (workflow_id) {
-            get_workflow_type(workflow_id);
+            // get_workflow_typeEdit(workflow_id);
         }
 
         $.ajax({
@@ -1310,14 +1562,14 @@
                 $(".start_date").val(data.project.start_date);
                 $(".end_date").val(data.project.end_date);
                 $(".role").val(data.project.role);
-                $(".initiator_id").val(data.project.initiator_id);
+                $(".initiator_id").val(data.project.initiator_id).trigger('change')
                 $(".document_type_id").val(data.project.document_type_id);
                 // $(".total_levels").val(data.project);
-                get_document_workflow(data.project.document_type_id);
+                //get_document_workflow(data.project.document_type_id);
                 $(".workflow_id").val(data.project.workflow_id).prop("selected", true);
                 $(".workflow_hidden").val(data.project.workflow_id);
                 set_min(data.project.start_date);
-                get_workflow_type(data.project.workflow_id);
+                get_workflow_typeEdit(data.project.workflow_id);
                 get_employee_details(data.project.initiator_id);
 
                 $(".multi-fields").html("");
@@ -1421,5 +1673,41 @@
     function remove_more() {
         $(".multi-fields").children("div[class=multi-field]:last").remove()
         // $(".multi-fields .multi-field:last-child").remove();
+    }
+
+    function deletepdf(event) {
+
+        var connect = $(event).prev().attr('connect_id');
+        $("input").filter("[connect_id='" + connect + "']").remove();
+        $("iframe , img").filter("[connect_id='" + connect + "']").parent().remove();
+
+    }
+
+
+
+
+
+    function pdfPreview(file) {
+
+        var pdfFile = file.files[0];
+        var uniqueNumber = "in-if" + Date.now() + Math.random();
+        file.setAttribute('connect_id', uniqueNumber);
+
+        if (pdfFile["name"].endsWith(".pdf")) {
+            var objectURL = URL.createObjectURL(pdfFile);
+            var FileParent = $(file).parent();
+            $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><iframe src="' + objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber + '" scrolling="no"></iframe><button class="btn btn-danger btn-sm pdf_delete_btn  " onclick="deletepdf(this)">Delete</button></div>');
+            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;">');
+            $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
+        } else {
+            var objectURL = " https://download.logo.wine/logo/Microsoft_Excel/Microsoft_Excel-Logo.wine.png";
+            var FileParent = $(file).parent();
+            $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><img src="' + objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber + '" scrolling="no"></img><button class="btn btn-danger btn-sm pdf_delete_btn  " onclick="deletepdf(this)">Delete</button></div>');
+            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;">');
+            $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
+        }
+
+
+
     }
 </script>

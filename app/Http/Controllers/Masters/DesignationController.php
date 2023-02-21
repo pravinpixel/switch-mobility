@@ -85,4 +85,10 @@ class DesignationController extends Controller
         }
         return response()->json($data);
     }
+    public function changeDesignationActiveStatus(Request $request)
+    {
+        $employee_update = Designation::where("id", $request->id)->update(["is_active" => $request->status]);
+      
+        echo json_encode($employee_update);
+    }
 }

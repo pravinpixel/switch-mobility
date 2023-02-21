@@ -83,4 +83,13 @@ class DepartmentController extends Controller
         }
         return response()->json($data);
     }
+    public function changedepartmentActiveStatus(Request $request)
+    {
+        $employee_update = Department::where("id", $request->id)->update(["is_active" => $request->status]);
+        echo json_encode($employee_update);
+    }
+    public function departmentValidation(Request $request)
+    {
+    dd($request->all());
+    }
 }

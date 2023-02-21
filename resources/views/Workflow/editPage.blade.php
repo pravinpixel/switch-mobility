@@ -89,8 +89,9 @@
                                     <input type="hidden" class="form-control form-control-solid" name="workflow_id" value="{{$modelWorkflow->id}}">
                                     <!--end::Input-->
 
-                                    <input type="text" class="form-control form-control-solid" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" value="{{$modelWorkflow->workflow_code}}">
+                                    <input type="text" class="form-control form-control-solid wfCode" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" value="{{$modelWorkflow->workflow_code}}">
                                     <!--end::Input-->
+                                    <p id="wfCodeAlert" class="notifyAlert"></p>
                                 </div>
                                 <!--end::Col-->
                                 <!--begin::Col-->
@@ -142,9 +143,13 @@
                                             <!--begin::Input group-->
                                             <div class="fullLevelFlow" data-kt-ecommerce-catalog-add-product="auto-options">
                                                 <!--begin::Repeater-->
-                                                @for($k=0;$k<count($entities);$k++)
+                                                <?php
+                                                $arrayN=0;
+                                                ?>
+                                                @for($k=0;$k<11;$k++)
+                                                
                                                         <div id="kt_ecommerce_add_product_options1">
-                                                            <?php $a = count($entities);
+                                                            <?php $a = 11;
                                                                 $b = $a - 1; ?>
                                                             <!--begin::Form group-->
                                                             <div class="form-group">
@@ -154,24 +159,38 @@
                                                                         <div class="col-md-4">
                                                                             <select class="form-select product_option2" name="levels[]" data-placeholder="Select a variation" data-kt-ecommerce-catalog-add-product="product_option" disabled>
                                                                                 <option value="">Select Level</option>
-                                                                                @for($i=1;$i<12;$i++) <option value="{{$i}}" <?php echo ($entities[$k]['levelId'] == $i) ? "selected" : ""; ?>>Level {{$i}}</option>
+                                                                                @for($i=1;$i<12;$i++) <option value="{{$i}}" <?php echo ($k+1 >= $i) ? "selected" : ""; ?> >Level {{$i}}</option>
                                                                                     @endfor
                                                                             </select>
                                                                         </div>
                                                                         <!--end::Select2-->
                                                                         <!--begin::Input-->
                                                                         <div class="col-md-3 fv-row">
-                                                                            <select class="form-select mb-2 designation" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="approver_designation{{$entities[$k]['levelId']}}[]">
+                                                                            <select class="form-select mb-2 designation" required data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="fapprover_designation{{$k+1}}[]">
+                                                                                
+                                                                                <?php
+                                                                                // $arrayN=0;
+                                                                                $designLoops=[];
+                                                                                $arrayLength = count($entities);
+                                                                                if ($k+1 == $entities[$arrayN]["levelId"] ) {
+                                                                                    $arrayN = $arrayN + 1;
+                                                                                    if ($arrayN == $arrayLength) {
+                                                                                       $arrayN=0;
+                                                                                    }
+                                                                                   $designLoops=$entities[$arrayN]["designationId"];
+                                                                                
+                                                                                }
+                                                                                // $option = ['designationId'];
+                                                                                // $selectedAttribute = '';      ?>
+                                                                                
                                                                                 @foreach($designationDatas as $designationData)
 
-                                                                                <?php $option = $entities[$k]['designationId'];
-                                                                                $selectedAttribute = '';
-                                                                                if (in_array($designationData->id, $option)) {
-                                                                                    $selectedAttribute = 'selected';
-                                                                                }
-
-                                                                                $selectedAttribute1 = $option == $designationData->id ? 'selected' : 'no'; ?>
-                                                                                <option value="{{$designationData->id}}" <?php echo $selectedAttribute; ?>>{{$designationData->name}}</option>
+                                                                               
+                                                                             
+                                        
+                                                                                <option value="{{$designationData->id}}" <?php if (in_array($designationData->id, $designLoops)) {
+                                                                                    echo "selected ";
+                                                                                } ?>    >{{$designationData->name}}</option>
                                                                                 @endforeach
                                                                             </select>
 
@@ -197,6 +216,9 @@
                                     <!--end::Card header-->
                                 </div>
                             </center>
+                            <script>
+
+                            </script>
                             <div class="col-md-12 fv-row partialWorkflow" style="display:none;">
                                 <!--begin::Variations-->
                                 <div class="card card-flush py-4">
@@ -312,7 +334,7 @@
                             {{-- FORM --}}
                             <div class="text-center pt-15">
                                 <button type="reset" class="btn btn-light me-3">Reset</button>
-                                <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
+                                <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit" id="submitBtn">
                                     <span class="indicator-label">Save and Exit</span>
                                     <span class="indicator-progress">Please wait...
                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -331,6 +353,43 @@
             // code to run when form is reset
             location.reload();
         });
+        $(document).on('blur', '.wfCode', function() {
+        console.log($(this).val());
+        $.ajax({
+            url: "{{ route('workflowValidation') }}",
+            type: 'ajax',
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                code: $(this).val(),
+                id:"{{$modelWorkflow->id}}",
+            },
+            success: function(data) {
+                var alertName = 'wfCodeAlert';
+                console.log(data.response);
+                console.log(alertName);
+
+                if (data.response == false) {
+                    $('#submitBtn').attr('disabled', true);
+
+                    document.getElementById(alertName).style.display = "block";
+                    document.getElementById(alertName).style.color = "red";
+                    document.getElementById(alertName).innerHTML = 'Code Is Exists*';
+                    return false;
+                }
+                document.getElementById(alertName).style.display = "none";
+                $('#submitBtn').attr('disabled', false);
+                return true;
+
+
+            },
+            error: function() {
+                $("#otp_error").text("Update Error");
+            }
+
+        });
+
+    });
         var checkOption = $(".product_option1");
         if ($(checkOption[checkOption.length - 1]).val() == 11) {
 if (checkOption.length != 1) {

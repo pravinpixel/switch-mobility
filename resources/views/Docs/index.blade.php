@@ -114,184 +114,156 @@
         background-color: green;
     }
 </style>
-    <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
-        <!--begin::Content wrapper-->
-        <div class="d-flex flex-column flex-column-fluid">
-            <!--begin::Toolbar-->
-            <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
-                <!--begin::Toolbar container-->
-                <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
-                    <!--begin::Page title-->
-                    <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                        <!--begin::Title-->
-                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Document Listing</h1>
-                        <!--end::Title-->
-                        <!--begin::Breadcrumb-->
-                        <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-                            <!--begin::Item-->
-                            <li class="breadcrumb-item text-muted">
-                                <a href="#" class="text-muted text-hover-primary">Document Listing</a>
-                            </li>
-                            <!--end::Item-->
+<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+    <!--begin::Content wrapper-->
+    <div class="d-flex flex-column flex-column-fluid">
+        <!--begin::Toolbar-->
+        <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
+            <!--begin::Toolbar container-->
+            <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
+                <!--begin::Page title-->
+                <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+                    <!--begin::Title-->
+                    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                        Document Listing</h1>
+                    <!--end::Title-->
+                    <!--begin::Breadcrumb-->
+                    <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                        <!--begin::Item-->
+                        <li class="breadcrumb-item text-muted">
+                            <a href="#" class="text-muted text-hover-primary">Document Listing</a>
+                        </li>
+                        <!--end::Item-->
 
 
 
 
-                        </ul>
-                        <!--end::Breadcrumb-->
-                    </div>
-                    <!--end::Page title-->
-
+                    </ul>
+                    <!--end::Breadcrumb-->
                 </div>
+                <!--end::Page title-->
+
             </div>
-            <div id="kt_app_content" class="app-content flex-column-fluid">
-                <div id="kt_app_content_container" class="app-container container-xxl">
-                    <div class="card">
-                        @if (session('success'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('success') }}
-                            </div>
-                        @endif
-                        @if (session('error'))
-                            <div class="alert alert-danger" role="alert">
-                                {{ session('error') }}
-                            </div>
-                        @endif
-                        
-                        <!--end::Card header-->
-                        <div class="card-body">
-                            <form method="post" action="{{url('Search')}}">
-                                @csrf
+        </div>
+        <div id="kt_app_content" class="app-content flex-column-fluid">
+            <div id="kt_app_content_container" class="app-container container-xxl">
+                <div class="card">
+                    @if (session('success'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('success') }}
+                    </div>
+                    @endif
+                    @if (session('error'))
+                    <div class="alert alert-danger" role="alert">
+                        {{ session('error') }}
+                    </div>
+                    @endif
+
+                    <!--end::Card header-->
+                    <div class="card-body">
+                        <form method="post">
+                            @csrf
                             <!--begin::Row-->
                             <div class="row g-8">
                                 <!--begin::Col-->
                                 <div class="col-md-4">
-                                    <label class="fs-6 form-label fw-bold text-dark"> Ticket No.</label>
-                                    <select class="form-select form-select-solid filterDeptAndDes" name="ticket_no" data-kt-select2="true"
-                                        data-placeholder="Ticket No" data-allow-clear="true" id="">
-                                        <option></option> 
+                                    <label class="fs-6 form-label fw-bold text-dark "> Ticket No. </label>
+                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="ticket_no" data-kt-select2="true" data-placeholder="Ticket No" data-allow-clear="true" id="ticketno">
+                                        <option></option>
                                         @foreach($projects as $project)
-                                        <option value="{{$project['id']}}">{{$project['id']}}</option> 
-                                        @endforeach            
-                  </select>
+                                        <option name="ticket_no" value="{{$project['ticket_no']}}">{{$project['ticket_no']}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <!--end::Col-->
 
                                 <!--begin::Col-->
                                 <div class="col-md-4">
-                                    <label class="fs-6 form-label fw-bold text-dark">Project Code / Name</label>
-                                    <select class="form-select form-select-solid filterDeptAndDes" name="project_code_name" data-kt-select2="true"
-                                        data-placeholder="Project Code / Name" data-allow-clear="true" id="designationFilter">
-                                        <option></option>  
+                                    <label class="fs-6 form-label fw-bold text-dark ">Project Code / Name </label>
+                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="project_code_name" data-kt-select2="true" data-placeholder="Project Code / Name" data-allow-clear="true" id="projectCode">
+                                        <option></option>
                                         @foreach($projects as $project)
-                                        <option value="{{$project['id']}}">{{$project['project_code']}}  {{$project['project_name']}}</option> 
-                                        @endforeach                 
-                  </select>
+                                        <option value="{{$project['project_code']}}">{{$project['project_code']}} {{$project['project_name']}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="fs-6 form-label fw-bold text-dark"> WorkFlow Code/Name</label>
+                                    <label class="fs-6 form-label fw-bold text-dark "> WorkFlow Code/Name </label>
                                     <!--begin::Select-->
-                                    <select class="form-select form-select-solid filterDeptAndDes" name="workflow" data-kt-select2="true"
-                                    data-placeholder="WorkFlow Code/Name" data-allow-clear="true" id="">
-                                    <option></option>   
-                                    @foreach ($workflow as $wf)
-                                    <option value="{{ $wf['id'] }}"> {{ $wf['workflow_code'] }}   {{ $wf['workflow_name'] }}
-                                    </option>
-                                @endforeach          
-              </select>
+                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="workflow_code_name" data-kt-select2="true" data-placeholder="WorkFlow Code/Name" data-allow-clear="true" id="workflow">
+                                        <option></option>
+                                        @foreach ($workflow as $wf)
+                                        <option value="{{ $wf['workflow_code'] }}"> {{ $wf['workflow_code'] }} {{ $wf['workflow_name'] }}
+                                        </option>
+                                        @endforeach
+                                    </select>
                                     <!--end::Select-->
                                 </div>
-                                <!--end::Col-->
-                                <h4> Date Period</h4>
-                                <!--begin::Col-->
+                                <div class="col-lg-3">
+                                    <label class="fs-6 form-label fw-bold text-dark"> Department </label>
+                                    <!--begin::Select-->
+                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="department" data-kt-select2="true" data-placeholder="Department" data-allow-clear="true" id="deptId">
+                                        <option></option>
+                                        @foreach ($departments as $dept)
+                                        <option name="department" value="{{ $dept['id'] }}">{{ $dept['name'] }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    <!--end::Select-->
+                                </div>
+                                <div class="col-lg-3">
+                                    <label class="fs-6 form-label fw-bold text-dark"> Designation </label>
+                                    <!--begin::Select-->
+                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="designation" data-kt-select2="true" data-placeholder="Designation" name="designation" data-allow-clear="true" id="desgId">
+                                        <option></option>
+                                        @foreach ($designation as $des)
+                                        <option value="{{ $des['id'] }}">{{ $des['name'] }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    <!--end::Select-->
+                                </div>
+
+                                <div class="col-lg-2">
+                                    <label class="fs-6 form-label fw-bold text-dark"> Users </label>
+                                    <!--begin::Select-->
+                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="users" data-kt-select2="true" data-placeholder="Users" data-allow-clear="true" id="users">
+                                        <option></option>
+                                        @foreach ($employee as $emp)
+                                        <option value="<?php echo $emp['id']; ?>"><?php echo $emp['first_name'] . ' ' . $emp['last_name']; ?></option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="col-sm-2">
                                     <label class="fs-6 form-label fw-bold text-dark">Start Date</label>
-                                    <input type="date" class="form-control" name="start_date"
-                                        placeholder="Enter Start Date">
+                                    <input type="date" class="form-control" id="startDate" name="start_date" placeholder="Enter Start Date">
                                 </div>
-                                <!--end::Col-->
-
-                                <!--begin::Col-->
                                 <div class="col-sm-2">
                                     <label class="fs-6 form-label fw-bold text-dark">End Date</label>
-                                    <input type="date" class="form-control" name="end_date" placeholder="Enter End Date">
-                                </div>
-                                <!--end::Col-->
-
-                                <!--begin::Col-->
-                                <div class="col-lg-2">
-                                    <label class="fs-6 form-label fw-bold text-dark"> Users</label>
-                                    <!--begin::Select-->
-                                    <select class="form-select form-select-solid filterDeptAndDes" name="users" data-kt-select2="true"
-                                    data-placeholder="Users" data-allow-clear="true" id="">
-                                    <option></option>
-                                    @foreach ($employee as $emp)
-                                        <option value="<?php echo $emp['id']; ?>"><?php echo $emp['first_name'] . ' ' . $emp['last_name']; ?></option>
-                                        @endforeach               
-                                </select>
-                                
-                                </div>
-                                <!--end::Col-->
-
-                                <!--begin::Col-->
-                                <!--end::Col-->
-
-                                <!--begin::Col-->
-                                <div class="col-lg-3">
-                                    <label class="fs-6 form-label fw-bold text-dark"> Department</label>
-                                    <!--begin::Select-->
-                                    <select class="form-select form-select-solid filterDeptAndDes" name="" data-kt-select2="true"
-                                    data-placeholder="Department" data-allow-clear="true" id="">
-                                    <option></option>  
-                                    @foreach ($departments as $dept)
-                                        <option value="{{ $dept['id'] }}">{{ $dept['name'] }}
-                                        </option>
-                                        @endforeach             
-                                </select>
-                                    <!--end::Select-->
-                                </div>
-                                <div class="col-lg-3">
-                                    <label class="fs-6 form-label fw-bold text-dark"> Designation</label>
-                                    <!--begin::Select-->
-                                    <select class="form-select form-select-solid filterDeptAndDes" data-kt-select2="true"
-                                    data-placeholder="Designation" data-allow-clear="true" id="">
-                                    <option></option>
-                                    @foreach ($designation as $des)
-                                    <option value="{{ $des['image'] }}">{{ $des['name'] }}
-                                    </option>
-                                    @endforeach               
-                                </select>
-                                    <!--end::Select-->
+                                    <input type="date" class="form-control doclistFilter" id="endDate" name="end_date" placeholder="Enter End Date">
                                 </div>
                                 <!--end::Col-->
                                 <div class="col-lg-4">
-                                    
+
                                     <span class="svg-icon svg-icon-1 position-absolute ms-4">
-                                        <svg width="20" height="24" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546"
-                                                height="2" rx="1" transform="rotate(45 17.0365 15.1223)"
-                                                fill="currentColor" />
-                                            <path
-                                                d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                                                fill="currentColor" />
+                                        <svg width="20" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
+                                            <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
                                         </svg>
                                     </span>
-                                    <input type="text" id="searchInput" data-kt-user-table-filter="search"
-                                    class="form-control form-control-solid ps-14" placeholder="Search" />
-                                    </div>
-                                
-                                <div class="col-lg-4">
-                                    <label class="fs-6 form-label fw-bold text-dark"></label>
+                                    <input type="text" id="searchInput" data-kt-user-table-filter="search" class="form-control form-control-solid ps-14" placeholder="Search" />
+                                </div>
+
+                                {{-- <div class="col-lg-4 mt-5">
+                                    <label class="fs-6 form-label fw-bold text-dark "></label>
                                     <button type="submit" class="form-control btn btn-primary" data-kt-users-modal-action="submit">Search</button>
                                     </div>   
 
-                            </div>
-                            <!--end::Row-->
-                           
+                            </div> --}}
+                                <!--end::Row-->
+
                         </form>
-                        
+
 
                         <hr>
                         <table class="table align-middle table-row-dashed fs-6 gy-5" id="service_table">
@@ -305,15 +277,20 @@
                                     <th class="min-w-125px">Work Flow Code & Name</th>
                                     <th class="min-w-125px">Initiator</th>
                                     <th class="min-w-125px">Department</th>
-                                    <th >Status</th>
+                                    <th class="">Action</th>
                                 </tr>
                                 <!--end::Table row-->
                             </thead>
                             <!--end::Table head-->
                             <!--begin::Table body-->
-                            <tbody class="text-gray-600 fw-semibold">
+                            <tbody class="text-gray-600 fw-semibold" id="service_table_tbody">
                                 <!--begin::Table row-->
                                 @foreach($order_at as $key=>$d)
+                                <?php
+                                $WorkFlow = $d->workflow;
+                                $initiator = $d->employee;
+                                $department = $initiator->department;
+                                ?>
                                 <tr>
                                     <!--begin::Checkbox-->
 
@@ -324,32 +301,27 @@
                                     </td>
 
                                     <td>{{$d->project_name.' '.$d->project_code}}</td>
-                                    <td>{{$d->workflow_name.' '.$d->workflow_code}}</td>
-                                    <td>{{$d->first_name.' '.$d->last_name}}</td>
-                                    <td>{{$d->department}}</td>
-                                    @if($d->is_active==1)
-                                    <td><button type="button" class="btn btn-success btn-sm float-right">Aproved</button></td>
-                                    @else{
-                                    <td><button type="button" class="btn btn-warning btn-sm">Pending</button></td>
+                                    <td>{{$WorkFlow->workflow_name.' & '.$WorkFlow->workflow_code}}</td>
+                                    <td>{{$initiator->first_name.' '.$initiator->last_name}}</td>
+                                    <td>{{$department->name}}</td>
+                                    <td><a href="{{url('viewProject/'.$d->id)}}"><i class="fa-solid fa-eye"></i>View</a></td>
 
-                                    }
-                                    @endif
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
 
-                        </div>
                     </div>
                 </div>
             </div>
-
-
-
-            
         </div>
 
+
+
+
     </div>
+
+</div>
 
 
 
@@ -746,7 +718,7 @@
 
                             </div>
                             @endfor
-                                    <input type="hidden" class="project_id" name="project_id" disabled>
+                            <input type="hidden" class="project_id" name="project_id" disabled>
                             <!-- Levels Tab -->
                         </div>
                         <!--end::Wrapper-->
@@ -817,15 +789,77 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 <script>
-        
-$(document).ready(function (){
-    $('.modal').each(function (){
-        $(this).on('hidden.bs.modal', function () {
-            window.location.reload();
-            //fires when evey popup close. Ex. resetModal();
+    $(document).ready(function() {
+        var table = $('#service_table').DataTable({
+            "lengthMenu": [
+                [10, 25, 50, -1],
+                [10, 25, 50, "All"]
+            ]
+        });
+
+        $('.modal').each(function() {
+            $(this).on('hidden.bs.modal', function() {
+                window.location.reload();
+                //fires when evey popup close. Ex. resetModal();
+            });
+        });
+        $('.doclistFilter').on('change', function() {
+
+            var ticketNo = $('#ticketno').val();
+            var projectCode = $('#projectCode').val();
+            var workflow = $('#workflow').val();
+            var user = $('#users').val();
+            var deptId = $('#deptId').val();
+            var desgId = $('#desgId').val();
+            var startdate = $('#startDate').val();
+            var enddate = $('#endDate').val();
+            $.ajax({
+                url: "{{ route('docListingSearch')}}",
+                type: 'ajax',
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    ticket_no: ticketNo,
+                    project_code_name: projectCode,
+                    workflow_code_name: workflow,
+                    users: user,
+                    start_date: startdate,
+                    end_date: enddate,
+                    department: deptId,
+                    designation: desgId,
+                },
+                success: function(data) {
+                    table.clear().draw();
+                    $.each(data, function(key, val) {
+                        var ticketNo = val.ticket_no;
+                        var deptName = val.deptName;
+                        var initiator = val.first_name;
+                        var projectCode = val.project_code;
+                        var projectName = val.project_name;
+                        var wfCode = val.workflow_code;
+                        var wfName = val.workflow_name;
+                        var projectId = val.projectId;
+                  
+                        var viewurl = '{{ route("viewProject", ":id") }}';
+                        viewurl = viewurl.replace(':id', projectId);
+
+                        var action = '<a href="' + viewurl + '"><i class="fa-solid fa-eye"></i>View</a>'
+                        table.row.add([ticketNo, projectCode + projectName, wfCode + wfName, initiator, deptName, action]).draw();
+                    });
+                    $('.doclistFilter option:selected').prop("selected", false);
+                    //   $('.select2-selection__clear').remove();  
+                    //   $('span.select2-selection__rendered').empty(); 
+                    //   $('.doclistFilter').attr("data-placeholder", "Tricket_No");
+
+                    //     // $('.select2-selection__rendered').prop("selected", false);
+
+                },
+                error: function() {
+                    $("#otp_error").text("Update Error");
+                }
+            });
         });
     });
-});
 
     function openCity(evt, cityName) {
         var i, tabcontent, tablinks;
@@ -942,12 +976,6 @@ $(document).ready(function (){
 
     $(document).ready(
         function() {
-            $('#service_table').DataTable({
-                "lengthMenu": [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, "All"]
-                ]
-            });
 
         });
 
@@ -1037,7 +1065,6 @@ $(document).ready(function (){
                 $(".workflow_id").val(data.project.workflow_id);
                 get_workflow_type(data.project.workflow_id);
                 get_employee_details(data.project.initiator_id);
-
                 $(".multi-fields").html("");
                 $.each(data.milestone, function(key, val) {
                     $(".multi-fields").append('<div class="multi-field"><div class="row"><div class="col-md-4 fv-row"><label class="required fs-6 fw-semibold mb-2">Mile Stone</label><input type="text" class="form-control" name="milestone[]" value="' + val.milestone + '"></div><div class="col-md-4 fv-row"><label class="required fs-6 fw-semibold mb-2">Planned Date</label><input type="date" class="form-control" name="planned_date[]" value="' + val.planned_date + '"></div><div class="col-md-4 fv-row"><label class="required fs-6 fw-semibold mb-2">Level To Be Crossed</label><select class="form-control levels_to_be_crossed" name="level_to_be_crosssed[]"><option value="">Select</option>@for($i=1; $i<=11; $i++)<option <?php echo "'+val.levels_to_be_crossed+'=={{$i}}" ? "selected" : ''; ?> value="{{$i}}">{{$i}}</option>@endfor</select></div></div><br><button type="button" class="btn btn-sm btn-danger remove-field1" onclick="remove_more();">Remove</button><button type="button" class="btn btn-sm btn-success add-field1" onclick="append_more();">Add field</button></div>');
@@ -1048,8 +1075,8 @@ $(document).ready(function (){
                     $(".priority" + val1.priority + key).attr('checked', 'checked');
                     $(".staff" + key).val(val1.staff);
                     $(".hod" + key).val(val1.hod);
-                    $(".main_document" + key).attr("href", "{{ URL::to('/') }}/main_document/"+val1.main_document);
-                    $(".auxillary_document" + key).attr("href", "{{ URL::to('/') }}/auxillary_document/"+val1.auxillary_document);
+                    $(".main_document" + key).attr("href", "{{ URL::to('/') }}/main_document/" + val1.main_document);
+                    $(".auxillary_document" + key).attr("href", "{{ URL::to('/') }}/auxillary_document/" + val1.auxillary_document);
                     $(".main_document" + key).show();
                     $(".auxillary_document" + key).show();
                 });

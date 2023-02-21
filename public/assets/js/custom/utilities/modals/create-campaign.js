@@ -80,14 +80,14 @@ var KTCreateCampaign = (function () {
                         KTUtil.scrollTop();
                 }),
                 n.addEventListener("click", function (e) {
-                    e.preventDefault(),
-                        (n.disabled = !0),
-                        n.setAttribute("data-kt-indicator", "on"),
-                        setTimeout(function () {
-                            n.removeAttribute("data-kt-indicator"),
-                                (n.disabled = !1),
-                                i.goNext();
-                        }, 2e3);
+                    // e.preventDefault(),
+                    //     (n.disabled = !0),
+                    //     n.setAttribute("data-kt-indicator", "off"),
+                    //     setTimeout(function () {
+                    //         n.removeAttribute("data-kt-indicator"),
+                    //             (n.disabled = !0),
+                    //             i.goNext();
+                    //     }, 2e3);
                 }),
                 (function () {
                     var e = document.querySelector(

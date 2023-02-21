@@ -104,7 +104,7 @@
                                             <h2 class="fw-bold">Add</h2>
                                             <!--end::Modal title-->
                                             <!--begin::Close-->
-                                            <div class="btn btn-icon btn-sm btn-active-icon-danger" data-bs-dismiss="modal">
+                                            <div class="btn btn-icon btn-sm btn-active-icon-danger" data-bs-dismiss="modal" onclick=" document.location.reload();">
                                                 <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
                                                 <span class="svg-icon svg-icon-1">
                                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -123,35 +123,18 @@
                                             <form id="department_form" class="form" method="post" action="{{url('users')}}">
                                                 @csrf
 
-
                                                 <div class="row g-9 mb-7">
-                                                    <!--begin::Col-->
-                                                    <div class="col-md-12 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="required fs-6 fw-semibold mb-2">Enter SAP-ID </label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <input class="form-control form-control-solid sapId" placeholder="Enter Sap-Id 1" name="sapId" id="sapId" required autocomplete="off" />
-                                                        <input type="hidden" class="form-control form-control-solid" placeholder="Enter Sap-Id 1" name="id" required />
-                                                        <input type="hidden" class="form-control form-control-solid empId" placeholder="Enter Sap-Id 1" name="empId" required />
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--end::Col-->
-
-                                                </div>
-
-                                                <div class="row g-9 mb-7">
-                                                    <!--begin::Col-->
-                                                    <div class="col-md-12 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="required fs-6 fw-semibold mb-2">Name</label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <input class="form-control form-control-solid name" name="name" readonly required />
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--end::Col-->
-
+                                                    <!--begin::Label-->
+                                                    <label class="required fs-6 fw-semibold mb-2">Enter SAP-ID Or Name</label>
+                                                    <!--end::Label-->
+                                                    <!--begin::Input-->
+                                                    <select class="form-control form-control initiator_id" name="initiator_id" required>
+                                                        <option value="">Select</option>
+                                                        @foreach ($employees as $emp)
+                                                        <option value="<?php echo $emp['id']; ?>"><?php echo $emp['first_name'] . ' ' . $emp['last_name'] . '(' . $emp['sap_id'] . ')'; ?></option>
+                                                        @endforeach
+                                                    </select>
+                                                    <!--end::Input-->
                                                 </div>
 
                                                 <div class="row g-9 mb-7">
@@ -187,7 +170,7 @@
                                                         <label class="required fs-6 fw-semibold mb-2">Role</label>
                                                         <!--end::Label-->
                                                         <!--begin::Input-->
-                                                        <select class="form-control form-control-solid" name="roles" required>
+                                                        <select class="form-control form-control roles" name="roles" required>
                                                             <option value="">Select</option>
                                                             @foreach ($roles as $role)
                                                             <option value="<?php echo $role['id']; ?>"><?php echo $role['name']; ?></option>
@@ -196,7 +179,7 @@
                                                         <!--end::Input-->
                                                     </div>
                                                 </div>
-                                              
+
                                                 <div class="row g-9 mb-7">
                                                     <!--begin::Col-->
                                                     <div class="col-md-12 fv-row">
@@ -204,7 +187,7 @@
                                                         <label class="required fs-6 fw-semibold mb-2">Password</label>
                                                         <!--end::Label-->
                                                         <!--begin::Input-->
-                                                        <input class="form-control form-control-solid" placeholder="Enter Password" name="password" required />
+                                                        <input class="form-control form-control" placeholder="Enter Password" name="password" required />
                                                         <!--end::Input-->
                                                     </div>
                                                     <!--end::Col-->
@@ -217,7 +200,7 @@
                                                         <label class="required fs-6 fw-semibold mb-2">Confirm Password</label>
                                                         <!--end::Label-->
                                                         <!--begin::Input-->
-                                                        <input class="form-control form-control-solid" placeholder="Enter confirm password" name="cpassword" required />
+                                                        <input class="form-control form-control" placeholder="Enter confirm password" name="cpassword" required />
                                                         <!--end::Input-->
                                                     </div>
                                                     <!--end::Col-->
@@ -247,7 +230,7 @@
                     <!--end::Card header-->
                     <!--begin::Card body-->
                     <div class="card-body py-4">
-                    <div class="card-title">
+                        <div class="card-title">
                             <!--begin::Search-->
                             <div class="d-flex align-items-center position-relative my-1">
                                 <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
@@ -327,7 +310,7 @@
 
 <!-- Edit Model -->
 @foreach($models as $key=>$d)
-<div class="modal fade" id="kt_modal_add_customer<?php echo $d['id']; ?>" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal fade crudForm" id="kt_modal_add_customer<?php echo $d['id']; ?>" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered mw-650px">
         <!--begin::Modal content-->
@@ -339,7 +322,7 @@
                 <h2 class="fw-bold">Edit</h2>
                 <!--end::Modal title-->
                 <!--begin::Close-->
-                <div class="btn btn-icon btn-sm btn-active-icon-danger" data-bs-dismiss="modal">
+                <div class="btn btn-icon btn-sm btn-active-icon-danger" data-bs-dismiss="modal" onclick=" document.location.reload();">
                     <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
                     <span class="svg-icon svg-icon-1">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -372,7 +355,19 @@
                         <!--begin::Col-->
                         <div class="col-md-12 fv-row">
                             <!--begin::Label-->
-                            <label class="required fs-6 fw-semibold mb-2">Enter SAP-ID {{$roleId}}</label>
+                            <label class="required fs-6 fw-semibold mb-2">Name</label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <input class="form-control form-control-solid" placeholder="Enter Role Name" name="name" value="{{$d['name']}}" disabled />
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <div class="row g-9 mb-7">
+                        <!--begin::Col-->
+                        <div class="col-md-12 fv-row">
+                            <!--begin::Label-->
+                            <label class="required fs-6 fw-semibold mb-2">SAP-ID</label>
                             <!--end::Label-->
                             <!--begin::Input-->
                             <input class="form-control form-control-solid sapId" placeholder="Enter Sap-Id 1" name="sapId" id="sapId" value="{{$userModel['sap_id']}}" disabled />
@@ -382,19 +377,7 @@
                         <!--end::Col-->
 
                     </div>
-
-                    <div class="row g-9 mb-7">
-                        <!--begin::Col-->
-                        <div class="col-md-12 fv-row">
-                            <!--begin::Label-->
-                            <label class="required fs-6 fw-semibold mb-2">Name</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <input class="form-control form-control-solid" placeholder="Enter Role Name" name="name" value="{{$d['name']}}" disabled />
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Col-->
-                    </div>
+                   
 
                     <div class="row g-9 mb-7">
                         <!--begin::Col-->
@@ -403,7 +386,7 @@
                             <label class="required fs-6 fw-semibold mb-2">Role</label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <select class="form-control form-control-solid" name="roles" required>
+                            <select class="form-control form-control" name="roles" required>
                                 <option value="">Select</option>
                                 @foreach ($roles as $role)
                                 <option value="<?php echo $role['id']; ?>" <?php echo ($role['id'] == $roleId) ? "selected" : ""; ?>><?php echo $role['name']; ?></option>
@@ -412,7 +395,7 @@
                             <!--end::Input-->
                         </div>
                     </div>
-                  
+
                     <div class="row g-9 mb-7">
                         <!--begin::Col-->
                         <div class="col-md-12 fv-row">
@@ -420,7 +403,7 @@
                             <label class="required fs-6 fw-semibold mb-2">Password</label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <input class="form-control form-control-solid" placeholder="Enter Password" name="password" />
+                            <input class="form-control form-control" placeholder="Enter Password" name="password" />
                             <!--end::Input-->
                         </div>
                         <!--end::Col-->
@@ -429,7 +412,7 @@
 
                     {{-- FORM --}}
                     <div class="text-center pt-15">
-                        <button type="reset" class="btn btn-light-danger me-3" data-bs-dismiss="modal">Cancel</button>
+                        <button type="reset" class="btn btn-light-danger me-3" data-bs-dismiss="modal" onclick=" document.location.reload();">Cancel</button>
                         <button type="submit" class="btn btn-primary submit" data-kt-users-modal-action="submit">
                             <span class="indicator-label">Update and Exit</span>
                             <span class="indicator-progress">Please wait...
@@ -453,30 +436,36 @@
 <script>
     $(document).ready(function() {
         // on form submit
+        $(".initiator_id").select2({
+            dropdownParent: $("#kt_modal_add_user")
+        });
+
+       
+       
         $("#department_form1").on('submit', function() {
             // to each unchecked checkbox
             $(this).find('input[type=checkbox]:not(:checked)').prop('checked', true).val(0);
         })
-        $(".sapId").on('input', function() {
-            var sapdata = $(this).val();
-            console.log(sapdata);
+        $(".initiator_id").on('change', function() {
+            var employeeId = $(this).val();
+
             $('.submit').prop('disabled', true);
 
-            if (sapdata) {
+            if (employeeId) {
                 $.ajax({
                     url: "{{ route('getEmployeeDetailByParams') }}",
                     type: 'ajax',
                     method: 'post',
                     data: {
                         "_token": "{{ csrf_token() }}",
-                        fieldname: 'sapId',
-                        fieldData: sapdata,
+                        fieldname: 'EmpId',
+                        fieldData: employeeId,
                     },
                     success: function(result) {
                         var data = JSON.parse(result);
 
-console.log(data);
-                        $(".name,.mobile,.email,.empId").val("");
+                        console.log(data);
+                        $(".name,.mobile,.email").val("");
                         if (data) {
                             if (data.user) {
                                 Swal.fire({
@@ -486,12 +475,12 @@ console.log(data);
                                     footer: ''
                                 });
                                 $('.submit').prop('disabled', true);
-                                $(".sapId,.name,.mobile,.email,.empId").val("");
+                                $(".sapId,.name,.mobile,.email").val("");
                             } else {
                                 $('.submit').prop('disabled', false);
                                 var name = data.first_name + " " + data.last_name;
                                 $(".name").val(name);
-                                $(".empId").val(data.id);
+
                                 $(".mobile").val(data.mobile);
                                 $(".email").val(data.email);
                             }

@@ -1,0 +1,6 @@
+.notifyAlert{
+    position: absolute;   
+    background-color: bisque;
+    padding: 1px;
+    display: none;
+    }

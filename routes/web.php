@@ -11,7 +11,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Masters\DepartmentController;
 use App\Http\Controllers\Masters\DesignationController;
 use App\Http\Controllers\Masters\DocumentTypeController;
-use App\Http\Controllers\settings\AuthorityTypeController;
+
 use App\Http\Controllers\settings\RolesController;
 use App\Http\Controllers\settings\UserController;
 use App\Http\Controllers\WorkflowController;
@@ -33,8 +33,14 @@ Route::group([
     //Dept
     Route::resource('dashboard', DashboardController::class);
     Route::resource('doclisting', Doclistings::class);
+    Route::post('docListingSearch', [Doclistings::class, 'docListingSearch'])->name('docListingSearch');
     Route::post('Search', [Doclistings::class, 'Search'])->name('Search')->middleware('is_admin');
     Route::resource('department', DepartmentController::class);
+    Route::post('departmentValidation', [DepartmentController::class, 'departmentValidation'])->name('departmentValidation');
+
+    Route::post('changedepartmentActiveStatus', [DepartmentController::class, 'changedepartmentActiveStatus'])->name('changedepartmentActiveStatus');
+    Route::post('changedesignationActiveStatus', [DesignationController::class, 'changedesignationActiveStatus'])->name('changedesignationActiveStatus');
+    
     Route::resource('designation', DesignationController::class);
     Route::resource('documentType', DocumentTypeController::class);
     Route::resource('employees', EmployeeController::class);
@@ -45,6 +51,11 @@ Route::group([
     Route::post('getDetailsById', [EmployeeController::class, 'getDetailsById'])->name('getDetailsById')->middleware('is_admin');
     Route::post('getEmployeeDetailByParams', [EmployeeController::class, 'getEmployeeDetailByParams'])->name('getEmployeeDetailByParams');
     Route::resource('projects', ProjectController::class);
+    Route::post('employeeSearch', [EmployeeController::class, 'employeeSearch'])->name('employeeSearch');
+
+    Route::post('projectCodeValidation', [ProjectController::class, 'projectCodeValidation'])->name('projectCodeValidation');
+    Route::post('projectNameValidation', [ProjectController::class, 'projectNameValidation'])->name('projectNameValidation');
+    
     Route::post('getWorkflowByDocumentType', [ProjectController::class, 'getWorkflowByDocumentType'])->name('getWorkflowByDocumentType')->middleware('is_admin');
     Route::post('getEmployeeByWorkFlow', [ProjectController::class, 'getEmployeeByWorkFlow'])->name('getEmployeeByWorkFlow')->middleware('is_admin');
     Route::get('viewProject/{id}', [ProjectController::class, 'viewProject'])->name('viewProject')->middleware('is_admin');
@@ -55,11 +66,19 @@ Route::group([
     Route::post('docStatus', [ProjectController::class, 'docStatus'])->name('docStatus')->middleware('is_admin');
     Route::resource('workflow', WorkflowController::class);
     Route::post('getWorkflowById', [WorkflowController::class, 'getWorkflowById'])->name('getWorkflowById')->middleware('is_admin');
+    Route::post('changeWorkflowActiveStatus', [WorkflowController::class, 'changeWorkflowActiveStatus'])->name('changeWorkflowActiveStatus');
+   
     Route::post('getWorkflowLevels', [WorkflowController::class, 'getWorkflowLevels'])->name('getWorkflowLevels')->middleware('is_admin');
+    Route::post('workflowValidation', [WorkflowController::class, 'workflowValidation'])->name('workflowValidation');
+
     Route::post('uploadDocumentVersion', [ProjectController::class, 'uploadDocumentVersion'])->name('uploadDocumentVersion');
     Route::resource('roles', RolesController::class);
+    Route::post('roleNameValidation', [RolesController::class, 'roleNameValidation'])->name('roleNameValidation');
     Route::resource('users', UserController::class);
-    Route::resource('authorityType', AuthorityTypeController::class);
+
+    Route::post('getWorkflowByProjectId', [ProjectController::class, 'getWorkflowByProjectId'])->name('getWorkflowByProjectId');
+
+
 });
 // Route::get('departments', [MasterController::class, 'Departments'])->name('departments')->middleware('is_admin');
 // Route::post('store_department', [MasterController::class, 'store_department'])->name('store_department')->middleware('is_admin');

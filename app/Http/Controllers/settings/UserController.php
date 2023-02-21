@@ -22,8 +22,9 @@ class UserController extends Controller
         $models = User::whereNotNull('is_admin')->orderBy('id', 'DESC')->get();
         $roles = Role::where('delete_flag', 1)->select('name', 'id')->get();
        
-
-        return view('settings/User/list', ['models' => $models, 'roles' => $roles]);
+        $employees = Employee::doesntHave('user')->get();
+      
+        return view('settings/User/list', ['models' => $models, 'roles' => $roles,'employees'=>$employees]);
     }
 
     /**
@@ -44,9 +45,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-
-        $empModel = Employee::find($request->empId);
-
+       
+        $empModel = Employee::find($request->initiator_id);
+  
         if ($request->id) {
             $user = User::find($request->id);
             if ($request->password) {
@@ -56,13 +57,11 @@ class UserController extends Controller
             $user = new User();
             $user->name = $empModel->first_name;
             $user->username = $empModel->sap_id;
-            $user->email = $empModel->email;
-           
+            $user->email = $empModel->email;           
             $user->is_admin = 1;
             $user->emp_id = $empModel->id;
             $user->password =  Hash::make($request->password);
-        }
-        $user->authority_type = $request->authority_type;
+        }       
         $user->save();
 
 

@@ -10,10 +10,40 @@ use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
+
+    public function employeeSearch(Request $request)
+    {
+        
+        $searchData = $request->searchData;
+        $searchData1="";
+        if($searchData == "active"|| $searchData == "Active"){
+            $searchData1 = 1;            
+        }
+        if($searchData == "in active" || $searchData == "In-active"){
+            $searchData1 = 0;
+        }
+       
+        $model = Employee::select('employees.id', 'employees.first_name', 'employees.email', 'employees.last_name', 'employees.profile_image', 'employees.mobile', 'employees.is_active', 'employees.sap_id', 'departments.name as deptName', 'designations.name as desgName')
+            ->leftjoin('departments', 'departments.id', '=', 'employees.department_id')
+            ->leftjoin('designations', 'designations.id', '=', 'employees.designation_id')
+            ->where(function ($query) use ($searchData) {
+                $query->where('employees.first_name', 'LIKE', '%' . $searchData . '%')
+                    ->orWhere('employees.last_name', 'LIKE', '%' . $searchData . '%')
+                    ->orWhere('employees.email', 'LIKE', '%' . $searchData . '%')
+                    ->orWhere('employees.mobile', 'LIKE', '%' . $searchData . '%')
+                    ->orWhere('employees.sap_id', 'LIKE', '%' . $searchData . '%')
+                    ->orWhere('designations.name', 'LIKE', '%' . $searchData . '%')
+                    ->orWhere('departments.name', 'LIKE', '%' . $searchData . '%');
+            })
+            ->whereNull('employees.deleted_at')
+            ->get();
+        
+        return response()->json($model);
+    }
     public function getEmployeeDetailByParams(Request $request)
     {
 
-        $model = Employee::with('user');
+        $model = Employee::with('user')->whereNull('employees.deleted_at');
         if ($request->fieldname == "sapId") {
             $model->where('sap_id', $request->fieldData);
         }
@@ -45,6 +75,7 @@ class EmployeeController extends Controller
             ->select('e.*', 'd.id as department_id', 'd.name as department_name', 'de.id as designation_id', 'de.name as designation_name', 'e.is_active as employee_status')
             ->join('departments as d', 'd.id', '=', 'e.department_id')
             ->join('designations as de', 'de.id', '=', 'e.designation_id')
+            ->whereNull('e.deleted_at')
             ->where('e.delete_flag', 1)
             ->get();
         return $employees;
@@ -57,7 +88,6 @@ class EmployeeController extends Controller
             ->where('employees.id', $request->id)
             ->get();
         return response()->json($model);
-
     }
     public function employeeDetailByDesDept(Request $request)
     {
@@ -70,7 +100,7 @@ class EmployeeController extends Controller
         if ($request->descId) {
             $model->where('designation_id', $request->descId);
         }
-
+        $model->whereNull('employees.deleted_at');
         $data = $model->get();
         return response()->json($data);
     }
@@ -89,19 +119,19 @@ class EmployeeController extends Controller
     {
 
         if ($request->id == "") {
-            $check_email = Employee::where('email', $request->email)->pluck('id')->first();
+            $check_email = Employee::where('email', $request->email)->whereNull('employees.deleted_at')->pluck('id')->first();
         } else {
             $check_email = null;
         }
 
         if ($request->id == "") {
-            $check_mobile = Employee::where('mobile', $request->mobile)->pluck('id')->first();
+            $check_mobile = Employee::where('mobile', $request->mobile)->whereNull('employees.deleted_at')->pluck('id')->first();
         } else {
             $check_mobile = null;
         }
 
         if ($request->id == "") {
-            $check_sap = Employee::where('sap_id', $request->sap_id)->pluck('id')->first();
+            $check_sap = Employee::where('sap_id', $request->sap_id)->whereNull('employees.deleted_at')->pluck('id')->first();
         } else {
             $check_sap = null;
         }
