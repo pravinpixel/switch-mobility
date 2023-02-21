@@ -45,7 +45,7 @@ class DashboardController extends Controller
   public function overdue_project_document()
   {
     $now = date('Y-m-d');
-    $order_att = DB::table('project_document as p')
+    $order_att = DB::table('project_documents as p')
       ->leftjoin('project_levels as pl', 'pl.project_id', '=', 'p.id')
       ->select('*')
       ->where('pl.due_date', '<', $now);
