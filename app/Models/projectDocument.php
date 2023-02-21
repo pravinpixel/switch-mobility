@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class projectDocument extends Model
 {
     use HasFactory;
+protected $table = "project_documents";
         public function docDetail()
     {
         return $this->hasMany('App\Models\ProjectDocumentDetail', 'project_doc_id', 'id');
