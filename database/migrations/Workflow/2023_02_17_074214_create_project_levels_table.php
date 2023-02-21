@@ -19,8 +19,7 @@ class CreateProjectLevelsTable extends Migration
             $table->date('due_date');
             $table->integer('project_level');
             $table->integer('priority');
-            $table->integer('staff');
-            $table->string('hod');
+            $table->integer('staff')->nullable();          
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
             $table->foreign('project_id')->references('id')->on('projects')

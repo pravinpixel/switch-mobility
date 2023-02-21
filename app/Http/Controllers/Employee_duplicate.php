@@ -93,7 +93,7 @@ class EmployeeController extends Controller
     public function destroy($id)
     {
 
-        $employee_update = Employee::where("id", $id)->update(["delete_flag" => 0]);
+        $employee_update = Employee::where("id", $id)->delete();
         echo json_encode($employee_update);
     }
 }

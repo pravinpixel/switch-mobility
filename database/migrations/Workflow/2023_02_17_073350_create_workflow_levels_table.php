@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDepartmentsTable extends Migration
+class CreateWorkflowLevelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,16 @@ class CreateDepartmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('departments', function (Blueprint $table) {
+        Schema::create('workflow_levels', function (Blueprint $table) {
             $table->increments('id')->unsigned(false);
-            $table->string('name');
-            $table->text('description')->nullable();
+            $table->integer('workflow_id');
+            $table->integer('levels');
+            $table->integer('approver_designation')->nullable();
             $table->integer('is_active')->default(1);
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
+            $table->foreign('workflow_id')->references('id')->on('workflows')
+            ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -30,6 +33,6 @@ class CreateDepartmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('departments');
+        Schema::dropIfExists('workflow_levels');
     }
 }

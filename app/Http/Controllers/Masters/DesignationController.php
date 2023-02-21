@@ -71,7 +71,7 @@ class DesignationController extends Controller
     {
         $checkChildData = Employee::where('designation_id', $id)->first();
         $checkChildData2 = WorkflowLevelDetail::where('designation_id', $id)->first();
-        if ($checkChildData&&$checkChildData2) {
+        if ($checkChildData||$checkChildData2) {
             $data = [
                 "message" => "Failed",
                 "data" => "Designation already exist.cannot delete."

@@ -16,10 +16,10 @@ class CreateDesignatiosTable extends Migration
         Schema::create('designations', function (Blueprint $table) {
             $table->increments('id')->unsigned(false);
             $table->string('name');
-            $table->string('description');
-            $table->boolean('is_active')->nullable();
+            $table->text('description')->nullable();
+            $table->integer('is_active')->default(1);
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->timestamp('deleted_at')->nullable(true);
         });
     }
 

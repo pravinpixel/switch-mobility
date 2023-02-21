@@ -63,9 +63,9 @@ class EmployeeController extends Controller
     public function index()
     {
         $employee_all = $this->get_all_employee();
-        $employees = Employee::where('delete_flag', 1)->get()->toArray();
-        $departments = Department::where('is_active', 1)->where('delete_flag', 1)->get()->toArray();
-        $designation = Designation::where('is_active', 1)->where('delete_flag', 1)->get()->toArray();
+        $employees = Employee::whereNull('deleted_at')->get()->toArray();
+        $departments = Department::where('is_active', 1)->whereNull('deleted_at')->get()->toArray();
+        $designation = Designation::where('is_active', 1)->whereNull('deleted_at')->get()->toArray();
         return view('Employee/list', ['employee_all' => $employee_all, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
     }
 
@@ -76,7 +76,8 @@ class EmployeeController extends Controller
             ->join('departments as d', 'd.id', '=', 'e.department_id')
             ->join('designations as de', 'de.id', '=', 'e.designation_id')
             ->whereNull('e.deleted_at')
-            ->where('e.delete_flag', 1)
+          
+            
             ->get();
         return $employees;
     }
@@ -197,7 +198,7 @@ class EmployeeController extends Controller
     public function destroy($id)
     {
 
-        $employee_update = Employee::where("id", $id)->update(["delete_flag" => 0]);
+        $employee_update = Employee::where("id", $id)->delete();
         echo json_encode($employee_update);
     }
 

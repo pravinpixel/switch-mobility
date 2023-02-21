@@ -17,7 +17,7 @@ class CreateAuthorityTypesTable extends Migration
             $table->increments('id')->unsigned(false);
             $table->string('name');
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->timestamp('deleted_at')->nullable(true);
         });
     }
 

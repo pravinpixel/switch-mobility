@@ -21,8 +21,8 @@ class WorkflowController extends Controller
  }
     public function index()
     {
-        $designation = Designation::where('is_active', 1)->where('delete_flag', 1)->get()->toArray();
-        $designation_edit = Designation::where('is_active', 1)->where('delete_flag', 1)->get();
+        $designation = Designation::where('is_active', 1)->whereNull('deleted_at')->get()->toArray();
+        $designation_edit = Designation::where('is_active', 1)->whereNull('deleted_at')->get();
         $workflow = Workflow::whereNull('deleted_at')->get()->toArray();
         $allwork_flow = $this->get_all_workflow();
         return view('Workflow/list', ['designation_edit' => $designation_edit, 'all_workflow' => $allwork_flow, 'workflow' => $workflow, 'designation' => $designation]);

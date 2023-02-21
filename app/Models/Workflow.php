@@ -9,7 +9,7 @@ class Workflow extends Model
 {
     use HasFactory;
 
-    protected $table = "workflows";
+   
     public function workflowl()
     {
         return $this->hasMany('App\Models\Workflowlevels', 'workflow_id', 'id');

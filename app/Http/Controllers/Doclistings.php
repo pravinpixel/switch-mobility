@@ -17,11 +17,11 @@ class Doclistings extends Controller
     {
 
         $project = Project::with('workflow', 'employee', 'employee.department')->whereNull('deleted_at')->get();
-        $employees = Employee::where(['is_active'=>1,'delete_flag'=>1])->get();
-        $departments = Department::where(['is_active'=>1,'delete_flag'=>1])->get();
-        $designation = Designation::where(['is_active'=>1,'delete_flag'=>1])->get();
-        $document_type = DocumentType::where(['is_active'=>1,'delete_flag'=>1])->get();
-        $workflow = Workflow::where(['is_active'=>1,'delete_flag'=>1])->get();  
+        $employees = Employee::where(['is_active'=>1])->get();
+        $departments = Department::where(['is_active'=>1])->get();
+        $designation = Designation::where(['is_active'=>1])->get();
+        $document_type = DocumentType::where(['is_active'=>1])->get();
+        $workflow = Workflow::where(['is_active'=>1])->get();  
         $projectList = $project;
        
         return view('Docs/index', ['order_at' => $projectList, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation, 'projects' => $project]);

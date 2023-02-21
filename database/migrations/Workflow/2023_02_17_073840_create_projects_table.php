@@ -17,15 +17,22 @@ class CreateProjectsTable extends Migration
             $table->increments('id')->unsigned(false);
             $table->string('project_name');
             $table->string('project_code');
+            $table->string('ticket_no')->nullable();
             $table->date('start_date');
             $table->date('end_date');
             $table->integer('initiator_id');
-            $table->integer('project_role_id');
+            $table->integer('document_type_id');
+            $table->integer('workflow_id');
+            $table->string('role')->nullable();
             $table->integer('delete_flag')->default(0)->nullable();         
-            $table->boolean('is_active')->nullable();
+            $table->integer('is_active')->default(1);
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
             $table->foreign('initiator_id')->references('id')->on('employees')
+            ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('document_type_id')->references('id')->on('document_types')
+            ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('workflow_id')->references('id')->on('workflows')
             ->onUpdate('cascade')->onDelete('cascade');
         });
     }

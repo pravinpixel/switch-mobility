@@ -20,8 +20,9 @@ class UserController extends Controller
     public function index()
     {
         $models = User::whereNotNull('is_admin')->orderBy('id', 'DESC')->get();
-        $roles = Role::where('delete_flag', 1)->select('name', 'id')->get();
        
+        $roles = Role::select('name', 'id')->get();
+    
         $employees = Employee::doesntHave('user')->get();
       
         return view('settings/User/list', ['models' => $models, 'roles' => $roles,'employees'=>$employees]);

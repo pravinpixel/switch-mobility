@@ -156,7 +156,7 @@ class RolesController extends Controller
      */
     public function destroy($id)
     {
-        $department_update = Role::where("id", $id)->update(["delete_flag" => 0]);
+        $department_update = Role::where("id", $id)->delete();
         echo json_encode($department_update);
     }
 }

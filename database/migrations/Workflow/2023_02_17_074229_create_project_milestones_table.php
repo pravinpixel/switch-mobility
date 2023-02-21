@@ -19,8 +19,8 @@ class CreateProjectMilestonesTable extends Migration
             $table->string('milestone');
             $table->date('mile_start_date');
             $table->date('mile_end_date');
-            $table->integer('level_to_be_crossed');
-            $table->integer('is_active');
+            $table->integer('levels_to_be_crossed');
+            $table->integer('is_active')->default(1);
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
             $table->foreign('project_id')->references('id')->on('projects')

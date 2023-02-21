@@ -15,11 +15,11 @@ class CreateProjectDocumentDetailsTable extends Migration
     {
         Schema::create('project_document_details', function (Blueprint $table) {
             $table->increments('id')->unsigned(false);
-            $table->integer('version');
+            $table->integer('version')->nullable();
             $table->integer('project_doc_id');
-            $table->string('document');
-            $table->string('remark');
-            $table->integer('status');
+            $table->string('document_name')->nullable();
+            $table->string('remark')->nullable();
+            $table->integer('status')->nullable();
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
             $table->foreign('project_doc_id')->references('id')->on('project_documents')

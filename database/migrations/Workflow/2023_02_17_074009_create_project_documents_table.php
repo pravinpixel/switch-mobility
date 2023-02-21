@@ -15,14 +15,14 @@ class CreateProjectDocumentsTable extends Migration
     {
         Schema::create('project_documents', function (Blueprint $table) {
             $table->increments('id')->unsigned(false);
-            $table->string('original_name');
-            $table->integer('type');
+            $table->string('original_name')->nullable();
+            $table->integer('type')->nullable();
             $table->integer('project_id');
             $table->integer('project_level');
-            $table->string('document');
-            $table->string('remark');
-            $table->integer('is_latest');
-            $table->integer('status');
+            $table->string('document')->nullable();
+            $table->string('remark')->nullable();
+            $table->integer('is_latest')->nullable();
+            $table->integer('status')->nullable();
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
             $table->foreign('project_id')->references('id')->on('projects')

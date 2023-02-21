@@ -9,7 +9,7 @@ class Workflowlevels extends Model
 {
     use HasFactory;
     protected $table = "workflow_levels";
-    protected $fillable = [
+      protected $fillable = [
         'workflow_id',
         'levels',
         'approver_designation'

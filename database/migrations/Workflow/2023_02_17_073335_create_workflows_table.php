@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEmployeeTypesTable extends Migration
+class CreateWorkflowsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,15 @@ class CreateEmployeeTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('employee_types', function (Blueprint $table) {
+        Schema::create('workflows', function (Blueprint $table) {
             $table->increments('id')->unsigned(false);
-            $table->string('name');
+            $table->string('workflow_code');
+            $table->string('workflow_name');
+            $table->integer('workflow_type');
+            $table->integer('total_levels');
+            $table->integer('is_active')->default(1);
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable(true);
+            $table->timestamp('deleted_at')->nullable();
         });
     }
 
@@ -28,6 +32,6 @@ class CreateEmployeeTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employee_types');
+        Schema::dropIfExists('workflows');
     }
 }

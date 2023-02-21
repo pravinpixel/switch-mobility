@@ -125,8 +125,8 @@ class ProjectController extends Controller
         
             Log::info('ProjectController->Store:-ProjectData ' . json_encode($project));
             if ($project) {
-                $project->ticket_no = $project->id . substr($project->project_name, 0, 3) . substr($project->project_code, 0, 3) . date('Y-m-d');
-                $project->save();
+                $project->ticket_no = "WF".  date('Y-m-d').'/'.$project->id;
+                                $project->save();
 
                 if (isset($request->project_id) != null) {
                     $milestone_delete = ProjectMilestone::where("project_id", $request->project_id)->delete();
