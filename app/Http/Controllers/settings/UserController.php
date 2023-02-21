@@ -25,7 +25,7 @@ class UserController extends Controller
     
         $employees = Employee::doesntHave('user')->get();
       
-        return view('settings/User/list', ['models' => $models, 'roles' => $roles,'employees'=>$employees]);
+        return view('Settings/User/list', ['models' => $models, 'roles' => $roles,'employees'=>$employees]);
     }
 
     /**

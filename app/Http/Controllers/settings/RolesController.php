@@ -21,7 +21,7 @@ class RolesController extends Controller
         $permissions = Permission::get();
 
 
-        return view('settings/Role/list', ['models' => $models, 'permissions' => $permissions]);
+        return view('Settings/Role/list', ['models' => $models, 'permissions' => $permissions]);
     }
 
     /**
