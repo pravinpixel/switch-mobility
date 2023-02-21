@@ -188,17 +188,6 @@ CREATE TABLE `model_has_permissions` (
 
 /*Table structure for table `model_has_roles` */
 
-DROP TABLE IF EXISTS `model_has_roles`;
-
-CREATE TABLE `model_has_roles` (
-  `role_id` bigint(20) unsigned NOT NULL,
-  `model_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `model_id` bigint(20) unsigned NOT NULL,
-  PRIMARY KEY (`role_id`,`model_id`,`model_type`),
-  KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`),
-  CONSTRAINT `model_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 /*Data for the table `model_has_roles` */
 
 /*Table structure for table `password_resets` */
@@ -421,36 +410,6 @@ CREATE TABLE `projects` (
 
 /*Table structure for table `role_has_permissions` */
 
-DROP TABLE IF EXISTS `role_has_permissions`;
-
-CREATE TABLE `role_has_permissions` (
-  `permission_id` bigint(20) unsigned NOT NULL,
-  `role_id` bigint(20) unsigned NOT NULL,
-  PRIMARY KEY (`permission_id`,`role_id`),
-  KEY `role_has_permissions_role_id_foreign` (`role_id`),
-  CONSTRAINT `role_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `role_has_permissions_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-/*Data for the table `role_has_permissions` */
-
-/*Table structure for table `roles` */
-
-DROP TABLE IF EXISTS `roles`;
-
-CREATE TABLE `roles` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `authority_type` int(11) NOT NULL DEFAULT 2,
-  `guard_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `delete_flag` int(11) NOT NULL DEFAULT 1,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`),
-  KEY `authority_type` (`authority_type`),
-  CONSTRAINT `roles_ibfk_1` FOREIGN KEY (`authority_type`) REFERENCES `authority_types` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `roles` */
 
@@ -460,15 +419,15 @@ CREATE TABLE `roles` (
 DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `is_admin` tinyint(1) DEFAULT NULL,
+  `is_admin` int(1) DEFAULT NULL,
   `is_super_admin` int(11) DEFAULT NULL,
-  `auth_level` tinyint(1) DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `auth_level` int(1) DEFAULT NULL,
+  `password` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
   `emp_id` int(11) DEFAULT NULL,
   `authority_type` int(11) DEFAULT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -523,8 +482,8 @@ DROP TABLE IF EXISTS `workflows`;
 
 CREATE TABLE `workflows` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `workflow_code` varchar(255) NOT NULL,
-  `workflow_name` varchar(255) NOT NULL,
+  `workflow_code` varchar(50) NOT NULL,
+  `workflow_name` varchar(50) NOT NULL,
   `workflow_type` int(11) NOT NULL DEFAULT 1,
   `total_levels` int(11) NOT NULL DEFAULT 0,
   `is_active` int(11) NOT NULL DEFAULT 1,
