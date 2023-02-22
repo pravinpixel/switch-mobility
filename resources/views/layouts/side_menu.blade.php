@@ -223,7 +223,7 @@
 										<i class="fas fa-drafting-compass"></i>
 									</span>
 								</span>
-								<span class="menu-title">Privilages</span>
+								<span class="menu-title">Privillages</span>
 							</a>
 							<!--end:Menu link-->
 						</div>
@@ -240,7 +240,7 @@
 										<i class="fas fa-drafting-compass"></i>
 									</span>
 								</span>
-								<span class="menu-title">User Entroll</span>
+								<span class="menu-title">User Enroll</span>
 							</a>
 							<!--end:Menu link-->
 						</div>

@@ -300,10 +300,10 @@
                                                     <!--begin::Col-->
                                                     <div class="col-md-6 fv-row">
                                                         <!--begin::Label-->
-                                                        <label class="required fs-6 fw-semibold mb-2">SAP-id</label>
+                                                        <label class="required fs-6 fw-semibold mb-2">SAP-ID</label>
                                                         <!--end::Label-->
                                                         <!--begin::Input-->
-                                                        <input type="text" class="form-control form-control-solid sapId" placeholder="Enter SAP-id" name="sap_id" />
+                                                        <input type="text" class="form-control form-control-solid sapId" placeholder="Enter SAP-ID" name="sap_id" />
                                                         <p id="sapIdAlert" class="notifyAlert"></p>
                                                         <!--end::Input-->
                                                     </div>
@@ -312,7 +312,7 @@
                                                     <!--begin::Col-->
                                                     <div class="col-md-6 fv-row">
                                                         <!--begin::Label-->
-                                                        <label class="fs-6 fw-semibold mb-2">Profie</label>
+                                                        <label class="fs-6 fw-semibold mb-2">Profile</label>
                                                         <!--end::Label-->
                                                         <!--begin::Input-->
                                                         <input type="file" class="form-control form-control-solid" name="profile_image" />
@@ -473,7 +473,7 @@
                             <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
 
                                 <th class="min-w-125px">Name</th>
-                                <th class="min-w-125px">SAP-id</th>
+                                <th class="min-w-125px">SAP-ID</th>
                                 <th class="min-w-125px">Mobile</th>
                                 <th class="min-w-125px">Department</th>
                                 <th class="min-w-125px">Designation</th>
@@ -734,10 +734,10 @@
                         <!--begin::Col-->
                         <div class="col-md-6 fv-row">
                             <!--begin::Label-->
-                            <label class="required fs-6 fw-semibold mb-2">SAP-id</label>
+                            <label class="required fs-6 fw-semibold mb-2">SAP-ID</label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <input type="text" class="form-control form-control-solid sapId editSapId" placeholder="Enter SAP-id" name="sap_id" value="{{ $d->sap_id }}" required />
+                            <input type="text" class="form-control form-control-solid sapId editSapId" placeholder="Enter SAP-ID" name="sap_id" value="{{ $d->sap_id }}" required />
                             <p id="sapIdAlert" class="notifyAlert"></p>
                             <!--end::Input-->
                         </div>

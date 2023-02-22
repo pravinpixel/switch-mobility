@@ -167,7 +167,7 @@
                                                     <!--begin::Col-->
                                                     <div class="col-md-12 fv-row">
                                                         <!--begin::Label-->
-                                                        <label class="required fs-6 fw-semibold mb-2">Role</label>
+                                                        <label class="required fs-6 fw-semibold mb-2">Privillage</label>
                                                         <!--end::Label-->
                                                         <!--begin::Input-->
                                                         <select class="form-control form-control roles" name="roles" required>
@@ -358,7 +358,7 @@
                             <label class="required fs-6 fw-semibold mb-2">Name</label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <input class="form-control form-control-solid" placeholder="Enter Role Name" name="name" value="{{$d['name']}}" disabled />
+                            <input class="form-control form-control-solid" placeholder="Enter Privillage Name" name="name" value="{{$d['name']}}" disabled />
                             <!--end::Input-->
                         </div>
                         <!--end::Col-->
@@ -383,7 +383,7 @@
                         <!--begin::Col-->
                         <div class="col-md-12 fv-row">
                             <!--begin::Label-->
-                            <label class="required fs-6 fw-semibold mb-2">Role</label>
+                            <label class="required fs-6 fw-semibold mb-2">Privillage</label>
                             <!--end::Label-->
                             <!--begin::Input-->
                             <select class="form-control form-control" name="roles" required>
