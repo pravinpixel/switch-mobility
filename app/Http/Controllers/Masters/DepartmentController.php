@@ -19,6 +19,19 @@ class DepartmentController extends Controller
         $departments = Department::get()->toArray();
         return view('Departments/list', ['departments' => $departments]);
     }
+
+
+    public function create()
+    {
+      
+       return view('Departments/DeptDetails');
+    }
+
+    public function edit($id)
+    {
+       
+        return view('formError');
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -29,6 +42,7 @@ class DepartmentController extends Controller
     {
 
         $input = $request->all();
+        dd($input);
         if (isset($request->is_active)) {
             if ($request->is_active) {
                 $input['is_active'] = 1;
@@ -90,6 +104,6 @@ class DepartmentController extends Controller
     }
     public function departmentValidation(Request $request)
     {
-    dd($request->all());
+        dd($request->all());
     }
 }

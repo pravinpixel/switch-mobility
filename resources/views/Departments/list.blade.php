@@ -141,8 +141,8 @@
                                 <!--begin::Filter-->
                                 @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('department-create'))
                                 <!--begin::Add user-->
-                                <a href="{{url('department/create')}}">
-                                <button type="button" class="btn btn-primary" >
+                             
+                                <button type="button" class="btn btn-primary" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user">
                                     <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                                     <span class="svg-icon svg-icon-2">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -150,7 +150,7 @@
                                             <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
                                         </svg>
                                     </span>
-                                    <!--end::Svg Icon-->Add</button></a>
+                                    <!--end::Svg Icon-->Add</button>
                                 @endif
                                 <!--end::Add user-->
                             </div>
