@@ -11,14 +11,15 @@ use App\Models\Workflowlevels;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class WorkflowController extends Controller
 {
- public function changeWorkflowActiveStatus(Request $request)
- {
-    $model = Workflow::where("id", $request->id)->update(["is_active" => $request->status]);
-    echo json_encode($model);
- }
+    public function changeWorkflowActiveStatus(Request $request)
+    {
+        $model = Workflow::where("id", $request->id)->update(["is_active" => $request->status]);
+        echo json_encode($model);
+    }
     public function index()
     {
         $designation = Designation::where('is_active', 1)->whereNull('deleted_at')->get()->toArray();
@@ -62,7 +63,7 @@ class WorkflowController extends Controller
             return $datas;
         });
 
-
+      
         return view('Workflow/editPage', compact('designationDatas', 'entities', 'modelWorkflow'));
     }
     public function get_all_workflow()
@@ -78,16 +79,17 @@ class WorkflowController extends Controller
 
     public function store(Request $request)
     {
-        $input = $request->all();       
-
-        if ($input['workflow_type'] == 1) {
-            $levels = array();
-            for ($i = 1; $i < 12; $i++) {
-                array_push($levels, $i);
+        $input = $request->all();
+       
+        if (!$request->workflow_id) {
+            if ($input['workflow_type'] == 1) {
+                $levels = array();
+                for ($i = 1; $i < 12; $i++) {
+                    array_push($levels, $i);
+                }
+                $input['levels'] = $levels;
             }
-            $input['levels'] = $levels;
         }
-
         if ($request->workflow_id) {
             $id = $request->workflow_id;
             Workflowlevels::where('workflow_id', $request->workflow_id)->delete();
@@ -117,6 +119,15 @@ class WorkflowController extends Controller
                         $totDesignation = $input['approver_designation' . $levels];
                     }
                     for ($j = 0; $j < count($totDesignation); $j++) {
+                        Log::info('WorkflowController->Store:-level ' . json_encode($levels));
+                        if ($input['workflow_type'] == 1) {
+                            Log::info('WorkflowController->Store:-Level With fApprover designation  ' . json_encode($input['fapprover_designation' . $levels][$j]));
+                        } else {
+                            Log::info('WorkflowController->Store:-Level With Approver designation  ' . json_encode($input['approver_designation' . $levels][$j]));
+                        }
+
+
+
                         $workflow_level_details = new WorkflowLevelDetail();
                         $workflow_level_details->workflow_id = $id;
                         $workflow_level_details->workflow_level_id = $workflow_levels->id;
@@ -166,38 +177,38 @@ class WorkflowController extends Controller
         $workflow_id = $request->workflow_id;
         $workflow = Workflow::where('id', $workflow_id)->get()->first();
 
-        
 
-        $entities =$this->getLevelLooping($workflow_id);
+
+        $entities = $this->getLevelLooping($workflow_id);
         //dd($entities);
         echo json_encode(["workflow" => $workflow, 'workflow_level' => $entities]);
     }
-public function getLevelLooping($workflow_id)
-{
-    $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $workflow_id)->get();
-    $entities = collect($models)->map(function ($model) {
-        $levelDetails = $model['workflowLevelDetail'];
+    public function getLevelLooping($workflow_id)
+    {
+        $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $workflow_id)->get();
+        $entities = collect($models)->map(function ($model) {
+            $levelDetails = $model['workflowLevelDetail'];
 
-        $e = collect($levelDetails)->map(function ($levelDetail) {
-            $designationId = $levelDetail->designation_id;
+            $e = collect($levelDetails)->map(function ($levelDetail) {
+                $designationId = $levelDetail->designation_id;
 
-            $designationName = Designation::with('employee')->where('id', $designationId)->first();
-            $desEmployee = $designationName->employee;
+                $designationName = Designation::with('employee')->where('id', $designationId)->first();
+                $desEmployee = $designationName->employee;
 
-            $desData = ['desName' => $designationName->name, 'desEmployee' => $desEmployee];
+                $desData = ['desName' => $designationName->name, 'desEmployee' => $desEmployee];
 
-            return $desData;
+                return $desData;
+            });
+
+            $designationArray =  $e;
+
+
+            $datas = ['levelId' => $model->levels, 'designationId' => $designationArray];
+
+            return $datas;
         });
-
-        $designationArray =  $e;
-
-
-        $datas = ['levelId' => $model->levels, 'designationId' => $designationArray];
-
-        return $datas;
-    });
-    return $entities;
-}
+        return $entities;
+    }
     public function getWorkflowLevels(Request $request)
     {
         $workflow_id = $request->workflow_id;
@@ -256,10 +267,27 @@ public function getLevelLooping($workflow_id)
     }
     public function workflowValidation(Request $request)
     {
+
+        $model = Workflow::where('workflow_code', $request->code)->where('id', '!=', $request->id)->first();
+
+        $response = ($model) ? false : true;
+        return response()->json(['response' => $response]);
+    }
+
+    public function search(Request $request)
+    {
        
-        $model = Workflow::where('workflow_code',$request->code)->where('id', '!=', $request->id)->first();
- 
-        $response = ($model)?false:true;
-        return response()->json(['response'=>$response]);
+       $searchData = $request->searchData;
+       $model = Workflow::select('*')
+      
+       ->where(function ($query) use ($searchData) {
+           $query->where('workflow_code', 'LIKE', '%' . $searchData . '%')
+               ->orWhere('workflow_name', 'LIKE', '%' . $searchData . '%')
+               ->orWhere('total_levels', 'LIKE', '%' . $searchData . '%');
+       })
+       ->whereNull('deleted_at')
+       ->get();
+
+   return response()->json($model);
     }
 }

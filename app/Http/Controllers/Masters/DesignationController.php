@@ -17,8 +17,20 @@ class DesignationController extends Controller
      */
     public function index()
     {
-        $designation = Designation::get()->toArray();
+        $designation = Designation::orderBy('id', 'desc')->get()->toArray();
         return view('Designation/list', ['designation' => $designation]);
+    }
+    public function create()
+    {
+        $model = array();
+        return view('Designation/DesignationDetail',compact('model'));
+    }
+    public function edit($id)
+    {
+     
+        $model = Designation::findOrFail($id);
+    
+        return view('Designation/DesignationDetail',compact('model'));
     }
 
     /**
@@ -27,39 +39,45 @@ class DesignationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function designationValidation(Request $request)
+    {
+        $model = Designation::where('name', $request->name)->where('id', '!=', $request->id)->whereNull('deleted_at')->first();
+
+        $response = ($model) ? false : true;
+       
+        return response()->json(['response' => $response]);
+    }
+
+  
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
-        $input = $request->all();
 
-        if (isset($request->is_active)) {
-            if ($request->is_active) {
-                $input['is_active'] = 1;
-            } else {
-                $input['is_active'] = 0;
-            }
+
+        $input = $request->all();
+        if ($request->id) {
+            $model = Designation::findOrFail($request->id);
+            $msg = "Updated";
         } else {
-            $input['is_active'] = 0;
+            $model = new Designation();
+            $msg = "Stored";
         }
-        if ($request->id == "") {
-            $check = Designation::where('name', $request->name)->pluck('id')->first();
+        $model->name = $request->name;
+        $model->description = $request->description;
+        $model->save();
+
+        if ($model) {
+            return redirect('designation')->with('success', "Designation " . $msg . "  successfully.");
         } else {
-            $check = null;
-        }
-        if ($check == null) {
-            unset($input['_token']);
-            $id = Designation::updateOrInsert(
-                ['id' => $request->id],
-                $input
-            );
-            if ($id) {
-                return redirect('designation')->with('success', "Designation Stored successfully.");
-            } else {
-                return redirect()->back()->withErrors(['error' => ['Insert Error']]);
-            }
-        } else {
-            return redirect('designation')->with('error', "Designation Already Exists.");
+            return redirect()->back()->withErrors(['error' => ['Insert Error']]);
         }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -91,4 +109,17 @@ class DesignationController extends Controller
       
         echo json_encode($employee_update);
     }
+     public function designationSearch(Request $request)
+     {
+        $searchData = $request->data;
+        $model = Designation::select('*')
+        ->where(function ($query) use ($searchData) {
+            $query->where('name', 'LIKE', '%' . $searchData . '%')
+                ->orWhere('description', 'LIKE', '%' . $searchData . '%');
+               
+        })
+        ->whereNull('deleted_at')
+        ->get();
+        return response()->json($model);
+     }
 }

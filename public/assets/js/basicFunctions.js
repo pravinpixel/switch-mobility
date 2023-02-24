@@ -15,6 +15,10 @@ $(document).ready(
             });
         });
     });
+    setTimeout(function() {
+        $('.alert').fadeOut('fast');
+    }, 5000);
+
     function workFlowType(type){
         if (type == "0") {
             $('.fullWorkflow').hide();

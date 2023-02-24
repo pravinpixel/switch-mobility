@@ -40,7 +40,13 @@ class ProjectController extends Controller
         return view('Projects/list', ['document_type' => $document_type, 'workflow' => $workflow, 'projects_all' => $projects_all, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
         //return view('Projects/listPageOrg', ['document_type' => $document_type, 'workflow' => $workflow, 'projects_all' => $projects_all, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
     }
-
+public function create()
+{
+$employee =Employee::whereNull('deleted_at')->get();
+$document_type=DocumentType::whereNull('deleted_at')->get();
+$workflow =Workflow::whereNull('deleted_at')->get();
+    return view('Projects/newList',compact('employee','document_type','workflow'));
+}
     public function get_all_projects()
     {
         $projects = DB::table('projects as p')
@@ -97,8 +103,8 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
-        Log::info('ProjectController->Store:-Inside ' . json_encode($request->all()));
-
+        //Log::info('ProjectController->Store:-Inside ' . json_encode($request->all()));
+// dd($request->all());
         $workflow_id = $request->workflow_id;
 
         $workflowLevelmodels = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $workflow_id)->get();
@@ -125,15 +131,15 @@ class ProjectController extends Controller
         
             Log::info('ProjectController->Store:-ProjectData ' . json_encode($project));
             if ($project) {
-                $project->ticket_no = "WF".  date('Y-m-d').'/'.$project->id;
+                $project->ticket_no = "WF".  date('Y-m-d').'-'.$project->id;
                                 $project->save();
 
                 if (isset($request->project_id) != null) {
                     $milestone_delete = ProjectMilestone::where("project_id", $request->project_id)->delete();
                     $PL = ProjectLevels::where("project_id", $request->project_id)->delete();
                     $PA = ProjectApprover::where("project_id", $request->project_id)->delete();
-                    $PDocDet = ProjectDocumentDetail::leftjoin('project_document', 'project_document.id', '=', 'project_document_details.project_doc_id')
-                        ->leftjoin('projects', 'projects.id', '=', 'project_document.project_id')
+                    $PDocDet = ProjectDocumentDetail::leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
+                        ->leftjoin('projects', 'projects.id', '=', 'project_documents.project_id')
                         ->where("projects.id", $request->project_id)
                         ->delete();
                     $PDoc = projectDocument::where("project_id", $request->project_id)->delete();
@@ -538,20 +544,20 @@ class ProjectController extends Controller
 
         $project_details1 = DB::table('projects as p')
             ->leftjoin('project_levels as pl', 'pl.project_id', '=', 'p.id')
-            ->leftJoin('project_milestone as pm', 'pm.project_id', '=', 'p.id')
+            ->leftJoin('project_milestones as pm', 'pm.project_id', '=', 'p.id')
             ->leftjoin('employees as staff', 'staff.id', '=', 'pl.staff')
             ->where("p.id", '=', $id)
             ->select('p.ticket_no', 'pl.staff', 'pm.created_at as milestone_created', 'pm.mile_start_date', 'staff.profile_image as staff_image', 'staff.first_name as staff_first_name', 'staff.last_name as staff_last_name');
         $details1 = $project_details1->get();
         // dd($details1);
 
-        $main_doc = DB::table('project_document as p')
+        $main_doc = DB::table('project_documents as p')
             ->where("p.project_id", '=', $id)
             ->where("p.type", '=', 1)
             ->select('*');
         $maindocument = $main_doc->get();
 
-        $aux_doc = DB::table('project_document as p')
+        $aux_doc = DB::table('project_documents as p')
             ->where("p.project_id", '=', $id)
             ->where("p.type", '=', 2)
             ->select('*');
@@ -599,7 +605,7 @@ class ProjectController extends Controller
     {
         $id = $request->project_id;
         $level = $request->level;
-        $projectDataWithLevelId = Project::leftjoin('project_milestone', 'project_milestone.project_id', '=', 'projects.id')
+        $projectDataWithLevelId = Project::leftjoin('project_milestones', 'project_milestones.project_id', '=', 'projects.id')
             ->leftjoin('project_levels', 'project_levels.project_id', '=', 'projects.id')
             ->leftjoin('project_approvers', 'project_approvers.project_level_id', '=', 'project_levels.id')
             ->leftjoin('employees as staff', 'staff.id', '=', 'project_approvers.approver_id')
@@ -609,7 +615,7 @@ class ProjectController extends Controller
         // dd($projectDataWithLevelId);
         $project_details1 = DB::table('projects as p')
             ->leftjoin('project_levels as pl', 'pl.project_id', '=', 'p.id')
-            ->leftJoin('project_milestone as pm', 'pm.project_id', '=', 'p.id')
+            ->leftJoin('project_milestones as pm', 'pm.project_id', '=', 'p.id')
             ->leftjoin('employees as staff', 'staff.id', '=', 'pl.staff')
             ->where("p.id", '=', $id)
             ->where("pl.project_level", '=', $level)
@@ -706,8 +712,8 @@ class ProjectController extends Controller
     {
 
         $parentModel = projectDocument::select('ticket_no', 'type', 'project_name', 'projects.id as projectId')
-            ->leftjoin('projects', 'projects.id', 'project_document.project_id')
-            ->where('project_document.id', $request->documentId)
+            ->leftjoin('projects', 'projects.id', 'project_documents.project_id')
+            ->where('project_documents.id', $request->documentId)
             ->first();
 
         $typeOfDoc = ($parentModel->type == 2) ? 'auxillary_document' : 'main_document/';

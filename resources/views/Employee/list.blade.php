@@ -130,241 +130,7 @@
                         {{ session('error') }}
                     </div>
                     @endif
-                    <div class="card-header border-0 pt-6">
-
-                        <div class="card-title">
-
-                        </div>
-
-                        <div class="card-toolbar">
-                            <!--begin::Toolbar-->
-
-                            <!--end::Toolbar-->
-                            <!--begin::Group actions-->
-                            <div class="d-flex justify-content-end align-items-center d-none" data-kt-user-table-toolbar="selected">
-                                <div class="fw-bold me-5">
-                                    <span class="me-2" data-kt-user-table-select="selected_count"></span>Selected
-                                </div>
-                                <button type="button" class="btn btn-danger" data-kt-user-table-select="delete_selected">Delete Selected</button>
-                            </div>
-                            <!--end::Group actions-->
-
-                            <!--begin::Modal - Add task-->
-                            <div class="modal fade" id="kt_modal_add_user" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-                                <!--begin::Modal dialog-->
-                                <div class="modal-dialog modal-dialog-centered mw-850px">
-                                    <!--begin::Modal content-->
-                                    <div class="modal-content">
-
-                                        <!--begin::Modal header-->
-                                        <div class="modal-header" id="kt_modal_add_user_header">
-                                            <!--begin::Modal title-->
-                                            <h2 class="fw-bold">Add</h2>
-                                            <!--end::Modal title-->
-                                            <!--begin::Close-->
-                                            <div class="btn btn-icon btn-sm btn-active-icon-danger" data-bs-dismiss="modal">
-                                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                                                <span class="svg-icon svg-icon-1">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
-                                                    </svg>
-                                                </span>
-                                                <!--end::Svg Icon-->
-                                            </div>
-                                            <!--end::Close-->
-                                        </div>
-                                        <!--end::Modal header-->
-                                        <!--begin::Modal body-->
-                                        <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-
-                                            <form name="createForm" id="designation_form1" class="form" method="post" enctype="multipart/form-data" action="{{ url('employees') }}" pkey="">
-                                                @csrf
-                                                <input type="hidden" name="id" class="PrimKey" value="">
-                                                <input type="hidden" name="is_active" value="1">
-                                                <div class="fv-row mb-7" style="display: none">
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex flex-stack">
-                                                        <!--begin::Label-->
-                                                        <div class="me-5">
-                                                            <!--begin::Label-->
-                                                            <label class="fs-6 fw-semibold">Active</label>
-                                                            <!--end::Label-->
-
-                                                        </div>
-                                                        <!--end::Label-->
-                                                        <!--begin::Switch-->
-                                                        <label class="form-check form-switch form-check-custom form-check-solid">
-                                                            <!--begin::Input-->
-                                                            <input class="form-check-input" name="is_active" type="checkbox" value="1" id="kt_modal_add_customer_billing" checked="checked" />
-                                                            <!--end::Input-->
-                                                            <!--begin::Label-->
-                                                            <span class="form-check-label fw-semibold text-muted" for="kt_modal_add_customer_billing">Yes</span>
-                                                            <!--end::Label-->
-                                                        </label>
-                                                        <!--end::Switch-->
-                                                    </div>
-                                                    <!--begin::Wrapper-->
-                                                </div>
-                                                <!--end::Input group-->
-
-                                                <div class="row g-9 mb-7">
-                                                    <!--begin::Col-->
-                                                    <div class="col-md-6 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="required fs-6 fw-semibold mb-2">First
-                                                            Name</label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <input type="text" class="form-control form-control-solid" placeholder="Enter First Name" name="first_name" />
-                                                        <p id="firstNameAlert" class="notifyAlert"></p>
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--end::Col-->
-
-                                                    <!--begin::Col-->
-                                                    <div class="col-md-6 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="required fs-6 fw-semibold mb-2">Last Name</label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <input type="text" class="form-control form-control-solid" placeholder="Enter Last Name" name="last_name" />
-
-                                                        <p id="lastNameAlert" class="notifyAlert"></p>
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--end::Col-->
-
-                                                    <!--begin::Col-->
-                                                    <div class="col-md-6 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="required fs-6 fw-semibold mb-2">Email</label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <input type="email" class="form-control form-control-solid email" placeholder="Enter Email" name="email" />
-                                                        <p id="emailAlert" class="notifyAlert"></p>
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--end::Col-->
-
-
-                                                    <!--begin::Col-->
-                                                    <div class="col-md-6 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="required fs-6 fw-semibold mb-2">Mobile</label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <input type="text" pattern="\d*" class="form-control form-control-solid mobile" placeholder="Enter Mobile" name="mobile" autocomplete="off" maxlength="10" />
-                                                        <p id="mobileAlert" class="notifyAlert"></p>
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--end::Col-->
-
-
-                                                    <!--begin::Col-->
-                                                    <div class="col-md-6 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="required fs-6 fw-semibold mb-2">Department</label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <select class="form-control form-control-solid department" name="department_id">
-                                                            <option value="">Select</option>
-                                                            @foreach ($departments as $dept)
-                                                            <option value="<?php echo $dept['id']; ?>"><?php echo $dept['name']; ?>
-                                                            </option>
-                                                            @endforeach
-                                                        </select>
-                                                        <p id="departmentAlert" class="notifyAlert"></p>
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--end::Col-->
-
-                                                    <!--begin::Col-->
-                                                    <div class="col-md-6 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="required fs-6 fw-semibold mb-2">Designation</label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <select class="form-control form-control-solid designation_id" name="designation_id">
-                                                            <option value="">Select</option>
-                                                            @foreach ($designation as $des)
-                                                            <option value="<?php echo $des['id']; ?>"><?php echo $des['name']; ?>
-                                                            </option>
-                                                            @endforeach
-                                                        </select>
-                                                        <p id="designationAlert" class="notifyAlert"></p>
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--end::Col-->
-
-                                                    <!--begin::Col-->
-                                                    <div class="col-md-6 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="required fs-6 fw-semibold mb-2">SAP-ID</label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <input type="text" class="form-control form-control-solid sapId" placeholder="Enter SAP-ID" name="sap_id" />
-                                                        <p id="sapIdAlert" class="notifyAlert"></p>
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--end::Col-->
-
-                                                    <!--begin::Col-->
-                                                    <div class="col-md-6 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="fs-6 fw-semibold mb-2">Profile</label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <input type="file" class="form-control form-control-solid" name="profile_image" />
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--end::Col-->
-
-                                                    <!--begin::Col-->
-                                                    <div class="col-md-6 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="fs-6 fw-semibold mb-2">Signature</label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <input type="file" class="form-control form-control-solid" name="sign_image" />
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--end::Col-->
-
-
-                                                    <!--begin::Col-->
-                                                    <div class="col-md-12 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="fs-6 fw-semibold mb-2">Address</label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <textarea class="form-control form-control-solid" name="address" rows="4" cols="50"></textarea>
-
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--end::Col-->
-                                                </div>
-
-                                                {{-- FORM --}}
-                                                <div class="text-center pt-15">
-                                                    <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Reset</button>
-                                                    <input type="submit" class="btn btn-primary submit" data-kt-users-modal-action="submit">
-                                                    <!-- <span class="indicator-label">Save and Exit</span>
-                                                                        <span class="indicator-progress">Please wait... -->
-                                                    <!-- <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span> -->
-
-                                                </div>
-
-                                            </form>
-
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
+                   
                     <!--end::Card header-->
                     <!--begin::Card body-->
                     <div class="card-body py-4">
@@ -449,7 +215,8 @@
                         <button class="badge badge-warning badge-sm" onclick="resetFilter()"><i class="fa fa-refresh" aria-hidden="true" style="color: #172d93;"></i></button>
                         @if (auth()->user()->is_super_admin == 1 ||
                         auth()->user()->can('employee-create'))
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user">
+                        <a href="{{url('employees/create')}}">
+                        <button type="button" class="btn btn-primary">
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                             <span class="svg-icon svg-icon-2">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -459,6 +226,7 @@
                             </span>
                             <!--end::Svg Icon-->Add
                         </button>
+                        </a>
                         @endif
 
 
@@ -505,7 +273,7 @@
                                     <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
                                         <a href="javascript:void(0);">
                                             <div class="symbol-label">
-                                                <img src="{{ asset('images/' . $pImage) }}" alt="" width="50" height="50" class="w-100" />
+                                                <img src="{{ asset('images/Employee/' . $pImage) }}" alt="" width="50" height="50" class="w-100" />
                                             </div>
                                         </a>
                                     </div>
@@ -533,7 +301,7 @@
                                         <!--begin::Edit-->
                                         @if (auth()->user()->is_super_admin == 1 ||
                                         auth()->user()->can('employee-edit'))
-                                        <a href="#" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer<?php echo $d->id; ?>">
+                                        <a href="{{route('employees.edit',$d->id)}}" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" >
                                             <span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit">
                                                 <!--begin::Svg Icon | path: icons/duotune/art/art005.svg-->
                                                 <span class="svg-icon svg-icon-3">
@@ -580,225 +348,7 @@
 </div>
 
 <!-- Edit Model -->
-@foreach ($employee_all as $key => $d)
-<div class="modal fade" id="kt_modal_add_customer<?php echo $d->id; ?>" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-    <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered mw-850px">
-        <!--begin::Modal content-->
-        <div class="modal-content">
 
-            <!--begin::Modal header-->
-            <div class="modal-header" id="kt_modal_add_user_header">
-                <!--begin::Modal title-->
-                <h2 class="fw-bold">Edit</h2>
-                <!--end::Modal title-->
-                <!--begin::Close-->
-                <div class="btn btn-icon btn-sm btn-active-icon-danger" data-bs-dismiss="modal">
-                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                    <span class="svg-icon svg-icon-1">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
-                        </svg>
-                    </span>
-                    <!--end::Svg Icon-->
-                </div>
-                <!--end::Close-->
-            </div>
-            <!--end::Modal header-->
-            <!--begin::Modal body-->
-            <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-
-
-                <form name="editForm" id="designation_form1" class="form" method="post" enctype="multipart/form-data" action="{{ url('employees') }}" pkey="{{ $d->id }}">
-                    @csrf
-                    <div class="fv-row mb-7">
-                        <!--begin::Wrapper-->
-                        <div class="d-flex flex-stack">
-                            <!--begin::Label-->
-                            <div class="me-5">
-                                <!--begin::Label-->
-                                <label class="fs-6 fw-semibold"></label>
-                                <!--end::Label-->
-
-                            </div>
-                            <!--end::Label-->
-                            <!--begin::Switch-->
-                            <label class="form-check form-switch form-check-custom form-check-solid">In Active
-                                <!--begin::Input-->
-                                <input class="form-check-input" name="is_active" type="checkbox" value="1" id="kt_modal_add_customer_billing" <?php if ($d->employee_status == 1) {
-                                                                                                                                                    echo 'checked';
-                                                                                                                                                } ?> />
-                                <!--end::Input-->
-                                <!--begin::Label-->
-                                <span class="form-check-label fw-semibold text-muted" for="kt_modal_add_customer_billing">Active</span>
-                                <!--end::Label-->
-                            </label>
-                            <!--end::Switch-->
-                        </div>
-                        <!--begin::Wrapper-->
-                    </div>
-                    <!--end::Input group-->
-
-                    <div class="row g-9 mb-7">
-                        <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
-                            <!--begin::Label-->
-                            <label class="required fs-6 fw-semibold mb-2">First Name</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <input type="text" required class="form-control form-control-solid editFirstName" placeholder="Enter First Name" name="first_name" value="{{ $d->first_name }}" />
-                            <!--end::Input-->
-                            <p id="firstNameAlert" class="notifyAlert"></p>
-                        </div>
-                        <!--end::Col-->
-
-                        <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
-                            <!--begin::Label-->
-                            <label class="required fs-6 fw-semibold mb-2">Last Name</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <input type="text" class="form-control form-control-solid editLastName1" placeholder="Enter Last Name" name="last_name" value="{{ $d->last_name }}" />
-                            <!--end::Input-->
-                            <p id="lastNameAlert" class="notifyAlert"></p>
-                        </div>
-                        <!--end::Col-->
-
-                        <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
-                            <!--begin::Label-->
-                            <label class="required fs-6 fw-semibold mb-2">Email</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <input type="email" class="form-control form-control-solid email editEmail" placeholder="Enter Email" name="email" value="{{ $d->email }}" required />
-                            <!--end::Input-->
-                            <p id="emailAlert" class="notifyAlert"></p>
-                        </div>
-                        <!--end::Col-->
-
-
-                        <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
-                            <!--begin::Label-->
-                            <label class="required fs-6 fw-semibold mb-2">Mobile</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <input type="number" class="form-control form-control-solid mobile editMobile" pattern="\d*" placeholder="Enter Mobile" name="mobile" value="{{ $d->mobile }}" maxlength="10" required />
-                            <p id="mobileAlert" class="notifyAlert"></p>
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Col-->
-
-
-                        <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
-                            <!--begin::Label-->
-                            <label class="required fs-6 fw-semibold mb-2">Department</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <select class="form-control form-control-solid editDepartment" name="department_id">
-                                <option value="">Select</option>
-                                @foreach ($departments as $dept)
-                                <option <?php if ($d->department_id == $dept['id']) {
-                                            echo 'selected';
-                                        } ?> value="<?php echo $dept['id']; ?>"><?php echo $dept['name']; ?>
-                                </option>
-                                @endforeach
-                            </select>
-                            <p id="departmentAlert" class="notifyAlert"></p>
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Col-->
-
-                        <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
-                            <!--begin::Label-->
-                            <label class="required fs-6 fw-semibold mb-2">Designation</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <select class="form-control form-control-solid editDesignation" name="designation_id">
-                                <option value="">Select</option>
-                                @foreach ($designation as $des)
-                                <option <?php if ($d->designation_id == $des['id']) {
-                                            echo 'selected';
-                                        } ?> value="<?php echo $des['id']; ?>"><?php echo $des['name']; ?>
-                                </option>
-                                @endforeach
-                            </select>
-                            <p id="designationAlert" class="notifyAlert"></p>
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Col-->
-
-                        <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
-                            <!--begin::Label-->
-                            <label class="required fs-6 fw-semibold mb-2">SAP-ID</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <input type="text" class="form-control form-control-solid sapId editSapId" placeholder="Enter SAP-ID" name="sap_id" value="{{ $d->sap_id }}" required />
-                            <p id="sapIdAlert" class="notifyAlert"></p>
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Col-->
-
-                        <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
-                            <!--begin::Label-->
-                            <label class="fs-6 fw-semibold mb-2">Profie</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <input type="file" class="form-control form-control-solid" name="profile_image" />
-                            <!--end::Input-->
-                            <img src="{{ asset('images/' . $d->profile_image) }}" width="50" height="50">
-                        </div>
-                        <!--end::Col-->
-
-                        <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
-                            <!--begin::Label-->
-                            <label class="fs-6 fw-semibold mb-2">Signature</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <input type="file" class="form-control form-control-solid" name="sign_image" />
-                            <!--end::Input-->
-                            <img src="{{ asset('images/' . $d->sign_image) }}" width="50" height="50">
-                        </div>
-                        <!--end::Col-->
-
-
-                        <!--begin::Col-->
-                        <div class="col-md-12 fv-row">
-                            <!--begin::Label-->
-                            <label class="fs-6 fw-semibold mb-2">Address</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <textarea class="form-control form-control-solid" name="address" rows="4" cols="50">{{ $d->address }}</textarea>
-                            <input type="hidden" name="id" class="PrimKey" value="{{ $d->id }}">
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Col-->
-                    </div>
-
-                    {{-- FORM --}}
-                    <div class="text-center pt-15">
-                        <button type="reset" class="btn btn-light-danger me-3" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary submit">Update & Exit</button>
-                        <!-- <span class="indicator-label">Update and Exit</span>
-                                            <span class="indicator-progress">Please wait...
-                                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span> -->
-                        </button>
-                    </div>
-
-                </form>
-
-            </div>
-
-        </div>
-    </div>
-</div>
-@endforeach
 @endsection
 <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
 </script>
@@ -1023,10 +573,10 @@
                             var activeStatus = (val.is_active == 1) ? "checked" : "";
                             console.log(activeStatus);
                             var pic = val.profile_image;
+                            var editurl = '{{ route("employees.edit", ":id") }}';
+                            editurl = editurl.replace(':id', id);
                             var editBtn = (
-                                '<a href="#" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer' +
-                                id +
-                                '"<span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit"><span class="svg-icon svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path opacity="0.3" d="M21.4 8.35303L19.241 10.511L13.485 4.755L15.643 2.59595C16.0248 2.21423 16.5426 1.99988 17.0825 1.99988C17.6224 1.99988 18.1402 2.21423 18.522 2.59595L21.4 5.474C21.7817 5.85581 21.9962 6.37355 21.9962 6.91345C21.9962 7.45335 21.7817 7.97122 21.4 8.35303ZM3.68699 21.932L9.88699 19.865L4.13099 14.109L2.06399 20.309C1.98815 20.5354 1.97703 20.7787 2.03189 21.0111C2.08674 21.2436 2.2054 21.4561 2.37449 21.6248C2.54359 21.7934 2.75641 21.9115 2.989 21.9658C3.22158 22.0201 3.4647 22.0084 3.69099 21.932H3.68699Z" fill="currentColor" /><path d="M5.574 21.3L3.692 21.928C3.46591 22.0032 3.22334 22.0141 2.99144 21.9594C2.75954 21.9046 2.54744 21.7864 2.3789 21.6179C2.21036 21.4495 2.09202 21.2375 2.03711 21.0056C1.9822 20.7737 1.99289 20.5312 2.06799 20.3051L2.696 18.422L5.574 21.3ZM4.13499 14.105L9.891 19.861L19.245 10.507L13.489 4.75098L4.13499 14.105Z" fill="currentColor" /></svg> </span></span></a>'
+                                '<a href="'+editurl+'" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" <span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit"><span class="svg-icon svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path opacity="0.3" d="M21.4 8.35303L19.241 10.511L13.485 4.755L15.643 2.59595C16.0248 2.21423 16.5426 1.99988 17.0825 1.99988C17.6224 1.99988 18.1402 2.21423 18.522 2.59595L21.4 5.474C21.7817 5.85581 21.9962 6.37355 21.9962 6.91345C21.9962 7.45335 21.7817 7.97122 21.4 8.35303ZM3.68699 21.932L9.88699 19.865L4.13099 14.109L2.06399 20.309C1.98815 20.5354 1.97703 20.7787 2.03189 21.0111C2.08674 21.2436 2.2054 21.4561 2.37449 21.6248C2.54359 21.7934 2.75641 21.9115 2.989 21.9658C3.22158 22.0201 3.4647 22.0084 3.69099 21.932H3.68699Z" fill="currentColor" /><path d="M5.574 21.3L3.692 21.928C3.46591 22.0032 3.22334 22.0141 2.99144 21.9594C2.75954 21.9046 2.54744 21.7864 2.3789 21.6179C2.21036 21.4495 2.09202 21.2375 2.03711 21.0056C1.9822 20.7737 1.99289 20.5312 2.06799 20.3051L2.696 18.422L5.574 21.3ZM4.13499 14.105L9.891 19.861L19.245 10.507L13.489 4.75098L4.13499 14.105Z" fill="currentColor" /></svg> </span></span></a>'
                             );
                             var Action = (editBtn +
                                 '<a class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" href="javascript:void(0);" class="menu-link px-3" onclick="delete_item(' +
@@ -1082,7 +632,7 @@
                             var activeStatus = (val.is_active == 1) ? "checked" : "";
 
                             var pic = (val.profile_image)?val.profile_image:'noimage.png';
-                            var folder = "images/";
+                            var folder = "images/Employee/";
                             folder += pic;
 
                             var firsttd =
@@ -1099,10 +649,10 @@
                             firsttd += ' <span style="position:relative;left:59px;bottom:43px;">Email:' + email + '</span>';
                             firsttd += ' </div>';
 
+                            var editurl = '{{ route("employees.edit", ":id") }}';
+                            editurl = editurl.replace(':id', id);
                             var editBtn = (
-                                '<a href="#" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer' +
-                                id +
-                                '"<span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit"><span class="svg-icon svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path opacity="0.3" d="M21.4 8.35303L19.241 10.511L13.485 4.755L15.643 2.59595C16.0248 2.21423 16.5426 1.99988 17.0825 1.99988C17.6224 1.99988 18.1402 2.21423 18.522 2.59595L21.4 5.474C21.7817 5.85581 21.9962 6.37355 21.9962 6.91345C21.9962 7.45335 21.7817 7.97122 21.4 8.35303ZM3.68699 21.932L9.88699 19.865L4.13099 14.109L2.06399 20.309C1.98815 20.5354 1.97703 20.7787 2.03189 21.0111C2.08674 21.2436 2.2054 21.4561 2.37449 21.6248C2.54359 21.7934 2.75641 21.9115 2.989 21.9658C3.22158 22.0201 3.4647 22.0084 3.69099 21.932H3.68699Z" fill="currentColor" /><path d="M5.574 21.3L3.692 21.928C3.46591 22.0032 3.22334 22.0141 2.99144 21.9594C2.75954 21.9046 2.54744 21.7864 2.3789 21.6179C2.21036 21.4495 2.09202 21.2375 2.03711 21.0056C1.9822 20.7737 1.99289 20.5312 2.06799 20.3051L2.696 18.422L5.574 21.3ZM4.13499 14.105L9.891 19.861L19.245 10.507L13.489 4.75098L4.13499 14.105Z" fill="currentColor" /></svg> </span></span></a>'
+                                '<a href="'+editurl+'" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" <span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit"><span class="svg-icon svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path opacity="0.3" d="M21.4 8.35303L19.241 10.511L13.485 4.755L15.643 2.59595C16.0248 2.21423 16.5426 1.99988 17.0825 1.99988C17.6224 1.99988 18.1402 2.21423 18.522 2.59595L21.4 5.474C21.7817 5.85581 21.9962 6.37355 21.9962 6.91345C21.9962 7.45335 21.7817 7.97122 21.4 8.35303ZM3.68699 21.932L9.88699 19.865L4.13099 14.109L2.06399 20.309C1.98815 20.5354 1.97703 20.7787 2.03189 21.0111C2.08674 21.2436 2.2054 21.4561 2.37449 21.6248C2.54359 21.7934 2.75641 21.9115 2.989 21.9658C3.22158 22.0201 3.4647 22.0084 3.69099 21.932H3.68699Z" fill="currentColor" /><path d="M5.574 21.3L3.692 21.928C3.46591 22.0032 3.22334 22.0141 2.99144 21.9594C2.75954 21.9046 2.54744 21.7864 2.3789 21.6179C2.21036 21.4495 2.09202 21.2375 2.03711 21.0056C1.9822 20.7737 1.99289 20.5312 2.06799 20.3051L2.696 18.422L5.574 21.3ZM4.13499 14.105L9.891 19.861L19.245 10.507L13.489 4.75098L4.13499 14.105Z" fill="currentColor" /></svg> </span></span></a>'
                             );
                             //   var img=('<img src='  'width=50' 'height=50' 'class=w-100'' />')
                             var Action = (editBtn +
@@ -1161,7 +711,7 @@
                             var activeStatus = (val.is_active == 1) ? "checked" : "";
 
                             var pic = (val.profile_image)?val.profile_image:'noimage.png';
-                            var folder = "images/";
+                            var folder = "images/Employee/";
                             folder += pic;
 
                             var firsttd =
@@ -1177,11 +727,10 @@
                             firsttd += '<a href="javascript:void(0);"class="text-gray-800 text-hover-primary mb-1" style="position:relative;left:59px;bottom:43px;">' + firstName + ' ' + lastName + '</a>';
                             firsttd += ' <span style="position:relative;left:59px;bottom:43px;">Email:' + email + '</span>';
                             firsttd += ' </div>';
-
+                            var editurl = '{{ route("employees.edit", ":id") }}';
+                            editurl = editurl.replace(':id', id);
                             var editBtn = (
-                                '<a href="#" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer' +
-                                id +
-                                '"<span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit"><span class="svg-icon svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path opacity="0.3" d="M21.4 8.35303L19.241 10.511L13.485 4.755L15.643 2.59595C16.0248 2.21423 16.5426 1.99988 17.0825 1.99988C17.6224 1.99988 18.1402 2.21423 18.522 2.59595L21.4 5.474C21.7817 5.85581 21.9962 6.37355 21.9962 6.91345C21.9962 7.45335 21.7817 7.97122 21.4 8.35303ZM3.68699 21.932L9.88699 19.865L4.13099 14.109L2.06399 20.309C1.98815 20.5354 1.97703 20.7787 2.03189 21.0111C2.08674 21.2436 2.2054 21.4561 2.37449 21.6248C2.54359 21.7934 2.75641 21.9115 2.989 21.9658C3.22158 22.0201 3.4647 22.0084 3.69099 21.932H3.68699Z" fill="currentColor" /><path d="M5.574 21.3L3.692 21.928C3.46591 22.0032 3.22334 22.0141 2.99144 21.9594C2.75954 21.9046 2.54744 21.7864 2.3789 21.6179C2.21036 21.4495 2.09202 21.2375 2.03711 21.0056C1.9822 20.7737 1.99289 20.5312 2.06799 20.3051L2.696 18.422L5.574 21.3ZM4.13499 14.105L9.891 19.861L19.245 10.507L13.489 4.75098L4.13499 14.105Z" fill="currentColor" /></svg> </span></span></a>'
+                                '<a href="'+editurl+'" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" <span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit"><span class="svg-icon svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path opacity="0.3" d="M21.4 8.35303L19.241 10.511L13.485 4.755L15.643 2.59595C16.0248 2.21423 16.5426 1.99988 17.0825 1.99988C17.6224 1.99988 18.1402 2.21423 18.522 2.59595L21.4 5.474C21.7817 5.85581 21.9962 6.37355 21.9962 6.91345C21.9962 7.45335 21.7817 7.97122 21.4 8.35303ZM3.68699 21.932L9.88699 19.865L4.13099 14.109L2.06399 20.309C1.98815 20.5354 1.97703 20.7787 2.03189 21.0111C2.08674 21.2436 2.2054 21.4561 2.37449 21.6248C2.54359 21.7934 2.75641 21.9115 2.989 21.9658C3.22158 22.0201 3.4647 22.0084 3.69099 21.932H3.68699Z" fill="currentColor" /><path d="M5.574 21.3L3.692 21.928C3.46591 22.0032 3.22334 22.0141 2.99144 21.9594C2.75954 21.9046 2.54744 21.7864 2.3789 21.6179C2.21036 21.4495 2.09202 21.2375 2.03711 21.0056C1.9822 20.7737 1.99289 20.5312 2.06799 20.3051L2.696 18.422L5.574 21.3ZM4.13499 14.105L9.891 19.861L19.245 10.507L13.489 4.75098L4.13499 14.105Z" fill="currentColor" /></svg> </span></span></a>'
                             );
                             //   var img=('<img src='  'width=50' 'height=50' 'class=w-100'' />')
                             var Action = (editBtn +
@@ -1212,9 +761,7 @@
             });
         });
 
-    setTimeout(function() {
-        $('.alert').fadeOut('fast');
-    }, 5000);
+
 
     function delete_item(id) {
         Swal.fire({

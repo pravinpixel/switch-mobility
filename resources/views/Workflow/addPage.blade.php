@@ -297,7 +297,9 @@
 
                 {{-- FORM --}}
                 <div class="text-center mb-5">
-                    <button type="reset" class="btn btn-light me-3">Reset</button>
+                    <button type="reset" class="btn btn-light me-3" onclick="resetForm()">Reset</button>
+                    <a href="{{route('workflow.index')}}">
+                                    <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
                     <button type="submit" class="btn btn-primary " id="submitBtn" data-kt-users-modal-action="submit">
                         <span class="indicator-label">Save and Exit</span>
                         <span class="indicator-progress">Please wait...
@@ -313,10 +315,7 @@
 </div>
 </div>
 <script>
-    $("form").on("reset", function() {
-        // code to run when form is reset
-        $(".append-elements").remove();
-    });
+    
 </script>
 @endsection
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
@@ -333,6 +332,10 @@
 <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script>
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
 <script>
+    function resetForm() {
+        $("#department_form")[0].reset();
+        $('.designation').val('').trigger('change');
+    }
     $(document).ready(function() {
         // on form submit
         $("#department_form1").on('submit', function() {

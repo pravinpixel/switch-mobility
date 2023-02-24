@@ -11,18 +11,77 @@ use Illuminate\Support\Facades\DB;
 class EmployeeController extends Controller
 {
 
+    public function create()
+    {
+        $departments = Department::get();
+        $designation = Designation::get();
+        $model = array();
+        return view('Employee/EmployeeDetails', ['model' => $model, 'departments' => $departments, 'designation' => $designation]);
+    }
+    public function edit($id)
+    {
+        $departments = Department::get();
+        $designation = Designation::get();
+        $model = Employee::findOrFail($id);
+        return view('Employee/EmployeeDetails', ['model' => $model, 'departments' => $departments, 'designation' => $designation]);
+    }
+
+    public function store(Request $request)
+    {
+
+        if ($request->id) {
+            $model = Employee::findOrFail($request->id);
+            $msg = "Updated";
+        } else {
+            $model = new Employee();
+            $msg = "stored";
+        }
+        $model->first_name = $request->first_name;
+        $model->last_name = $request->last_name;
+        $model->email = $request->email;
+        $model->mobile = $request->mobile;
+        $model->department_id = $request->department_id;
+        $model->designation_id = $request->designation_id;
+        $model->sap_id = $request->sap_id;
+        $model->save();
+
+        if ($request->hasFile('profile_image')) {
+
+            $image = $request->file('profile_image');
+            $profile_image = "p" . time() . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('/images/Employee');
+            $image->move($destinationPath, $profile_image);
+
+            $model->profile_image =  $profile_image;
+            $model->save();
+
+        }
+        
+        if ($request->hasFile('sign_image')) {
+            $image = $request->file('sign_image');
+            $sign_image = "s" . time() . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('/images/Employee');
+            $image->move($destinationPath, $sign_image);
+            $model->sign_image =  $sign_image;
+            $model->save();
+        }
+
+
+
+        return redirect('employees')->with('success', "Employee " . $msg . " Successfully!.");
+    }
     public function employeeSearch(Request $request)
     {
-        
+
         $searchData = $request->searchData;
-        $searchData1="";
-        if($searchData == "active"|| $searchData == "Active"){
-            $searchData1 = 1;            
+        $searchData1 = "";
+        if ($searchData == "active" || $searchData == "Active") {
+            $searchData1 = 1;
         }
-        if($searchData == "in active" || $searchData == "In-active"){
+        if ($searchData == "in active" || $searchData == "In-active") {
             $searchData1 = 0;
         }
-       
+
         $model = Employee::select('employees.id', 'employees.first_name', 'employees.email', 'employees.last_name', 'employees.profile_image', 'employees.mobile', 'employees.is_active', 'employees.sap_id', 'departments.name as deptName', 'designations.name as desgName')
             ->leftjoin('departments', 'departments.id', '=', 'employees.department_id')
             ->leftjoin('designations', 'designations.id', '=', 'employees.designation_id')
@@ -37,7 +96,7 @@ class EmployeeController extends Controller
             })
             ->whereNull('employees.deleted_at')
             ->get();
-        
+
         return response()->json($model);
     }
     public function getEmployeeDetailByParams(Request $request)
@@ -76,8 +135,8 @@ class EmployeeController extends Controller
             ->join('departments as d', 'd.id', '=', 'e.department_id')
             ->join('designations as de', 'de.id', '=', 'e.designation_id')
             ->whereNull('e.deleted_at')
-          
-            
+
+
             ->get();
         return $employees;
     }
@@ -116,9 +175,9 @@ class EmployeeController extends Controller
             ->get();
         echo json_encode($employees);
     }
-    public function store(Request $request)
+    public function store1(Request $request)
     {
-
+        dd($request->all());
         if ($request->id == "") {
             $check_email = Employee::where('email', $request->email)->whereNull('employees.deleted_at')->pluck('id')->first();
         } else {

@@ -189,169 +189,7 @@
                                             <!--end::Close-->
                                         </div>
                                         <!--end::Modal header-->
-                                        <!--begin::Modal body-->
-                                        <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-
-                                            <form id="designation_form" class="form" method="post" enctype="multipart/form-data" action="{{url('workflow')}}">
-                                                @csrf
-                                                <div class="fv-row mb-7">
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex flex-stack">
-                                                        <!--begin::Label-->
-                                                        <div class="me-5">
-
-
-                                                        </div>
-                                                        <!--end::Label-->
-                                                        <!--begin::Switch-->
-                                                        <label class="form-check form-switch form-check-custom form-check-solid">
-                                                            <!--begin::Input-->
-                                                            <span class="form-check-label fw-semibold text-muted" for="kt_modal_add_customer_billing">Full</span>&nbsp;
-
-                                                            <input class="form-check-input partial" name="workflow_type" type="checkbox" id="kt_modal_add_customer_billing" />
-                                                            <!--end::Input-->
-                                                            <!--begin::Label-->
-                                                            <span class="form-check-label fw-semibold text-muted" for="kt_modal_add_customer_billing">Partial</span>
-                                                            <!--end::Label-->
-                                                        </label>
-                                                        <!--end::Switch-->
-                                                    </div>
-                                                    <!--begin::Wrapper-->
-                                                </div>
-                                                <!--end::Input group-->
-
-                                                <div class="row g-9 mb-7">
-                                                    <!--begin::Col-->
-                                                    <div class="col-md-6 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="required fs-6 fw-semibold mb-2">Work Flow Code</label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <input type="text" class="form-control form-control-solid" placeholder="Enter Work Flow Code" name="workflow_code" required />
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--end::Col-->
-
-                                                    <!--begin::Col-->
-                                                    <div class="col-md-6 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="required fs-6 fw-semibold mb-2">Work Flow Name</label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        <input type="text" class="form-control form-control-solid" placeholder="Enter Work Flow Name" name="workflow_name" required />
-                                                        <!--end::Input-->
-                                                    </div>
-                                                    <!--end::Col-->
-                                                    <div class="">
-                                                        <div class="">
-                                                            <table class="table">
-                                                                <colgroup>
-                                                                    <col width="40%">
-                                                                    <col width="20%">
-                                                                    <col width="">
-                                                                </colgroup>
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>Levels </th>
-                                                                        <th class="text-center">Approver Designation</th>
-                                                                    </tr>
-                                                                </thead>
-
-                                                            </table>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="full_level">
-                                                        <div class="near_by_hotel_container">
-                                                            <table class="table no-border custom_table dataTable no-footer dtr-inline">
-                                                                <colgroup>
-                                                                    <col width="40%">
-                                                                    <col width="20%">
-                                                                    <col width="">
-                                                                </colgroup>
-
-                                                                <tbody>
-                                                                    @for ($i=0; $i<=10; $i++) <tr>
-                                                                        <td>
-                                                                            <label>Level-{{$i+1}}</label>
-                                                                            <input type="hidden" name="levels[]" value="{{$i+1}}" class="full_work">
-                                                                        </td>
-                                                                        <td class="text-center">
-                                                                            <select class="form-control full_work select2" name="approver_designation{{$i+1}}[]" multiple>
-                                                                                <option value="">Select</option>
-                                                                                @foreach($designation as $desi)
-                                                                                <option value="{{$desi['id']}}">{{$desi['name']}}</option>
-                                                                                @endforeach
-
-                                                                            </select>
-                                                                        </td>
-                                                                        </tr>
-                                                                        @endfor
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="multi-field-wrapper">
-                                                        <div class="multi-fields">
-                                                            <div class="multi-field">
-                                                                <table class="table no-border custom_table dataTable no-footer dtr-inline">
-                                                                    <colgroup>
-                                                                        <col width="40%">
-                                                                        <col width="20%">
-                                                                        <col width="">
-                                                                    </colgroup>
-
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td>
-                                                                                <select class="form-control select_level" name="levels[]">
-                                                                                    <option value="0">Select</option>
-                                                                                    @for($i=1;$i<=11;$i++) <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                                                                                        @endfor
-                                                                                </select>
-
-                                                                              
-                                                                                <!-- <label>Level-<span class="level_name">1</span></label> -->
-                                                                                <input type="hidden" name="levels[]" class="levels" value="1">
-                                                                            </td>
-                                                                            <td class="text-center">
-                                                                                <select class="form-control designation select2" name="approver_designation[]" multiple>
-                                                                                    <option value="">Select</option>
-                                                                                    @foreach($designation as $desi)
-                                                                                    <option value="{{$desi['id']}}">{{$desi['name']}}</option>
-                                                                                    @endforeach
-
-                                                                                </select>
-                                                                            </td>
-                                                                        </tr>
-
-                                                                    </tbody>
-                                                                </table>
-                                                                <button type="button" class="remove-field btn btn-sm btn-danger">Remove</button>
-                                                            </div>
-                                                        </div>
-                                                        <button type="button" class="add-field btn btn-sm btn-success" style="margin-left: 639px;margin-top: -36px;">Add</button>
-                                                    </div>
-
-
-
-
-                                                </div>
-                                                <b>Note: The Maximum possible level is 11</b>
-                                                {{-- FORM --}}
-                                                <div class="text-center pt-15">
-                                                    <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Reset</button>
-                                                    <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
-                                                        <span class="indicator-label">Save and Exit</span>
-                                                        <span class="indicator-progress">Please wait...
-                                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                                    </button>
-                                                </div>
-
-                                            </form>
-
-                                        </div>
+                                     
 
                                     </div>
                                 </div>
@@ -373,7 +211,7 @@
                                     </svg>
                                 </span>
                                 <!--end::Svg Icon-->
-                                <input type="text" id="searchInput" data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="Search" />
+                                <input type="text"  class="form-control form-control-solid w-250px ps-14 search" placeholder="Search" />
                             </div>
                             <!--end::Search-->
                         </div>
@@ -404,7 +242,7 @@
                                     <td>{{$d['workflow_name']}}</td>
                                     <td>{{$d['workflow_code']}}</td>
                                     <td>{{$d['total_levels']}}</td>
-                                    <td>{{($d['workflow_type'] == 1) ? 'Full' : 'Parital' }}</td>
+                                    <td>{{($d['workflow_type'] == 1) ? 'Full' : 'Partial' }}</td>
                                     <td>
                                     <label class="switch">
                                         <input type="checkbox" data-id="{{ $d['id'] }}" value="" class="status" <?php echo $d['is_active'] == 1 ? 'checked' : ''; ?>>
@@ -465,208 +303,7 @@
 
 </div>
 
-<!-- Edit Model -->
-@foreach($workflow as $key=>$d)
-<div class="modal fade" id="kt_modal_add_customer<?php echo $d['id']; ?>" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-    <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered mw-850px">
-        <!--begin::Modal content-->
-        <div class="modal-content">
 
-            <!--begin::Modal header-->
-            <div class="modal-header" id="kt_modal_add_user_header">
-                <!--begin::Modal title-->
-                <h2 class="fw-bold">Edit</h2>
-                <!--end::Modal title-->
-                <!--begin::Close-->
-                <div class="btn btn-icon btn-sm btn-active-icon-danger" data-bs-dismiss="modal">
-                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                    <span class="svg-icon svg-icon-1">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
-                        </svg>
-                    </span>
-                    <!--end::Svg Icon-->
-                </div>
-                <!--end::Close-->
-            </div>
-            <!--end::Modal header-->
-            <!--begin::Modal body-->
-            <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-
-
-
-                <form id="designation_form1" class="form designation_form_edit" method="post" enctype="multipart/form-data" action="{{url('workflow')}}">
-                    @csrf
-                    <div class="fv-row mb-7">
-                        <!--begin::Wrapper-->
-                        <div class="d-flex flex-stack">
-                            <!--begin::Label-->
-                            <div class="me-5">
-
-
-                            </div>
-                            <!--end::Label-->
-                            <!--begin::Switch-->
-                            <label class="form-check form-switch form-check-custom form-check-solid">
-                                <!--begin::Input-->
-                                <span class="form-check-label fw-semibold text-muted" for="kt_modal_add_customer_billing">Full</span>&nbsp;
-
-                                <input class="form-check-input partial1" name="workflow_type" type="checkbox" <?php if ($d['workflow_type'] == 1) {
-                                                                                                                    echo "checked";
-                                                                                                                } ?> id="kt_modal_add_customer_billing" />
-                                <!--end::Input-->
-                                <!--begin::Label-->
-                                <span class="form-check-label fw-semibold text-muted" for="kt_modal_add_customer_billing">Parial</span>
-                                <!--end::Label-->
-                            </label>
-                            <!--end::Switch-->
-                        </div>
-                        <!--begin::Wrapper-->
-                    </div>
-                    <!--end::Input group-->
-
-                    <div class="row g-9 mb-7">
-                        <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
-                            <!--begin::Label-->
-                            <label class="required fs-6 fw-semibold mb-2">Work Flow Code</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <input type="text" class="form-control form-control-solid" placeholder="Enter Work Flow Code" name="workflow_code" value="{{$d['workflow_code']}}" required />
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Col-->
-
-                        <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
-                            <!--begin::Label-->
-                            <label class="required fs-6 fw-semibold mb-2">Work Flow Name</label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <input type="text" class="form-control form-control-solid" placeholder="Enter Work Flow Name" name="workflow_name" value="{{$d['workflow_name']}}" required />
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Col-->
-                        <div class="">
-                            <div class="">
-                                <table class="table">
-                                    <colgroup>
-                                        <col width="40%">
-                                        <col width="20%">
-                                        <col width="">
-                                    </colgroup>
-                                    <thead>
-                                        <tr>
-                                            <th>Levels </th>
-                                            <th class="text-center">Approver Designation</th>
-                                        </tr>
-                                    </thead>
-
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="full_level1">
-                            <div class="near_by_hotel_container">
-                                <table class="table no-border custom_table dataTable no-footer dtr-inline">
-                                    <colgroup>
-                                        <col width="40%">
-                                        <col width="20%">
-                                        <col width="">
-                                    </colgroup>
-
-                                    <tbody class="append_div_full">
-                                        @for ($i=0; $i<=10; $i++) <tr>
-                                            <td>
-                                                <label>Level-{{$i+1}}</label>
-                                                <input type="hidden" name="levels[]" value="{{$i+1}}" class="full_work1">
-                                            </td>
-                                            <td class="text-center">
-                                                <select class="form-control full_work1 select2" name="approver_designation[]" required>
-                                                    <option value="">Select</option>
-                                                    @foreach($designation as $desi)
-                                                    <option value="{{$desi['id']}}">{{$desi['name']}}</option>
-                                                    @endforeach
-
-                                                </select>
-                                            </td>
-                                            </tr>
-                                            @endfor
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-
-                        <div class="multi-field-wrapper1 partial11">
-                            <div class="multi-fields1">
-                                <div class="multi-field1">
-                                    <table class="table no-border custom_table dataTable no-footer dtr-inline edittable">
-                                        <colgroup>
-                                            <col width="40%">
-                                            <col width="20%">
-                                            <col width="">
-                                        </colgroup>
-                                        <tbody class="append_div_partial">
-                                            <tr>
-                                                <td>
-                                                <select class="form-control select_level" name="levels[]">
-                                                                                    <option value="0">Select</option>
-                                                                                    @for($i=1;$i<=11;$i++) <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                                                                                        @endfor
-                                                                                </select>
-                                                    <!-- <label>Level-<span class="level_name1">1</span></label> -->
-                                                    <input type="hidden" name="levels[]" class="levels" value="1">
-                                                </td>
-                                                <td class="text-center">
-                                                    <select class="form-control designation select2" name="approver_designation[]" multiple required>
-                                                        <option value="">Select</option>
-                                                        @foreach($designation as $desi)
-                                                        <option value="{{$desi['id']}}">{{$desi['name']}}</option>
-                                                        @endforeach
-
-                                                    </select>
-                                                </td>
-                                               
-                                            </tr>
-
-
-                                        </tbody>
-                                    </table>
-                                    <button type="button" class="remove-field1 btn btn-sm btn-danger">Remove</button>
-                                </div>
-                            </div>
-                            <button type="button" class="add-field1 btn btn-sm btn-success" style="margin-left: 639px;margin-top: -36px;">Add</button>
-                        </div>
-
-
-
-                        <input type="hidden" class="total_levels_edit" value="{{$d['total_levels']}}">
-                        <input type="hidden" name="workflow_id" value="{{$d['id']}}">
-
-                    </div>
-                    <b>Note: The Maximum possible level is 11</b>
-                    {{-- FORM --}}
-                    <div class="text-center pt-15">
-                        <button type="reset" class="btn btn-light-danger me-3" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
-                            <span class="indicator-label">Update and Exit</span>
-                            <span class="indicator-progress">Please wait...
-                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                        </button>
-                    </div>
-
-                </form>
-
-            </div>
-
-        </div>
-    </div>
-</div>
-
-@endforeach
 
 @endsection
 
@@ -722,7 +359,7 @@ $(document).ready(function() {
 
         });
 
-
+       
     });
 </script>
 <script>
@@ -769,7 +406,7 @@ $(document).ready(function() {
     });
     $(function() {
         $('.multi-field-wrapper').each(function() {
-            console.log("well");
+           
             var $wrapper = $('.multi-fields', this);
 
             $(".add-field", $(this)).click(function(e) {
@@ -818,7 +455,7 @@ $(document).ready(function() {
                 // $(".append_div_partial").empty();
                 // $(".append_div_partial").append('<tr><td><label>Level-<span class="level_name1">1</span></label><input type="hidden" name="levels[]" class="levels1" value="1"></td><td class="text-center"><select class="form-control levels1" name="approver_designation[]" required><option value="">Select</option>@foreach($designation_edit as $desi)<option  value="{{$desi->id}}">{{$desi->name}}</option>@endforeach</select></td></tr>');
                 var length = $('table.edittable tr:last').index() + 1;
-                console.log("length:> "+length);
+               
                 if (length + 1 <= 11) {
                     $('<tr><td> <select class="form-control select_level1" name="levels[]"> <option value="0">Select</option> @for($i=1;$i<=11;$i++) <option value="<?php echo $i; ?>"><?php echo $i; ?></option> @endfor </select> <input type="hidden" name="levels[]" class="levels1" value="1"> </td><td class="text-center"> <select class="form-control designation1 select2" name="approver_designation[]" multiple required> <option value="">Select</option> @foreach($designation as $desi) <option value="{{$desi['id']}}">{{$desi['name']}}</option> @endforeach </select> </td></tr>').appendTo(".append_div_partial").find('input').val('').end()
                         .find(".level_name1").html("").end();
@@ -836,15 +473,7 @@ $(document).ready(function() {
     });
 
 
-    $(document).ready(
-        function() {
-            $('#service_table').DataTable({
-                "lengthMenu": [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, "All"]
-                ]
-            });
-        });
+  
     function delete_item(id) {
         Swal.fire({
             title: 'Are you sure?',
@@ -882,105 +511,7 @@ $(document).ready(function() {
         });
     }
 
-    function get_workflow_type(workflow_id) {
-        $.ajax({
-            url: "{{url('getWorkflowById')}}",
-            type: 'ajax',
-            method: 'post',
-            data: {
-                "_token": "{{ csrf_token() }}",
-                workflow_id: workflow_id,
-            },
-            success: function(result) {
-                var data = JSON.parse(result);
-                if (data) {
-                    var workflow_type = data.workflow_type;
-                    if (workflow_type == 1) {
-                        $(".full_level1").hide();
-                        $(".multi-field-wrapper1").show();
-                        $(".levels1").prop('disabled', false);
-                        $(".full_work1").prop('disabled', true);
-                    } else {
-                        $(".full_level1").show();
-                        $(".levels1").prop('disabled', true);
-                        $(".full_work1").prop('disabled', false);
-                        $(".multi-field-wrapper1").hide();
-                    }
-
-                    // Getting Workflow levels
-
-                    $.ajax({
-                        url: "{{url('getWorkflowLevels')}}",
-                        type: 'ajax',
-                        method: 'post',
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            workflow_id: workflow_id,
-                        },
-                        success: function(result) {
-                            var data = JSON.parse(result);
-                            console.log(data);
-                            if (data.workflow_levels) {
-
-                                var levels = data.workflow_levels;
-                                if (workflow_type == 1) {
-                                    $(".append_div_partial").empty();
-                                    for(var i = 1; i <= data.workflow.total_levels; i++){
-                                        //var level = key + 1;
-                                        $(".append_div_partial").append('<tr><td><select class="form-control select_level1 lev'+data.workflow_levels[i-1]+'" name="levels[]"> <option value="0">Select</option></select> <input type="hidden" name="levels[]" class="levels1" value="1"> </td><td class="text-center"> <select class="form-control designation1 select2 des'+data.workflow_levels[i-1]+'" name="approver_designation[]" multiple required> <option value="">Select</option></select> <button type="button" class="remove-field1 btn btn-sm btn-danger">Remove</button></td></tr>');
-                                        
-                                        for (var j = 1; j <= 11; j++)
-                                        {
-                                            if (data.workflow_levels[i-1] == j) {
-                                                var selected1 = "selected";
-                                            } else {
-                                                var selected1 = "";
-                                            }
-
-                                            var option = '<option '+selected1+' value="' + j + '">' + j +'</option>';
-                                            $('.lev'+data.workflow_levels[i-1]).append(option);
-                                        }
-                                        
-                                        $.each(data.designation, function(key, value) {
-                                            if(jQuery.inArray(value.id, data.approver[i-1]) !== -1) {
-                                                var selected = "selected";
-                                            } else {
-                                                var selected = "";
-                                            }
-                                            var option = '<option '+selected+' value="' + value.id + '">' + value.name +
-                                                '</option>';
-                                            $('.des'+data.workflow_levels[i-1]).append(option);
-                                        });
-                                    }
-                                } else {
-                                    $(".append_div_full").empty();
-                                    $.each(levels, function(key, val) {
-                                        var level = key + 1;
-
-                                        $(".append_div_full").append('<tr><td><label>Level-<span class="level_name1">' + level + '</span></label><input type="hidden" name="levels[]" class="full_work1" value="' + key + 1 + '"></td><td class="text-center"><select class="des1' + level + ' form-control full_work1" name="approver_designation'+level+'[]" multiple required><option value="">Select</option></select></td></tr>');
-                                        
-                                        $.each(data.designation, function(key1, value) {
-                                            console.log(data.approver[key]);
-                                            if(jQuery.inArray(value.id, data.approver[key]) !== -1) {
-                                                var selected = "selected";
-                                            } else {
-                                                var selected = "";
-                                            }
-                                            var option = '<option ' + selected + ' value="' + value.id + '">' + value.name +
-                                                '</option>';
-                                            $('.des1' + level).append(option);
-                                        });
-                                    });
-                                }
-
-                            }
-                        }
-                    });
-
-                }
-            }
-        });
-    }
+   
     $(document).on('change', '.status', function() {
         var id = $(this).attr('data-id');
         var status = $(this).prop('checked') == true ? 1 : 0;
@@ -990,7 +521,7 @@ $(document).ready(function() {
         } else {
             activeStatus = "InActive";
         }
-        console.log(status);
+      
 
         Swal.fire({
             title: 'Change Status',
@@ -1028,4 +559,63 @@ $(document).ready(function() {
             }
         });
     });
-</script>
+    $(document).ready(
+        function() {
+            var table =    $('#service_table').DataTable({
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ]
+            });
+       
+    $(document).on('input','.search', function() {
+            var searchData = $('.search').val();
+            $.ajax({
+                url: "{{ route('workflowSearch') }}",
+                type: 'ajax',
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    searchData: searchData,
+                },
+                success: function(data) {
+                  
+                   
+                   table.clear().draw();
+                    $.each(data, function(key, val) {
+                        var sNo = key + 1;
+                        var id = val.id;
+                        var wfname = val.workflow_name;
+                        var wfcode =  val.workflow_code;
+                        var wfLevel = val.total_levels;
+                        var wfType = (val.workflow_type==1)?"FULL":"Partial";
+                        var activeStatus = (val.is_active == 1) ? "checked" : "";
+
+                        var editurl = '{{ route("workflow.edit", ":id") }}';
+                        editurl = editurl.replace(':id', id);
+                        var result = (
+                            '<label class="switch"><input type="checkbox" data-id="' +
+                            id + '" class="status" ' + activeStatus +
+                            '>  <span class="slider round"></span></label>');
+                        var editBtn = (
+                            '<a href="' + editurl + '" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" <span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit"><span class="svg-icon svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path opacity="0.3" d="M21.4 8.35303L19.241 10.511L13.485 4.755L15.643 2.59595C16.0248 2.21423 16.5426 1.99988 17.0825 1.99988C17.6224 1.99988 18.1402 2.21423 18.522 2.59595L21.4 5.474C21.7817 5.85581 21.9962 6.37355 21.9962 6.91345C21.9962 7.45335 21.7817 7.97122 21.4 8.35303ZM3.68699 21.932L9.88699 19.865L4.13099 14.109L2.06399 20.309C1.98815 20.5354 1.97703 20.7787 2.03189 21.0111C2.08674 21.2436 2.2054 21.4561 2.37449 21.6248C2.54359 21.7934 2.75641 21.9115 2.989 21.9658C3.22158 22.0201 3.4647 22.0084 3.69099 21.932H3.68699Z" fill="currentColor" /><path d="M5.574 21.3L3.692 21.928C3.46591 22.0032 3.22334 22.0141 2.99144 21.9594C2.75954 21.9046 2.54744 21.7864 2.3789 21.6179C2.21036 21.4495 2.09202 21.2375 2.03711 21.0056C1.9822 20.7737 1.99289 20.5312 2.06799 20.3051L2.696 18.422L5.574 21.3ZM4.13499 14.105L9.891 19.861L19.245 10.507L13.489 4.75098L4.13499 14.105Z" fill="currentColor" /></svg> </span></span></a>'
+                        );
+                        var Action = (editBtn +
+                            '<a class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" href="javascript:void(0);" class="menu-link px-3" onclick="delete_item(' +
+                            id +
+                            ')"><span class="svg-icon svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor" /><path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor" /><path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor" /></svg></span></a>'
+                        );
+                        table.row.add([sNo, wfname,wfcode,wfLevel,wfType, result, Action]).draw();
+                    });
+                },
+                error: function() {
+                    $("#otp_error").text("Update Error");
+                }
+
+            });
+
+
+        });
+
+    });
+            </script>

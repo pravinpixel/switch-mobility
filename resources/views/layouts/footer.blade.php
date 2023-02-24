@@ -45,7 +45,7 @@
 		<script src="{{ asset('assets/js/custom/utilities/modals/create-app.js')}}"></script>
 		<script src="{{ asset('assets/js/custom/utilities/modals/users-search.js')}}"></script>
 		<script src="{{ asset('assets/js/sweetalert.js')}}"></script>
-		<script src="{{ asset('assets/js/select2.min.js')}}"></script>
+		<!-- <script src="{{ asset('assets/js/select2.min.js')}}"></script> -->
 		<!--end::Custom Javascript-->
 		<!--end::Javascript-->
 

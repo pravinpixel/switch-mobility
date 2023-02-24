@@ -36,14 +36,23 @@ Route::group([
     Route::post('docListingSearch', [Doclistings::class, 'docListingSearch'])->name('docListingSearch');
     Route::post('Search', [Doclistings::class, 'Search'])->name('Search')->middleware('is_admin');
     Route::resource('department', DepartmentController::class);
+    Route::post('designationSearch', [DesignationController::class, 'designationSearch'])->name('designationSearch');
     Route::post('departmentValidation', [DepartmentController::class, 'departmentValidation'])->name('departmentValidation');
+    Route::post('designationValidation', [DesignationController::class, 'designationValidation'])->name('designationValidation');
+    Route::post('documentTypeValidation', [DocumentTypeController::class, 'validation'])->name('documentTypeValidation');
 
     Route::post('changedepartmentActiveStatus', [DepartmentController::class, 'changedepartmentActiveStatus'])->name('changedepartmentActiveStatus');
     Route::post('changedesignationActiveStatus', [DesignationController::class, 'changedesignationActiveStatus'])->name('changedesignationActiveStatus');
-    
+    Route::post('deptSearch', [DepartmentController::class, 'deptSearch'])->name('deptSearch');
+    Route::post('doctypeSearch', [DocumentTypeController::class, 'doctypeSearch'])->name('doctypeSearch');
     Route::resource('designation', DesignationController::class);
+    Route::post('changedDocumentTypeActiveStatus', [DocumentTypeController::class, 'changedDocumentTypeActiveStatus'])->name('changedDocumentTypeActiveStatus');
+    Route::get('docTypeDetails', [DocumentTypeController::class, 'docTypeDetails'])->name('docTypeDetails');
+    Route::get('documentTypeEdit/{id}', [DocumentTypeController::class, 'documentTypeEdit'])->name('documentTypeEdit');
+
     Route::resource('documentType', DocumentTypeController::class);
     Route::resource('employees', EmployeeController::class);
+    
     Route::post('changeEmployeeActiveStatus', [EmployeeController::class, 'changeActiveStatus'])->name('changeActiveStatus');
     Route::post('employeeDetailById', [EmployeeController::class, 'employeeDetailById'])->name('employeeDetailById');
     Route::post('employeeDetailByDesDept', [EmployeeController::class, 'employeeDetailByDesDept'])->name('employeeDetailByDesDept');
@@ -65,6 +74,7 @@ Route::group([
     Route::post('getProjectDocs', [ProjectController::class, 'getProjectDocs'])->name('getProjectDocs')->middleware('is_admin');
     Route::post('docStatus', [ProjectController::class, 'docStatus'])->name('docStatus')->middleware('is_admin');
     Route::resource('workflow', WorkflowController::class);
+    Route::post('workflowSearch', [WorkflowController::class, 'search'])->name('workflowSearch');
     Route::post('getWorkflowById', [WorkflowController::class, 'getWorkflowById'])->name('getWorkflowById')->middleware('is_admin');
     Route::post('changeWorkflowActiveStatus', [WorkflowController::class, 'changeWorkflowActiveStatus'])->name('changeWorkflowActiveStatus');
    

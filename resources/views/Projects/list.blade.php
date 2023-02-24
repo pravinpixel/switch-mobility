@@ -257,7 +257,8 @@
                                 <!--begin::Filter-->
                                 @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('project-create'))
                                 <!--begin::Add user-->
-                                <button type="button" onclick="clear_form();" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_campaign">
+                                <a href="{{url('projects/create')}}">
+                                <button type="button"  class="btn btn-primary" >
                                     <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                                     <span class="svg-icon svg-icon-2">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -267,6 +268,7 @@
                                     </span>
                                     <!--end::Svg Icon-->Add
                                 </button>
+                                </a>
                                 @endif
                                 <!--end::Add user-->
                             </div>
