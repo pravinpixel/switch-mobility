@@ -102,7 +102,7 @@ class EmployeeController extends Controller
     public function getEmployeeDetailByParams(Request $request)
     {
 
-        $model = Employee::with('user')->whereNull('employees.deleted_at');
+        $model = Employee::with('user')->where('id','!=', $request->pkey)->whereNull('employees.deleted_at');
         if ($request->fieldname == "sapId") {
             $model->where('sap_id', $request->fieldData);
         }

@@ -315,7 +315,6 @@
 
             var email = $(this).val();
             $('.submit').prop('disabled', true);
-
             if (email) {
                 getValidationResult('email', email, pkey);
             }
@@ -329,19 +328,18 @@
                 getValidationResult('mobile', mobile, pkey);
             }
         });
-        $(".sapId").on('input', function() {
+        $(".sapId").on('input', function() { 
             var sapId = $(this).val();
             var pkey = $('.id').val();
             $('.submit').prop('disabled', true);
 
             if (sapId) {
-                getValidationResult('sapId', sapId, pkey);
+         getValidationResult('sapId', sapId, pkey);
             }
         });
     });
 
-    function finalValidation1() {
-
+function finalValidation1() {
         // to each unchecked checkbox          
         return validateFormCreate();
         console.log("damn");
@@ -372,7 +370,7 @@
 
                         });
                         $('.submit').prop('disabled', true);
-                        $("." + fieldname + "").val("");
+                       // $("." + fieldname + "").val("");
                     }
                 } else {
                     $('.submit').prop('disabled', false);
@@ -420,7 +418,9 @@
         if (firstNameError && lastNameError && emailError && mobileError && departmentError && designationError &&
             sapidError) {
 
-            $(".form").submit();
+             $(".form").submit();
+             $('.submit').prop('disabled', true);
+           
             return true;
         } else {
             console.log("Not well");
@@ -439,10 +439,10 @@
         }
         if (fieldname == "Mobile") {
             if (fieldValue != "" || fieldValue != null) {
-                if (fieldValue.length < 8) {
+                if (fieldValue.length < 10) {
                     document.getElementById(alertName).style.display = "block";
                     document.getElementById(alertName).style.color = "red";
-                    document.getElementById(alertName).innerHTML = fieldname + ' Is Minimum 8 Digit*';
+                    document.getElementById(alertName).innerHTML = fieldname + ' Is Minimum 10 Digit*';
                     return false;
                 }
 

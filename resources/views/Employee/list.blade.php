@@ -315,6 +315,8 @@
                                         </a>
                                         @endif
                                         <!--end::Edit-->
+                                        @if (auth()->user()->is_super_admin == 1 ||
+                                        auth()->user()->can('employee-delete'))
                                         <!--begin::Delete-->
                                         <a class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" href="javascript:void(0);" class="menu-link px-3" onclick="delete_item(<?php echo $d->id; ?>);">
                                             <!--begin::Svg Icon | path: icons/duotune/general/gen027.svg-->
@@ -327,6 +329,7 @@
                                             </span>
                                             <!--end::Svg Icon-->
                                         </a>
+                                        @endif
                                         <!--end::Delete-->
                                         <!--begin::More-->
 

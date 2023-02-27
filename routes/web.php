@@ -85,7 +85,9 @@ Route::group([
     Route::resource('roles', RolesController::class);
     Route::post('roleNameValidation', [RolesController::class, 'roleNameValidation'])->name('roleNameValidation');
     Route::resource('users', UserController::class);
-
+    Route::post('rolesSearch', [RolesController::class, 'search'])->name('rolesSearch');
+    Route::post('UserSearch', [UserController::class, 'search'])->name('UserSearch');
+ 
     Route::post('getWorkflowByProjectId', [ProjectController::class, 'getWorkflowByProjectId'])->name('getWorkflowByProjectId');
 
 

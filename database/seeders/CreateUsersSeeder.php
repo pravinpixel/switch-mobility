@@ -13,6 +13,7 @@ class CreateUsersSeeder extends Seeder
      */
     public function run()
     {
+        User::truncate();
         $user = [
             [
                'name'=>'Admin',

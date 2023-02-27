@@ -254,7 +254,7 @@
                                         <div class="d-flex my-3 ms-9">
                                             <!--begin::Edit-->
                                             @if (auth()->user()->is_super_admin == 1 ||
-                                            auth()->user()->can('department-edit'))
+                                            auth()->user()->can('workflow-edit'))
                                             <a href="{{ route('workflow.edit',$d['id']) }}" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" >
                                                 <span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit">
                                                     <!--begin::Svg Icon | path: icons/duotune/art/art005.svg-->
@@ -269,7 +269,7 @@
                                             </a>
                                             @endif
                                             @if (auth()->user()->is_super_admin == 1 ||
-                                            auth()->user()->can('department-edit'))
+                                            auth()->user()->can('workflow-delete'))
                                             <!--end::Edit-->
                                             <!--begin::Delete-->
                                             <a class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" href="javascript:void(0);" class="menu-link px-3" onclick="delete_item(<?php echo $d['id']; ?>);">

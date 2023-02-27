@@ -8,5 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectLevels extends Model
 {
     use HasFactory;
+    public function projectDocument()
+    {
+        return $this->hasMany(projectDocument::class, 'project_level', 'project_level');
+    }
   
 }

@@ -244,18 +244,7 @@
                     <textarea required class="form-control form-control-solid remarks" style="border: 3px solid #ccc;" name="remarks" rows="4" cols="50"></textarea>
 
                 </div>
-                <div class="col-md-12 fv-row">
-                    <!--begin::Label-->
-                    <label class="required fs-6 fw-semibold mb-2">status</label><br>
-                    <!--end::Label-->
-                    <!--begin::Input-->
-                    <select name="statusversion" id="statusversion" required class="form-control form-control-solid statusversion" style="border: 3px solid #ccc;">
-                        <option value="">Status</option>
-                        <option value="1">Pending</option>
-                        <option value="2">Completed</option>
-                    </select>
-
-                </div>
+                
                 <div class="text-center pt-15">
                     <button type="button" class="btn btn-danger me-3" onclick="closeModel()">Cancel</button>
                     <button type="button" class="btn btn-primary store" onclick="submitForm()">

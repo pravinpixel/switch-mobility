@@ -143,7 +143,7 @@
                                 <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        <img src="images/logout.jpg" alt="user" width="50px" title="logout" /></a>
+                                        <img src="{{ asset('images/logout.jpg')}}" alt="user" width="50px" title="logout" /></a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>

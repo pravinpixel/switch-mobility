@@ -31,7 +31,7 @@ class RolesController extends Controller
      */
     public function create()
     {
-        //
+        return view('settings.Role.create');
     }
 
     /**
@@ -51,12 +51,10 @@ class RolesController extends Controller
      }
     public function store(Request $request)
     {
-      
+
         Log::info('RoleController->Store:-Inside ' . json_encode($request->all()));
         $input = $request->all();
-      
         $input['guard_name'] = 'web';
-
         $permissionitems = array();
         $permissionsDatas = $input['permission'];
        
@@ -65,7 +63,7 @@ class RolesController extends Controller
            
             Log::info('ProjectController->Store:-Inside $permissionsData' . json_encode($permissionsData));
             $permissionitems[] = Permission::where('name', $permissionsData)->first()->id;
-            Log::info('ProjectController->Store:-Inside $$permissionitems[]' . json_encode($permissionitems));
+            Log::info('ProjectController->Store:-Inside permissionitems[]' . json_encode($permissionitems));
 
             // $values = array('permission_id' =>  $permissionitemsId, 'role_id' => $role->id);
             // DB::table('role_has_permissions')->insert($values);
@@ -93,24 +91,24 @@ class RolesController extends Controller
        $role->save();
       
         if (isset($permissionsDatas)) {
-          
+         
                $role->syncPermissions($permissionsNew); 
               
-             //If one or more role is selected associate user to roles
+             
             } else {
+
                //If no role is selected remove exisiting permissions associated to a role
                $p_all = Permission::all(); //Get all permissions
                foreach ($p_all as $p) {
                   $role->revokePermissionTo($p); //Remove all permissions associated with role
                }
             }
-
-          
-        if ($id) {
-
+        if ($role) {
             return redirect('roles')->with('success', "Roles Stored successfully.");
         } else {
             return redirect()->back()->withErrors(['error' => ['Insert Error']]);
+
+           
         }
     }
 
@@ -133,7 +131,8 @@ class RolesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $roles=Role::where('id',$id)->first();
+        return view('settings.Role.edit',['roles'=>$roles]);
     }
 
     /**
@@ -158,5 +157,11 @@ class RolesController extends Controller
     {
         $department_update = Role::where("id", $id)->delete();
         echo json_encode($department_update);
+    }
+    public function search(Request $request)
+    {
+        $searchData = $request->searchData;
+        $model = Role::Where('roles.name', 'LIKE', '%' . $searchData . '%')->get();
+        return response()->json($model);
     }
 }

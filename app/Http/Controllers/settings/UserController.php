@@ -5,7 +5,6 @@ namespace App\Http\Controllers\settings;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\User;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -19,13 +18,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $models = User::whereNotNull('is_admin')->orderBy('id', 'DESC')->get();
-       
+        $models = User::whereNull('is_super_admin')->orderBy('id', 'DESC')->get();
         $roles = Role::select('name', 'id')->get();
-    
         $employees = Employee::doesntHave('user')->get();
-      
-        return view('Settings/User/list', ['models' => $models, 'roles' => $roles,'employees'=>$employees]);
+        return view('Settings/User/list', ['models' => $models, 'roles' => $roles, 'employees' => $employees]);
     }
 
     /**
@@ -35,7 +31,10 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $roles = Role::select('name', 'id')->get();
+        $employees = Employee::doesntHave('user')->get();
+        $userDetails = array();
+        return view('settings.User.userCreate', ['roles' => $roles, 'employees' => $employees, 'userDetails' => $userDetails]);
     }
 
     /**
@@ -46,33 +45,27 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-       
+        // dd($request->all());
         $empModel = Employee::find($request->initiator_id);
-  
         if ($request->id) {
             $user = User::find($request->id);
             if ($request->password) {
-                $user->password =  Hash::make($request->password);
+                $user->password = Hash::make($request->password);
             }
         } else {
             $user = new User();
             $user->name = $empModel->first_name;
             $user->username = $empModel->sap_id;
-            $user->email = $empModel->email;           
+            $user->email = $empModel->email;
             $user->is_admin = 1;
             $user->emp_id = $empModel->id;
-            $user->password =  Hash::make($request->password);
-        }       
+            $user->password = Hash::make($request->password);
+        }
         $user->save();
-
-
-
         $roleModel = Role::where('id', $request->roles)->first();
-
-
         if ($request->id) {
             if (isset($roleModel)) {
-                $user->roles()->sync($roleModel);  //If one or more role is selected associate user to roles
+                $user->roles()->sync($roleModel); //If one or more role is selected associate user to roles
             } else {
                 $user->roles()->detach(); //If no role is selected remove exisiting role associated to a user
             }
@@ -107,7 +100,17 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+
+        $roles = Role::select('name', 'id')->get();
+        $userDetails = User::select('employees.id as empId', 'employees.mobile', 'employees.email', 'users.emp_id')
+            ->leftjoin('employees', 'employees.id', '=', 'users.emp_id')
+            ->where('users.id', $id)->first();
+        $employees = Employee::where('id', $userDetails->emp_id)->get();
+        $userModel = User::with('roles', 'employee')->where('id', $id)->first();
+
+        $roleId = $userModel->roles->pluck("id")->first();
+
+        return view('settings.User.edit', ['roles' => $roles, 'employees' => $employees, 'userDetails' => $userDetails, 'userModel' => $userModel, 'roleId' => $roleId]);
     }
 
     /**
@@ -130,6 +133,13 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-       dd("well");
+        $users = User::where("id", $id)->delete();
+        echo json_encode($users);
+    }
+    public function search(Request $request)
+    {
+        $searchData = $request->searchData;
+        $model = User::Where('users.name', 'LIKE', '%' . $searchData . '%')->whereNull('is_super_admin')->whereNull('deleted_at')->get();
+        return response()->json($model);
     }
 }

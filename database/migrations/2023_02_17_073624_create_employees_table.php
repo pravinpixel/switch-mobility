@@ -22,7 +22,7 @@ class CreateEmployeesTable extends Migration
             $table->string('mobile',200);
             $table->integer('department_id');
             $table->integer('designation_id');
-            $table->integer('sap_id');
+            $table->string('sap_id',200);
             $table->string('profile_image',200)->nullable();
             $table->string('sign_image',200)->nullable();            
             $table->string('address',200)->nullable();

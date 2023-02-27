@@ -20,4 +20,13 @@ class Project extends Model
     {
         return $this->hasOne('App\Models\department', 'id', 'initiator_id');
     }
+    public function docType()
+    {
+        return $this->hasOne(DocumentType::class, 'id', 'document_type_id');
+    }
+
+    public function milestone()
+    {
+        return $this->hasMany(ProjectMilestone::class, 'project_id', 'id');
+    }
 }

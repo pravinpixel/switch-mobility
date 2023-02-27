@@ -40,13 +40,25 @@ class ProjectController extends Controller
         return view('Projects/list', ['document_type' => $document_type, 'workflow' => $workflow, 'projects_all' => $projects_all, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
         //return view('Projects/listPageOrg', ['document_type' => $document_type, 'workflow' => $workflow, 'projects_all' => $projects_all, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
     }
-public function create()
-{
-$employee =Employee::whereNull('deleted_at')->get();
-$document_type=DocumentType::whereNull('deleted_at')->get();
-$workflow =Workflow::whereNull('deleted_at')->get();
-    return view('Projects/newList',compact('employee','document_type','workflow'));
-}
+    public function create()
+    {
+        $employee = Employee::whereNull('deleted_at')->get();
+        $document_type = DocumentType::whereNull('deleted_at')->get();
+        $workflow = Workflow::whereNull('deleted_at')->get();
+        $project = array();
+        return view('Projects/create', compact('employee', 'document_type', 'workflow', 'project'));
+    }
+    public function edit($id)
+    {
+        $employee = Employee::whereNull('deleted_at')->get();
+        $document_type = DocumentType::whereNull('deleted_at')->get();
+        $workflow = Workflow::whereNull('deleted_at')->get();
+        $project = Project::with('employee', 'employee.department', 'employee.designation', 'docType', 'workflow', 'milestone')->where('id', $id)->first();
+
+        $levelModels = $this->getProjectLevelLooping($id);
+        // dd($levelModels);
+        return view('Projects/edit', compact('employee', 'document_type', 'workflow', 'project', 'levelModels'));
+    }
     public function get_all_projects()
     {
         $projects = DB::table('projects as p')
@@ -78,7 +90,8 @@ $workflow =Workflow::whereNull('deleted_at')->get();
         foreach ($arr as $level) {
             $arr1[] = ProjectLevels::where('project_level', $level)->pluck('staff')->toArray();
         }
-
+        $levelArray = $this->getProjectLevelLooping($request->project_id);
+        
         $output = array(
             'project' => $project,
             'milestone' => $milestone,
@@ -86,7 +99,8 @@ $workflow =Workflow::whereNull('deleted_at')->get();
             'emp' => array_values($arr1),
             'employees' => $employees,
             'main_documents' => $main_documents,
-            'aux_documents' => $aux_documents
+            'aux_documents' => $aux_documents,
+            'levelArray'=>$levelArray
         );
         echo json_encode($output);
     }
@@ -104,7 +118,7 @@ $workflow =Workflow::whereNull('deleted_at')->get();
     public function store(Request $request)
     {
         //Log::info('ProjectController->Store:-Inside ' . json_encode($request->all()));
-// dd($request->all());
+        // dd($request->all());
         $workflow_id = $request->workflow_id;
 
         $workflowLevelmodels = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $workflow_id)->get();
@@ -127,28 +141,26 @@ $workflow =Workflow::whereNull('deleted_at')->get();
             $project->workflow_id = $request->workflow_id;
             $project->is_active = $request->is_active ? 1 : 0;
             $project->save();
-           
-        
+
+
             Log::info('ProjectController->Store:-ProjectData ' . json_encode($project));
             if ($project) {
-                $project->ticket_no = "WF".  date('Y-m-d').'-'.$project->id;
-                                $project->save();
+                $project->ticket_no = "WF" .  date('Y-m-d') . '-' . $project->id;
+                $project->save();
 
                 if (isset($request->project_id) != null) {
                     $milestone_delete = ProjectMilestone::where("project_id", $request->project_id)->delete();
                     $PL = ProjectLevels::where("project_id", $request->project_id)->delete();
                     $PA = ProjectApprover::where("project_id", $request->project_id)->delete();
-                    $PDocDet = ProjectDocumentDetail::leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
-                        ->leftjoin('projects', 'projects.id', '=', 'project_documents.project_id')
-                        ->where("projects.id", $request->project_id)
-                        ->delete();
-                    $PDoc = projectDocument::where("project_id", $request->project_id)->delete();
-                    $path = public_path().'/projectDocuments/'.$project->ticket_no;
+                    // $PDocDet = ProjectDocumentDetail::leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
+                    //     ->leftjoin('projects', 'projects.id', '=', 'project_documents.project_id')
+                    //     ->where("projects.id", $request->project_id)
+                    //     ->delete();
+                    // $PDoc = projectDocument::where("project_id", $request->project_id)->delete();
+                    $path = public_path() . '/projectDocuments/' . $project->ticket_no;
                     if (File::exists($path)) {
                         File::deleteDirectory($path);
                     }
-
-                  
                 }
                 foreach ($request->milestone as $key => $miles) {
                     $project_milestone = new ProjectMilestone();
@@ -220,6 +232,7 @@ $workflow =Workflow::whereNull('deleted_at')->get();
 
                                 $docdetail = new ProjectDocumentDetail();
                                 $docdetail->project_doc_id =  $doc->id;
+                                $docdetail->version = 1;
                                 $docdetail->document_name = $halfPath . $fileName;
                                 $docdetail->status = 1;
                                 $docdetail->save();
@@ -264,6 +277,7 @@ $workflow =Workflow::whereNull('deleted_at')->get();
                                 $doc->save();
 
                                 $docdetail = new ProjectDocumentDetail();
+                                $docdetail->version = 1;
                                 $docdetail->project_doc_id =  $doc->id;
                                 $docdetail->document_name = $halfPath1 . $fileName1;
                                 $docdetail->status = 1;
@@ -283,250 +297,6 @@ $workflow =Workflow::whereNull('deleted_at')->get();
                 'data' => $e
             ];
         }
-
-
-
-
-
-
-        $input = $request->all();
-        if (isset($request->project_id)) {
-            // dd($input);
-            $project_level_array = array();
-            $project_update = Project::where("id", $request->project_id)->update(
-                [
-                    "project_name" => $request->project_name,
-                    "project_code" => $request->project_code,
-                    'start_date' => $request->start_date,
-                    'end_date' => $request->end_date,
-                    'initiator_id' => $request->initiator_id,
-                    'document_type_id' => $request->document_type_id,
-                    'workflow_id' => $request->workflow_id,
-                    'role' => $request->role,
-                    'is_active' => $request->is_active ? 1 : 0,
-                ]
-            );
-            $milestone_delete = ProjectMilestone::where("project_id", $request->project_id)->delete();
-            foreach ($request->milestone as $key => $miles) {
-                $project_milestone = new ProjectMilestone();
-                $project_milestone->project_id = $request->project_id;
-                $project_milestone->milestone = $miles;
-                $project_milestone->mile_start_date = $request->mile_start_date[$key];
-                $project_milestone->mile_end_date = $request->mile_end_date[$key];
-                $project_milestone->levels_to_be_crossed = $request->level_to_be_crosssed[$key];
-                $project_milestone->is_active = 1;
-                $project_milestone->save();
-            }
-            $levels_delete = ProjectLevels::where("project_id", $request->project_id)->delete();
-            foreach ($request->priority as $plkey => $level) {
-
-                if ($files = $request->file('main_document')) {
-                    foreach ($files as $file) {
-                        $name = $file->getClientOriginalName();
-                        $file->move('main_document', $name);
-                        $main_document[] = $name;
-                    }
-                }
-
-                if ($files = $request->file('auxillary_document')) {
-                    foreach ($files as $file) {
-                        $name = $file->getClientOriginalName();
-                        $file->move('auxillary_document', $name);
-                        $auxillary_document[] = $name;
-                    }
-                }
-
-                if (isset($input['staff' . $plkey])) {
-                    foreach ($input['staff' . $plkey] as $skey => $staff) {
-
-                        $project_level_array[] = array(
-                            'project_id' => $request->project_id,
-                            'project_level' => $request->project_level_edit[count($project_level_array)],
-                            'due_date' => $request->due_date[$plkey],
-                            'priority' => $request->priority[$plkey],
-                            'staff' => $input['staff' . $plkey][$skey]
-                        );
-                        // $project_level = new ProjectLevels();
-                        // $project_level->project_id = $request->project_id;
-                        // $project_level->project_level = $request->project_level_edit[$c];
-                        // $project_level->due_date = $request->due_date[$plkey];
-                        // $project_level->priority = $request->priority[$plkey];
-                        // $project_level->staff = $input['staff' . $plkey][$skey];
-                        // $project_level->save();
-
-                    }
-                }
-
-
-
-                if (isset($main_document[$plkey]) && $main_document[$plkey] != "") {
-                    $doc_update = projectDocument::where(["project_id" => $request->project_id, 'type' => 1])->update(["is_latest" => 0]);
-                    $doc = new projectDocument();
-                    $doc->type = 1;
-                    $doc->project_id = $request->project_id;
-                    $doc->project_level = $request->project_level[$plkey];
-                    $doc->document = $main_document[$plkey];
-                    $doc->is_latest = 1;
-                    $doc->save();
-                }
-
-                if (isset($auxillary_document[$plkey]) && $auxillary_document[$plkey] != "") {
-                    $doc_update = projectDocument::where(["project_id" => $request->project_id, 'type' => 2])->update(["is_latest" => 0]);
-                    $doc = new projectDocument();
-                    $doc->type = 2;
-                    $doc->project_id = $request->project_id;
-                    $doc->project_level = $request->project_level[$plkey];
-                    $doc->document = $auxillary_document[$plkey];
-                    $doc->is_latest = 1;
-                    $doc->save();
-                }
-            }
-            ProjectLevels::insert($project_level_array);
-            // dd($project_level_array);
-
-        } else {
-
-            // echo "<pre>";
-            // print_r($_FILES);
-            // die();
-            // dd($input);
-            $project_level_array = array();
-            $check_project_name = Project::where('project_name', $request->project_name)->pluck('id')->first();
-            $check_project_code = Project::where('project_code', $request->project_code)->pluck('id')->first();
-
-            if ($check_project_name == null) {
-                if ($check_project_code == null) {
-                    $project = new Project();
-                    $project->project_name = $request->project_name;
-                    $project->project_code = $request->project_code;
-                    $project->start_date = $request->start_date;
-                    $project->end_date = $request->end_date;
-                    $project->initiator_id = $request->initiator_id;
-                    $project->role = $request->role;
-                    $project->document_type_id = $request->document_type_id;
-                    $project->workflow_id = $request->workflow_id;
-                    $project->is_active = $request->is_active ? 1 : 0;
-                    $project->save();
-                    $id = $project->id;
-                    if ($id) {
-                        foreach ($request->milestone as $key => $miles) {
-                            $project_milestone = new ProjectMilestone();
-                            $project_milestone->project_id = $id;
-                            $project_milestone->milestone = $miles;
-                            $project_milestone->mile_start_date = $request->mile_start_date[$key];
-                            $project_milestone->mile_end_date = $request->mile_end_date[$key];
-                            $project_milestone->levels_to_be_crossed = $request->level_to_be_crosssed[$key];
-                            $project_milestone->is_active = 1;
-                            $project_milestone->save();
-                        }
-
-                        foreach ($request->priority as $plkey => $level) {
-
-                            //Main Document//
-                            $length = count($_FILES['main_document' . $plkey]['name']);
-                            for ($i = 0; $i < $length; $i++) {
-                                if ($_FILES['main_document' . $plkey]['name'][$i]) {
-                                    if (!is_dir(public_path() . '/main_document/' . $request->project_name . '/')) {
-                                        mkdir(public_path() . '/main_document/' . $request->project_name . '/', 0777, true);
-                                    }
-                                    $upload_path = public_path() . '/main_document/' . $request->project_name . '/';
-                                    $upload_path_table = public_path() . '/main_document/' . $request->project_name . '/';
-                                    $banner = $_FILES['main_document' . $plkey]['name'][$i];
-                                    $expbanner = explode('.', $banner);
-                                    $bannerexptype = $expbanner[1];
-                                    $date = date('m/d/Yh:i:sa', time());
-                                    $rand = rand(10000, 99999);
-                                    $encname = $date . $rand;
-                                    $bannername = md5($encname) . '.' . $bannerexptype;
-                                    $bannerpath = $upload_path . $bannername;
-                                    move_uploaded_file($_FILES["main_document" . $plkey]["tmp_name"][$i], $bannerpath);
-                                    $main_document = $upload_path_table . $bannername;
-
-                                    $doc_update = projectDocument::where(["project_id" => $id, 'type' => 1])->update(["is_latest" => 0]);
-                                    $doc = new projectDocument();
-                                    $doc->type = 1;
-                                    $doc->project_id = $id;
-                                    $doc->project_level = $request->project_level[$plkey];
-                                    $doc->document = '/main_document/' . $request->project_name . '/' . $bannername;
-                                    $doc->is_latest = 1;
-                                    $doc->original_name = $_FILES['main_document' . $plkey]['name'][$i];
-                                    $doc->save();
-
-                                    $docdetail = new ProjectDocumentDetail();
-                                    $docdetail->project_doc_id =  $doc->id;
-                                    $docdetail->document_name = '/main_document/' . $request->project_name . '/' . $bannername;
-                                    $docdetail->status = 1;
-                                    $docdetail->save();
-                                }
-                            }
-                            //Main Document ENDS//
-
-                            //AUXILLARY DOC//
-                            $length = count($_FILES['auxillary_document' . $plkey]['name']);
-                            for ($i = 0; $i < $length; $i++) {
-                                if ($_FILES['auxillary_document' . $plkey]['name'][$i]) {
-                                    if (!is_dir(public_path() . '/auxillary_document/' . $request->project_name . '/')) {
-                                        mkdir(public_path() . '/auxillary_document/' . $request->project_name . '/', 0777, true);
-                                    }
-                                    $upload_path = public_path() . '/auxillary_document/' . $request->project_name . '/';
-                                    $upload_path_table = public_path() . '/auxillary_document/' . $request->project_name . '/';
-                                    $banner = $_FILES['auxillary_document' . $plkey]['name'][$i];
-                                    $expbanner = explode('.', $banner);
-                                    $bannerexptype = $expbanner[1];
-                                    $date = date('m/d/Yh:i:sa', time());
-                                    $rand = rand(10000, 99999);
-                                    $encname = $date . $rand;
-                                    $bannername = md5($encname) . '.' . $bannerexptype;
-                                    $bannerpath = $upload_path . $bannername;
-                                    move_uploaded_file($_FILES["auxillary_document" . $plkey]["tmp_name"][$i], $bannerpath);
-                                    $auxillary_document = $upload_path_table . $bannername;
-
-                                    $doc_update = projectDocument::where(["project_id" => $id, 'type' => 2])->update(["is_latest" => 0]);
-                                    $doc = new projectDocument();
-                                    $doc->type = 2;
-                                    $doc->project_id = $id;
-                                    $doc->project_level = $request->project_level[$plkey];
-                                    $doc->document = '/auxillary_document/' . $request->project_name . '/' . $bannername;
-                                    $doc->is_latest = 1;
-                                    $doc->original_name = $_FILES['auxillary_document' . $plkey]['name'][$i];
-                                    $doc->save();
-
-                                    $docdetail = new ProjectDocumentDetail();
-                                    $docdetail->project_doc_id =  $doc->id;
-                                    $docdetail->document_name = '/auxillary_document/' . $request->project_name . '/' . $bannername;
-                                    $docdetail->status = 1;
-                                    $docdetail->save();
-                                }
-                            }
-                            //AUXILLARY DOC//
-                            if (isset($input['staff' . $plkey])) {
-                                foreach ($input['staff' . $plkey] as $skey => $staff) {
-                                    if ($staff != null) {
-                                        $project_level_array[] = array(
-                                            'level' => $request->project_level,
-                                        );
-                                        $project_level = new ProjectLevels();
-                                        $project_level->project_id = $id;
-                                        $project_level->project_level = $request->project_level[$plkey];
-                                        $project_level->due_date = $request->due_date[$plkey];
-                                        $project_level->priority = $request->priority[$plkey];
-                                        $project_level->staff = $input['staff' . $plkey][$skey];
-                                        $project_level->save();
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        return redirect()->back()->withErrors(['error' => ['Insert Error']]);
-                    }
-                } else {
-                    return redirect('projects')->with('error', "Project Code Already Exists.");
-                }
-            } else {
-                return redirect('projects')->with('error', "Project Name Already Exists.");
-            }
-        }
-        return redirect('projects')->with('success', "Project Stored successfully.");
     }
 
     public function viewProject($id)
@@ -598,21 +368,23 @@ $workflow =Workflow::whereNull('deleted_at')->get();
         });
         // dd($entities);
 
-        return view('Projects/view', ['levelsArray' => $entities, 'levelCount' => $levelCount, 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
+        return view('Docs/view', ['levelsArray' => $entities, 'levelCount' => $levelCount, 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
     }
 
     public function getProjectLevel(Request $request)
     {
         $id = $request->project_id;
         $level = $request->level;
-        $projectDataWithLevelId = Project::leftjoin('project_milestones', 'project_milestones.project_id', '=', 'projects.id')
+        $projectDataWithLevelId = Project::select('employees.first_name', 'designations.name as desName', 'employees.profile_image', 'employees.last_name')
+            ->leftjoin('project_milestones', 'project_milestones.project_id', '=', 'projects.id')
             ->leftjoin('project_levels', 'project_levels.project_id', '=', 'projects.id')
             ->leftjoin('project_approvers', 'project_approvers.project_level_id', '=', 'project_levels.id')
-            ->leftjoin('employees as staff', 'staff.id', '=', 'project_approvers.approver_id')
+            ->leftjoin('employees', 'employees.id', '=', 'project_approvers.approver_id')
+            ->leftjoin('designations', 'designations.id', '=', 'employees.designation_id')
             ->where('projects.id', $id)
             ->where('project_levels.project_level', $level)
             ->get();
-        // dd($projectDataWithLevelId);
+
         $project_details1 = DB::table('projects as p')
             ->leftjoin('project_levels as pl', 'pl.project_id', '=', 'p.id')
             ->leftJoin('project_milestones as pm', 'pm.project_id', '=', 'p.id')
@@ -623,7 +395,7 @@ $workflow =Workflow::whereNull('deleted_at')->get();
             ->select('pl.staff', 'pm.created_at as milestone_created', 'pm.mile_start_date', 'staff.profile_image as staff_image', 'staff.first_name as staff_first_name', 'staff.last_name as staff_last_name');
         $details1 = $project_details1->get();
 
-        echo json_encode($details1);
+        echo json_encode($projectDataWithLevelId);
     }
 
     public function getProjectDocs(Request $request)
@@ -732,6 +504,7 @@ $workflow =Workflow::whereNull('deleted_at')->get();
         Log::info('ProjectController->Store:-filePart1' . json_encode($filePart1));
         $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
 
+
         $fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
         Log::info('ProjectController->Store:-fileName1' . json_encode($fileName1));
         $bannerpath = $upload_path1 . $fileName1;
@@ -752,6 +525,10 @@ $workflow =Workflow::whereNull('deleted_at')->get();
             $model->document_name =  $halfPath1 . $fileName1;
 
             $model->save();
+
+            $ProjectDocumentModelVersion = projectDocument::findOrFail($request->documentId);
+            $ProjectDocumentModelVersion->original_name = $fileName1;
+            $ProjectDocumentModelVersion->save();
         }
         if ($model) {
             return response()->json(['status' => 'success']);
@@ -795,12 +572,27 @@ $workflow =Workflow::whereNull('deleted_at')->get();
         $response = ['workflow_level' => $levelArray];
         return response()->json(['response' => $response]);
     }
-    public function getProjectLevelLooping($projectId)
+    public function  getProjectLevelLooping($projectId)
     {
         $projectModel = Project::where('id', $projectId)->first();
         $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $projectModel->workflow_id)->get();
         $entities = collect($models)->map(function ($model) use ($projectId) {
+
+            $MaindocumentCount = projectDocument::select('project_documents.id')->where('project_level', $model->levels)
+                ->where('project_id', $projectId)
+                ->where('type', 1)
+                ->count();
+            $AuxdocumentCount = projectDocument::select('project_documents.id')->where('project_level', $model->levels)
+                ->where('project_id', $projectId)
+                ->where('type', 2)
+                ->count();
+            $milstoneArray = ProjectMilestone::where('levels_to_be_crossed', $model->levels)
+                ->where('project_id', $projectId)
+                ->first();
+
+
             $levelDetails = $model['workflowLevelDetail'];
+
             $projectMasterData = ProjectLevels::where('project_id', $projectId)->where('project_level', $model->levels)->first();
             $projectApproversArray = array();
             if ($projectMasterData) {
@@ -827,10 +619,11 @@ $workflow =Workflow::whereNull('deleted_at')->get();
             $designationArray =  $e;
 
 
-            $datas = ['levelId' => $model->levels, 'designationId' => $designationArray, 'projectMasterData' => $projectMasterData, 'projectApprovers' => $projectApproversArray];
+            $datas = ['levelId' => $model->levels, 'levelPkId' => $model->id, 'designationId' => $designationArray, 'projectMasterData' => $projectMasterData, 'projectApprovers' => $projectApproversArray, 'MaindocumentCount' => $MaindocumentCount, 'AuxdocumentCount' => $AuxdocumentCount,'milstoneArray'=>$milstoneArray];
 
             return $datas;
         });
+
         return $entities;
     }
 }

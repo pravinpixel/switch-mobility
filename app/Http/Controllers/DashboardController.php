@@ -8,6 +8,7 @@ use App\Models\DocumentType;
 use App\Models\Employee;
 use App\Models\Project;
 use App\Models\projectDocument;
+use App\Models\ProjectDocumentDetail;
 use App\Models\ProjectLevels;
 use App\Models\ProjectMilestone;
 use App\Models\Workflow;
@@ -18,6 +19,14 @@ class DashboardController extends Controller
 {
   public function index()
   {
+
+
+
+    $totProject = Project::whereNull('deleted_at')->count();
+    $totDocs = ProjectDocumentDetail::whereNull('deleted_at')->count();
+    $totApprovedDocs = ProjectDocumentDetail::where('status',4)->whereNull('deleted_at')->count();
+    $totDeclinedDocs = ProjectDocumentDetail::where('status',2)->whereNull('deleted_at')->count();
+    // dd($totProject);
     $project = $this->get_all_projects();
     
   
@@ -27,17 +36,19 @@ class DashboardController extends Controller
     $declined_project_document = projectDocument::where('status', 2)->get()->toArray();
     $overdue_project_document = $this->overdue_project_document();
     $order_at =$project;
-    return view('Dashboard/index', ['order_at' => $order_at, 'project' => $project, 'project_document' => $project_document, 'approved_project_document' => $approved_project_document, 'pending_project_document' => $pending_project_document, 'declined_project_document' => $declined_project_document, 'overdue_project_document' => $overdue_project_document]);
+    return view('Dashboard/index', ['totDeclinedDocs'=>$totDeclinedDocs,'totApprovedDocs'=>$totApprovedDocs,'totProject'=>$totProject,'totDocs'=>$totDocs,'order_at' => $order_at, 'project' => $project, 'project_document' => $project_document, 'approved_project_document' => $approved_project_document, 'pending_project_document' => $pending_project_document, 'declined_project_document' => $declined_project_document, 'overdue_project_document' => $overdue_project_document]);
   }
   public function get_all_projects()
     {
         $projects = DB::table('projects as p')
-            ->select('p.*', 'p.id as project_id', 'p.is_active as project_status','w.*','e.*')
+            ->select('p.*', 'p.id as project_id', 'p.is_active as project_status','w.*','e.*','departments.name as deptname')
             ->join('employees as e', 'e.id', '=', 'p.initiator_id')
+            ->join('departments', 'departments.id', '=', 'e.department_id')
             ->join('workflows as w', 'p.workflow_id', '=', 'w.id')
             ->where('p.is_active', 1)
             ->limit(10)
             ->get();
+          
         return $projects;
     }
 

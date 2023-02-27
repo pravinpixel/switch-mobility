@@ -99,7 +99,9 @@
 
                             {{-- FORM --}}
                             <div class="text-center pt-15">
+                               
                                 <button type="reset" class="btn btn-light me-3 reset ">Reset</button>
+                              
                                 <a href="{{route('department.index')}}">
                                     <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
                                 <button type="button" class="btn btn-primary submitBtn" data-kt-users-modal-action="submit">

@@ -163,7 +163,7 @@
                                             </a>
                                             @endif
                                             @if (auth()->user()->is_super_admin == 1 ||
-                                            auth()->user()->can('designation-edit'))
+                                            auth()->user()->can('designation-delete'))
                                             <!--end::Edit-->
                                             <!--begin::Delete-->
                                             <a class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" href="javascript:void(0);" class="menu-link px-3" onclick="delete_item(<?php echo $d['id']; ?>);">
