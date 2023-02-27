@@ -34,7 +34,7 @@ class UserController extends Controller
         $roles = Role::select('name', 'id')->get();
         $employees = Employee::doesntHave('user')->get();
         $userDetails = array();
-        return view('settings.User.userCreate', ['roles' => $roles, 'employees' => $employees, 'userDetails' => $userDetails]);
+        return view('Settings.User.userCreate', ['roles' => $roles, 'employees' => $employees, 'userDetails' => $userDetails]);
     }
 
     /**
@@ -110,7 +110,7 @@ class UserController extends Controller
 
         $roleId = $userModel->roles->pluck("id")->first();
 
-        return view('settings.User.edit', ['roles' => $roles, 'employees' => $employees, 'userDetails' => $userDetails, 'userModel' => $userModel, 'roleId' => $roleId]);
+        return view('Settings.User.edit', ['roles' => $roles, 'employees' => $employees, 'userDetails' => $userDetails, 'userModel' => $userModel, 'roleId' => $roleId]);
     }
 
     /**

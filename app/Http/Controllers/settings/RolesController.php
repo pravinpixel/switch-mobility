@@ -31,7 +31,7 @@ class RolesController extends Controller
      */
     public function create()
     {
-        return view('settings.Role.create');
+        return view('Settings.Role.create');
     }
 
     /**
@@ -132,7 +132,7 @@ class RolesController extends Controller
     public function edit($id)
     {
         $roles=Role::where('id',$id)->first();
-        return view('settings.Role.edit',['roles'=>$roles]);
+        return view('Settings.Role.edit',['roles'=>$roles]);
     }
 
     /**
