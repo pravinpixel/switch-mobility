@@ -1058,7 +1058,10 @@
                 $('.LevelTabContent').html("");
                 var data = JSON.parse(result);
                 var WFLevelBtn = data['workflow_level'];
-                console.log(WFLevelBtn);
+                if(WFLevelBtn.length==1){
+                    $('.nextLevel').attr('type','submit');
+                    $(".nextlevel").html('<span class="indicator-label  ">Submit <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg--> <!--end::Svg Icon--> </span>');
+                }
                 var SelectId = [];
                 if (WFLevelBtn) {
 
@@ -1213,7 +1216,10 @@
                 var data = result.response;
 
                 var WFLevelBtn = data.workflow_level;
-                console.log(WFLevelBtn);
+                if(WFLevelBtn.length==1){
+                    $('.nextLevel').attr('type','submit');
+                    $(".nextlevel").html('<span class="indicator-label  ">Submit <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg--> <!--end::Svg Icon--> </span>');
+                }
                 var SelectId = [];
                 if (WFLevelBtn) {
 
@@ -1488,7 +1494,7 @@
                 $(".role").val(data.project.role);
                 $(".initiator_id").val(data.project.initiator_id).trigger('change')
                 $(".document_type_id").val(data.project.document_type_id).attr("selected", "selected").select2();
-                // $(".total_levels").val(data.project);
+                 $(".total_levels").val(data.levelArray.length);
                 //get_document_workflow(data.project.document_type_id);
                 $(".workflow_id").val(data.project.workflow_id).prop("selected", true);
                 $(".workflow_hidden").val(data.project.workflow_id);

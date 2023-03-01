@@ -187,7 +187,7 @@
                                 <!--begin::Col-->
                                 <div class="col-md-3 fv-row">
                                     <!--begin::Label-->
-                                    <label class="fs-6 fw-semibold mb-2">Profile</label>
+                                    <label class="fs-6 fw-semibold mb-2">Profile Photo</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
                                     <input type="file" class="form-control form-control-solid" name="profile_image" id="imgShow2" onchange="document.getElementById('blahnew').src = window.URL.createObjectURL(this.files[0])" />
@@ -195,7 +195,7 @@
                                     <span class="btnAdded1"></span>
                                     <?php
                                     $noImage = 'noimage.png';
-                                   
+
                                     $image = isset($model['profile_image']) ? $model['profile_image'] : $noImage;
                                     ?>
                                     <img src="{{ asset('images/Employee/' . $image) }}" alt="wellone" class="editPic1" width="50" height="50" class="w-50" />
@@ -206,7 +206,7 @@
                                 <!--begin::Col-->
                                 <div class="col-md-3 fv-row">
                                     <!--begin::Label-->
-                                    <label class="fs-6 fw-semibold mb-2">Signature</label>
+                                    <label class="fs-6 fw-semibold mb-2">Signature Photo</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
                                     <input type="file" class="form-control form-control-solid" name="sign_image" id="imgShow" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" />
@@ -225,7 +225,7 @@
                                 <!--begin::Col-->
                                 <div class="col-md-12 fv-row">
                                     <!--begin::Label-->
-                                    <label class="fs-6 fw-semibold mb-2">Address</label>
+                                    <label class="fs-6 fw-semibold mb-2">official Communication Address</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
                                     <textarea class="form-control form-control-solid" name="address" rows="4" cols="50"><?php echo $model ? $model->address : ''; ?></textarea>
@@ -271,7 +271,7 @@
         });
 
         if ($('.id').val()) {
-           
+
             $('.reset').css('display', 'none');
         }
         $("#imgShow").change(function() {
@@ -315,7 +315,10 @@
 
             var email = $(this).val();
             $('.submit').prop('disabled', true);
-            if (email) {
+            var regex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+            var res = regex.test(email);
+           
+            if (res) {
                 getValidationResult('email', email, pkey);
             }
         });
@@ -328,18 +331,18 @@
                 getValidationResult('mobile', mobile, pkey);
             }
         });
-        $(".sapId").on('input', function() { 
+        $(".sapId").on('input', function() {
             var sapId = $(this).val();
             var pkey = $('.id').val();
             $('.submit').prop('disabled', true);
 
             if (sapId) {
-         getValidationResult('sapId', sapId, pkey);
+                getValidationResult('sapId', sapId, pkey);
             }
         });
     });
 
-function finalValidation1() {
+    function finalValidation1() {
         // to each unchecked checkbox          
         return validateFormCreate();
         console.log("damn");
@@ -370,7 +373,7 @@ function finalValidation1() {
 
                         });
                         $('.submit').prop('disabled', true);
-                       // $("." + fieldname + "").val("");
+                        // $("." + fieldname + "").val("");
                     }
                 } else {
                     $('.submit').prop('disabled', false);
@@ -418,9 +421,9 @@ function finalValidation1() {
         if (firstNameError && lastNameError && emailError && mobileError && departmentError && designationError &&
             sapidError) {
 
-             $(".form").submit();
-             $('.submit').prop('disabled', true);
-           
+            $(".form").submit();
+            $('.submit').prop('disabled', true);
+
             return true;
         } else {
             console.log("Not well");
@@ -447,6 +450,18 @@ function finalValidation1() {
                 }
 
             }
+        }
+
+        if (fieldname == "Email") {
+            var regex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+            var res = regex.test(fieldValue);
+
+            if (!res) {              
+                    document.getElementById(alertName).style.display = "block";
+                    document.getElementById(alertName).style.color = "red";
+                    document.getElementById(alertName).innerHTML = fieldname + ' Is InCorrect*';
+                    return false;
+                }
         }
         document.getElementById(alertName).style.display = "none";
         return true;

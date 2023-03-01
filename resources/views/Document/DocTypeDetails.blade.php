@@ -232,11 +232,15 @@
             document.getElementById('workflowAlert').style.color = "red";
             document.getElementById('workflowAlert').innerHTML = 'Workflow is Required*';
             return false;
-        } else {
-            document.getElementById('workflowAlert').style.display = "none";
-            $('.submitBtn').removeAttr('disabled');
-
         }
+        if (!name) {
+            $('.submitBtn').attr('disabled', true);
+
+            document.getElementById('nameAlert').style.display = "block";
+            document.getElementById('nameAlert').style.color = "red";
+            document.getElementById('nameAlert').innerHTML = 'Name is Required*';
+            return false;
+        } 
 
        
 

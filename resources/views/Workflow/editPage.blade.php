@@ -88,8 +88,8 @@
                                     <!--begin::Input-->
                                     <input type="hidden" class="form-control form-control-solid" name="workflow_id" value="{{$modelWorkflow->id}}">
                                     <!--end::Input-->
-
-                                    <input type="text" class="form-control form-control-solid" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" value="{{$modelWorkflow->workflow_code}}">
+                                    <input type="hidden" class="form-control form-control-solid" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" value="{{$modelWorkflow->workflow_code}}">
+                                    <input type="text" class="form-control form-control-solid" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" value="{{$modelWorkflow->workflow_code}}" disabled>
                                     <!--end::Input-->
                                 </div>
                                 <!--end::Col-->
@@ -332,7 +332,8 @@
 
                             {{-- FORM --}}
                             <div class="text-center pt-15">
-                                <button type="reset" class="btn btn-light me-3">Reset</button>
+                            <a href="{{route('workflow.index')}}">
+                                    <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
                                 <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
                                     <span class="indicator-label">Save and Exit</span>
                                     <span class="indicator-progress">Please wait...

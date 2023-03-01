@@ -127,7 +127,9 @@ class ProjectController extends Controller
         try {
             if (isset($request->project_id) != null) {
                 $project = Project::findOrFail($request->project_id);
+                $msg = "Updated";
             } else {
+                $msg = "Stored";
                 $project = new Project();
             }
 
@@ -289,7 +291,7 @@ class ProjectController extends Controller
                     }
                 }
             }
-            return redirect('projects')->with('success', "Projects Stored successfully.");
+            return redirect('projects')->with('success', "Projects ".$msg." successfully.");
         } catch (Exception $e) {
             return [
 

@@ -513,6 +513,7 @@ $(document).ready(function() {
 
    
     $(document).on('change', '.status', function() {
+        var chk = $(this);
         var id = $(this).attr('data-id');
         var status = $(this).prop('checked') == true ? 1 : 0;
         var activeStatus = "";
@@ -555,6 +556,12 @@ $(document).ready(function() {
                         'success'
                     );
 
+                }
+            }else {             
+                if (chk.checked) {
+                    chk.prop("checked", false);
+                } else {
+                    chk.prop("checked", true);
                 }
             }
         });

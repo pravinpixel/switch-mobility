@@ -36,9 +36,23 @@ class WorkflowController extends Controller
      */
     public function create()
     {
+        $workflow = Workflow::latest('id')->first();
+        $runningNo = ($workflow) ? $workflow->id : 1;
+        $digit = strlen($runningNo);
+        $genNo = "";
+        if ($digit == 1) {
+            $genNo = "0000" . $runningNo;
+        } elseif ($digit == 2) {
+            $genNo = "000" . $runningNo;
+        } else {
+            $genNo = "00" . $runningNo;
+        }
+
+        $wfCode = "WFC" . date('dmy') . $genNo;
+
         $designationDatas = Designation::where('is_active', 1)->where('is_active', 1)->get();
 
-        return view('Workflow/addPage', compact('designationDatas'));
+        return view('Workflow/addPage', compact('designationDatas', 'wfCode'));
     }
 
     public function edit($id)
@@ -63,7 +77,7 @@ class WorkflowController extends Controller
             return $datas;
         });
 
-      
+
         return view('Workflow/editPage', compact('designationDatas', 'entities', 'modelWorkflow'));
     }
     public function get_all_workflow()
@@ -79,8 +93,9 @@ class WorkflowController extends Controller
 
     public function store(Request $request)
     {
+        
         $input = $request->all();
-       
+
         if (!$request->workflow_id) {
             if ($input['workflow_type'] == 1) {
                 $levels = array();
@@ -276,18 +291,18 @@ class WorkflowController extends Controller
 
     public function search(Request $request)
     {
-       
-       $searchData = $request->searchData;
-       $model = Workflow::select('*')
-      
-       ->where(function ($query) use ($searchData) {
-           $query->where('workflow_code', 'LIKE', '%' . $searchData . '%')
-               ->orWhere('workflow_name', 'LIKE', '%' . $searchData . '%')
-               ->orWhere('total_levels', 'LIKE', '%' . $searchData . '%');
-       })
-       ->whereNull('deleted_at')
-       ->get();
 
-   return response()->json($model);
+        $searchData = $request->searchData;
+        $model = Workflow::select('*')
+
+            ->where(function ($query) use ($searchData) {
+                $query->where('workflow_code', 'LIKE', '%' . $searchData . '%')
+                    ->orWhere('workflow_name', 'LIKE', '%' . $searchData . '%')
+                    ->orWhere('total_levels', 'LIKE', '%' . $searchData . '%');
+            })
+            ->whereNull('deleted_at')
+            ->get();
+
+        return response()->json($model);
     }
 }

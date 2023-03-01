@@ -115,8 +115,8 @@
                                     <label class="required fs-6 fw-semibold mb-2">Workflow Code</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input class="form-control form-control-solid wfCode" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" />
-                                    <!--end::Input-->
+                                    <input type="text" class="form-control form-control-solid wfCode" value="{{$wfCode}}" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" disabled/>
+                                    <input type="hidden" class="form-control form-control-solid wfCode" value="{{$wfCode}}" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" /> <!--end::Input-->
                                     <p id="wfCodeAlert" class="notifyAlert"></p>
                                 </div>
                                 <!--end::Col-->
@@ -126,7 +126,7 @@
                                     <label class="required fs-6 fw-semibold mb-2">Workflow Name</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="text" class="form-control form-control-solid" name="workflow_name" autocomplete="off" placeholder="Enter Workflow Name" required>
+                                    <input type="text" class="form-control form-control-solid workflow_name" name="workflow_name" autocomplete="off" placeholder="Enter Workflow Name" required>
 
                                     <!--end::Input-->
                                 </div>
@@ -297,7 +297,7 @@
 
                 {{-- FORM --}}
                 <div class="text-center mb-5">
-                    <button type="reset" class="btn btn-light me-3" onclick="resetForm()">Reset</button>
+                    <button type="button" class="btn btn-light me-3" onclick="resetForm()">Reset</button>
                     <a href="{{route('workflow.index')}}">
                                     <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
                     <button type="submit" class="btn btn-primary " id="submitBtn" data-kt-users-modal-action="submit">
@@ -354,8 +354,18 @@ function DesChange(evt) {
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
 <script>
     function resetForm() {
-        $("#department_form")[0].reset();
+        console.log("wrt");
+       // $("#department_form")[0].reset();
+       $('.workflow_name').val('');
         $('.designation').val('').trigger('change');
+       let remo= $('.partial-input-container').not(':first');
+         $.each(remo, function (indexInArray, reo) { 
+             $(reo).remove();
+         });
+        $(".partialWorkflow select option").removeAttr('selected');
+        $(".partialWorkflow select option:first-child").attr('selected','true');
+        $(".partialWorkflow select option").show();
+      
     }
     $(document).ready(function() {
         // on form submit

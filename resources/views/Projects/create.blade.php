@@ -1041,7 +1041,11 @@ $(".end_date").val(getEndDate());
                 $('.LevelTabContent').html("");
                 var data = JSON.parse(result);
                 var WFLevelBtn = data['workflow_level'];
-                console.log(WFLevelBtn);
+                console.log("levelCount"+WFLevelBtn.length);
+                if(WFLevelBtn.length==1){
+                    $('.nextLevel').attr('type','submit');
+                    $(".nextlevel").html('<span class="indicator-label  ">Submit <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg--> <!--end::Svg Icon--> </span>');
+                }
                 var SelectId = [];
                 if (WFLevelBtn) {
 
@@ -1196,7 +1200,7 @@ $(".end_date").val(getEndDate());
                 var data = result.response;
 
                 var WFLevelBtn = data.workflow_level;
-
+console.log("levelCount"+WFLevelBtn.length);
                 var SelectId = [];
                 if (WFLevelBtn) {
 
