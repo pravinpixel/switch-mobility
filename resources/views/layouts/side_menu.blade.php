@@ -246,6 +246,42 @@
 						</div>
 						<!--end:Menu item-->
 						@endif
+						<!--begin:Menu item-->
+						<div class="menu-item pt-5">
+							<!--begin:Menu content-->
+							<div class="menu-content">
+								<span class="menu-heading fw-bold text-uppercase fs-7">Reports</span>
+							</div>
+							<!--end:Menu content-->
+						</div>
+						<!--end:Menu item-->
+						
+					
+						<div class="menu-item">
+							<!--begin:Menu link-->
+							<a class="menu-link {{request()->is('datewiseReportIndex')?'active' :''}}" href="{{url('datewiseReportIndex')}}">
+								<span class="menu-icon">
+									<span class="svg-icon svg-icon-2">
+										<i class="fas fa-drafting-compass"></i>
+									</span>
+								</span>
+								<span class="menu-title">Datewise Report</span>
+							</a>
+							<!--end:Menu link-->
+						</div>
+						<div class="menu-item">
+							<!--begin:Menu link-->
+							<a class="menu-link {{request()->is('documentWiseReportIndex')?'active' :''}}" href="{{url('documentWiseReportIndex')}}">
+								<span class="menu-icon">
+									<span class="svg-icon svg-icon-2">
+										<i class="fas fa-drafting-compass"></i>
+									</span>
+								</span>
+								<span class="menu-title">Documentwise Report</span>
+							</a>
+							<!--end:Menu link-->
+						</div>
+					
 					</div>
 					<!--end::Menu-->
 				</div>

@@ -8,33 +8,37 @@
 
     /* Style the tab */
     .tab {
-        
-       border-radius: 5px;
-       overflow-y: auto;
+
+        border-radius: 5px;
+        overflow-y: auto;
         width: 180px;
         padding: 0 20px;
         background: white;
         box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
     }
-.LevelTabContent{
-    border-radius: 5px;
-    background: white;
-    border: none !important;
-    border-top: 5px solid blue !important ;
-    overflow-y: auto;
-    margin-left: 10px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
-}
-form:has(.level-container.current){
-    background: transparent;
-}
-form:has(.level-container.current) .action-button{
-    background: white;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
-  margin-top: 10px;
- border-radius: 5px;
-    
-}
+
+    .LevelTabContent {
+        border-radius: 5px;
+        background: white;
+        border: none !important;
+        border-top: 5px solid blue !important;
+        overflow-y: auto;
+        margin-left: 10px;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+    }
+
+    form:has(.level-container.current) {
+        background: transparent;
+    }
+
+    form:has(.level-container.current) .action-button {
+        background: white;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+        margin-top: 10px;
+        border-radius: 5px;
+
+    }
+
     /* Style the buttons inside the tab */
     .tab button {
         display: block;
@@ -53,21 +57,21 @@ form:has(.level-container.current) .action-button{
         border-radius: 5px;
     }
 
-   
+
     /* Change background color of buttons on hover */
     .tab button:hover {
-        background-color: rgba(105, 205, 238,0.2);
+        background-color: rgba(105, 205, 238, 0.2);
         color: rgb(23, 182, 236);
     }
 
     /* Create an active/current "tab button" class */
     .tab button.active {
-        background-color: rgba(105, 205, 238,0.2);
+        background-color: rgba(105, 205, 238, 0.2);
         color: rgb(23, 182, 236);
     }
 
     /* Style the tab content */
-  
+
     .tabcontent {
         float: left;
         padding: 0px 12px;
@@ -215,44 +219,50 @@ form:has(.level-container.current) .action-button{
     .pdf-view:has(.pdf) .upload-text {
         display: none;
     }
-    .formStyle{
-        padding:20px;
-        margin:20px;
-        background:white;
+
+    .formStyle {
+        padding: 20px;
+        margin: 20px;
+        background: white;
         border-radius: 5px;
     }
-    .error-msg{
+
+    .error-msg {
         color: red;
     }
-    .multi-field:not(:last-child) .add-field{
-        display:none !important;
-    }
-    .multi-field:last-child .remo{
-        display:none !important;
-    }
-    .multi-field:only-child .remove-field {
-  display: none !important;
-}
-div[data-kt-stepper-element="content"]{
-    min-height: 400px !important;
-    max-height: 400px !important;
-    overflow-x: hidden;
-    overflow-y:auto;
-}
 
-.level-container{
-    background: transparent;
-    display: flex;
-   
-}
+    .multi-field:not(:last-child) .add-field {
+        display: none !important;
+    }
+
+    .multi-field:last-child .remo {
+        display: none !important;
+    }
+
+    .multi-field:only-child .remove-field {
+        display: none !important;
+    }
+
+    div[data-kt-stepper-element="content"] {
+        min-height: 400px !important;
+        max-height: 400px !important;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .level-container {
+        background: transparent;
+        display: flex;
+
+    }
 </style>
-    <!--begin::Modal title-->
-    <h2 class="text-center m-5">Create Project</h2>
-  
+<!--begin::Modal title-->
+<h2 class="text-center m-5">Create Project</h2>
+
 
 <!--begin::Modal header-->
 <!--begin::Modal body-->
-<div class="" id="kt_modal_create_campaign" tabindex="-1" aria-hidden="true" >
+<div class="" id="kt_modal_create_campaign" tabindex="-1" aria-hidden="true">
     <!--begin::Stepper-->
     <div class="stepper stepper-links d-flex flex-column" id="kt_modal_create_campaign_stepper">
         <!--begin::Nav-->
@@ -277,7 +287,7 @@ div[data-kt-stepper-element="content"]{
         <!--end::Nav-->
         <!--begin::Form-->
 
-        <form id="designation_form kt_modal_create_campaign_stepper_form " class="form formStyle" method="post" enctype="multipart/form-data" action="{{ url('projects') }}" >
+        <form id="designation_form kt_modal_create_campaign_stepper_form " class="form formStyle" method="post" enctype="multipart/form-data" action="{{ url('projects') }}">
             <!--begin::Step 1-->
             <div class="current" data-kt-stepper-element="content">
                 <!--begin::Wrapper-->
@@ -535,11 +545,17 @@ div[data-kt-stepper-element="content"]{
                                 </div>
                                 <br>
                                 <button type="button" class="btn btn-sm btn-icon btn-light-danger remove-field">
-                                    <span class="svg-icon svg-icon-1"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="currentColor"></rect> <rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor"></rect> </svg> </span>
+                                    <span class="svg-icon svg-icon-1"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="currentColor"></rect>
+                                            <rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor"></rect>
+                                        </svg> </span>
                                 </button>
                                 <button type="button" class="btn btn-sm btn-icon btn-light-success add-field">
                                     <span class="svg-icon svg-icon-1">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor"></rect> <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor"></rect> </svg></span></button>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor"></rect>
+                                            <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor"></rect>
+                                        </svg></span></button>
                             </div>
                         </div>
 
@@ -550,21 +566,21 @@ div[data-kt-stepper-element="content"]{
             </div>
             <!--end::Step 2-->
             <!--begin::Step 3-->
-            <div data-kt-stepper-element="content"  class="level-container">
+            <div data-kt-stepper-element="content" class="level-container">
                 <!--begin::Wrapper-->
-               
-                    <!-- Levels Tab -->
-                    <div class="tab">
 
-                    </div>
-                    <div class="LevelTabContent" style="width:100%">
+                <!-- Levels Tab -->
+                <div class="tab">
 
-                    </div>
+                </div>
+                <div class="LevelTabContent" style="width:100%">
 
-                    <input type="hidden" class="project_id" name="project_id" disabled>
-                    <div class="project_level_edit"></div>
-                    <!-- Levels Tab -->
-                
+                </div>
+
+                <input type="hidden" class="project_id" name="project_id" disabled>
+                <div class="project_level_edit"></div>
+                <!-- Levels Tab -->
+
                 <!--end::Wrapper-->
             </div>
             <!--end::Step 3-->
@@ -617,59 +633,59 @@ div[data-kt-stepper-element="content"]{
 
 <script>
     function nextLevel(get) {
-   
-     var actTab= $(".tablinks.active");
-     let event=actTab.next(".tablinks");
-     let l=actTab.next(".tablinks").attr("l");
 
-    let lo="London"+l;
-    if ($(".tablinks.active").is(":last-child")) {
-                        $(".nextlevel").html('<span class="indicator-label  ">Submit <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg--> <!--end::Svg Icon--> </span>')
-                    }
-                    else{
-    openCity(event,lo,l );
-                    }
-    // actTab.next(".tablinks").addClass("active");
-    // actTab.removeClass("active");
+        var actTab = $(".tablinks.active");
+        let event = actTab.next(".tablinks");
+        let l = actTab.next(".tablinks").attr("l");
+
+        let lo = "London" + l;
+        if ($(".tablinks.active").is(":last-child")) {
+            $(".nextlevel").html('<span class="indicator-label  ">Submit <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg--> <!--end::Svg Icon--> </span>')
+        } else {
+            openCity(event, lo, l);
+        }
+        // actTab.next(".tablinks").addClass("active");
+        // actTab.removeClass("active");
 
     }
+
     function getCurrentDate() {
-  var today = new Date();
-  var dd = today.getDate();
-  var mm = today.getMonth() + 1; //January is 0!
-  var yyyy = today.getFullYear();
-  if (dd < 10) {
-    dd = '0' + dd;
-  }
-  if (mm < 10) {
-    mm = '0' + mm;
-  }
-  var currentDate = yyyy + '-' + mm + '-' + dd;
-  return currentDate;
-}
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var currentDate = yyyy + '-' + mm + '-' + dd;
+        return currentDate;
+    }
 
 
 
-document.getElementsByName("start_date")[0].value = getCurrentDate();
+    document.getElementsByName("start_date")[0].value = getCurrentDate();
 
 
-function getEndDate() {
-  var today = new Date();
-  var futureDate = new Date(today.getTime() + (30 * 24 * 60 * 60 * 1000)); // Add 30 days to current date
-  var dd = futureDate.getDate();
-  var mm = futureDate.getMonth() + 1; //January is 0!
-  var yyyy = futureDate.getFullYear();
-  if (dd < 10) {
-    dd = '0' + dd;
-  }
-  if (mm < 10) {
-    mm = '0' + mm;
-  }
-  var endDate = yyyy + '-' + mm + '-' + dd;
-  return endDate;
-}
-$(".end_date").val(getEndDate());
-// alert(getEndDate());
+    function getEndDate() {
+        var today = new Date();
+        var futureDate = new Date(today.getTime() + (30 * 24 * 60 * 60 * 1000)); // Add 30 days to current date
+        var dd = futureDate.getDate();
+        var mm = futureDate.getMonth() + 1; //January is 0!
+        var yyyy = futureDate.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var endDate = yyyy + '-' + mm + '-' + dd;
+        return endDate;
+    }
+    $(".end_date").val(getEndDate());
+    // alert(getEndDate());
 
 
     $(document).on('blur', '.project_code', function() {
@@ -793,9 +809,9 @@ $(".end_date").val(getEndDate());
             });
         });
     });
-   $(document).ready(function () {
-    $(".tablinks:first-child").addClass("active");
-   });
+    $(document).ready(function() {
+        $(".tablinks:first-child").addClass("active");
+    });
 </script>
 
 
@@ -807,7 +823,7 @@ $(".end_date").val(getEndDate());
 <script>
     $(document).ready(function() {
         $(".initiator_id").select2();
-    
+
         // on form submit
         $("#designation_form").on('submit', function() {
             // to each unchecked checkbox
@@ -867,19 +883,17 @@ $(".end_date").val(getEndDate());
         var $Blocktab = $(tabcontent).filter(function() {
             return $(this).css("display") === "block";
         });
-  let nextL=$(".tablinks.active").next(".tablinks").attr("l");
+        let nextL = $(".tablinks.active").next(".tablinks").attr("l");
         if ($Blocktab.length) {
             $Blocktab.find("input[required]").each(function() {
                 if ($(this).val().trim() === "") {
                     $(".error-msg").remove();
-                    let name =$(this).prev().text();
-                    $(this).after("<span class='error-msg'>"+name+" field is required.</span>");
+                    let name = $(this).prev().text();
+                    $(this).after("<span class='error-msg'>" + name + " field is required.</span>");
 
-                } 
-                else if(nextL != level &&  nextL < level && $("#London"+nextL).find("input[required]").val() == ""){
-                        alert("sorry ! Click a next level");
-                }
-                else {
+                } else if (nextL != level && nextL < level && $("#London" + nextL).find("input[required]").val() == "") {
+                    alert("sorry ! Click a next level");
+                } else {
                     for (i = 0; i < tabcontent.length; i++) {
                         tabcontent[i].style.display = "none";
                     }
@@ -888,14 +902,13 @@ $(".end_date").val(getEndDate());
                         tablinks[i].className = tablinks[i].className.replace(" active", "");
                     }
                     document.getElementById("London" + level).style.display = "block";
-                  
+
                     if ($(evt).hasClass("tablinks")) {
                         $(evt).addClass("active");
-                    }
-                    else{
+                    } else {
                         evt.currentTarget.className += " active";
                     }
-                 
+
 
                     var project_id = $(".project_id").val();
                     var workflow_id = $('.workflow_id').find(":selected").val();
@@ -971,14 +984,14 @@ $(".end_date").val(getEndDate());
                         });
                     }
                     if ($(".tablinks.active").is(":last-child")) {
-                        $(".nextlevel").attr("type","submit");
+                        $(".nextlevel").attr("type", "submit");
                         $(".nextlevel").html('<span class="indicator-label  ">Submit <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg--> <!--end::Svg Icon--> </span>')
                     }
                 }
             });
         }
 
-      
+
     }
     $(function() {
 
@@ -1041,16 +1054,16 @@ $(".end_date").val(getEndDate());
                 $('.LevelTabContent').html("");
                 var data = JSON.parse(result);
                 var WFLevelBtn = data['workflow_level'];
-                console.log("levelCount"+WFLevelBtn.length);
-                if(WFLevelBtn.length==1){
-                    $('.nextLevel').attr('type','submit');
+                console.log("levelCount" + WFLevelBtn.length);
+                if (WFLevelBtn.length == 1) {
+                    $('.nextLevel').attr('type', 'submit');
                     $(".nextlevel").html('<span class="indicator-label  ">Submit <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg--> <!--end::Svg Icon--> </span>');
                 }
                 var SelectId = [];
                 if (WFLevelBtn) {
 
                     for (var wfl = 0; wfl < WFLevelBtn.length; wfl++) {
-                        let className="";
+                        let className = "";
                         if (wfl == 0) {
                             className = "active";
                         }
@@ -1058,7 +1071,7 @@ $(".end_date").val(getEndDate());
                         console.log(WFLevelBtn[wfl].designationId);
                         var levelDesignation = WFLevelBtn[wfl].designationId;
 
-                        var levelBtnRow = '<button type="button" class="tablinks '+className+'"  onclick="openCity(event, London' + WFLevelBtn[wfl].levelId + ',' + WFLevelBtn[wfl].levelId + ')" id="defaultOpen" l="' + WFLevelBtn[wfl].levelId + '" >Level' + WFLevelBtn[wfl].levelId + '</button>';
+                        var levelBtnRow = '<button type="button" class="tablinks ' + className + '"  onclick="openCity(event, London' + WFLevelBtn[wfl].levelId + ',' + WFLevelBtn[wfl].levelId + ')" id="defaultOpen" l="' + WFLevelBtn[wfl].levelId + '" >Level' + WFLevelBtn[wfl].levelId + '</button>';
                         $('.tab').append(levelBtnRow);
                         var contentshow = "";
                         if (wfl != 0) {
@@ -1200,17 +1213,17 @@ $(".end_date").val(getEndDate());
                 var data = result.response;
 
                 var WFLevelBtn = data.workflow_level;
-console.log("levelCount"+WFLevelBtn.length);
+                console.log("levelCount" + WFLevelBtn.length);
                 var SelectId = [];
                 if (WFLevelBtn) {
 
                     for (var wfl = 0; wfl < WFLevelBtn.length; wfl++) {
-                       
+
                         var levelDesignation = WFLevelBtn[wfl].designationId;
 
                         var masterData = WFLevelBtn[wfl].projectMasterData;
                         var projectApprovers = WFLevelBtn[wfl].projectApprovers;
-                     
+
                         var priority = masterData.priority;
                         var due_date = masterData.due_date;
                         console.log(projectApprovers);
@@ -1229,18 +1242,18 @@ console.log("levelCount"+WFLevelBtn.length);
 
                         levelTabContentData += '<div class="col-md-12 fv-row">';
                         levelTabContentData += '<label class="required fs-6 fw-semibold mb-2">Due Date</label>';
-                        levelTabContentData += '<input type="date" required class="form-control w-50 duedate due_date' + WFLevelBtn[wfl].levelId + '" name="due_date[]" onclick="set_min_max_value_due_date();" value="'+due_date+'"/>';
+                        levelTabContentData += '<input type="date" required class="form-control w-50 duedate due_date' + WFLevelBtn[wfl].levelId + '" name="due_date[]" onclick="set_min_max_value_due_date();" value="' + due_date + '"/>';
                         levelTabContentData += '</div><br><br>';
                         levelTabContentData += '<div class="col-md-12 fv-row"><label class="required fs-6 fw-semibold mb-2">Priority</label><br>';
-                        var check1 = (priority ==1)?"checked":"";
-                        var check2 = (priority ==2)?"checked":"";
-                        var check3 = (priority ==3)?"checked":"";
-                        var check4 = (priority == 4)?"checked":"";
+                        var check1 = (priority == 1) ? "checked" : "";
+                        var check2 = (priority == 2) ? "checked" : "";
+                        var check3 = (priority == 3) ? "checked" : "";
+                        var check4 = (priority == 4) ? "checked" : "";
 
-                        levelTabContentData += 'Important <input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1" '+check1+'>&nbsp;&nbsp;';
-                        levelTabContentData += 'Medium <input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2" '+check2+'>&nbsp;&nbsp;';
-                        levelTabContentData += 'Low <input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3" '+check3+'>&nbsp;&nbsp;';
-                        levelTabContentData += 'High <input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" '+check4+'>';
+                        levelTabContentData += 'Important <input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1" ' + check1 + '>&nbsp;&nbsp;';
+                        levelTabContentData += 'Medium <input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2" ' + check2 + '>&nbsp;&nbsp;';
+                        levelTabContentData += 'Low <input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3" ' + check3 + '>&nbsp;&nbsp;';
+                        levelTabContentData += 'High <input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" ' + check4 + '>';
 
                         levelTabContentData += '</div><br><br>';
                         levelTabContentData += '<h4>Approvers</h4>';
@@ -1256,8 +1269,8 @@ console.log("levelCount"+WFLevelBtn.length);
                             levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
                             levelTabContentData += '<option></option>';
                             for (var lvlApvrs = 0; lvlApvrs < levelApprovers.length; lvlApvrs++) {
-                                var selectedStatus = (projectApprovers.includes( levelApprovers[lvlApvrs].id))?"selected":"";
-                                levelTabContentData += '<option value="' + levelApprovers[lvlApvrs].id + '" '+selectedStatus+'>' + levelApprovers[lvlApvrs].first_name + '</option>';
+                                var selectedStatus = (projectApprovers.includes(levelApprovers[lvlApvrs].id)) ? "selected" : "";
+                                levelTabContentData += '<option value="' + levelApprovers[lvlApvrs].id + '" ' + selectedStatus + '>' + levelApprovers[lvlApvrs].first_name + '</option>';
 
                             }
                             levelTabContentData += '</select>';
@@ -1604,5 +1617,4 @@ console.log("levelCount"+WFLevelBtn.length);
 
 
     }
-
 </script>

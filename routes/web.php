@@ -11,7 +11,8 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Masters\DepartmentController;
 use App\Http\Controllers\Masters\DesignationController;
 use App\Http\Controllers\Masters\DocumentTypeController;
-
+use App\Http\Controllers\Reports\DatewiseReportController;
+use App\Http\Controllers\Reports\DocumentwiseReportController;
 use App\Http\Controllers\settings\RolesController;
 use App\Http\Controllers\settings\UserController;
 use App\Http\Controllers\WorkflowController;
@@ -90,6 +91,12 @@ Route::group([
  
     Route::post('getWorkflowByProjectId', [ProjectController::class, 'getWorkflowByProjectId'])->name('getWorkflowByProjectId');
 
+    //reports
+ Route::get('datewiseReportIndex', [DatewiseReportController::class, 'index'])->name('datewiseReportIndex');
+ Route::post('dateWiseReportSearchFilter', [DatewiseReportController::class, 'filterSearch'])->name('dateWiseReportSearchFilter');
+ //docuWiseReport 
+ Route::get('documentWiseReportIndex', [DocumentwiseReportController::class, 'index'])->name('documentWiseReportIndex');
+ Route::post('documnetWiseReportSearchFilter', [DocumentwiseReportController::class, 'filterSearch'])->name('documnetWiseReportSearchFilter');
 
 });
 // Route::get('departments', [MasterController::class, 'Departments'])->name('departments')->middleware('is_admin');

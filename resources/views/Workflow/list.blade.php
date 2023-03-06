@@ -494,7 +494,18 @@ $(document).ready(function() {
                         id: id,
                     },
                     success: function(result) {
-                        if (result) {
+                        if (result.message == "Failed") {
+                            Swal.fire(
+                                'Deleted!',
+                                'Reference Datas Are Found,deleted Failed.',
+                                'error'
+                            );
+                        } else {
+                            Swal.fire(
+                                'Deleted!',
+                                'Department has been deleted.',
+                                'success'
+                            );
                             window.location.reload();
                         }
                     }
@@ -558,10 +569,12 @@ $(document).ready(function() {
 
                 }
             }else {             
-                if (chk.checked) {
-                    chk.prop("checked", false);
+                if (status ==1) {
+                    chk.prop('checked', false);
+                  
                 } else {
-                    chk.prop("checked", true);
+                   
+                    chk.prop('checked', true).attr('checked', 'checked');
                 }
             }
         });

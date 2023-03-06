@@ -414,6 +414,14 @@ function DesChange(evt) {
     });
     $(document).on('change', '.btn-check', function() {
         console.log($(this).val());
+        if ($(this).val() == 0) {
+$(".fullWorkflow select").removeAttr("required");
+$(".partialWorkflow select").attr("required");
+            }
+            else{
+                $(".partialWorkflow select").removeAttr("required");
+                $(".fullWorkflow select").attr("required");
+            }
         workFlowType($(this).val());
 
     });

@@ -165,18 +165,22 @@
                                                                         <!--end::Select2-->
                                                                         <!--begin::Input-->
                                                                         <div class="col-md-3 fv-row">
-                                                                            <select class="form-select mb-2 designation" levelCheck="{{$k + 1}}" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="{{$k}}approver_designation[]">
+                                                                            <select class="form-select mb-2 designation" levelCheck="{{$k + 1}}" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="fapprover_designation{{$k+1}}[]">
                                                                                 
                                                                                 <?php
                                                                                 // $arrayN=0;
                                                                                 $designLoops=[];
                                                                                 $arrayLength = count($entities);
                                                                                 if ($k+1 == $entities[$arrayN]["levelId"] ) {
-                                                                                    $arrayN = $arrayN + 1;
-                                                                                    if ($arrayN == $arrayLength) {
+                                                                                    
+                                                                                   
+                                                                                   $designLoops=$entities[$arrayN]["designationId"];
+                                                                                   $arrayN = $arrayN + 1;
+                                                                                   if ($arrayN == $arrayLength) {
                                                                                        $arrayN=0;
                                                                                     }
-                                                                                   $designLoops=$entities[$arrayN]["designationId"];
+                                                                                  
+                                                                                    
                                                                                 
                                                                                 }
                                                                                 // $option = ['designationId'];
@@ -548,6 +552,14 @@ if (checkOption.length != 1) {
         $(document).on('change', '.btn-check', function() {
             workFlowType($(this).val());
             console.log($(this).val());
+            if ($(this).val() == 0) {
+$(".fullWorkflow select").removeAttr("required");
+$(".partialWorkflow select").attr("required");
+            }
+            else{
+                $(".partialWorkflow select").removeAttr("required");
+                $(".fullWorkflow select").attr("required");
+            }
         });
 
 

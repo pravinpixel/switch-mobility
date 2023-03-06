@@ -116,7 +116,13 @@
                                     <select class="form-control workflow_id" name="workflow_id" onchange="get_work_flow_levels(this.value);" required>
                                         <option value="">Select</option>
                                         @foreach($workflow as $wf)
-                                        <option value="{{$wf['id']}}" <?php echo (isset($model->workflow_id) == $wf['id']) ? "selected" : "" ?>>{{$wf['workflow_name']}}</option>
+
+                                        <?php
+                                        $wfId = ($model)? $model->workflow_id : "";
+                                        $selectedRow = ($wfId == $wf['id'])?"selected":"";
+
+                                        ?>
+                                        <option value="{{$wf['id']}}" <?php echo  $selectedRow; ?>>{{$wf['workflow_name']}}</option>
                                         @endforeach
                                     </select>
                                     <p id="workflowAlert" class="notifyAlert"></p>
