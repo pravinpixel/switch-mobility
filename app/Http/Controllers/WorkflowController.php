@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Designation;
 use App\Models\DocumentType;
+use App\Models\Employee;
 use App\Models\Workflow;
 use App\Models\WorkflowLevelDetail;
 use App\Models\Workflowlevels;
@@ -15,6 +16,33 @@ use Illuminate\Support\Facades\Log;
 
 class WorkflowController extends Controller
 {
+
+    public function getWorkflowCodeFormat(Request $request)
+    {
+       $wfname = $request->wfname;   
+       $wfcode =$this->genarateWFCode($wfname);
+       return response()->json($wfcode);
+
+    }
+    public function genarateWFCode($wfname)
+    {
+        $workflow = Workflow::latest('id')->first();
+
+        $runningNo = ($workflow) ? ($workflow->id + 1) : 1;
+        $digit = strlen($runningNo);
+        $genNo = "";
+        if ($digit == 1) {
+            $genNo = "000" . $runningNo;
+        } elseif ($digit == 2) {
+            $genNo = "00" . $runningNo;
+        } else {
+            $genNo = "0" . $runningNo;
+        } 
+     
+     
+        $wfCode = "SWF".date('Y').substr($wfname, 0, 3).$genNo;
+        return $wfCode;
+    }
     public function changeWorkflowActiveStatus(Request $request)
     {
         $model = Workflow::where("id", $request->id)->update(["is_active" => $request->status]);
@@ -37,7 +65,9 @@ class WorkflowController extends Controller
     public function create()
     {
         $workflow = Workflow::latest('id')->first();
-        $runningNo = ($workflow) ? $workflow->id : 1;
+
+        $runningNo = ($workflow) ? ($workflow->id + 1) : 1;
+
         $digit = strlen($runningNo);
         $genNo = "";
         if ($digit == 1) {
@@ -48,11 +78,24 @@ class WorkflowController extends Controller
             $genNo = "00" . $runningNo;
         }
 
-        $wfCode = "WFC" . date('dmy') . $genNo;
+        $wfCode = "";
 
         $designationDatas = Designation::where('is_active', 1)->where('is_active', 1)->get();
 
-        return view('Workflow/addPage', compact('designationDatas', 'wfCode'));
+        $employeeModels = Employee::with('designation')->whereNull('deleted_at')->where('is_active', 1)->get();
+        $employeeDatas = collect($employeeModels)->map(function ($employeeData) {
+            $designationData = ($employeeData['designation']);
+
+            $designationName = $designationData->name;
+            $name = $employeeData->first_name.$employeeData->last_name.'('.$employeeData->sap_id.')'.'-('.$designationName.')';
+         
+           return ['id'=>$employeeData->id,'data'=>$name];
+           
+        });
+        
+        // dd($employeeDatas[0]['designation']->name);
+
+        return view('Workflow/addPage', compact('designationDatas', 'wfCode', 'employeeDatas'));
     }
 
     public function edit($id)
@@ -65,7 +108,7 @@ class WorkflowController extends Controller
             $levelDetails = $model['workflowLevelDetail'];
 
             $e = collect($levelDetails)->map(function ($levelDetail) {
-                $designationId = $levelDetail->designation_id;
+                $designationId = $levelDetail->employee_id;
 
                 return $designationId;
             });
@@ -77,8 +120,17 @@ class WorkflowController extends Controller
             return $datas;
         });
 
+        $employeeModels = Employee::with('designation')->whereNull('deleted_at')->where('is_active', 1)->get();
+        $employeeDatas = collect($employeeModels)->map(function ($employeeData) {
+            $designationData = ($employeeData['designation']);
 
-        return view('Workflow/editPage', compact('designationDatas', 'entities', 'modelWorkflow'));
+            $designationName = $designationData->name;
+            $name = $employeeData->first_name.$employeeData->last_name.'('.$employeeData->sap_id.')'.'-('.$designationName.')';
+         
+           return ['id'=>$employeeData->id,'data'=>$name];
+           
+        });
+        return view('Workflow/editPage', compact('designationDatas', 'entities', 'modelWorkflow', 'employeeDatas'));
     }
     public function get_all_workflow()
     {
@@ -93,8 +145,9 @@ class WorkflowController extends Controller
 
     public function store(Request $request)
     {
-        
+
         $input = $request->all();
+        //  dd($input);
 
         if (!$request->workflow_id) {
             if ($input['workflow_type'] == 1) {
@@ -147,9 +200,9 @@ class WorkflowController extends Controller
                         $workflow_level_details->workflow_id = $id;
                         $workflow_level_details->workflow_level_id = $workflow_levels->id;
                         if ($input['workflow_type'] == 1) {
-                            $workflow_level_details->designation_id = $input['fapprover_designation' . $levels][$j];
+                            $workflow_level_details->employee_id = $input['fapprover_designation' . $levels][$j];
                         } else {
-                            $workflow_level_details->designation_id = $input['approver_designation' . $levels][$j];
+                            $workflow_level_details->employee_id = $input['approver_designation' . $levels][$j];
                         }
 
 
@@ -200,28 +253,38 @@ class WorkflowController extends Controller
     }
     public function getLevelLooping($workflow_id)
     {
-        $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $workflow_id)->get();
+        $models = Workflowlevels::with('workflowLevelDetail', 'workflowLevelDetail.employeeData')->where('workflow_id', $workflow_id)->get();
+
         $entities = collect($models)->map(function ($model) {
-            $levelDetails = $model['workflowLevelDetail'];
-
-            $e = collect($levelDetails)->map(function ($levelDetail) {
-                $designationId = $levelDetail->designation_id;
-
-                $designationName = Designation::with('employee')->where('id', $designationId)->first();
-                $desEmployee = $designationName->employee;
-
-                $desData = ['desName' => $designationName->name, 'desEmployee' => $desEmployee];
-
-                return $desData;
-            });
-
-            $designationArray =  $e;
+            $empModel = WorkflowLevelDetail::select('employees.*','designations.name as designation_name')->leftjoin('employees', 'employees.id', '=', 'workflow_level_details.employee_id')->leftjoin('designations', 'designations.id', '=', 'employees.designation_id')->where('workflow_level_id', $model->id)->get()->toArray();
 
 
-            $datas = ['levelId' => $model->levels, 'designationId' => $designationArray];
+            // $e = collect($levelDetails)->map(function ($levelDetail) use($empModel) {
+            //     $empData = $levelDetail->employeeData;
+
+            //     // $designationId = $levelDetail->designation_id;
+
+            //     // $designationName = Designation::with('employee')->where('id', $designationId)->first();
+            //     // $desEmployee = $designationName->employee;
+            //     $employeeId = $levelDetail->employee_id;
+            //     $desEmployee = Employee::where('id', $employeeId)->first();
+
+
+            //     // $desEmployee
+
+            //     $desData = ['desEmployee' => $desEmployee];
+
+            //     return $desData;
+            // });
+
+            // $designationArray =  array_fla($e);
+
+
+            $datas = ['levelId' => $model->levels, 'designationId' => $empModel];
 
             return $datas;
         });
+
         return $entities;
     }
     public function getWorkflowLevels(Request $request)
@@ -254,10 +317,14 @@ class WorkflowController extends Controller
             $levelDetails = $model['workflowLevelDetail'];
 
             $e = collect($levelDetails)->map(function ($levelDetail) {
-                $designationId = $levelDetail->designation_id;
-                $designationName = Designation::where('id', $designationId)->first()->name;
+                // $employeeId = $levelDetail->employee_id;
+                // $designationName = Designation::where('id', $designationId)->first()->name;
+                $employeeId = $levelDetail->employee_id;
+                $designationDetail = Employee::with('designation')->where('id', $employeeId)->first();
+              
+                $designationData = $designationDetail->first_name . "" . $designationDetail->last_name . "(" . $designationDetail->sap_id . ")" . "-(" . $designationDetail['designation']['name'] . ")";
 
-                return $designationName;
+                return $designationData;
             });
 
             $designationArray =  $e;

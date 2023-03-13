@@ -190,7 +190,7 @@
                             </select>
                             <!--end::Select2-->
                         </div> --}}
-                        <div class="w-250px mw-250px">
+                        <div class="col-md-2">
                             <!--begin::Select2-->
                             <select class="form-select form-select-solid filterDeptAndDes" data-kt-select2="true" data-placeholder="Department" data-allow-clear="true" id="deptFilter">
                                 <option value=""></option>
@@ -201,7 +201,7 @@
                             </select>
                             <!--end::Select2-->
                         </div>
-                        <div class="w-250px mw-250px">
+                        <div class="col-md-2">
                             <!--begin::Select2-->
                             <select class="form-select form-select-solid filterDeptAndDes" data-kt-select2="true" data-placeholder="Desgination" data-allow-clear="true" id="designationFilter">
                                 <option value=""></option>
@@ -225,6 +225,12 @@
                                 </svg>
                             </span>
                             <!--end::Svg Icon-->Add
+                        </button>
+                        </a><a href="{{url('employees/create')}}">
+                        <button type="button" class="badge badge-md badge-info" style="width:150px;height:50px">
+                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
+                           
+                            <!--end::Svg Icon-->Bulk Upload
                         </button>
                         </a>
                         @endif

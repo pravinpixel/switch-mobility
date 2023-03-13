@@ -67,7 +67,7 @@
 
 						<!--begin:Menu item-->
 						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('department-view'))
-						<div class="menu-item" >
+						<div class="menu-item">
 							<!--begin:Menu link-->
 							<a class="menu-link {{request()->is('department')?'active' :''}}" href="{{url('department')}}">
 								<span class="menu-icon">
@@ -134,7 +134,7 @@
 
 						@endif
 						<!--end:Menu item-->
-						
+
 
 						<!--end:Menu item-->
 						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('document-type-view'))
@@ -156,16 +156,16 @@
 						@endif
 						<!--end:Menu item-->
 
-							<!--begin:Menu item-->
-							<div class="menu-item pt-5">
-								<!--begin:Menu content-->
-								<div class="menu-content">
-									<span class="menu-heading fw-bold text-uppercase fs-7">Transaction</span>
-								</div>
-								<!--end:Menu content-->
+						<!--begin:Menu item-->
+						<div class="menu-item pt-5">
+							<!--begin:Menu content-->
+							<div class="menu-content">
+								<span class="menu-heading fw-bold text-uppercase fs-7">Transaction</span>
 							</div>
-							<!--end:Menu item-->
-						
+							<!--end:Menu content-->
+						</div>
+						<!--end:Menu item-->
+
 						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('project-view'))
 						<!--begin:Menu item-->
 						<div class="menu-item">
@@ -213,7 +213,7 @@
 							<!--end:Menu content-->
 						</div>
 						<!--end:Menu item-->
-						
+
 						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('role-view'))
 						<div class="menu-item">
 							<!--begin:Menu link-->
@@ -223,12 +223,12 @@
 										<i class="fas fa-drafting-compass"></i>
 									</span>
 								</span>
-								<span class="menu-title">Privillages</span>
+								<span class="menu-title">Privileges</span>
 							</a>
 							<!--end:Menu link-->
 						</div>
 						@endif
-						
+
 						<!--end:Menu item-->
 						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('user-view'))
 
@@ -255,8 +255,8 @@
 							<!--end:Menu content-->
 						</div>
 						<!--end:Menu item-->
-						
-					
+
+
 						<div class="menu-item">
 							<!--begin:Menu link-->
 							<a class="menu-link {{request()->is('datewiseReportIndex')?'active' :''}}" href="{{url('datewiseReportIndex')}}">
@@ -266,6 +266,18 @@
 									</span>
 								</span>
 								<span class="menu-title">Datewise Report</span>
+							</a>
+							<!--end:Menu link-->
+						</div>
+						<div class="menu-item">
+							<!--begin:Menu link-->
+							<a class="menu-link {{request()->is('projectwiseReportIndex')?'active' :''}}" href="{{url('projectwiseReportIndex')}}">
+								<span class="menu-icon">
+									<span class="svg-icon svg-icon-2">
+										<i class="fas fa-drafting-compass"></i>
+									</span>
+								</span>
+								<span class="menu-title">Projectwise Report</span>
 							</a>
 							<!--end:Menu link-->
 						</div>
@@ -281,7 +293,19 @@
 							</a>
 							<!--end:Menu link-->
 						</div>
-					
+
+						<div class="menu-item">
+							<!--begin:Menu link-->
+							<a class="menu-link {{request()->is('userWiseReportIndex')?'active' :''}}" href="{{url('userWiseReportIndex')}}">
+								<span class="menu-icon">
+									<span class="svg-icon svg-icon-2">
+										<i class="fas fa-drafting-compass"></i>
+									</span>
+								</span>
+								<span class="menu-title">Userwise Report</span>
+							</a>
+							<!--end:Menu link-->
+						</div>
 					</div>
 					<!--end::Menu-->
 				</div>

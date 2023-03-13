@@ -16,12 +16,12 @@
     }
 
     .Partial-input-container .select2-selection__choice__remove {
-        /* display: none !important; */
+        display: none !important;
 
     }
 
     .Partial-input-container:not(:last-child) .select2 {
-        /* pointer-events: none; */
+        pointer-events: none;
     }
 
     .addEvents {
@@ -34,7 +34,7 @@
     }
 
     .Partial-input-container:not(:last-child) .select2-selection__clear {
-        /* display: none !important; */
+        display: none !important;
     }
 
     .select2-selection__choice__remove.addBlock,
@@ -115,8 +115,8 @@
                                     <label class="required fs-6 fw-semibold mb-2">Workflow Code</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="text" class="form-control form-control-solid wfCode"  placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" disabled />
-                                    <input type="hidden" class="form-control form-control-solid wfCode"  placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" /> <!--end::Input-->
+                                    <input type="text" class="form-control form-control-solid wfCode" value="{{$wfCode}}" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" disabled/>
+                                    <input type="hidden" class="form-control form-control-solid wfCode" value="{{$wfCode}}" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" /> <!--end::Input-->
                                     <p id="wfCodeAlert" class="notifyAlert"></p>
                                 </div>
                                 <!--end::Col-->
@@ -178,17 +178,16 @@
                                                                 <div class="col-md-6 ">
                                                                     <select class="form-select product_option2" name="levels[]" data-placeholder="Select a variation" data-kt-ecommerce-catalog-add-product="product_option" disabled>
                                                                         <option value="">Select Level</option>
-                                                                        @for($i=1;$i<12;$i++) <option value="{{$i}}" <?php echo ($i == $a + 1) ? "selected" : "" ?>>Level {{$i}}</option>
+                                                                        @for($i=1;$i<12;$i++) <option value="{{$i}}"  <?php echo ($i == $a + 1) ? "selected" : "" ?>>Level {{$i}}</option>
                                                                             @endfor
                                                                     </select>
                                                                 </div>
                                                                 <!--end::Select2-->
                                                                 <!--begin::Input-->
                                                                 <div class="col-md-6 fv-row">
-                                                                    <select class="form-select mb-2 designation" levelCheck="{{$a + 1}}" required data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="fapprover_designation{{$a+1}}[]">
-                                                                        @foreach($employeeDatas as $employeeData)
-                                                                      
-                                                                        <option value="{{$employeeData['id']}}">{{$employeeData['data']}}</option>
+                                                                    <select class="form-select mb-2 designation" levelCheck="{{$a + 1}}"  required data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="fapprover_designation{{$a+1}}[]">
+                                                                        @foreach($designationDatas as $designationData)
+                                                                        <option value="{{$designationData->id}}">{{$designationData->name}}</option>
                                                                         @endforeach
                                                                     </select>
 
@@ -247,9 +246,9 @@
                                                     <!--end::Select2-->
                                                     <!--begin::Input-->
                                                     <div class="col-md-4 fv-row">
-                                                        <select class="form-select mb-2 designation" onchange="DesChange(this)" disabled data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="approver_designation[]">
-                                                            @foreach($employeeDatas as $employeeData)
-                                                            <option value="{{$employeeData['id']}}">{{$employeeData['data']}}</option>
+                                                        <select class="form-select mb-2 designation"  onchange="DesChange(this)" disabled data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="approver_designation[]">
+                                                            @foreach($designationDatas as $designationData)
+                                                            <option value="{{$designationData->id}}">{{$designationData->name}}</option>
                                                             @endforeach
                                                         </select>
 
@@ -300,7 +299,7 @@
                 <div class="text-center mb-5">
                     <button type="button" class="btn btn-light me-3" onclick="resetForm()">Reset</button>
                     <a href="{{route('workflow.index')}}">
-                        <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
+                                    <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
                     <button type="submit" class="btn btn-primary " id="submitBtn" data-kt-users-modal-action="submit">
                         <span class="indicator-label">Save and Exit</span>
                         <span class="indicator-progress">Please wait...
@@ -316,27 +315,28 @@
 </div>
 </div>
 <script>
-    function DesChange(evt) {
-        let nameAttr = $(evt).attr("name").match(/\d+/)[0]; //get numbers only here
-        let evtValue = $(evt).find('option:selected');
-        let evtValueAll = evtValue.map(function() {
-            return $(this).val();
-        }).get();
+function DesChange(evt) {
+  let nameAttr = $(evt).attr("name").match(/\d+/)[0]; //get numbers only here
+  let evtValue = $(evt).find('option:selected');
+  let evtValueAll = evtValue.map(function() {
+    return $(this).val();
+  }).get();
 
-        let Options = $(`select[levelCheck=${nameAttr}]`).find('option');
+  let Options = $(`select[levelCheck=${nameAttr}]`).find('option');
 
-        $.each(Options, function(i, option) {
-            let optionValue = $(option).val();
+  $.each(Options, function(i, option) {
+    let optionValue = $(option).val();
 
-            if (evtValueAll.includes(optionValue)) {
-                $(option).attr('selected', true);
-
-            } else {
-                $(option).removeAttr('selected');
-            }
-        });
-        $(`select[levelCheck=${nameAttr}]`).select2();
+    if (evtValueAll.includes(optionValue)) {
+      $(option).attr('selected', true);
+    
+    } else {
+      $(option).removeAttr('selected');
     }
+  });
+ $(`select[levelCheck=${nameAttr}]`).select2();
+}
+
 </script>
 @endsection
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
@@ -355,18 +355,17 @@
 <script>
     function resetForm() {
         console.log("wrt");
-        // $("#department_form")[0].reset();
-        $('.wfCode').val('');
-        $('.workflow_name').val('');
+       // $("#department_form")[0].reset();
+       $('.workflow_name').val('');
         $('.designation').val('').trigger('change');
-        let remo = $('.partial-input-container').not(':first');
-        $.each(remo, function(indexInArray, reo) {
-            $(reo).remove();
-        });
+       let remo= $('.partial-input-container').not(':first');
+         $.each(remo, function (indexInArray, reo) { 
+             $(reo).remove();
+         });
         $(".partialWorkflow select option").removeAttr('selected');
-        $(".partialWorkflow select option:first-child").attr('selected', 'true');
+        $(".partialWorkflow select option:first-child").attr('selected','true');
         $(".partialWorkflow select option").show();
-
+      
     }
     $(document).ready(function() {
         // on form submit
@@ -385,7 +384,7 @@
             data: {
                 "_token": "{{ csrf_token() }}",
                 code: $(this).val(),
-                id: "",
+                id:"",
             },
             success: function(data) {
                 var alertName = 'wfCodeAlert';
@@ -416,12 +415,13 @@
     $(document).on('change', '.btn-check', function() {
         console.log($(this).val());
         if ($(this).val() == 0) {
-            $(".fullWorkflow select").removeAttr("required");
-            $(".partialWorkflow select").attr("required");
-        } else {
-            $(".partialWorkflow select").removeAttr("required");
-            $(".fullWorkflow select").attr("required");
-        }
+$(".fullWorkflow select").removeAttr("required");
+$(".partialWorkflow select").attr("required");
+            }
+            else{
+                $(".partialWorkflow select").removeAttr("required");
+                $(".fullWorkflow select").attr("required");
+            }
         workFlowType($(this).val());
 
     });
@@ -447,45 +447,45 @@
             $(this).parent().next().find('.designation').removeAttr('disabled');
             let designationElem = $(this).parent().next().find('.designation');
             let evtSetName = designationElem.attr("name");
-            let evtSetNum = parseInt(evtSetName.match(/\d+/));
-            if (isNaN(evtSetNum)) {
-                evtSetNum = false;
-            }
+    let evtSetNum = parseInt(evtSetName.match(/\d+/));
+    if (isNaN(evtSetNum)) {
+        evtSetNum = false;
+    }
+    
+    if (evtSetNum != false) {
+        let emptySelects = $(`select[levelCheck=${evtSetNum}]`).find('option');
 
-            if (evtSetNum != false) {
-                let emptySelects = $(`select[levelCheck=${evtSetNum}]`).find('option');
+$.each(emptySelects, function(i, option) {
 
-                $.each(emptySelects, function(i, option) {
-
-                    $(option).removeAttr('selected');
-
-                });
-                $(`select[levelCheck=${evtSetNum}]`).select2();
-            }
+    $(option).removeAttr('selected');
+  
+});
+$(`select[levelCheck=${evtSetNum}]`).select2();
+    }
             $(this).parent().next().find('.designation').attr("name", "approver_designation" + this.value + "[]").end();
         }
 
-
-        let evt = $(this).parent().next().find('.designation');
+       
+    let evt=$(this).parent().next().find('.designation');
         let nameAttr = $(evt).attr("name").match(/\d+/)[0]; //get numbers only here
-        let evtValue = $(evt).find('option:selected');
-        let evtValueAll = evtValue.map(function() {
-            return $(this).val();
-        }).get();
+  let evtValue = $(evt).find('option:selected');
+  let evtValueAll = evtValue.map(function() {
+    return $(this).val();
+  }).get();
 
-        let Options = $(`select[levelCheck=${nameAttr}]`).find('option');
+  let Options = $(`select[levelCheck=${nameAttr}]`).find('option');
 
-        $.each(Options, function(i, option) {
-            let optionValue = $(option).val();
+  $.each(Options, function(i, option) {
+    let optionValue = $(option).val();
 
-            if (evtValueAll.includes(optionValue)) {
-                $(option).attr('selected', true);
-
-            } else {
-                $(option).removeAttr('selected');
-            }
-        });
-        $(`select[levelCheck=${nameAttr}]`).select2();
+    if (evtValueAll.includes(optionValue)) {
+      $(option).attr('selected', true);
+    
+    } else {
+      $(option).removeAttr('selected');
+    }
+  });
+ $(`select[levelCheck=${nameAttr}]`).select2();
 
         partialLevelSelect = $(".product_option1");
         selectedOptions = partialLevelSelect.map(function() {
@@ -648,7 +648,7 @@
 
 
         var uniqueId = Date.now();
-        $(".partialLevelFlow").last().append('<div id="kt_ecommerce_add_product_options" class="Partial-input-container append-elements"> <!--begin::Form group--> <div class="form-group"> <div data-repeater-list="kt_ecommerce_add_product_options" class="d-flex flex-column gap-3"> <div data-repeater-item="" class="form-group d-flex flex-wrap align-items-center justify-content-center gap-5"> <!--begin::Select2--> <div class="col-md-4"> <select class="form-select product_option1" name="levels[]" data-placeholder="Select a variation" data-kt-ecommerce-catalog-add-product="product_option" required> <option value=""  selected disabled>Select Level</option> @for($i=1;$i<12;$i++) <option value="{{$i}}">Level {{$i}}</option> @endfor </select> </div> <!--end::Select2--> <!--begin::Input--> <div class="col-md-4 fv-row"> <select class="form-select mb-2 designation" onchange="DesChange(this)"  disabled id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple"  name="approver_designation[]" required> @foreach($employeeDatas as $employeeData) <option value="{{$employeeData['id']}}">{{$employeeData['data']}}</option> @endforeach </select> </div> <!--end::Input--> <button type="button" data-repeater-delete="" class="btn btn-sm btn-icon btn-light-danger removeBtnsm" onclick="RemoveFunctionc(this)" > <!--begin::Svg Icon | path: icons/duotune/arrows/arr088.svg--> <span class="svg-icon svg-icon-1"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="currentColor" /> <rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor" /> </svg> </span> <!--end::Svg Icon--> </button> <button type="button" data-repeater-create="" class="btn btn-sm btn-light-primary addLevel" disabled> <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg--> <span class="svg-icon svg-icon-2"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11" y="18" width="12" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" /> <rect x="6" y="11" width="12" height="2" rx="1" fill="currentColor" /> </svg> </span> <!--end::Svg Icon-->Add Level</button> </div> </div> </div> <!--end::Form group--> <!--begin::Form group--> <!--end::Form group--> </div>');
+        $(".partialLevelFlow").last().append('<div id="kt_ecommerce_add_product_options" class="Partial-input-container append-elements"> <!--begin::Form group--> <div class="form-group"> <div data-repeater-list="kt_ecommerce_add_product_options" class="d-flex flex-column gap-3"> <div data-repeater-item="" class="form-group d-flex flex-wrap align-items-center justify-content-center gap-5"> <!--begin::Select2--> <div class="col-md-4"> <select class="form-select product_option1" name="levels[]" data-placeholder="Select a variation" data-kt-ecommerce-catalog-add-product="product_option" required> <option value=""  selected disabled>Select Level</option> @for($i=1;$i<12;$i++) <option value="{{$i}}">Level {{$i}}</option> @endfor </select> </div> <!--end::Select2--> <!--begin::Input--> <div class="col-md-4 fv-row"> <select class="form-select mb-2 designation" onchange="DesChange(this)"  disabled id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple"  name="approver_designation[]" required> @foreach($designationDatas as $designationData) <option value="{{$designationData->id}}">{{$designationData->name}}</option> @endforeach </select> </div> <!--end::Input--> <button type="button" data-repeater-delete="" class="btn btn-sm btn-icon btn-light-danger removeBtnsm" onclick="RemoveFunctionc(this)" > <!--begin::Svg Icon | path: icons/duotune/arrows/arr088.svg--> <span class="svg-icon svg-icon-1"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="currentColor" /> <rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor" /> </svg> </span> <!--end::Svg Icon--> </button> <button type="button" data-repeater-create="" class="btn btn-sm btn-light-primary addLevel" disabled> <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg--> <span class="svg-icon svg-icon-2"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11" y="18" width="12" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" /> <rect x="6" y="11" width="12" height="2" rx="1" fill="currentColor" /> </svg> </span> <!--end::Svg Icon-->Add Level</button> </div> </div> </div> <!--end::Form group--> <!--begin::Form group--> <!--end::Form group--> </div>');
         $("#" + uniqueId).select2();
         $(this).remove();
         $(".addBlock").toggleClass("addBlock");
@@ -1208,21 +1208,4 @@
             }
         }
     }
-    $(document).on('blur', '.workflow_name', function() {
-        var wfname = $('.workflow_name').val();
-console.log("well");
-   $.ajax({
-            url: "{{url('getWorkflowCodeFormat')}}",
-            type: 'ajax',
-            method: 'post',
-            data: {
-                    "_token": "{{ csrf_token() }}",
-                    wfname: wfname,
-                    },
-            success: function(result) {
-                $('.wfCode').val("");
-                $('.wfCode').val(result);
-            }
-        });
-    });
 </script>

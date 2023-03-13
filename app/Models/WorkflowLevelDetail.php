@@ -14,6 +14,9 @@ class WorkflowLevelDetail extends Model
     //     'levels',
     //     'approver_designation'
     // ];
-   
+    public function employeeData()
+    {
+        return $this->hasOne('App\Models\Employee', 'id', 'employee_id');
+    }
    
 }

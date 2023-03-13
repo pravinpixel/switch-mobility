@@ -116,7 +116,7 @@
                                   <!--begin::Col-->
                                   <div class="col-md-12 fv-row">
                                       <!--begin::Label-->
-                                      <label class="required fs-6 fw-semibold mb-2">Privillage</label>
+                                      <label class="required fs-6 fw-semibold mb-2">Privileges</label>
                                       <!--end::Label-->
                                       <!--begin::Input-->
                                       <select class="form-control form-control roles Privillage" name="roles" required>

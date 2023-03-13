@@ -253,6 +253,7 @@
     .level-container {
         background: transparent;
         display: flex;
+        flex-wrap: wrap;
 
     }
 </style>
@@ -568,12 +569,29 @@
             <!--begin::Step 3-->
             <div data-kt-stepper-element="content" class="level-container">
                 <!--begin::Wrapper-->
-
+                <div class="row" style="width: 100%;">
+                    <div class="col-md-6 fv-row">
+                        <label class="fs-6 fw-semibold mb-2">Main Document</label><br>
+                        <div class="col-md-12 p-3 pdf_container input-group">
+                            <label class="row col-12 m-2 pdf-view row " for="pdf1">
+                                <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div>
+                            </label> <input type="file" name="main_document[]" id="pdf1" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        </div>';
+                    </div>
+                    <div class="col-md-6 fv-row">
+                        <label class="fs-6 fw-semibold mb-2">Auxilary Document</label><br>
+                        <div class="col-md-12 p-3 pdf_container input-group">
+                            <label class="row col-12 m-2 pdf-view row " for="pdf2">
+                                <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div>
+                            </label> <input type="file" name="auxillary_document[]" id="pdf2" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        </div>
+                    </div>
+                </div>
                 <!-- Levels Tab -->
                 <div class="tab">
 
                 </div>
-                <div class="LevelTabContent" style="width:100%">
+                <div class="LevelTabContent"  style="width:calc(100% - 200px)">
 
                 </div>
 
@@ -1070,7 +1088,7 @@
                         console.log(WFLevelBtn[wfl].levelId);
                         console.log(WFLevelBtn[wfl].designationId);
                         var levelDesignation = WFLevelBtn[wfl].designationId;
-
+                      
                         var levelBtnRow = '<button type="button" class="tablinks ' + className + '"  onclick="openCity(event, London' + WFLevelBtn[wfl].levelId + ',' + WFLevelBtn[wfl].levelId + ')" id="defaultOpen" l="' + WFLevelBtn[wfl].levelId + '" >Level' + WFLevelBtn[wfl].levelId + '</button>';
                         $('.tab').append(levelBtnRow);
                         var contentshow = "";
@@ -1089,43 +1107,50 @@
                         levelTabContentData += '</div><br><br>';
                         levelTabContentData += '<div class="col-md-12 fv-row"><label class="required fs-6 fw-semibold mb-2">Priority</label><br>';
 
-                        levelTabContentData += 'Important <input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1">&nbsp;&nbsp;';
-                        levelTabContentData += 'Medium <input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2">&nbsp;&nbsp;';
-                        levelTabContentData += 'Low <input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3">&nbsp;&nbsp;';
-                        levelTabContentData += 'High <input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" checked>';
+                        levelTabContentData += ' <input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1"> Important &nbsp;&nbsp;';
+                        levelTabContentData += ' <input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2"> Medium &nbsp;&nbsp;';
+                        levelTabContentData += ' <input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3"> Low &nbsp;&nbsp;';
+                        levelTabContentData += ' <input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" checked> High';
 
                         levelTabContentData += '</div><br><br>';
                         levelTabContentData += '<h4>Approvers</h4>';
-                        levelTabContentData += ' <div class="col-md-12 fv-row">';
+                        levelTabContentData += ' <div class="col-md-6 fv-row">';  
+                        var uniqueId = "SelectLevel" + wfl;   
+                        var uniqueApproverName = "approver_" + WFLevelBtn[wfl].levelId; 
+                        SelectId.push(uniqueId);               
+                        levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
+                        levelTabContentData += '<option></option>';
                         for (var lvldesc = 0; lvldesc < levelDesignation.length; lvldesc++) {
-                            var levelApprovers = levelDesignation[lvldesc].desEmployee;
+                           var optionId = levelDesignation[lvldesc].id;
+                           var optionData = levelDesignation[lvldesc].first_name +levelDesignation[lvldesc].last_name+"(" +levelDesignation[lvldesc].sap_id +")"+ "-(" + levelDesignation[lvldesc].designation_name + ")";
 
-                            levelTabContentData += '<br><br><h4>' + levelDesignation[lvldesc].desName + '</h4>';
-                            var uniqueId = "SelectLevel" + wfl + lvldesc;
-                            var uniqueApproverName = "approver_" + WFLevelBtn[wfl].levelId + "_" + lvldesc;
-                            console.log("uniqueApproverName >" + uniqueApproverName);
-                            SelectId.push(uniqueId);
-                            levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
-                            levelTabContentData += '<option></option>';
-                            for (var lvlApvrs = 0; lvlApvrs < levelApprovers.length; lvlApvrs++) {
+                           // levelTabContentData += '<br><br><h4>' + levelDesignation[lvldesc].desName + '</h4>';
+                            // var uniqueId = "SelectLevel" + wfl + lvldesc;
+                            // var uniqueApproverName = "approver_" + WFLevelBtn[wfl].levelId + "_" + lvldesc;
+                            // console.log("uniqueApproverName >" + uniqueApproverName);
+                            // SelectId.push(uniqueId);
+                            // levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
+                            // levelTabContentData += '<option></option>';
+                          //  for (var lvlApvrs = 0; lvlApvrs < levelApprovers.length; lvlApvrs++) {
 
-                                levelTabContentData += '<option value="' + levelApprovers[lvlApvrs].id + '">' + levelApprovers[lvlApvrs].first_name + '</option>';
+                             levelTabContentData += '<option value="' + optionId+ '" selected>' + optionData + '</option>';
 
-                            }
-                            levelTabContentData += '</select>';
+                            //}
+                            //levelTabContentData += '</select>';
 
                         }
+                        levelTabContentData += '</select>';
                         levelTabContentData += '</div><br><br>';
 
-                        levelTabContentData += '<div class="col-md-12 fv-row">';
-                        levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Documents</label><br>';
-                        levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
-                        levelTabContentData += '</div';
+                        // levelTabContentData += '<div class="col-md-12 fv-row">';
+                        // levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Documents</label><br>';
+                        // levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                        // levelTabContentData += '</div';
 
-                        levelTabContentData += '<br><br><div class="col-md-12 fv-row">';
-                        levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Auxillary Documents</label><br>';
-                        levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
-                        levelTabContentData += '</div';
+                        // levelTabContentData += '<br><br><div class="col-md-12 fv-row">';
+                        // levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Auxillary Documents</label><br>';
+                        // levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                        // levelTabContentData += '</div';
 
                         levelTabContentData += '</div>';
 
@@ -1250,10 +1275,10 @@
                         var check3 = (priority == 3) ? "checked" : "";
                         var check4 = (priority == 4) ? "checked" : "";
 
-                        levelTabContentData += 'Important <input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1" ' + check1 + '>&nbsp;&nbsp;';
-                        levelTabContentData += 'Medium <input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2" ' + check2 + '>&nbsp;&nbsp;';
-                        levelTabContentData += 'Low <input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3" ' + check3 + '>&nbsp;&nbsp;';
-                        levelTabContentData += 'High <input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" ' + check4 + '>';
+                        levelTabContentData += '<input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1" ' + check1 + '> Important &nbsp;&nbsp;';
+                        levelTabContentData += ' <input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2" ' + check2 + '> Medium &nbsp;&nbsp;';
+                        levelTabContentData += ' <input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3" ' + check3 + '> Low &nbsp;&nbsp;';
+                        levelTabContentData += '<input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" ' + check4 + '> HIGH';
 
                         levelTabContentData += '</div><br><br>';
                         levelTabContentData += '<h4>Approvers</h4>';
@@ -1278,15 +1303,15 @@
                         }
                         levelTabContentData += '</div><br><br>';
 
-                        levelTabContentData += '<div class="col-md-12 fv-row">';
-                        levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Documents</label><br>';
-                        levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
-                        levelTabContentData += '</div';
+                        // levelTabContentData += '<div class="col-md-12 fv-row">';
+                        // levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Documents</label><br>';
+                        // levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                        // levelTabContentData += '</div';
 
-                        levelTabContentData += '<br><br><div class="col-md-12 fv-row">';
-                        levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Auxillary Documents</label><br>';
-                        levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
-                        levelTabContentData += '</div';
+                        // levelTabContentData += '<br><br><div class="col-md-12 fv-row">';
+                        // levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Auxillary Documents</label><br>';
+                        // levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                        // levelTabContentData += '</div';
 
                         levelTabContentData += '</div>';
 

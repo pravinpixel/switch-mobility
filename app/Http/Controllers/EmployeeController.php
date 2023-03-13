@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\EmployeesImport;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeController extends Controller
 {
@@ -29,6 +31,16 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
 
+      
+
+        // try {
+        //     Excel::import(new EmployeesImport, "bulk1.xlsx");         
+           
+        // } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+        //      $failures = $e->failures();
+            
+        //      dd($failures);
+        // }
         if ($request->id) {
             $model = Employee::findOrFail($request->id);
             $msg = "Updated";
@@ -54,9 +66,8 @@ class EmployeeController extends Controller
 
             $model->profile_image =  $profile_image;
             $model->save();
-
         }
-        
+
         if ($request->hasFile('sign_image')) {
             $image = $request->file('sign_image');
             $sign_image = "s" . time() . '.' . $image->getClientOriginalExtension();
@@ -102,7 +113,7 @@ class EmployeeController extends Controller
     public function getEmployeeDetailByParams(Request $request)
     {
 
-        $model = Employee::with('user')->where('id','!=', $request->pkey)->whereNull('employees.deleted_at');
+        $model = Employee::with('user')->where('id', '!=', $request->pkey)->whereNull('employees.deleted_at');
         if ($request->fieldname == "sapId") {
             $model->where('sap_id', $request->fieldData);
         }

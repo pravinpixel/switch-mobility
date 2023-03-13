@@ -3,11 +3,19 @@
 namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ProjectController;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
 class DatewiseReportController extends Controller
 {
+    protected $projectController;
+    public function __construct(ProjectwiseController $projectController)
+    {
+        $this->projectController = $projectController;
+    }
+    protected $service;
+   
     public function index()
     {
         return view('Reports/DatewiseReport/list');
@@ -27,25 +35,7 @@ class DatewiseReportController extends Controller
             ->whereNull('deleted_at')
             ->get();
 
-        $entities = collect($models)->map(function ($model) {
-            $workflowModel = $model['workflow'];
-            $employeeModel = $model['employee'];
-            $departmentModel = "";
-            if ($employeeModel) {
-                $departmentModel = $employeeModel->department;
-            }
-
-            $projectId = $model->id;
-            $projectCode = $model->project_code;
-            $projectName = $model->project_name;
-            $workflowCode = $workflowModel->workflow_code;
-            $workflowName = $workflowModel->workflow_name;
-            $initiater = $employeeModel->first_name . "" . $employeeModel->last_name;
-            $department = ($departmentModel) ? $departmentModel->name : "";
-            $data = ['projectId' => $projectId, 'workflowName' => $workflowName, 'projectCode' => $projectCode, 'projectName' => $projectName, 'workflowCode' => $workflowCode, 'initiater' => $initiater, 'department' => $department];
-
-            return $data;
-        });
+        $entities = $this->projectController->ReportDataLooping($models);
         return response()->json(['entities' => $entities]);
     }
 }

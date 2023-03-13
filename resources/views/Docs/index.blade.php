@@ -297,14 +297,15 @@
                                     <!--end::Checkbox-->
                                     <!--begin::User=-->
                                     <td class="d-flex align-items-center">
-                                        {{$d->id}}
+                                        {{$d->ticket_no}}
                                     </td>
 
                                     <td>{{$d->project_name.' '.$d->project_code}}</td>
                                     <td>{{$WorkFlow->workflow_name.' & '.$WorkFlow->workflow_code}}</td>
                                     <td>{{$initiator->first_name.' '.$initiator->last_name}}</td>
                                     <td>{{$department->name}}</td>
-                                    <td><a href="{{url('viewProject/'.$d->id)}}"><i class="fa-solid fa-eye"></i>View</a></td>
+                                    <td><a href="{{url('viewDocListing/'.$d->id)}}" title="View Document"><i class="fa-solid fa-eye"></i>View</a>
+                                    <a href="{{url('viewProject/'.$d->id)}}" title="Edit Document"><i class="fa-solid fa-pen"></i> Edit</a></td>
 
                                 </tr>
                                 @endforeach

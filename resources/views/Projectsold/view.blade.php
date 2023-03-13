@@ -214,11 +214,6 @@
     table.table-bordered>tbody>tr>td {
         border: 1px solid black;
     }
-
-    .documentTableth>tr>th {
-        color: blue;
-        font-size: 15pt;
-    }
 </style>
 <title>VERTICAL TABS</title>
 </head>
@@ -249,7 +244,18 @@
                     <textarea required class="form-control form-control-solid remarks" style="border: 3px solid #ccc;" name="remarks" rows="4" cols="50"></textarea>
 
                 </div>
+                <div class="col-md-12 fv-row">
+                    <!--begin::Label-->
+                    <label class="required fs-6 fw-semibold mb-2">status</label><br>
+                    <!--end::Label-->
+                    <!--begin::Input-->
+                    <select name="statusversion" id="statusversion" required class="form-control form-control-solid statusversion" style="border: 3px solid #ccc;">
+                        <option value="">Status</option>
+                        <option value="1">Pending</option>
+                        <option value="2">Completed</option>
+                    </select>
 
+                </div>
                 <div class="text-center pt-15">
                     <button type="button" class="btn btn-danger me-3" onclick="closeModel()">Cancel</button>
                     <button type="button" class="btn btn-primary store" onclick="submitForm()">
@@ -278,19 +284,10 @@
                     <select name="status" id="status" required class="form-control form-control-solid status" style="border: 3px solid #ccc;">
                         <option value="">Status</option>
                         <option value="2">Declined</option>
-                        <option value="3">Change Request</option>
+                        <option value="3">Cancel Request</option>
                         <option value="4">Approved</option>
                     </select>
 
-                </div>
-                <div class="col-md-12 fv-row documentUploadDiv" style="display:none">
-                    <!--begin::Label-->
-                    <label class="required fs-6 fw-semibold mb-2">Documents</label><br>
-                    <!--end::Label-->
-                    <!--begin::Input-->
-                    <input style="border: 3px solid #ccc;" type="file" name="againestDocument" required class="form-control againestDocument" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                    <input type="hidden" value="" class="documentId" name="documentId">
-                    <input type="hidden" value="" class="levelId" name="levelId">
                 </div>
                 <div class="col-md-12 fv-row">
                     <!--begin::Label-->
@@ -321,87 +318,28 @@
     <div class="text-center container">
         <h3 class="breadcrumbs">Documents > Ticket No. #{{ $details->ticket_no }}</h3>
 
-
-
-
         <div class="row top-tap">
             <div class="col-md-3">
-                <h4>Ticket Number</h4>
-                <p>{{ $details->ticket_no }}</p>
-            </div>
-            <div class="col-md-3">
-                <h4>Project Code</h4>
-                <p>{{ $details->project_code }}</p>
-            </div>
-            <div class="col-md-3">
-                <h4>Project Name</h4>
-                <p>{{ $details->project_name }}</p>
-            </div>
-            <div class="col-md-3">
-                <h4>Upoload Date</h4>
-                <p>{{ $details->created_at }}</p>
-            </div>
-            <div class="col-md-3">
                 <h4>Document Type</h4>
-                <p>{{ $details->workflow_name }}</p>
+                <h5>{{ $details->document_type }}</h5>
             </div>
             <div class="col-md-3">
-                <h4>WorkFlow Name & Code </h4>
-                <p>{{$details->workflow_name .' '. $details->workflow_code }}</p>
+                <h4>Project Name & Code </h4>
+                <h5>{{ $details->project_name }} & {{ $details->project_code }}</h5>
             </div>
             <div class="col-md-3">
-                <h4>Department </h4>
-                <p>{{ $details->department }}</p>
+                <h4>Work Flow Name & Code </h4>
+                <h5>{{ $details->workflow_name }} & {{ $details->workflow_code }}</h5>
             </div>
-            <div class="col-md-2">
-                <h4>Initiater </h4>
-                <p>{{ $details->first_name . ' ' . $details->last_name }}</p>
-            </div>
-
-            <div class="m-0 d-flex justify-content-end pe-3">
-                <a href="#" class="btn btn-sm btn-flex bg-body btn-color-gray-700 btn-active-color-primary fw-bold " data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-
-                    Milestone
-                </a>
-
-                <!--  Drop Down Container -->
-                <div class="menu menu-sub menu-sub-dropdown w-350px w-md-400px " data-kt-menu="true" id="kt_menu_637dc6b4b8b49">
-                    <div class="px-7 py-5">
-                        <div class="fs-5 text-dark fw-bold">Milestone Detail</div>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Milestone Name</th>
-                                    <th>Start Date</th>
-                                    <th>End Date</th>
-                                    <th>Level</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($milestoneDatas as $milestoneData)
-                                <tr>
-                                    <td>{{$milestoneData->milestone}}</td>
-                                    <td>{{$milestoneData->mile_start_date}}</td>
-                                    <td>{{$milestoneData->mile_end_date}}</td>
-                                    <td>{{$milestoneData->levels_to_be_crossed}}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3" style="display: none;">
-                <h4>Initiator</h4>
+            <div class="col-md-3">
                 <figure>
                     <img src="{{ url('/images/Employee/' . $details->profile_image) }}" class="rounded" width="50" height="50">
-
+                    <figcaption>
+                        {{ $details->first_name . ' ' . $details->last_name }},{{ $details->department }},{{ $details->designation }}
+                    </figcaption>
                     <figure>
-
             </div>
-
         </div>
-
         <div class="vertical-tabs">
 
             <ul class="nav nav-tabs" role="tablist">
@@ -417,7 +355,6 @@
                 @for ($i = 0; $i < count($levelsArray); $i++) <div class="tab-pane <?php if ($i == 0) {
                                                                                         echo 'active';
                                                                                     } ?>" id="pag<?php echo $levelsArray[$i]['levelId']; ?>" role="tabpanel">
-
             </div>
             @endfor
         </div>
@@ -495,13 +432,11 @@
 
     }
 
-    function openStatusModel(id, levelId, mainId) {
+    function openStatusModel(id, levelId) {
         $('#statusModelForm')[0].reset();
         $('#statusChangeModal').css('display', 'block');
         $('#statusChangeModal').find('.statusdocumentId').val(id);
         $('#statusChangeModal').find('.statuslevelId').val(levelId);
-        $('#statusChangeModal').find('.documentId').val(mainId);
-        $('#statusChangeModal').find('.levelId').val(levelId);
 
     }
 
@@ -532,10 +467,10 @@
                 project_id: project_id
             },
             success: function(result) {
-                var data1 = JSON.parse(result);
+                var data = JSON.parse(result);
                 console.log("dahna");
-                console.log(data1);
-                if (data1.length) {
+                console.log(data);
+                if (data.length) {
 
                     $("#pag" + level).html("");
                     $(".image_append" + level).empty();
@@ -544,54 +479,15 @@
                     //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
                     //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
                     //     newDate = day + '-' + month + '-' + yr;
-                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:inline-flex;flex-flow:row"></div><div class="col-md-2">Due Date:<p class="due_date_' + level + '"></p></div><div class="col-md-2">Priority:<p class="priority_' + level + '"></p></div><hr><div>Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div>Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
+                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:inline-flex;flex-flow:row"></div><div class="col-md-4">Milestone:Pending<br>Milestone Start Date:Pending</div></div><hr><div class="doc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
                     //if (data.length > 0) {
 
                     $(".image_append" + level).empty();
-                    $.each(data1, function(key, val) {
-
-                        var dueDate = new Date(val.due_date);
-                        var todayDate = new Date();
-
-                        var millisBetween = dueDate.getTime() - todayDate.getTime();
-                        var getdays = millisBetween / (1000 * 3600 * 24);
-                        var completionDate = Math.round(Math.abs(getdays));
-                        var dateSign = "";
-                        if (completionDate) {
-                            dateSign = (dueDate.getTime() <= todayDate.getTime())?"-":"+";
-                                              }
-
-
-
-                    
-                        var duDateAppend = val.due_date;
-                        var badgeType = (dateSign == '-')?"danger":"success";
-                        duDateAppend+=' <span class="menu-badge"><span class="badge badge-'+badgeType+'">'+dateSign+completionDate+'</span></span>';
-                        $(".due_date_" + level).empty();
-                        $(".due_date_" + level).append(duDateAppend);
-
-                        var priority = "";
-                        if (val.priority == 4) {
-                            priority = "High";
-                        }
-                        else if(val.priority == 3) {
-                            priority = "Low";
-                        }
-                        else if(val.priority == 2) {
-                            priority = "Medium";
-                        }else{
-                            priority = "Important";
-                        }
-                        $(".priority_" + level).empty();
-                        $(".priority_" + level).append(priority);
-                        var images = val.profile_image;
+                    $.each(data, function(key, val) {
+                        console.log("loopdata" + val.first_name);
                         var baseUrl = "{{ asset('images/Employee/') }}";
-                        if (images) {
-                            var profile = images;
-                        } else {
-                            var profile = 'icon-5359553_960_720.png';
-                        }
-                        $(".image_append" + level).append('<figure><img src="' + baseUrl + '/' + profile + '" class="rounded"  width="50" height="50"><figcaption>[' + val.first_name + ' ,' + val.desName + ']&nbsp;</figcaption></figure>');
+
+                        $(".image_append" + level).append('<figure><img src="' + baseUrl + '/' + val.profile_image + '" class="rounded" width="50" height="50"><figcaption>[' + val.first_name + ' ,' + val.desName + ']&nbsp;</figcaption></figure>');
                     });
                     $.ajax({
                         url: "{{ url('getProjectDocs') }}",
@@ -604,11 +500,9 @@
                         },
                         success: function(result) {
                             var data = JSON.parse(result);
-                            console.log("data" + data);
+                            console.log(data);
 
-                            $(".maindoc_append" + level).empty();
-                            $(".auxdoc_append" + level).empty();
-                            var levelstageStatus = [];
+                            $(".doc_append" + level).empty();
                             if (data.main_docs) {
                                 $.each(data.main_docs, function(key, val) {
                                     var docMainDetailArray = val.doc_detail;
@@ -625,68 +519,48 @@
                                     versionMainDocDiv += '<div class="accordion" id="accordionExample' + key + '">';
                                     versionMainDocDiv += '<div class="card"> <div class="card-header" id="heading' + key + '">';
                                     versionMainDocDiv += '<h5 class="mb-0">';
-                                    versionMainDocDiv += '<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold">' + val.original_name + '</h3><p class="text-right mainlevelStatus-' + level + "-" + key + '"></p></button>';
+                                    versionMainDocDiv += '<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><i class="fa fa-angle-double-right mr-3"></i>' + val.original_name + '</button>';
                                     versionMainDocDiv += '</h5>';
                                     versionMainDocDiv += '</div>';
                                     versionMainDocDiv += '<div id="collapse' + key + '" class="collapse fade" aria-labelledby="heading' + key + '" data-parent="#accordionExample' + key + '">';
                                     versionMainDocDiv += '<div class="card-body">';
-                                    versionMainDocDiv += ' <table class="table table-striped documentTable">';
-                                    versionMainDocDiv += ' <thead class="documentTableth">';
-                                    versionMainDocDiv += ' <tr> <th scope="col">Version ID </th> <th scope="col">Remarks</th> <th scope="col">Status</th><th scope="col">Last Updated</th> <th scope="col">Action</th> </tr>';
+                                    versionMainDocDiv += ' <table class="table table-bordered">';
+                                    versionMainDocDiv += ' <thead>';
+                                    versionMainDocDiv += ' <tr> <th scope="col">Version </th> <th scope="col">Remarks</th> <th scope="col">Status</th> <th scope="col">Action</th> </tr>';
                                     versionMainDocDiv += '</thead>';
                                     versionMainDocDiv += '<tbody style="">';
                                     var mainDocSize = docMainDetailArray.length;
                                     var showMainDocAction = mainDocSize - 1;
                                     console.log("showMainDocAction " + showMainDocAction);
-                                    for (var i =docMainDetailArray.length-1; i >= 0; --i) {
+                                    for (var i = 0; i < docMainDetailArray.length; i++) {
 
                                         var remarkData = (docMainDetailArray[i].remark) ? docMainDetailArray[i].remark : "";
 
 
                                         var statusData = "";
                                         if (docMainDetailArray[i].status == 1) {
-                                            var statusData = "Waiting  For Approval";
+                                            var statusData = "Worked For Approval Approvel";
                                         } else if (docMainDetailArray[i].status == 2) {
                                             var statusData = "Declined";
                                         } else if (docMainDetailArray[i].status == 3) {
-                                            var statusData = "Change Request";
+                                            var statusData = "Cancel Request";
                                         } else if (docMainDetailArray[i].status == 4) {
                                             var statusData = "Approved";
                                         } else {
-                                            var statusData = "Waiting For Approval";
+                                            var statusData = "Worked For Approval Approvel";
                                         }
-                                        console.log("statusData" + statusData);
-                                        var dateFormat = new Date(docMainDetailArray[i].updated_at);
-                                        var lastUpdate = ("Date: " + dateFormat.getDate() +
-                                            "/" + (dateFormat.getMonth() + 1) +
-                                            "/" + dateFormat.getFullYear() +
-                                            " " + dateFormat.getHours() +
-                                            ":" + dateFormat.getMinutes() +
-                                            ":" + dateFormat.getSeconds());
+
                                         versionMainDocDiv += '<tr>';
-                                        versionMainDocDiv += '<td>ver ' + docMainDetailArray[i].version + '</td>';
+                                        versionMainDocDiv += '<td>v' + docMainDetailArray[i].version + '</td>';
                                         versionMainDocDiv += '<td>' + remarkData + '</td>';
                                         versionMainDocDiv += '<td>' + statusData + '</td>';
-                                        versionMainDocDiv += '<td>' + lastUpdate + '</td>';
                                         versionMainDocDiv += '<td>';
-                                        console.log(".mainlevelStatus-" + level + "-" + i);
-
                                         if (i == showMainDocAction) {
-                                            var classData = "mainlevelStatus-" + level + "-" + key;
-                                            var stateData = statusData;
-                                            var state = [{
-                                                "class": classData
-                                            }, {
-                                                "res": stateData
-                                            }];
-                                            levelstageStatus.push(state);
-                                            // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
-                                            versionMainDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
-                                           
-                                        }
-                                        versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
-                                            // versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
+                                            versionMainDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
+                                            versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+                                            versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionMainDocDiv += '</button>';
+                                        }
                                         versionMainDocDiv += '</td>';
                                         versionMainDocDiv += '</tr>';
                                     }
@@ -698,9 +572,8 @@
                                     versionMainDocDiv += '</div>';
 
 
-                                    $(".maindoc_append" + level).append(versionMainDocDiv);
+                                    $(".doc_append" + level).append(versionMainDocDiv);
                                 });
-                                console.log("levelstageStatus" + levelstageStatus);
                             }
                             if (data.aux_docs) {
                                 $.each(data.aux_docs, function(key1, val) {
@@ -718,14 +591,14 @@
                                     versionAuxDocDiv += '<div class="accordion" id="accordionExample1">';
                                     versionAuxDocDiv += '<div class="card">';
                                     versionAuxDocDiv += '<div class="card-header" id="heading' + key1 + '">';
-                                    versionAuxDocDiv += ' <h5 class="mb-0"><button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse1' + key1 + '" aria-expanded="false" aria-controls="collapse' + key1 + '"><h3 style = "font-style:bold">' + val.original_name + '</h3><p class="auxlevelStatus' + (key1 - 1) + '"></p></button></h5>';
+                                    versionAuxDocDiv += ' <h5 class="mb-0"><button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse1' + key1 + '" aria-expanded="false" aria-controls="collapse' + key1 + '"><i class="fa fa-angle-double-right mr-3"></i>' + val.original_name + '</button></h5>';
                                     versionAuxDocDiv += '</div>';
                                     versionAuxDocDiv += ' <div id="collapse1' + key1 + '" class="collapse fade" aria-labelledby="heading' + key1 + '" data-parent="#accordionExample1">';
                                     versionAuxDocDiv += '<div class="card-body">';
-                                    versionAuxDocDiv += '<table class="table table-striped documentTable">';
-                                    versionAuxDocDiv += '<thead class="documentTableth">';
+                                    versionAuxDocDiv += '<table class="table table-bordered">';
+                                    versionAuxDocDiv += '<thead>';
                                     versionAuxDocDiv += '<tr>';
-                                    versionAuxDocDiv += '<th scope="col">Version ID</th><th scope="col">Remarks</th> <th scope="col">Status</th><th scope="col">Last Updated</th> <th scope="col">Action</th>';
+                                    versionAuxDocDiv += '<th scope="col">Version</th><th scope="col">Remarks</th> <th scope="col">Status</th> <th scope="col">Action</th>';
                                     versionAuxDocDiv += '</tr>';
                                     versionAuxDocDiv += '</thead>';
                                     versionAuxDocDiv += ' <tbody>';
@@ -733,44 +606,36 @@
                                     var showAuxDocAction = auxDocSize - 1;
                                     console.log("showAuxDocAction " + showAuxDocAction);
 
-                                    for (j = docAuxDetailArray.length-1; j >= 0 ; --j) {
+                                    for (j = 0; j < docAuxDetailArray.length; j++) {
                                         var remarkData = (docAuxDetailArray[j].remark) ? docAuxDetailArray[j].remark : "";
 
-                                        var dateFormat = new Date(docAuxDetailArray[j].updated_at);
-                                        var lastUpdate = ("Date: " + dateFormat.getDate() +
-                                            "/" + (dateFormat.getMonth() + 1) +
-                                            "/" + dateFormat.getFullYear() +
-                                            " " + dateFormat.getHours() +
-                                            ":" + dateFormat.getMinutes() +
-                                            ":" + dateFormat.getSeconds());
+
 
                                         var statusData = "";
                                         if (docAuxDetailArray[j].status == 1) {
-                                            var statusData = "Waiting For Approval";
+                                            var statusData = "Worked For Approval Approvel";
                                         } else if (docAuxDetailArray[j].status == 2) {
                                             var statusData = "Declined";
                                         } else if (docAuxDetailArray[j].status == 3) {
-                                            var statusData = "change Request";
+                                            var statusData = "Cancel Request";
                                         } else if (docAuxDetailArray[j].status == 4) {
                                             var statusData = "Approved";
                                         } else {
-                                            var statusData = "Waiting For Approval";
+                                            var statusData = "Worked For Approval Approvel";
                                         }
 
-                                        $(".mainlevelStatus" + j).html("");
-                                        $(".mainlevelStatus" + j).append("(" + statusData + ")");
+
                                         versionAuxDocDiv += '<tr>';
-                                        versionAuxDocDiv += '<td>ver ' + docAuxDetailArray[j].version + '</td>';
+                                        versionAuxDocDiv += '<td>v' + docAuxDetailArray[j].version + '</td>';
                                         versionAuxDocDiv += '<td>' + remarkData + '</td>';
                                         versionAuxDocDiv += '<td>' + statusData + '</td>';
-                                        versionAuxDocDiv += '<td>' + lastUpdate + '</td>';
                                         versionAuxDocDiv += '<td>';
-                                        //if (j == showAuxDocAction) {
-                                           // versionAuxDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docAuxDetailArray[j].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
+                                        if (j == showAuxDocAction) {
+                                            versionAuxDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docAuxDetailArray[j].id + ',' + level + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
                                             versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
-                                            // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
+                                            versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionAuxDocDiv += '</button>';
-                                        //}
+                                        }
                                         versionAuxDocDiv += '</td>';
                                         versionAuxDocDiv += '</tr>';
                                     }
@@ -781,7 +646,7 @@
                                     versionAuxDocDiv += '</div>';
                                     versionAuxDocDiv += '</div>';
                                     versionAuxDocDiv += '</div>';
-                                    $(".auxdoc_append" + level).append(versionAuxDocDiv);
+                                    $(".doc_append" + level).append(versionAuxDocDiv);
                                 });
                             }
                         },
@@ -869,14 +734,6 @@
             }
         });
     }
-    $(document).on('change', '.status', function() {
-        console.log($(this).val());
-        if ($(this).val() == 2 || $(this).val() == 3) {
-            $('.documentUploadDiv').css('display', 'block');
-        } else {
-            $('.documentUploadDiv').css('display', 'none');
-        }
-    });
 
     function submitForm() {
         console.log("well done");

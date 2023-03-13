@@ -7,12 +7,13 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\ProjectController;
-
 use App\Http\Controllers\Masters\DepartmentController;
 use App\Http\Controllers\Masters\DesignationController;
 use App\Http\Controllers\Masters\DocumentTypeController;
 use App\Http\Controllers\Reports\DatewiseReportController;
 use App\Http\Controllers\Reports\DocumentwiseReportController;
+use App\Http\Controllers\Reports\ProjectwiseController;
+use App\Http\Controllers\Reports\UserwiseReportController;
 use App\Http\Controllers\settings\RolesController;
 use App\Http\Controllers\settings\UserController;
 use App\Http\Controllers\WorkflowController;
@@ -69,6 +70,9 @@ Route::group([
     Route::post('getWorkflowByDocumentType', [ProjectController::class, 'getWorkflowByDocumentType'])->name('getWorkflowByDocumentType')->middleware('is_admin');
     Route::post('getEmployeeByWorkFlow', [ProjectController::class, 'getEmployeeByWorkFlow'])->name('getEmployeeByWorkFlow')->middleware('is_admin');
     Route::get('viewProject/{id}', [ProjectController::class, 'viewProject'])->name('viewProject')->middleware('is_admin');
+
+    Route::get('viewDocListing/{id}', [Doclistings::class, 'viewDocListing'])->name('viewDocListing');
+    
     Route::post('deleteDocument', [ProjectController::class, 'deleteDocument'])->name('deleteDocument')->middleware('is_admin');
     Route::post('getProjectDetailsById', [ProjectController::class, 'getProjectDetailsById'])->name('getProjectDetailsById')->middleware('is_admin');
     Route::post('getProjectLevel', [ProjectController::class, 'getProjectLevel'])->name('getProjectLevel')->middleware('is_admin');
@@ -76,6 +80,9 @@ Route::group([
     Route::post('docStatus', [ProjectController::class, 'docStatus'])->name('docStatus')->middleware('is_admin');
     Route::resource('workflow', WorkflowController::class);
     Route::post('workflowSearch', [WorkflowController::class, 'search'])->name('workflowSearch');
+    Route::post('getWorkflowCodeFormat', [WorkflowController::class, 'getWorkflowCodeFormat'])->name('getWorkflowCodeFormat');
+
+
     Route::post('getWorkflowById', [WorkflowController::class, 'getWorkflowById'])->name('getWorkflowById')->middleware('is_admin');
     Route::post('changeWorkflowActiveStatus', [WorkflowController::class, 'changeWorkflowActiveStatus'])->name('changeWorkflowActiveStatus');
    
@@ -94,9 +101,17 @@ Route::group([
     //reports
  Route::get('datewiseReportIndex', [DatewiseReportController::class, 'index'])->name('datewiseReportIndex');
  Route::post('dateWiseReportSearchFilter', [DatewiseReportController::class, 'filterSearch'])->name('dateWiseReportSearchFilter');
+ 
+ 	//projectwiseReport 
+Route::get('projectwiseReportIndex', [ProjectwiseController::class, 'index'])->name('projectwiseReportIndex');
+Route::post('projectwiseReportSearchFilter', [ProjectwiseController::class, 'filterSearch'])->name('projectwiseReportSearchFilter');
+
  //docuWiseReport 
  Route::get('documentWiseReportIndex', [DocumentwiseReportController::class, 'index'])->name('documentWiseReportIndex');
  Route::post('documnetWiseReportSearchFilter', [DocumentwiseReportController::class, 'filterSearch'])->name('documnetWiseReportSearchFilter');
+//userwiseReport 
+Route::get('userWiseReportIndex', [UserwiseReportController::class, 'index'])->name('userWiseReportIndex');
+Route::post('userWiseReportSearchFilter', [UserwiseReportController::class, 'filterSearch'])->name('userWiseReportSearchFilter');
 
 });
 // Route::get('departments', [MasterController::class, 'Departments'])->name('departments')->middleware('is_admin');

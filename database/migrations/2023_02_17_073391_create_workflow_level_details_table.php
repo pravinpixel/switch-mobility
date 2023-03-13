@@ -17,7 +17,8 @@ class CreateWorkflowLevelDetailsTable extends Migration
             $table->increments('id')->unsigned(false);
             $table->integer('workflow_id');
             $table->integer('workflow_level_id');
-            $table->integer('designation_id');
+            $table->integer('designation_id')->nullable();
+            $table->integer('employee_id');
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
             $table->foreign('workflow_id')->references('id')->on('workflows')
@@ -25,6 +26,8 @@ class CreateWorkflowLevelDetailsTable extends Migration
             $table->foreign('workflow_level_id')->references('id')->on('workflow_levels')
             ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('designation_id')->references('id')->on('designations')
+            ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('employee_id')->references('id')->on('employees')
             ->onUpdate('cascade')->onDelete('cascade');
         });
     }

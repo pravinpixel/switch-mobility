@@ -7,7 +7,10 @@ use App\Models\Designation;
 use App\Models\DocumentType;
 use App\Models\Employee;
 use App\Models\Project;
+use App\Models\ProjectMilestone;
 use App\Models\Workflow;
+use App\Models\WorkflowLevelDetail;
+use App\Models\Workflowlevels;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -101,5 +104,69 @@ class Doclistings extends Controller
             $workflow = Workflow::where('is_active', 1)->get()->toArray();
             return view('Docs/index', ['order_at' => $order_at, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
         }
+    }
+    public function viewDocListing($id)
+    {
+      
+            $project_details = DB::table('projects as p')
+                ->leftjoin('project_levels as pl', 'pl.project_id', '=', 'p.id')
+                ->leftJoin('workflows as w', 'w.id', '=', 'p.workflow_id')
+                ->leftjoin('employees as e', 'e.id', '=', 'p.initiator_id')
+                ->leftjoin('departments as d', 'd.id', '=', 'e.department_id')
+                ->leftjoin('document_types as doc', 'doc.id', '=', 'p.document_type_id')
+                ->leftjoin('designations as des', 'des.id', '=', 'e.designation_id')
+                ->where("p.id", '=', $id)
+                ->select('p.ticket_no', 'p.created_at', 'p.id', 'p.project_name', 'p.project_code', 'e.profile_image', 'des.name as designation', 'doc.name as document_type', 'w.workflow_code', 'w.workflow_name', 'e.first_name', 'e.last_name', 'd.name as department', 'p.is_active');
+            $details = $project_details->first();
+    
+            $project_details1 = DB::table('projects as p')
+                ->leftjoin('project_levels as pl', 'pl.project_id', '=', 'p.id')
+                ->leftJoin('project_milestones as pm', 'pm.project_id', '=', 'p.id')
+                ->leftjoin('employees as staff', 'staff.id', '=', 'pl.staff')
+                ->where("p.id", '=', $id)
+                ->select('p.ticket_no', 'p.created_at', 'pl.staff', 'pm.created_at as milestone_created', 'pm.mile_start_date', 'staff.profile_image as staff_image', 'staff.first_name as staff_first_name', 'staff.last_name as staff_last_name');
+            $details1 = $project_details1->get();
+            // dd($details1);
+    
+            $main_doc = DB::table('project_documents as p')
+                ->where("p.project_id", '=', $id)
+                ->where("p.type", '=', 1)
+                ->select('*');
+            $maindocument = $main_doc->get();
+    
+            $aux_doc = DB::table('project_documents as p')
+                ->where("p.project_id", '=', $id)
+                ->where("p.type", '=', 2)
+                ->select('*');
+            $auxdocument = $aux_doc->get();
+    
+            $project = Project::where('is_active', 1)->get()->toArray();
+            $employees = Employee::where('is_active', 1)->get()->toArray();
+            $departments = Department::where('is_active', 1)->get()->toArray();
+            $designation = Designation::where('is_active', 1)->get()->toArray();
+            $document_type = DocumentType::where('is_active', 1)->get()->toArray();
+            $workflow = Workflow::where('is_active', 1)->get()->toArray();
+            $levelCount = Workflow::leftjoin('projects', 'projects.workflow_id', '=', 'workflows.id')->where('projects.id', $id)->first()->total_levels;
+    
+            $projectModel  = Project::where('id', $id)->first();
+    
+            $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $projectModel->workflow_id)->get();
+    
+            $entities = collect($models)->map(function ($model) {
+                $levelDetails = $model['workflowLevelDetail'];
+    
+                $empModel = WorkflowLevelDetail::select('employees.*')->leftjoin('employees', 'employees.id', '=', 'workflow_level_details.employee_id')->where('workflow_level_id', $model->id)->get()->toArray();
+    
+    
+                $datas = ['levelId' => $model->levels, 'designationId' => $empModel];
+    
+                return $datas;
+            });
+            // dd($entities);
+            $milestoneDatas = ProjectMilestone::where('project_id', $id)->get();
+    
+            return view('Docs/viewDocument', ['milestoneDatas' => $milestoneDatas, 'levelsArray' => $entities, 'levelCount' => $levelCount, 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
+       
+    
     }
 }

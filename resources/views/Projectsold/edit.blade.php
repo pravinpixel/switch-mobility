@@ -253,12 +253,11 @@
     .level-container {
         background: transparent;
         display: flex;
-        flex-wrap: wrap;
 
     }
 </style>
 <!--begin::Modal title-->
-<h2 class="text-center m-5">Edit Project</h2>
+<h2 class="text-center m-5">Create Project</h2>
 
 
 <!--begin::Modal header-->
@@ -570,30 +569,12 @@
             <div data-kt-stepper-element="content" class="level-container">
                 <!--begin::Wrapper-->
 
-
-                <div class="row" style="width: 100%;">
-                    <div class="col-md-6 fv-row">
-                        <label class="fs-6 fw-semibold mb-2">Main Document</label><br>
-                        <div class="col-md-12 p-3 pdf_container input-group">
-                            <label class="row col-12 m-2 pdf-view row " for="pdf1">
-                                <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div>
-                            </label> <input type="file" name="main_document[]" id="pdf1" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        </div>';
-                    </div>
-                    <div class="col-md-6 fv-row">
-                        <label class="fs-6 fw-semibold mb-2">Auxilary Document</label><br>
-                        <div class="col-md-12 p-3 pdf_container input-group">
-                            <label class="row col-12 m-2 pdf-view row " for="pdf2">
-                                <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div>
-                            </label> <input type="file" name="auxillary_document[]" id="pdf2" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        </div>
-                    </div>
-                </div>
+                <!-- Levels Tab -->
                 <div class="tab">
 
                 </div>
-                <div class="LevelTabContent" style="width:calc(100% - 200px)">
-                   
+                <div class="LevelTabContent" style="width:100%">
+
                 </div>
 
                 <input type="hidden" class="project_id" name="project_id" disabled>
@@ -1076,10 +1057,9 @@
                 $('.tab').html("");
                 $('.LevelTabContent').html("");
                 var data = JSON.parse(result);
-                console.log(data);
                 var WFLevelBtn = data['workflow_level'];
-                if (WFLevelBtn.length == 1) {
-                    $('.nextLevel').attr('type', 'submit');
+                if(WFLevelBtn.length==1){
+                    $('.nextLevel').attr('type','submit');
                     $(".nextlevel").html('<span class="indicator-label  ">Submit <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg--> <!--end::Svg Icon--> </span>');
                 }
                 var SelectId = [];
@@ -1093,7 +1073,7 @@
                         console.log(WFLevelBtn[wfl].levelId);
                         console.log(WFLevelBtn[wfl].designationId);
                         var levelDesignation = WFLevelBtn[wfl].designationId;
-                      
+
                         var levelBtnRow = '<button type="button" class="tablinks ' + className + '"  onclick="openCity(event, London' + WFLevelBtn[wfl].levelId + ',' + WFLevelBtn[wfl].levelId + ')" id="defaultOpen" l="' + WFLevelBtn[wfl].levelId + '" >Level' + WFLevelBtn[wfl].levelId + '</button>';
                         $('.tab').append(levelBtnRow);
                         var contentshow = "";
@@ -1112,50 +1092,43 @@
                         levelTabContentData += '</div><br><br>';
                         levelTabContentData += '<div class="col-md-12 fv-row"><label class="required fs-6 fw-semibold mb-2">Priority</label><br>';
 
-                        levelTabContentData += '<input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1"> Important &nbsp;&nbsp;';
-                        levelTabContentData += '<input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2"> Medium &nbsp;&nbsp;';
-                        levelTabContentData += '<input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3"> Low &nbsp;&nbsp;';
-                        levelTabContentData += '<input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" checked> High';
+                        levelTabContentData += 'Important <input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1">&nbsp;&nbsp;';
+                        levelTabContentData += 'Medium <input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2">&nbsp;&nbsp;';
+                        levelTabContentData += 'Low <input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3">&nbsp;&nbsp;';
+                        levelTabContentData += 'High <input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" checked>';
 
                         levelTabContentData += '</div><br><br>';
                         levelTabContentData += '<h4>Approvers</h4>';
                         levelTabContentData += ' <div class="col-md-12 fv-row">';
-                        var uniqueId = "SelectLevel" + wfl;
-                        var uniqueApproverName = "approver_" + WFLevelBtn[wfl].levelId;
-                        SelectId.push(uniqueId);
-                        levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
-                        levelTabContentData += '<option></option>';
                         for (var lvldesc = 0; lvldesc < levelDesignation.length; lvldesc++) {
-                            var optionId = levelDesignation[lvldesc].id;
-                            var optionData = levelDesignation[lvldesc].first_name + levelDesignation[lvldesc].last_name + "(" + levelDesignation[lvldesc].sap_id + ")"+ "-(" + levelDesignation[lvldesc].designation_id + ")";
+                            var levelApprovers = levelDesignation[lvldesc].desEmployee;
 
-                            // levelTabContentData += '<br><br><h4>' + levelDesignation[lvldesc].desName + '</h4>';
-                            // var uniqueId = "SelectLevel" + wfl + lvldesc;
-                            // var uniqueApproverName = "approver_" + WFLevelBtn[wfl].levelId + "_" + lvldesc;
-                            // console.log("uniqueApproverName >" + uniqueApproverName);
-                            // SelectId.push(uniqueId);
-                            // levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
-                            // levelTabContentData += '<option></option>';
-                            //  for (var lvlApvrs = 0; lvlApvrs < levelApprovers.length; lvlApvrs++) {
+                            levelTabContentData += '<br><br><h4>' + levelDesignation[lvldesc].desName + '</h4>';
+                            var uniqueId = "SelectLevel" + wfl + lvldesc;
+                            var uniqueApproverName = "approver_" + WFLevelBtn[wfl].levelId + "_" + lvldesc;
+                            console.log("uniqueApproverName >" + uniqueApproverName);
+                            SelectId.push(uniqueId);
+                            levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
+                            levelTabContentData += '<option></option>';
+                            for (var lvlApvrs = 0; lvlApvrs < levelApprovers.length; lvlApvrs++) {
 
-                            levelTabContentData += '<option value="' + optionId + '" selected>' + optionData + '</option>';
+                                levelTabContentData += '<option value="' + levelApprovers[lvlApvrs].id + '">' + levelApprovers[lvlApvrs].first_name + '</option>';
 
-                            //}
-                            //levelTabContentData += '</select>';
+                            }
+                            levelTabContentData += '</select>';
 
                         }
-                        levelTabContentData += '</select>';
                         levelTabContentData += '</div><br><br>';
 
-                        // levelTabContentData += '<div class="col-md-12 fv-row">';
-                        // levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Documents</label><br>';
-                        // levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
-                        // levelTabContentData += '</div';
+                        levelTabContentData += '<div class="col-md-12 fv-row">';
+                        levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Documents</label><br>';
+                        levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                        levelTabContentData += '</div';
 
-                        // levelTabContentData += '<br><br><div class="col-md-12 fv-row">';
-                        // levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Auxillary Documents</label><br>';
-                        // levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
-                        // levelTabContentData += '</div';
+                        levelTabContentData += '<br><br><div class="col-md-12 fv-row">';
+                        levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Auxillary Documents</label><br>';
+                        levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                        levelTabContentData += '</div';
 
                         levelTabContentData += '</div>';
 
@@ -1241,10 +1214,10 @@
                 $('.tab').html("");
                 $('.LevelTabContent').html("");
                 var data = result.response;
-                console.log(data);
+
                 var WFLevelBtn = data.workflow_level;
-                if (WFLevelBtn.length == 1) {
-                    $('.nextLevel').attr('type', 'submit');
+                if(WFLevelBtn.length==1){
+                    $('.nextLevel').attr('type','submit');
                     $(".nextlevel").html('<span class="indicator-label  ">Submit <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg--> <!--end::Svg Icon--> </span>');
                 }
                 var SelectId = [];
@@ -1253,7 +1226,6 @@
                     for (var wfl = 0; wfl < WFLevelBtn.length; wfl++) {
 
                         var levelDesignation = WFLevelBtn[wfl].designationId;
-                        console.log("levelDesignation" + levelDesignation.length);
 
                         var levelMaindocumentCount = WFLevelBtn[wfl].MaindocumentCount;
                         var levelAuxdocumentCount = WFLevelBtn[wfl].AuxdocumentCount;
@@ -1291,54 +1263,45 @@
                         var check3 = (priority == 3) ? "checked" : "";
                         var check4 = (priority == 4) ? "checked" : "";
 
-                        levelTabContentData += ' <input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1" ' + check1 + '> Important &nbsp;&nbsp;';
-                        levelTabContentData += '<input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2" ' + check2 + '> Medium &nbsp;&nbsp;';
-                        levelTabContentData += '<input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3" ' + check3 + '> Low &nbsp;&nbsp;';
-                        levelTabContentData += '<input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" ' + check4 + '> High ';
+                        levelTabContentData += 'Important <input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1" ' + check1 + '>&nbsp;&nbsp;';
+                        levelTabContentData += 'Medium <input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2" ' + check2 + '>&nbsp;&nbsp;';
+                        levelTabContentData += 'Low <input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3" ' + check3 + '>&nbsp;&nbsp;';
+                        levelTabContentData += 'High <input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" ' + check4 + '>';
 
                         levelTabContentData += '</div><br><br>';
                         levelTabContentData += '<h4>Approvers</h4>';
                         levelTabContentData += ' <div class="col-md-12 fv-row">';
-                        var uniqueId = "SelectLevel" + wfl;
-                        var uniqueApproverName = "approver_" + WFLevelBtn[wfl].levelId;
-                        SelectId.push(uniqueId);
-                        levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
-                        levelTabContentData += '<option></option>';
                         for (var lvldesc = 0; lvldesc < levelDesignation.length; lvldesc++) {
-                         console.log(levelDesignation[lvldesc]);
-                            var optionId = levelDesignation[lvldesc].id;
-                            var selectOption = (projectApprovers.includes(optionId)) ? "selected" : "";
-                            var optionData = levelDesignation[lvldesc].first_name + levelDesignation[lvldesc].last_name + "(" + levelDesignation[lvldesc].sap_id + ")"+ "-(" + levelDesignation[lvldesc].designation_name + ")";
+                            var levelApprovers = levelDesignation[lvldesc].desEmployee;
 
-                            // levelTabContentData += '<br><br><h4>' + levelDesignation[lvldesc].desName + '</h4>';
-                            // var uniqueId = "SelectLevel" + wfl + lvldesc;
-                            // var uniqueApproverName = "approver_" + WFLevelBtn[wfl].levelId + "_" + lvldesc;
-                            // console.log("uniqueApproverName >" + uniqueApproverName);
-                            // SelectId.push(uniqueId);
-                            // levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
-                            // levelTabContentData += '<option></option>';
-                            //  for (var lvlApvrs = 0; lvlApvrs < levelApprovers.length; lvlApvrs++) {
+                            levelTabContentData += '<br><br><h4>' + levelDesignation[lvldesc].desName + '</h4>';
+                            var uniqueId = "SelectLevel" + wfl + lvldesc;
+                            var uniqueApproverName = "approver_" + WFLevelBtn[wfl].levelId + "_" + lvldesc;
+                            console.log("uniqueApproverName >" + uniqueApproverName);
+                            SelectId.push(uniqueId);
+                            levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
+                            levelTabContentData += '<option></option>';
+                            for (var lvlApvrs = 0; lvlApvrs < levelApprovers.length; lvlApvrs++) {
+                                var selectedStatus = (projectApprovers.includes(levelApprovers[lvlApvrs].id)) ? "selected" : "";
+                                levelTabContentData += '<option value="' + levelApprovers[lvlApvrs].id + '" ' + selectedStatus + '>' + levelApprovers[lvlApvrs].first_name + '</option>';
 
-                            levelTabContentData += '<option value="' + optionId + '" ' + selectOption + '>' + optionData + '</option>';
-
-                            //}
-                            //levelTabContentData += '</select>';
+                            }
+                            levelTabContentData += '</select>';
 
                         }
-                        levelTabContentData += '</select>';
-                        levelTabContentData += '</div>';
-                        // if (!levelMaindocumentCount) {
-                        //     levelTabContentData += '<div class="col-md-12 fv-row">';
-                        //     levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Main Documents</label><br>';
-                        //     levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
-                        //     levelTabContentData += '</div';
-                        // }
-                        // if (!levelAuxdocumentCount) {
-                        //     levelTabContentData += '<br><br><div class="col-md-12 fv-row">';
-                        //     levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Auxillary Documents</label><br>';
-                        //     levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
-                        //     levelTabContentData += '</div';
-                        // }
+                        levelTabContentData += '</div><br><br>';
+                        if (!levelMaindocumentCount) {
+                            levelTabContentData += '<div class="col-md-12 fv-row">';
+                            levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Main Documents</label><br>';
+                            levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                            levelTabContentData += '</div';
+                        }
+                        if (!levelAuxdocumentCount) {
+                            levelTabContentData += '<br><br><div class="col-md-12 fv-row">';
+                            levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Auxillary Documents</label><br>';
+                            levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                            levelTabContentData += '</div';
+                        }
                         levelTabContentData += '</div>';
 
                         $('.LevelTabContent').append(levelTabContentData);
@@ -1531,7 +1494,7 @@
                 $(".role").val(data.project.role);
                 $(".initiator_id").val(data.project.initiator_id).trigger('change')
                 $(".document_type_id").val(data.project.document_type_id).attr("selected", "selected").select2();
-                $(".total_levels").val(data.levelArray.length);
+                 $(".total_levels").val(data.levelArray.length);
                 //get_document_workflow(data.project.document_type_id);
                 $(".workflow_id").val(data.project.workflow_id).prop("selected", true);
                 $(".workflow_hidden").val(data.project.workflow_id);
@@ -1542,12 +1505,12 @@
                 $(".multi-fields").html("");
                 $.each(data.milestone, function(key, val) {
                     var s1 = '<div class="multi-field"> <div class="row remove_append"> <div class="col-md-4 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Mile Stone</label> <!--end::Label--> <!--begin::Input--> <input type="text" class="form-control" name="milestone[]" value="' + val.milestone + '" oninput="set_mile_min_max();" required /> <!--end::Input--> </div> <!-- <div class="col-md-4 fv-row"> <label class="required fs-6 fw-semibold mb-2">Planned Date</label> <input type="date" class="form-control planned_date" name="planned_date[]" onclick="set_min_max_value();" required /> </div> --> <!--begin::Col--> <div class="col-md-2 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Start Date</label> <!--end::Label--> <!--begin::Input--> <input type="date" class="form-control form-control-solid mile_start_date" placeholder="Enter Start Date" name="mile_start_date[]" value="' + val.mile_start_date + '" required /> <!--end::Input--> </div> <!--end::Col--> <!--begin::Col--> <div class="col-md-2 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">End Date</label> <!--end::Label--> <!--begin::Input--> <input type="date" class="form-control form-control-solid mile_end_date" placeholder="Enter End Date" name="mile_end_date[]" value="' + val.mile_end_date + '"  required /> <!--end::Input--> </div> <!--end::Col--> <div class="col-md-4 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Level To Be Crossed1</label> <!--end::Label--> <!--begin::Input--> <select class="form-control levels_to_be_crossed" name="level_to_be_crosssed[]" required>';
-
+                   
                     $.each(data.levelArray, function(key1, val1) {
-                        var selectedCrosses = (val.levels_to_be_crossed == val1.levelId) ? "selected" : "";
-                        s1 += ' <option value="' + val1.levelId + '" ' + selectedCrosses + '>' + val1.levelId + '</option> ';
+                       var selectedCrosses = (val.levels_to_be_crossed == val1.levelId)?"selected":"";
+                        s1+=' <option value="'+val1.levelId+'" '+selectedCrosses+'>'+ val1.levelId+'</option> ';
                     });
-                    s1 += '</select> <!-- <input type="text" class="form-control" name="level_to_be_crosssed" /> --> <!--end::Input--> </div> </div> <br> <button type="button" class="btn btn-sm btn-icon btn-light-danger remove-field" onclick="remove_more(this)"> <span class="svg-icon svg-icon-1"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="currentColor"></rect> <rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor"></rect> </svg> </span> </button> <button type="button" class="btn btn-sm btn-icon btn-light-success add-field" onclick="append_more(this)"> <span class="svg-icon svg-icon-1"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor"></rect> <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor"></rect> </svg></span></button> </div>';
+                    s1+='</select> <!-- <input type="text" class="form-control" name="level_to_be_crosssed" /> --> <!--end::Input--> </div> </div> <br> <button type="button" class="btn btn-sm btn-icon btn-light-danger remove-field" onclick="remove_more(this)"> <span class="svg-icon svg-icon-1"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="currentColor"></rect> <rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor"></rect> </svg> </span> </button> <button type="button" class="btn btn-sm btn-icon btn-light-success add-field" onclick="append_more(this)"> <span class="svg-icon svg-icon-1"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor"></rect> <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor"></rect> </svg></span></button> </div>';
 
                     $(".multi-fields").append(s1);
                 });
@@ -1683,7 +1646,7 @@
 
 
     function pdfPreview(file) {
-        console.log("Well");
+
         var pdfFile = file.files[0];
         var uniqueNumber = "in-if" + Date.now() + Math.random();
         file.setAttribute('connect_id', uniqueNumber);

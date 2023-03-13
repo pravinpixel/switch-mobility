@@ -451,7 +451,7 @@
 
     // // When the user clicks the button, open the modal 
     // btn.onclick = function() {
-    //     console.log("well");
+
     //     modal.style.display = "block";
     // }
 
@@ -533,8 +533,7 @@
             },
             success: function(result) {
                 var data1 = JSON.parse(result);
-                console.log("dahna");
-                console.log(data1);
+
                 if (data1.length) {
 
                     $("#pag" + level).html("");
@@ -544,12 +543,11 @@
                     //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
                     //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
                     //     newDate = day + '-' + month + '-' + yr;
-                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:inline-flex;flex-flow:row"></div><div class="col-md-2">Due Date:<p class="due_date_' + level + '"></p></div><div class="col-md-2">Priority:<p class="priority_' + level + '"></p></div><hr><div>Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div>Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
+                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-5 image_append' + level + '" style="display:inline-flex;flex-flow:row"></div><div class="col-md-2">Due Date:<div class="due_date_' + level + '"></div></div><div class="col-md-1">Priority<p class="priority_' + level + '"></p></div><hr><div>Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div>Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
                     //if (data.length > 0) {
 
                     $(".image_append" + level).empty();
                     $.each(data1, function(key, val) {
-
                         var dueDate = new Date(val.due_date);
                         var todayDate = new Date();
 
@@ -569,17 +567,14 @@
                         duDateAppend+=' <span class="menu-badge"><span class="badge badge-'+badgeType+'">'+dateSign+completionDate+'</span></span>';
                         $(".due_date_" + level).empty();
                         $(".due_date_" + level).append(duDateAppend);
-
                         var priority = "";
                         if (val.priority == 4) {
                             priority = "High";
-                        }
-                        else if(val.priority == 3) {
+                        } else if (val.priority == 3) {
                             priority = "Low";
-                        }
-                        else if(val.priority == 2) {
+                        } else if (val.priority == 2) {
                             priority = "Medium";
-                        }else{
+                        } else {
                             priority = "Important";
                         }
                         $(".priority_" + level).empty();
@@ -604,7 +599,7 @@
                         },
                         success: function(result) {
                             var data = JSON.parse(result);
-                            console.log("data" + data);
+
 
                             $(".maindoc_append" + level).empty();
                             $(".auxdoc_append" + level).empty();
@@ -637,8 +632,8 @@
                                     versionMainDocDiv += '<tbody style="">';
                                     var mainDocSize = docMainDetailArray.length;
                                     var showMainDocAction = mainDocSize - 1;
-                                    console.log("showMainDocAction " + showMainDocAction);
-                                    for (var i =docMainDetailArray.length-1; i >= 0; --i) {
+
+                                    for (var i = docMainDetailArray.length - 1; i >= 0; --i) {
 
                                         var remarkData = (docMainDetailArray[i].remark) ? docMainDetailArray[i].remark : "";
 
@@ -655,7 +650,7 @@
                                         } else {
                                             var statusData = "Waiting For Approval";
                                         }
-                                        console.log("statusData" + statusData);
+
                                         var dateFormat = new Date(docMainDetailArray[i].updated_at);
                                         var lastUpdate = ("Date: " + dateFormat.getDate() +
                                             "/" + (dateFormat.getMonth() + 1) +
@@ -669,9 +664,9 @@
                                         versionMainDocDiv += '<td>' + statusData + '</td>';
                                         versionMainDocDiv += '<td>' + lastUpdate + '</td>';
                                         versionMainDocDiv += '<td>';
-                                        console.log(".mainlevelStatus-" + level + "-" + i);
 
-                                        if (i == showMainDocAction) {
+
+                                       // if (i == showMainDocAction) {
                                             var classData = "mainlevelStatus-" + level + "-" + key;
                                             var stateData = statusData;
                                             var state = [{
@@ -681,12 +676,11 @@
                                             }];
                                             levelstageStatus.push(state);
                                             // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
-                                            versionMainDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
-                                           
-                                        }
-                                        versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+
+                                            versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
                                             // versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionMainDocDiv += '</button>';
+                                       // }
                                         versionMainDocDiv += '</td>';
                                         versionMainDocDiv += '</tr>';
                                     }
@@ -700,12 +694,12 @@
 
                                     $(".maindoc_append" + level).append(versionMainDocDiv);
                                 });
-                                console.log("levelstageStatus" + levelstageStatus);
+
                             }
                             if (data.aux_docs) {
                                 $.each(data.aux_docs, function(key1, val) {
                                     var docAuxDetailArray = val.doc_detail;
-                                    console.log(docAuxDetailArray);
+
                                     var baseUrl = "{{ asset('/') }}";
                                     if (val.status == 0) {
                                         var status = "Waiting";
@@ -731,9 +725,9 @@
                                     versionAuxDocDiv += ' <tbody>';
                                     var auxDocSize = docAuxDetailArray.length;
                                     var showAuxDocAction = auxDocSize - 1;
-                                    console.log("showAuxDocAction " + showAuxDocAction);
 
-                                    for (j = docAuxDetailArray.length-1; j >= 0 ; --j) {
+
+                                    for (j = docAuxDetailArray.length - 1; j >= 0; --j) {
                                         var remarkData = (docAuxDetailArray[j].remark) ? docAuxDetailArray[j].remark : "";
 
                                         var dateFormat = new Date(docAuxDetailArray[j].updated_at);
@@ -765,12 +759,11 @@
                                         versionAuxDocDiv += '<td>' + statusData + '</td>';
                                         versionAuxDocDiv += '<td>' + lastUpdate + '</td>';
                                         versionAuxDocDiv += '<td>';
-                                        //if (j == showAuxDocAction) {
-                                           // versionAuxDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docAuxDetailArray[j].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
-                                            versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+                                       // if (j == showAuxDocAction) {
+                                             versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
                                             // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionAuxDocDiv += '</button>';
-                                        //}
+                                       // }
                                         versionAuxDocDiv += '</td>';
                                         versionAuxDocDiv += '</tr>';
                                     }
@@ -802,7 +795,7 @@
                     // });
                     // }
                 } else {
-                    console.log("data else");
+
                     $(".tab-pane").html("");
                     alert('Level -' + level + ' Not Available');
                 }
@@ -839,7 +832,7 @@
     }
 
     function submitStatusForm() {
-        console.log("well done");
+
 
 
 
@@ -856,21 +849,21 @@
 
             data: formData,
             success: function(result) {
-                console.log(result.status);
+
                 var ProjectId1 = "{{ $details->id }}";
                 if (result.status == 'success') {
                     var levelId = $('.statuslevelId').val();
                     closeStatusModel();
                     get_level_data(levelId, ProjectId1);
                 } else {
-                    console.log(result);
+
                     window.location.reload();
                 }
             }
         });
     }
     $(document).on('change', '.status', function() {
-        console.log($(this).val());
+
         if ($(this).val() == 2 || $(this).val() == 3) {
             $('.documentUploadDiv').css('display', 'block');
         } else {
@@ -898,14 +891,14 @@
 
             data: formData,
             success: function(result) {
-                console.log(result.status);
+
                 var ProjectId1 = "{{ $details->id }}";
                 if (result.status == 'success') {
                     var levelId = $('.levelId').val();
                     closeModel();
                     get_level_data(levelId, ProjectId1);
                 } else {
-                    console.log(result);
+
                     window.location.reload();
                 }
             }
