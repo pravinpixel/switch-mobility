@@ -25,10 +25,7 @@ class CreateWorkflowLevelDetailsTable extends Migration
             ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('workflow_level_id')->references('id')->on('workflow_levels')
             ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('designation_id')->references('id')->on('designations')
-            ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('employee_id')->references('id')->on('employees')
-            ->onUpdate('cascade')->onDelete('cascade');
+           
         });
     }
 

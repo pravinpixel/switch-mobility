@@ -167,7 +167,7 @@
                                     <th>Due Date</th>
                                     <th>No Of Days</th>
                                     <th>Status</th>
-                                    <th>Option</th>
+                                    <th>Action</th>
 
                                 </tr>
                                 <!--end::Table row-->
@@ -188,7 +188,8 @@
                                     <td>{{$entity['dueDate']}}</td>
                                     <td>{{$entity['noOfDays']}}</td>
                                     <td></td>
-                                    <td></td>
+                                    <td><a href={{route("viewDocListing",$entity['projectId']) }} class="btn btn-primary">View</a></td>
+
                                 </tr>
                                 @endforeach
 
@@ -314,7 +315,7 @@
                                 var projectId = val.projectId;
                                 var activeStatus = "";
 
-                                var editurl = '{{ route("projects.edit", ":id") }}';
+                                var editurl = '{{ route("viewDocListing", ":id") }}';
                                 editurl = editurl.replace(':id', projectId);
                                 var viewBtn = '<a href=' + editurl + ' class="btn btn-primary">View</a>';
 

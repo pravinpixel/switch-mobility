@@ -54,7 +54,9 @@ Route::group([
 
     Route::resource('documentType', DocumentTypeController::class);
     Route::resource('employees', EmployeeController::class);
-    
+    Route::get('bulkUploadCreate', [EmployeeController::class, 'bulkUploadCreate'])->name('bulkUploadCreate');
+    Route::post('bulkUploadStore', [EmployeeController::class, 'bulkUploadStore'])->name('bulkUploadStore');
+
     Route::post('changeEmployeeActiveStatus', [EmployeeController::class, 'changeActiveStatus'])->name('changeActiveStatus');
     Route::post('employeeDetailById', [EmployeeController::class, 'employeeDetailById'])->name('employeeDetailById');
     Route::post('employeeDetailByDesDept', [EmployeeController::class, 'employeeDetailByDesDept'])->name('employeeDetailByDesDept');

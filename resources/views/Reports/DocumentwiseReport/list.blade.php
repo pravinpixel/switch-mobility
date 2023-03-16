@@ -63,7 +63,7 @@
 
                                     <div class="col-md-3" id="workflowCodeField">
                                         <label class=" fs-6 fw-semibold mb-2">workflow Name & Code</label>
-                                        <select name="workflowCode" id="workflowCode" class="form-select">
+                                        <select name="workflowCode" id="workflowCode" class="form-select workFlow">
                                             <option value="">Select workflow </option>
                                             @foreach ($workflowDatas as $workflowData)
                                                 <option value="{{ $workflowData->id }}">
@@ -81,7 +81,7 @@
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <!--begin::Input-->
-                                        <select name="documentName" id="documentName" class="form-select">
+                                        <select name="documentName" id="documentName" class="form-select documentType">
                                             <option value=""> Select Workflow Name</option>
 
 
@@ -93,17 +93,17 @@
                                         <label class=" fs-6 fw-semibold mb-2">Project Name & Code</label>
                                         <!--end::Label-->
                                         <!--begin::Input-->
-                                        <select name="projectName" id="projectName" class="form-select">
-                                            <option value=""> Select Documen Type</option>
+                                        <select name="projectName" id="projectName" class="form-select projectName">
+                                            <option value=""> Select Project Name</option>
 
                                         </select>
                                     </div>
                                     <div class="col-md-1">
                                         <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                        <button class="btn btn-warning resetBtn Refresh">Reset</button>
+                                        <button class="btn btn-warning" onclick="reset()">Reset</button>
                                     </div>
                                 </div>
-                                
+
                             </div>
 
 
@@ -158,6 +158,23 @@
                                 <!--end::Table head-->
                                 <!--begin::Table body-->
                                 <tbody class="text-gray-600 fw-semibold" id="tableContent">
+                                  @foreach($entities as $entity )  
+                                  <tr>
+                                    <td>{{$loop->iteration}}</td>
+                                    <td>{{$entity['workflowCode']}}</td>
+                                    <td>{{$entity['workflowName']}}</td>
+                                    <td>{{$entity['initiater']}}</td>
+                                    <td>{{$entity['department']}}</td>
+                                    <td>{{$entity['workflowLevel']}}</td>
+                                    <td>{{$entity['dueDate']}}</td>
+                                    <td>{{$entity['noOfDays']}}</td>
+                                    <td></td>
+                                    <td><a href={{route("viewDocListing",$entity['projectId']) }} class="btn btn-primary">View</a></td>
+                                    
+                                    
+                              
+                                </tr>
+                                  @endforeach
 
 
                                 </tbody>
@@ -203,82 +220,89 @@
                     var wfOptiondata = '<option value=""> Select Workflow Name</option>';
                     $("#documentName").append(wfOptiondata);
                     $("#projectName").empty();
-                    var wfOptiondata = '<option value=""> Select DocumentType</option>';
+                    var wfOptiondata = '<option value=""> Select Project Name</option>';
                     $("#projectName").append(wfOptiondata);
 
                 });
                 $('#documentName,#projectName,#workflowCode').on('change', function() {
                     filterData();
                 });
-                $('.Refresh').click(function() {
-                    $('#documentName,#projectName,#workflowCode').val("").trigger('change');
-                });
 
                 function filterData() {
                     var workflow = $('#workflowCode').val();
                     var docuName = $('#documentName').val();
                     var projectName = $('#projectName').val();
-                    $.ajax({
-                        url: "{{ route('documnetWiseReportSearchFilter') }}",
-                        type: 'ajax',
-                        method: 'post',
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            workflowCode: workflow,
-                            docuName: docuName,
-                            projectName: projectName,
-                        },
-                        success: function(data) {
-                            var entities = data.entities;
-                            var documents = data.document;
-                            if (workflow && docuName == '') {
-                                $("#documentName").empty();
-                                var docOption = '<option value=""> Select Workflow Name</option>';
-                                $("#documentName").append(docOption);
-                                var documentitems = "";
-                                $.each(documents, function(key, val) {
-                                    documentitems += "<option  value=" + val.id + ">" + val
-                                        .name + "</option>";
-                                });
-                                $("#documentName").append(documentitems);
-                            }
-                            var projectNameOptionData = '<option value="">Select Project Name</option>';
-                            $("#projectName").append(projectNameOptionData);
-                            var projectNameOptionItems = "";
-                            table.clear().draw();
-                            $.each(entities, function(key, val) {
-                                var sNo = key + 1;
-                                var projectCode = val.projectCode;
-                                var projectName = val.projectName;
-                                var workflowName = val.workflowName;
-                                var workflowCode = val.workflowCode;
-                                var workflowLevel = val.workflowLevel;
-                                var dueDate = val.dueDate;
-                                var noOfDays = val.noOfDays;
-                                var initiater = val.initiater;
-                                var department = val.department;
-                                var projectId = val.projectId;
-                                var activeStatus = "";
-                                var editurl = '{{ route('projects.edit', ':id') }}';
-                                editurl = editurl.replace(':id', projectId);
-                                var viewBtn = '<a href=' + editurl +
-                                    ' class="btn btn-primary">View</a>';
-                                projectNameOptionItems += "<option value=" + projectId + ">" +
-                                    projectName + "(" + projectCode + ")</option>";
-                                table.row.add([sNo, workflowCode, workflowName, initiater,
-                                    department, workflowLevel, dueDate, noOfDays,
-                                    activeStatus, viewBtn
-                                ]).draw();
-                            });
-                            $("#projectName").append(projectNameOptionItems);
-                        },
-                        error: function() {
-                            $("#otp_error").text("Update Error");
-                        }
+                    if (workflow || docuName || projectName !== '') {
+                        $.ajax({
+                            url: "{{ route('documnetWiseReportSearchFilter') }}",
+                            type: 'ajax',
+                            method: 'post',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                workflowCode: workflow,
+                                docuName: docuName,
+                                projectName: projectName,
+                            },
+                            success: function(data) {
+                                var entities = data.entities;
+                                var documents = data.document;
+                                if (workflow && docuName == '') {
+                                    $("#documentName").empty();
+                                    var docOption = '<option value=""> Select Workflow Name</option>';
+                                    $("#documentName").append(docOption);
+                                    var documentitems = "";
+                                    $.each(documents, function(key, val) {
+                                        documentitems += "<option  value=" + val.id + ">" + val
+                                            .name + "</option>";
+                                    });
+                                    $("#documentName").append(documentitems);
+                                }
+                                table.clear().draw();
+                                if (projectName == '') {
+                                    $("#projectName").empty();
+                                    var projectOption = '<option value=""> Select Project Name</option>';
+                                    $("#projectName").append(projectOption);
 
-                    });
+                                    $.each(entities, function(key, val) {
+                                        var sNo = key + 1;
+                                        var projectCode = val.projectCode;
+                                        var projectName = val.projectName;
+                                        var workflowName = val.workflowName;
+                                        var workflowCode = val.workflowCode;
+                                        var workflowLevel = val.workflowLevel;
+                                        var dueDate = val.dueDate;
+                                        var noOfDays = val.noOfDays;
+                                        var initiater = val.initiater;
+                                        var department = val.department;
+                                        var projectId = val.projectId;
+                                        var activeStatus = "";
+                                        var editurl = '{{ route('viewDocListing', ':id') }}';
+                                        editurl = editurl.replace(':id', projectId);
+                                        var viewBtn = '<a href=' + editurl +
+                                            ' class="btn btn-primary">View</a>';
+                                        var projectNameOptionItems = "<option value=" + projectId +
+                                            ">" +
+                                            projectName + "(" + projectCode + ")</option>";
+                                        $("#projectName").append(projectNameOptionItems);
+                                        table.row.add([sNo, workflowCode, workflowName, initiater,
+                                            department, workflowLevel, dueDate, noOfDays,
+                                            activeStatus, viewBtn
+                                        ]).draw();
+                                    });
+                                }
+                            },
+                            error: function() {
+                                $("#otp_error").text("Update Error");
+                            }
+                        });
+
+                    }
 
                 }
             });
+
+        function reset() {
+            $('#documentName,#projectName,#workflowCode').val("").trigger('change');
+        }
     </script>
 @endsection

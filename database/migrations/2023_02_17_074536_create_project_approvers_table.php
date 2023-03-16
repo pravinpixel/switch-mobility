@@ -17,8 +17,8 @@ class CreateProjectApproversTable extends Migration
             $table->increments('id')->unsigned(false);
             $table->integer('project_id');
             $table->integer('project_level_id');
-            $table->integer('approver_id');
-            $table->integer('designation_id');
+            $table->integer('approver_id')->nullable(true);
+            $table->integer('designation_id')->nullable(true);
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
             $table->foreign('project_id')->references('id')->on('projects')

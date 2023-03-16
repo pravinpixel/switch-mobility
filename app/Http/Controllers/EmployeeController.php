@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\EmployeeImport;
 use App\Imports\EmployeesImport;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeController extends Controller
@@ -31,16 +33,16 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
 
-      
-
         // try {
-        //     Excel::import(new EmployeesImport, "bulk1.xlsx");         
-           
+        //     Excel::import(new EmployeesImport, "bulk1.xlsx");  
+
+
         // } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
         //      $failures = $e->failures();
-            
+
         //      dd($failures);
         // }
+
         if ($request->id) {
             $model = Employee::findOrFail($request->id);
             $msg = "Updated";
@@ -188,7 +190,7 @@ class EmployeeController extends Controller
     }
     public function store1(Request $request)
     {
-        dd($request->all());
+
         if ($request->id == "") {
             $check_email = Employee::where('email', $request->email)->whereNull('employees.deleted_at')->pluck('id')->first();
         } else {
@@ -277,5 +279,146 @@ class EmployeeController extends Controller
 
         $employee_update = Employee::where("id", $request->id)->update(["is_active" => $request->status]);
         echo json_encode($employee_update);
+    }
+
+    public function bulkUploadCreate()
+    {
+        $departments = Department::get();
+        $designation = Designation::get();
+        $model = array();
+        return view('Employee/bulkUpload', ['model' => $model, 'departments' => $departments, 'designation' => $designation]);
+    }
+    public function bulkUploadStore(Request $request)
+    {
+
+        $employeeImport = new EmployeesImport;
+        $sheet = Excel::import($employeeImport, $request->file('bulkupload')->store('temp'));
+        $rows = $employeeImport->data;
+        $errors = array();
+        foreach ($rows as $key => $row) {
+            $rowNo = $key + 1;
+            $validationResult = $this->EmployeeValidations($row);
+
+            if ($validationResult) {
+                for ($i = 0; $i < count($validationResult); $i++) {
+                    $error = "Row:" . $rowNo . "  Error:" . $validationResult[$i];
+                    array_push($errors, $error);
+                }
+            } else {
+
+                $employeeModel = Employee::where('sap_id', $row['sap_id'])->first();
+
+                if ($employeeModel) {
+
+                    $baseValidation = $this->basicValidation($rowNo, $row, $employeeModel->id);
+                    if (count($baseValidation)) {
+                        for ($j = 0; $j < count($baseValidation); $j++) {
+                            array_push($errors, $baseValidation[$j]);
+                        }
+                    } else {
+                        $model = $employeeModel;
+                        $convertModel = $this->employeeModel($model, $row);
+                    }
+                } else {
+                    $baseValidation = $this->basicValidation($rowNo, $row);
+                    if (count($baseValidation)) {
+                        for ($j = 0; $j < count($baseValidation); $j++) {
+                            array_push($errors, $baseValidation[$j]);
+                        }
+                    } else {
+
+                        $model = new Employee();
+                        $convertModel = $this->employeeModel($model, $row);
+                    }
+                }
+            }
+        }
+
+
+        if (count($errors)) {
+            return response()->json(['result' => "failed", 'data' => $errors]);
+        } else {
+            return response()->json(['result' => "success", 'data' => '']);
+        }
+    }
+    public function basicValidation($rowNo, $row, $id = null)
+    {
+        $errors = array();
+        $mobileCheck = $this->mobileCheckFunction($row['mobile'], $id);
+        if ($mobileCheck) {
+            $error = "Row:" . $rowNo . "  Error: Mobile Number Allready Exist!(" . $row['mobile'] . ").";
+            array_push($errors, $error);
+        }
+        $emailCheck = $this->emailCheckFunction($row['email'], $id);
+        if ($emailCheck) {
+            $error = "Row:" . $rowNo . " Error: Email Allready Exist!(" . $row['email'] . ").";
+            array_push($errors, $error);
+        }
+        $department = $this->departemntCheckFunction($row['department']);
+
+        if (!$department) {
+            $error = "Row:" . $rowNo . " Error: Department Not Found!(" . $row['department'] . ").";
+            array_push($errors, $error);
+        }
+        $designation = $this->designationCheckFunction($row['designation']);
+        if (!$designation) {
+            $error = "Row:" . $rowNo . " Error: Designation Not Found!(" . $row['designation'] . ").";
+            array_push($errors, $error);
+        }
+        return $errors;
+    }
+
+    public function mobileCheckFunction($mobileNo, $id = null)
+    {
+        return Employee::where('mobile', $mobileNo)->where('id', '!=', $id)->first();
+    }
+    public function emailCheckFunction($email, $id = null)
+    {
+        return Employee::where('email', $email)->where('id', '!=', $id)->first();
+    }
+    public function departemntCheckFunction($name)
+    {
+        return Department::where('name', $name)->first();
+    }
+    public function designationCheckFunction($name)
+    {
+        return Designation::where('name', $name)->first();
+    }
+    public function employeeModel($model, $datas)
+    {
+        $datas  = (object)$datas;
+        $deptId = Department::where('name', $datas->department)->first()->id;
+        $descId = Designation::where('name', $datas->designation)->first()->id;
+
+        $model->first_name = $datas->first_name;
+        $model->middle_name = $datas->middle_name;
+        $model->last_name = $datas->last_name;
+        $model->email = $datas->email;
+        $model->mobile = $datas->mobile;
+        $model->department_id = $deptId;
+        $model->designation_id = $descId;
+        $model->sap_id = $datas->sap_id;
+        $model->save();
+
+        return $model;
+    }
+
+    public function EmployeeValidations($datas)
+    {
+        //$datas  = (object)$datas;
+
+        $validator = Validator::make($datas, [
+            'first_name' => 'required',
+            'email' => 'required|email',
+            'mobile' => 'required|size:10',
+            'department' => 'required',
+            'designation' => 'required',
+            'sap_id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            return null;
+        }
     }
 }

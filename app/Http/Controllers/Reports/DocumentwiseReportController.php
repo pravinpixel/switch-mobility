@@ -23,8 +23,9 @@ class DocumentwiseReportController extends Controller
         $projectDatas = Project::whereNull('deleted_at')->get();
         $workflowDatas = Workflow::whereNull('deleted_at')->get();
         $documentDatas = DocumentType::whereNull('deleted_at')->get();
-
-        return view('Reports/DocumentwiseReport/list', compact(['projectDatas', 'documentDatas', 'workflowDatas']));
+        $models= Project::with('workflow', 'employee', 'employee.department', 'docType')->whereNull('deleted_at')->get();
+        $entities = $this->projectController->ReportDataLooping($models);
+        return view('Reports/DocumentwiseReport/list', compact(['projectDatas', 'documentDatas', 'workflowDatas','entities']));
     }
     public function filterSearch(Request $request)
     {
@@ -37,8 +38,8 @@ class DocumentwiseReportController extends Controller
                 $query->where('id', $workflowId);
             });
         }
-        if ($projectId) {
-            $modelDatas->where('id', $projectId);
+        if ($documentId) {
+            $modelDatas->where('document_type_id', $documentId);
         }
         $modelDatas->whereNull('deleted_at');
         $models = $modelDatas->get();
@@ -48,30 +49,9 @@ class DocumentwiseReportController extends Controller
         }else{
             $docType='';
         }
+
+
         return response()->json(['entities' => $entities,'document'=>$docType]); 
     }
-    public function dependentwiseData(Request $request)
-    {
-        $workflowId = $request->workflowId;
-        $documentId = $request->documentId;
-        $projectId = $request->projectId;
-        $modelDatas = Project::with('docType');
-        $modelDatas->whereHas('docType', function ($query) use ($workflowId) {
-            $query->where('id', $workflowId);
-        });
-
-        $modelDatas->whereNull('deleted_at');
-        $models = $modelDatas->get();
-        dd($models);
-        // if($documentId){
-        //     $modelDatas->where('document_type_id', $documentId);
-        // }
-        // $modelDatas->whereNull('deleted_at');
-        //     $models =  $modelDatas->get();
-        //     $entities = collect($models)->map(function ($model) {
-        //         $documentModel = $model['docType'];
-
-        //     });
-
-    }
+  
 }

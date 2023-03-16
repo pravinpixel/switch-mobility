@@ -226,8 +226,8 @@
                             </span>
                             <!--end::Svg Icon-->Add
                         </button>
-                        </a><a href="{{url('employees/create')}}">
-                        <button type="button" class="badge badge-md badge-info" style="width:150px;height:50px">
+                        </a><a href="{{url('bulkUploadCreate')}}">
+                        <button type="button" class="btn btn-info" style="width:150px;height:50px">
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                            
                             <!--end::Svg Icon-->Bulk Upload

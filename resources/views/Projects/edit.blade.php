@@ -1174,7 +1174,7 @@
                     //     .remove();
                     for (var i = 0; i < WFLevelBtn.length; i++) {
                         console.log("LevelData " + WFLevelBtn[i].levelId);
-                        var option = '<option selected value="' + +WFLevelBtn[i].levelId + '">' + +WFLevelBtn[i].levelId +
+                        var option = '<option selected value="' + +WFLevelBtn[i].levelId + '">Level -' + +WFLevelBtn[i].levelId +
                             '</option>';
                         // $('.levels_to_be_crossed').append(option);
                     }
@@ -1365,7 +1365,7 @@
 
                         var selectMileStoneLevel = "";
                         console.log("selectMileStoneLevel >" + selectMileStoneLevel);
-                        var option = '<option  value="' + +WFLevelBtn[i].levelId + '" ' + selectMileStoneLevel + '>' + +WFLevelBtn[i].levelId +
+                        var option = '<option  value="' + +WFLevelBtn[i].levelId + '" ' + selectMileStoneLevel + '>Level - ' + +WFLevelBtn[i].levelId +
                             '</option>';
                         //$('.levels_to_be_crossed').append(option);
                     }
@@ -1545,7 +1545,7 @@
 
                     $.each(data.levelArray, function(key1, val1) {
                         var selectedCrosses = (val.levels_to_be_crossed == val1.levelId) ? "selected" : "";
-                        s1 += ' <option value="' + val1.levelId + '" ' + selectedCrosses + '>' + val1.levelId + '</option> ';
+                        s1 += ' <option value="' + val1.levelId + '" ' + selectedCrosses + '>Level -' + val1.levelId + '</option> ';
                     });
                     s1 += '</select> <!-- <input type="text" class="form-control" name="level_to_be_crosssed" /> --> <!--end::Input--> </div> </div> <br> <button type="button" class="btn btn-sm btn-icon btn-light-danger remove-field" onclick="remove_more(this)"> <span class="svg-icon svg-icon-1"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="currentColor"></rect> <rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor"></rect> </svg> </span> </button> <button type="button" class="btn btn-sm btn-icon btn-light-success add-field" onclick="append_more(this)"> <span class="svg-icon svg-icon-1"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor"></rect> <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor"></rect> </svg></span></button> </div>';
 

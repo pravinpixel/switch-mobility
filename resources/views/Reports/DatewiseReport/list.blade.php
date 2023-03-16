@@ -225,7 +225,7 @@
                                 var projectId = val.projectId;
                                 var activeStatus = "";
 
-                                var editurl = '{{ route("projects.edit", ":id") }}';
+                                var editurl = '{{ route("viewDocListing", ":id") }}';
                                 editurl = editurl.replace(':id', projectId);
                                 var viewBtn = '<a href=' + editurl + ' class="btn btn-primary">View</a>';
 
