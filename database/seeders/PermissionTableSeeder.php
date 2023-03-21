@@ -198,6 +198,17 @@ class PermissionTableSeeder extends Seeder
                  'name'=>'user-download',
                  'guard_name'=>'web'   
               ],
+              [
+               'name'=>'dashboard-view',
+               'guard_name'=>'web'   
+           ],
+             [
+                'name'=>'document-listing-view',
+                'guard_name'=>'web'   
+             ], [
+                'name'=>'document-listing-edit',
+                'guard_name'=>'web'   
+             ],
 
         ];
   

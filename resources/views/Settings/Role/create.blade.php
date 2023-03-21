@@ -261,7 +261,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>7</td>
-                                                    <td>Role</td>
+                                                    <td>Privilage</td>
                                                     <td><input type="checkbox" name="permission[]" value="role-view" class='permission permisionCreate'></td>
                                                     <td><input type="checkbox" name="permission[]" value="role-create" class='permission permisionCreate'></td>
                                                     <td><input type="checkbox" name="permission[]" value="role-edit" class='permission permisionCreate'></td>
@@ -278,6 +278,26 @@
                                                     <td><input type="checkbox" name="permission[]" value="user-delete" class='permission permisionCreate'></td>
                                                     <td><input type="checkbox" name="permission[]" value="user-upload" class='permission permisionCreate'></td>
                                                     <td><input type="checkbox" name="permission[]" value="user-download" class='permission permisionCreate'></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>9</td>
+                                                    <td>Dashboard</td>
+                                                    <td><input type="checkbox" name="permission[]" value="dashboard-view" class='permission permisionCreate'></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>10</td>
+                                                    <td>Document Listing</td>
+                                                    <td><input type="checkbox" name="permission[]" value="document-listing-view" class='permission permisionCreate'></td>
+                                                    <td></td>
+                                                    <td><input type="checkbox" name="permission[]" value="document-listing-edit" class='permission permisionCreate'></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                 </tr>
                                             </tbody>
                                         </table>

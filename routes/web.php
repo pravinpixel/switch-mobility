@@ -38,6 +38,8 @@ Route::group([
     Route::post('docListingSearch', [Doclistings::class, 'docListingSearch'])->name('docListingSearch');
     Route::post('Search', [Doclistings::class, 'Search'])->name('Search')->middleware('is_admin');
     Route::resource('department', DepartmentController::class);
+  
+
     Route::post('designationSearch', [DesignationController::class, 'designationSearch'])->name('designationSearch');
     Route::post('departmentValidation', [DepartmentController::class, 'departmentValidation'])->name('departmentValidation');
     Route::post('designationValidation', [DesignationController::class, 'designationValidation'])->name('designationValidation');
@@ -73,8 +75,9 @@ Route::group([
     Route::post('getEmployeeByWorkFlow', [ProjectController::class, 'getEmployeeByWorkFlow'])->name('getEmployeeByWorkFlow')->middleware('is_admin');
     Route::get('viewProject/{id}', [ProjectController::class, 'viewProject'])->name('viewProject')->middleware('is_admin');
 
-    Route::get('viewDocListing/{id}', [Doclistings::class, 'viewDocListing'])->name('viewDocListing');
-    
+    Route::post('viewDocListing', [Doclistings::class, 'viewDocListing'])->name('viewDocListing');
+    Route::post('editDocument',[Doclistings::class, 'editDocument'])->name('editDocument');
+
     Route::post('deleteDocument', [ProjectController::class, 'deleteDocument'])->name('deleteDocument')->middleware('is_admin');
     Route::post('getProjectDetailsById', [ProjectController::class, 'getProjectDetailsById'])->name('getProjectDetailsById')->middleware('is_admin');
     Route::post('getProjectLevel', [ProjectController::class, 'getProjectLevel'])->name('getProjectLevel')->middleware('is_admin');
@@ -116,23 +119,12 @@ Route::get('userWiseReportIndex', [UserwiseReportController::class, 'index'])->n
 Route::post('userWiseReportSearchFilter', [UserwiseReportController::class, 'filterSearch'])->name('userWiseReportSearchFilter');
 
 });
-// Route::get('departments', [MasterController::class, 'Departments'])->name('departments')->middleware('is_admin');
-// Route::post('store_department', [MasterController::class, 'store_department'])->name('store_department')->middleware('is_admin');
-// Route::post('deleteDepartment', [MasterController::class, 'deleteDepartment'])->name('deleteDepartment')->middleware('is_admin');
-// Designation
-// Route::get('designation', [MasterController::class, 'Designation'])->name('designation')->middleware('is_admin');
-// Route::post('store_designation', [MasterController::class, 'store_designation'])->name('store_designation')->middleware('is_admin');
-// Route::post('deleteDesignation', [MasterController::class, 'deleteDesignation'])->name('deleteDesignation')->middleware('is_admin');
-//Document Tpe
-// Designation
-// Route::get('document', [MasterController::class, 'Document'])->name('document')->middleware('is_admin');
-// Route::post('storeDocument', [MasterController::class, 'storeDocument'])->name('storeDocument')->middleware('is_admin');
-// Route::post('deleteDocument', [MasterController::class, 'deleteDocument'])->name('deleteDocument')->middleware('is_admin');
 
-//Emplpoyee
-// Route::get('employee', [EmployeeController::class, 'Employee'])->name('employee')->middleware('is_admin');
-// Route::post('storeEmployee', [EmployeeController::class, 'storeEmployee'])->name('storeEmployee')->middleware('is_admin');
-// Route::post('deleteEmployee', [EmployeeController::class, 'deleteEmployee'])->name('deleteEmployee')->middleware('is_admin');
+//Department
+Route::post('departmentEdit', [DepartmentController::class, 'departmentEdit'])->name('departmentEdit');
+Route::post('projectEdit', [ProjectController::class, 'projectEdit'])->name('projectEdit');
+
+
 
 //Project
 //Route::get('project', [ProjectController::class, 'Project'])->name('project')->middleware('is_admin');

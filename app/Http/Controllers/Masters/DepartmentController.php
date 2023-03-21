@@ -26,9 +26,9 @@ class DepartmentController extends Controller
     }
     public function edit($id)
     {
-
+       
         $model = Department::findOrFail($id);
-
+        dd($model);
         return view('Departments/DepartmentDetail', compact('model'));
     }
     public function departmentValidation(Request $request)
@@ -105,5 +105,13 @@ class DepartmentController extends Controller
         $searchData = $request->searchData;
         $model = Department::Where('departments.name', 'LIKE', '%' . $searchData . '%')->whereNull('departments.deleted_at')->get();
         return response()->json($model);
+    }
+    public function departmentEdit(Request $request)
+    {
+       
+      $id =$request->id;    
+      $model = Department::findOrFail($id);
+  
+      return view('Departments/DepartmentDetail', compact('model'));
     }
 }

@@ -125,7 +125,7 @@ class WorkflowController extends Controller
             $designationData = ($employeeData['designation']);
 
             $designationName = $designationData->name;
-            $name = $employeeData->first_name.$employeeData->last_name.'('.$employeeData->sap_id.')'.'-('.$designationName.')';
+            $name = $employeeData->first_name." ".$employeeData->last_name.'('.$employeeData->sap_id.')'.'-('.$designationName.')';
          
            return ['id'=>$employeeData->id,'data'=>$name];
            
@@ -322,7 +322,7 @@ class WorkflowController extends Controller
                 $employeeId = $levelDetail->employee_id;
                 $designationDetail = Employee::with('designation')->where('id', $employeeId)->first();
               
-                $designationData = $designationDetail->first_name . "" . $designationDetail->last_name . "(" . $designationDetail->sap_id . ")" . "-(" . $designationDetail['designation']['name'] . ")";
+                $designationData = $designationDetail->first_name . " " . $designationDetail->last_name . "(" . $designationDetail->sap_id . ")" . "-(" . $designationDetail['designation']['name'] . ")";
 
                 return $designationData;
             });

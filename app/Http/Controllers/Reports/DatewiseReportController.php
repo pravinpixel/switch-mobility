@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProjectController;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DatewiseReportController extends Controller
 {
@@ -15,7 +16,7 @@ class DatewiseReportController extends Controller
         $this->projectController = $projectController;
     }
     protected $service;
-   
+
     public function index()
     {
         return view('Reports/DatewiseReport/list');
@@ -24,16 +25,22 @@ class DatewiseReportController extends Controller
     {
         $startDate = $request->startDate;
         $endDate = $request->endDate;
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+        $modeldatas = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
 
-        $models = Project::with('workflow', 'employee', 'employee.department')
-
-            ->where(function ($query) use ($startDate, $endDate) {
-                $query->whereBetween('start_date', [$startDate, $endDate])
-                    ->orWhereBetween('end_date', [$startDate, $endDate]);
-            })
-
-            ->whereNull('deleted_at')
-            ->get();
+        $modeldatas->where(function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('start_date', [$startDate, $endDate])
+                ->orWhereBetween('end_date', [$startDate, $endDate]);
+        });
+        if ($empId) {
+            $modeldatas->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
+        }
+        $modeldatas->whereNull('deleted_at');
+        $models= $modeldatas->get();
 
         $entities = $this->projectController->ReportDataLooping($models);
         return response()->json(['entities' => $entities]);

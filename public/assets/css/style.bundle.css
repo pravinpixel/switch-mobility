@@ -41838,8 +41838,8 @@ code:not([class*="language-"]) {
         max-width: none;
     }
     .symbol.symbol-md-40px > img {
-        width: 40px;
-        height: 40px;
+        width: 48px;
+        height: 54px;
     }
     .symbol.symbol-md-40px .symbol-label {
         width: 40px;

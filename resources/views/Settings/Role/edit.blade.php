@@ -277,7 +277,7 @@
                                             </tr>
                                             <tr>
                                                 <td>7</td>
-                                                <td>Role</td>
+                                                <td>Privilage</td>
                                                 <td><input type="checkbox" name="permission[]" value="role-view" class='permission permissionEdit' <?php echo (in_array("role-view", $allroles) ? "checked" : ''); ?>></td>
                                                 <td><input type="checkbox" name="permission[]" value="role-create" class='permission permissionEdit' <?php echo (in_array("role-create", $allroles) ? "checked" : ''); ?>></td>
                                                 <td><input type="checkbox" name="permission[]" value="role-edit" class='permission permissionEdit' <?php echo (in_array("role-edit", $allroles) ? "checked" : ''); ?>></td>
@@ -297,6 +297,26 @@
                                                 <td><input type="checkbox" name="permission[]" value="user-download" class='permission permissionEdit' <?php echo (in_array("user-download", $allroles) ? "checked" : ''); ?>></td>
 
                                             </tr>
+                                            <tr>
+                                                    <td>9</td>
+                                                    <td>Dashboard</td>
+                                                    <td><input type="checkbox" name="permission[]" value="dashboard-view" class='permission permissionEdit' <?php echo (in_array("dashboard-view", $allroles) ? "checked" : ''); ?> ></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>10</td>
+                                                    <td>Document Listing</td>
+                                                    <td><input type="checkbox" name="permission[]" value="document-listing-view" class='permission permissionEdit' <?php echo (in_array("document-listing-view", $allroles) ? "checked" : ''); ?>></td>
+                                                    <td></td>
+                                                    <td><input type="checkbox" name="permission[]" value="document-listing-edit" class='permission permissionEdit' <?php echo (in_array("document-listing-edit", $allroles) ? "checked" : ''); ?>></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
                                         </tbody>
                                     </table>
                                 </div>

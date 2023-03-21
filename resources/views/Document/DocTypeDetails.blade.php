@@ -103,7 +103,7 @@
                                     <label class="required fs-6 fw-semibold mb-2">Document Type</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input class="form-control form-control-solid name" value="<?php echo ($model) ? $model->name : " " ?>" placeholder="Enter Document type" name="name" required autocomplete="off" />
+                                    <input class="form-control form-control-solid name" value="<?php echo ($model) ? $model->name : "" ?>" placeholder="Enter Document type" name="name" required autocomplete="off" />
                                     <!--end::Input-->
                                     <p id="nameAlert" class="notifyAlert"></p>
                                 </div>
@@ -151,11 +151,11 @@
 
                             {{-- FORM --}}
                             <div class="text-center pt-15">
-                                <button type="reset" class="btn btn-light me-3" onclick=" document.location.reload();">Reset</button>
+                                <button type="reset" class="btn btn-light me-3 reset " onclick=" document.location.reload();">Reset</button>
                                 <a href="{{route('documentType.index')}}">
                                     <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
-                                <button type="button" class="btn btn-primary submitBtn" data-kt-users-modal-action="submit">
-                                    <span class="indicator-label" onclick="validation();">Save and Exit</span>
+                                <button onclick="validation();" type="button" class="btn btn-primary submitBtn" data-kt-users-modal-action="submit">
+                                    <span class="indicator-label" >Save and Exit</span>
                                     <span class="indicator-progress">Please wait...
                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                 </button>
@@ -172,6 +172,7 @@
 <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script>
 <script>
     $(document).ready(function() {
+        console.log($('.id').val());
         $(".work_levels").hide();
         var wfid = $('.workflow_id').val();
         if (wfid) {
@@ -184,6 +185,10 @@
         }
 
     });
+    if ($('.id').val()) {
+            $('.submitBtn').removeAttr('disabled');
+            $('.reset').css('display','none');
+        }
     $(document).on('input', '.name', function() {
         if ($(this).val()) {
             $('.submitBtn').removeAttr('disabled');
@@ -228,7 +233,8 @@
     function validation() {
 
         //  Swal.fire('Any fool can use a computer');
-        var name = $('.name').val();
+        var name = $('.name').val().length;
+        console.log(name);
         var id = $('.id').val();
         var workflow_id = $('.workflow_id').val();
         if (!workflow_id) {
@@ -248,7 +254,7 @@
             return false;
         } 
 
-       
+     
 
         $.ajax({
             url: "{{url('documentTypeValidation')}}",

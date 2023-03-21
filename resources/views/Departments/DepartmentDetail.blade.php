@@ -104,8 +104,8 @@
                               
                                 <a href="{{route('department.index')}}">
                                     <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
-                                <button type="button" class="btn btn-primary submitBtn" data-kt-users-modal-action="submit">
-                                    <span class="indicator-label" onclick="deptValidation();">Save and Exit</span>
+                                <button type="button" class="btn btn-primary submitBtn" onclick="deptValidation();" data-kt-users-modal-action="submit">
+                                    <span class="indicator-label" >Save and Exit</span>
                                     <span class="indicator-progress">Please wait...
                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                 </button>

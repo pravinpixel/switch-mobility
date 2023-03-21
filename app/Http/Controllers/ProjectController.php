@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\ProjectApprover;
 use App\Models\projectDocument;
 use App\Models\ProjectDocumentDetail;
+use App\Models\ProjectEmployee;
 use App\Models\ProjectLevels;
 use App\Models\ProjectMilestone;
 use App\Models\Workflow;
@@ -17,6 +18,7 @@ use App\Models\WorkflowLevelDetail;
 use App\Models\Workflowlevels;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
@@ -32,13 +34,29 @@ class ProjectController extends Controller
     {
 
         $projects_all = $this->get_all_projects();
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+
+        $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+        if ($empId) {
+            $models->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
+        }
+
+        $models->whereNull('deleted_at');
+        $models1 = $models->get();
+
+       // dd($models1);
+
         $employees = Employee::where('is_active', 1)->get()->toArray();
 
         $departments = Department::where('is_active', 1)->get()->toArray();
         $designation = Designation::where('is_active', 1)->get()->toArray();
         $document_type = DocumentType::where('is_active', 1)->get()->toArray();
         $workflow = Workflow::where('is_active', 1)->get()->toArray();
-        return view('Projects/list', ['document_type' => $document_type, 'workflow' => $workflow, 'projects_all' => $projects_all, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
+        return view('Projects/list', ['document_type' => $document_type, 'workflow' => $workflow, 'projects_all' => $models1, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
         //return view('Projects/listPageOrg', ['document_type' => $document_type, 'workflow' => $workflow, 'projects_all' => $projects_all, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
     }
     public function create()
@@ -60,6 +78,21 @@ class ProjectController extends Controller
         // dd($levelModels);
         return view('Projects/edit', compact('employee', 'document_type', 'workflow', 'project', 'levelModels'));
     }
+    public function projectEdit(Request $request)
+    {
+       
+        $id = $request->id;
+     
+        $employee = Employee::whereNull('deleted_at')->get();
+        $document_type = DocumentType::whereNull('deleted_at')->get();
+        $workflow = Workflow::whereNull('deleted_at')->get();
+        $project = Project::with('employee', 'employee.department', 'employee.designation', 'docType', 'workflow', 'milestone')->where('id', $id)->first();
+
+        $levelModels = $this->getProjectLevelLooping($id);
+        // dd($levelModels);
+        return view('Projects/edit', compact('employee', 'document_type', 'workflow', 'project', 'levelModels'));
+    }
+
     public function get_all_projects()
     {
         $projects = DB::table('projects as p')
@@ -151,11 +184,16 @@ class ProjectController extends Controller
             if ($project) {
                 $project->ticket_no = "WF" .  date('Y-m-d') . '-' . $project->id;
                 $project->save();
+               
 
                 if (isset($request->project_id) != null) {
                     $milestone_delete = ProjectMilestone::where("project_id", $request->project_id)->delete();
                     $PL = ProjectLevels::where("project_id", $request->project_id)->delete();
                     $PA = ProjectApprover::where("project_id", $request->project_id)->delete();
+                    
+                    $PE = ProjectEmployee::where("project_id", $request->project_id)->delete();
+
+                   
                     // $PDocDet = ProjectDocumentDetail::leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
                     //     ->leftjoin('projects', 'projects.id', '=', 'project_documents.project_id')
                     //     ->where("projects.id", $request->project_id)
@@ -245,6 +283,7 @@ class ProjectController extends Controller
                 for ($a = 0; $a < count($workflowLevelmodels); $a++) {
 
                     $levelId = $workflowLevelmodels[$a]->levels;
+                    $projectEmployee3 = $this->storeProjectEmployee($request->initiator_id, $project->id,'2',$levelId);
                     Log::info('ProjectController->Store:-Level Iteration ' . $a . "Level-Id " . ($levelId));
                     $projectLevelModel = new ProjectLevels();
                     $projectLevelModel->project_id = $project->id;
@@ -269,6 +308,8 @@ class ProjectController extends Controller
                                 $projectApproverModel->approver_id = $request->$getname[$c];
                                 $projectApproverModel->designation_id = null;
                                 $projectApproverModel->save();
+
+                                $projectEmployee2 = $this->storeProjectEmployee($request->$getname[$c], $project->id,'2',$request->project_level[$a]);
                             }
                         }
                         //}
@@ -366,7 +407,18 @@ class ProjectController extends Controller
             ];
         }
     }
+    public function storeProjectEmployee($empId, $projectId,$type,$levelId =null)
+    {
+        $model = new ProjectEmployee();
+        $model->employee_id = $empId;
+        $model->project_id = $projectId;
+        $model->type = $type;
+        $model->level = $levelId;
+        $model->save();
 
+        return $model;
+
+    }
     public function viewProject($id)
     {
         $project_details = DB::table('projects as p')
@@ -433,7 +485,7 @@ class ProjectController extends Controller
     {
         $id = $request->project_id;
         $level = $request->level;
-        $projectDataWithLevelId = Project::select('project_levels.priority','project_levels.due_date','employees.first_name', 'designations.name as desName', 'employees.profile_image', 'employees.last_name')
+        $projectDataWithLevelId = Project::select('project_levels.priority', 'project_levels.due_date', 'employees.first_name', 'designations.name as desName', 'employees.profile_image', 'employees.last_name')
             //->leftjoin('project_milestones', 'project_milestones.project_id', '=', 'projects.id')
             ->leftjoin('project_levels', 'project_levels.project_id', '=', 'projects.id')
             ->leftjoin('project_approvers', 'project_approvers.project_level_id', '=', 'project_levels.id')
@@ -463,13 +515,13 @@ class ProjectController extends Controller
         $id = $request->project_id;
         $level = $request->level;
 
-        $maindocument = projectDocument::select('*')->with('docDetail' )
-             ->where("project_id", '=', $request->project_id)
+        $maindocument = projectDocument::select('*')->with('docDetail', 'docDetail.employee')
+            ->where("project_id", '=', $request->project_id)
             ->where("type", '=', 1)
-           
+
             ->get();
 
-        $auxdocument = projectDocument::select('*')->with('docDetail')
+        $auxdocument = projectDocument::select('*')->with('docDetail', 'docDetail.employee')
 
             ->where("project_id", '=', $request->project_id)
             ->where("type", '=', 2)
@@ -526,12 +578,14 @@ class ProjectController extends Controller
 
     public function docStatus(Request $request)
     {
+        $empId = Auth::user()->emp_id;
 
 
         $modelData = ProjectDocumentDetail::where('id', $request->statusdocumentId)->first();
 
         $modelData->status = $request->status;
         $modelData->remark = $request->statusremarks;
+        $modelData->updated_by = $empId;
         $modelData->save();
         if ($request->file('againestDocument')) {
             $parentModel = projectDocument::select('ticket_no', 'type', 'project_name', 'projects.id as projectId')
@@ -546,7 +600,7 @@ class ProjectController extends Controller
             // Log::info('ProjectController->Store:-HalfPath' . json_encode($halfPath1));
             // $upload_path1 = public_path() . '/projectDocuments/' . $halfPath1;
 
-            $path = public_path() . '/projectDocuments/' . $parentModel->ticket_no.'/'. $typeOfDoc;
+            $path = public_path() . '/projectDocuments/' . $parentModel->ticket_no . '/' . $typeOfDoc;
 
 
             $banner = $request->file('againestDocument')->getClientOriginalName();
@@ -556,12 +610,12 @@ class ProjectController extends Controller
             $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
 
             $fileName1 = $typeOfDocFile . ($lastversion + 1) . "." . $filePart1;
-          
+
             //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
             Log::info('ProjectController->Store:-fileName1' . json_encode($fileName1));
             $bannerpath = $path . $fileName1;
 
-           
+
 
 
 
@@ -573,7 +627,8 @@ class ProjectController extends Controller
                 $model->remark = "";
                 $model->project_doc_id = $request->documentId;
                 $model->status = 1;
-                $model->document_name = $parentModel->ticket_no.'/'. $typeOfDoc. $fileName1;
+                $model->document_name = $parentModel->ticket_no . '/' . $typeOfDoc . $fileName1;
+                $model->updated_by = $empId;
 
                 $model->save();
 
@@ -615,7 +670,7 @@ class ProjectController extends Controller
         $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
 
         $fileName1 = "MainDocument" . ($lastversion + 1) . "." . $filePart1;
-       // $fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
+        // $fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
         Log::info('ProjectController->Store:-fileName1' . json_encode($fileName1));
         $bannerpath = $upload_path1 . $fileName1;
 
@@ -685,6 +740,7 @@ class ProjectController extends Controller
     public function  getProjectLevelLooping($projectId)
     {
         $projectModel = Project::where('id', $projectId)->first();
+       
         $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $projectModel->workflow_id)->get();
         $entities = collect($models)->map(function ($model) use ($projectId) {
 
@@ -715,7 +771,7 @@ class ProjectController extends Controller
                 }
             }
 
-            $empModel = WorkflowLevelDetail::select('employees.*','designations.name as designation_name')->leftjoin('employees', 'employees.id', '=', 'workflow_level_details.employee_id')->leftjoin('designations', 'designations.id', '=', 'employees.designation_id')->where('workflow_level_id', $model->id)->get()->toArray();
+            $empModel = WorkflowLevelDetail::select('employees.*', 'designations.name as designation_name')->leftjoin('employees', 'employees.id', '=', 'workflow_level_details.employee_id')->leftjoin('designations', 'designations.id', '=', 'employees.designation_id')->where('workflow_level_id', $model->id)->get()->toArray();
 
 
 

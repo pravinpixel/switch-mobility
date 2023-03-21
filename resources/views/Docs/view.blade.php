@@ -410,7 +410,7 @@
                     <a class="nav-link <?php if ($i == 0) {
                                             echo 'active';
                                         } ?>" data-toggle="tab" href="#pag<?php echo $levelsArray[$i]['levelId']; ?>" role="tab" aria-controls="home" onclick="get_level_data(<?php echo $levelsArray[$i]['levelId']; ?>,<?php echo $details->id; ?>);">Level <?php echo $levelsArray[$i]['levelId']; ?></a>
-                    </li>
+                </li>
                     @endfor
             </ul>
             <div class="tab-content">
@@ -641,8 +641,15 @@
                                     for (var i =docMainDetailArray.length-1; i >= 0; --i) {
 
                                         var remarkData = (docMainDetailArray[i].remark) ? docMainDetailArray[i].remark : "";
-
-
+                                        var updatedBy = docMainDetailArray[i].employee;
+                                        var updatedPerson = "";
+                                        console.log("updatedBy");
+                                        console.log(updatedBy);
+                                       if(updatedBy){
+                                       updatedPerson =updatedBy.first_name+" "+updatedBy.middle_name+" "+updatedBy.last_name;
+                                       }
+                                       console.log("updatedPerson");
+                                       console.log(updatedPerson);
                                         var statusData = "";
                                         if (docMainDetailArray[i].status == 1) {
                                             var statusData = "Waiting  For Approval";
@@ -657,7 +664,7 @@
                                         }
                                         console.log("statusData" + statusData);
                                         var dateFormat = new Date(docMainDetailArray[i].updated_at);
-                                        var lastUpdate = ("Date: " + dateFormat.getDate() +
+                                        var lastUpdate = (dateFormat.getDate() +
                                             "/" + (dateFormat.getMonth() + 1) +
                                             "/" + dateFormat.getFullYear() +
                                             " " + dateFormat.getHours() +
@@ -667,7 +674,7 @@
                                         versionMainDocDiv += '<td>ver ' + docMainDetailArray[i].version + '</td>';
                                         versionMainDocDiv += '<td>' + remarkData + '</td>';
                                         versionMainDocDiv += '<td>' + statusData + '</td>';
-                                        versionMainDocDiv += '<td>' + lastUpdate + '</td>';
+                                        versionMainDocDiv += '<td>' +updatedPerson+"("+lastUpdate + ')</td>';
                                         versionMainDocDiv += '<td>';
                                         console.log(".mainlevelStatus-" + level + "-" + i);
 

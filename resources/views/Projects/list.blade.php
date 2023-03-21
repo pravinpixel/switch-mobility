@@ -258,16 +258,16 @@
                                 @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('project-create'))
                                 <!--begin::Add user-->
                                 <a href="{{url('projects/create')}}">
-                                <button type="button"  class="btn btn-primary" >
-                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
-                                    <span class="svg-icon svg-icon-2">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor" />
-                                            <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->Add
-                                </button>
+                                    <button type="button" class="btn btn-primary">
+                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
+                                        <span class="svg-icon svg-icon-2">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor" />
+                                                <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->Add
+                                    </button>
                                 </a>
                                 @endif
                                 <!--end::Add user-->
@@ -324,26 +324,7 @@
                     <!--end::Card header-->
                     <!--begin::Card body-->
                     <div class="card-body py-4">
-                        <div class="card-title">
-                            <!--begin::Search-->
-                            <div class="d-flex align-items-center position-relative my-1">
-                                <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                <span class="svg-icon svg-icon-1 position-absolute ms-6">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
-                                        <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
-                                    </svg>
-                                </span>
 
-                                <!--end::Svg Icon-->
-                                <input type="text" id="searchInput" data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="Search" />
-                                <!--begin::Actions-->
-
-                                <!--end::Actions-->
-                            </div>
-
-                            <!--end::Search-->
-                        </div>
                         <!--begin::Table-->
                         <table class="table align-middle table-row-dashed fs-6 gy-5" id="service_table">
                             <!--begin::Table head-->
@@ -368,20 +349,27 @@
                             <tbody class="text-gray-600 fw-semibold">
                                 <!--begin::Table row-->
                                 @foreach ($projects_all as $key => $d)
+                                <?php 
+                                $employee = $d['employee'];
+                                $initiater = "";
+                                if($employee){
+                                    $initiater = $employee->first_name." ".$employee->middle_name." ".$employee->last_name;
+                                }
+                                ?>
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $d->project_code }}</td>
                                     <td>{{ $d->project_name }}</td>
                                     <td>{{ date('d-m-Y', strtotime($d->start_date)) }}</td>
                                     <td>{{ date('d-m-Y', strtotime($d->end_date)) }}</td>
-                                    <td>{{ $d->first_name }} {{ $d->last_name }}</td>
+                                    <td>{{ $initiater }}</td>
                                     <!-- <td></td>
                                     <td></td> -->
                                     <td>
                                         <div class="d-flex my-3 ms-9">
                                             <!--begin::Edit-->
                                             @if (auth()->user()->is_super_admin == 1 ||auth()->user()->can('project-edit'))
-                                            <a href="{{route('projects.edit',$d->project_id)}}" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3">
+                                            <div id="{{$d->id}}" class="editProject btn btn-icon btn-active-light-primary w-30px h-30px me-3">
                                                 <span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit">
                                                     <!--begin::Svg Icon | path: icons/duotune/art/art005.svg-->
                                                     <span class="svg-icon svg-icon-3">
@@ -392,7 +380,7 @@
                                                     </span>
                                                     <!--end::Svg Icon-->
                                                 </span>
-                                            </a>
+                                            </div>
                                             @endif
                                             @if (auth()->user()->is_super_admin == 1 || auth()->user()->can('project-delete'))
                                             <!--end::Edit-->
@@ -553,6 +541,7 @@
             });
         });
     });
+ 
 </script>
 
 
@@ -592,7 +581,16 @@
             });
         });
     });
+    $(document).on('click', '.editProject', function() {
+        var id = $(this).attr('id');
+        var url = "{{route('projectEdit')}}";
+        var form = $('<form action="' + url + '" method="post">' +
+            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
+            '</form>');
+        $('body').append(form);
+        form.submit();
 
+    })
     function set_min(start_date) {
         $('.end_date').attr('min', start_date);
     }
@@ -940,12 +938,12 @@
                 if (WFLevelBtn) {
 
                     for (var wfl = 0; wfl < WFLevelBtn.length; wfl++) {
-                       
+
                         var levelDesignation = WFLevelBtn[wfl].designationId;
 
                         var masterData = WFLevelBtn[wfl].projectMasterData;
                         var projectApprovers = WFLevelBtn[wfl].projectApprovers;
-                     
+
                         var priority = masterData.priority;
                         var due_date = masterData.due_date;
                         console.log(projectApprovers);
@@ -964,18 +962,18 @@
 
                         levelTabContentData += '<div class="col-md-12 fv-row">';
                         levelTabContentData += '<label class="required fs-6 fw-semibold mb-2">Due Date</label>';
-                        levelTabContentData += '<input type="date" required class="form-control w-50 duedate due_date' + WFLevelBtn[wfl].levelId + '" name="due_date[]" onclick="set_min_max_value_due_date();" value="'+due_date+'"/>';
+                        levelTabContentData += '<input type="date" required class="form-control w-50 duedate due_date' + WFLevelBtn[wfl].levelId + '" name="due_date[]" onclick="set_min_max_value_due_date();" value="' + due_date + '"/>';
                         levelTabContentData += '</div><br><br>';
                         levelTabContentData += '<div class="col-md-12 fv-row"><label class="required fs-6 fw-semibold mb-2">Priority</label><br>';
-                        var check1 = (priority ==1)?"checked":"";
-                        var check2 = (priority ==2)?"checked":"";
-                        var check3 = (priority ==3)?"checked":"";
-                        var check4 = (priority == 4)?"checked":"";
+                        var check1 = (priority == 1) ? "checked" : "";
+                        var check2 = (priority == 2) ? "checked" : "";
+                        var check3 = (priority == 3) ? "checked" : "";
+                        var check4 = (priority == 4) ? "checked" : "";
 
-                        levelTabContentData += 'Important <input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1" '+check1+'>&nbsp;&nbsp;';
-                        levelTabContentData += 'Medium <input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2" '+check2+'>&nbsp;&nbsp;';
-                        levelTabContentData += 'Low <input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3" '+check3+'>&nbsp;&nbsp;';
-                        levelTabContentData += 'High <input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" '+check4+'>';
+                        levelTabContentData += 'Important <input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1" ' + check1 + '>&nbsp;&nbsp;';
+                        levelTabContentData += 'Medium <input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2" ' + check2 + '>&nbsp;&nbsp;';
+                        levelTabContentData += 'Low <input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3" ' + check3 + '>&nbsp;&nbsp;';
+                        levelTabContentData += 'High <input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" ' + check4 + '>';
 
                         levelTabContentData += '</div><br><br>';
                         levelTabContentData += '<h4>Approvers</h4>';
@@ -991,8 +989,8 @@
                             levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
                             levelTabContentData += '<option></option>';
                             for (var lvlApvrs = 0; lvlApvrs < levelApprovers.length; lvlApvrs++) {
-                                var selectedStatus = (projectApprovers.includes( levelApprovers[lvlApvrs].id))?"selected":"";
-                                levelTabContentData += '<option value="' + levelApprovers[lvlApvrs].id + '" '+selectedStatus+'>' + levelApprovers[lvlApvrs].first_name + '</option>';
+                                var selectedStatus = (projectApprovers.includes(levelApprovers[lvlApvrs].id)) ? "selected" : "";
+                                levelTabContentData += '<option value="' + levelApprovers[lvlApvrs].id + '" ' + selectedStatus + '>' + levelApprovers[lvlApvrs].first_name + '</option>';
 
                             }
                             levelTabContentData += '</select>';
@@ -1095,16 +1093,6 @@
         $(".designation").val("");
     })
 
-    $(document).ready(
-        function() {
-            $('#service_table').DataTable({
-                "lengthMenu": [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, "All"]
-                ]
-            });
-
-        });
 
     $(document).on('change', '.priority', function() {
         $('input[name="priority[]"]').not(this).prop('checked', false);

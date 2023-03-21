@@ -61,7 +61,7 @@
 
                         <div class="card-title">
                             <div class="row">
-                                <div class="col-md-6" style="display:inline;">
+                                <div class="col-md-5" style="display:inline;">
                                     <!--begin::Label-->
                                     <label class="required fs-6 fw-semibold mb-2">Start Date</label>
                                     <!--end::Label-->
@@ -71,7 +71,7 @@
 
                                 </div>
 
-                                <div class="col-md-6" style="display:inline;">
+                                <div class="col-md-5" style="display:inline;">
                                     <!--begin::Label-->
                                     <label class="required fs-6 fw-semibold mb-2">End Date</label>
                                     <!--end::Label-->
@@ -79,6 +79,10 @@
                                     <input type="date" class="form-control endDate" value="" name="endDate" autocomplete="off" />
 
 
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                    <button class="btn btn-success" onclick="exportData()">Excel</button>
                                 </div>
                             </div>
                         </div>
@@ -118,7 +122,7 @@
                                     <th>Project Name</th>
                                     <th>Workflow Name</th>
                                     <th>Workflow Code</th>
-                                    <th>Initiater</th>
+                                    <th>Initiator</th>
                                     <th>Department</th>
                                     <th>Status</th>
                                     <th>Actions</th>
@@ -142,21 +146,12 @@
 
 
 
-@endsection
-<script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
 <script>
     $(document).ready(
         function() {
-            var table = $('#service_table').DataTable({
-                filter: true,
-                "lengthMenu": [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, "All"]
-                ],
-                "searching": true,
-            });
+
 
             var todayDate = new Date();
             var today = todayDate.toISOString().substr(0, 10);
@@ -167,7 +162,7 @@
             var nextSixDay = todayDate.toISOString().substr(0, 10);
 
             $('.startDate').val(nextSixDay);
-             $('.endDate').val(today);
+            $('.endDate').val(today);
             filterData();
 
             $('.startDate').on('change', function() {
@@ -191,7 +186,7 @@
                     filterData();
                 }
             });
-           
+
 
 
 
@@ -211,7 +206,7 @@
                         },
                         success: function(data) {
                             var entities = data.entities;
-
+                            var table = $('#service_table').DataTable();
                             table.clear().draw();
 
                             $.each(entities, function(key, val) {
@@ -227,7 +222,7 @@
 
                                 var editurl = '{{ route("viewDocListing", ":id") }}';
                                 editurl = editurl.replace(':id', projectId);
-                                var viewBtn = '<a href=' + editurl + ' class="btn btn-primary">View</a>';
+                                var viewBtn = '<div id=' + projectId + ' class="btn btn-primary viewDocs">View</div>';
 
 
                                 table.row.add([sNo, projectCode, projectName, workflowName, workflowCode, initiater, department, activeStatus, viewBtn]).draw();
@@ -241,4 +236,64 @@
                 }
             }
         });
+    $(document).on('click', '.viewDocs', function() {
+        console.log("well and good");
+        var id = $(this).attr('id');
+
+
+        var url = "{{route('viewDocListing')}}";
+        var form = $('<form action="' + url + '" method="post">' +
+            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
+            '</form>');
+        $('body').append(form);
+        form.submit();
+    });
+
+    function exportData() {
+        /* Get the HTML data using Element by Id */
+        var table = document.getElementById("service_table");
+
+        /* Declaring array variable */
+        var rows = [];
+
+        //iterate through rows of table
+        for (var i = 0, row; row = table.rows[i]; i++) {
+            //rows would be accessed using the "row" variable assigned in the for loop
+            //Get each cell value/column from the row
+            column1 = row.cells[0].innerText;
+            column2 = row.cells[1].innerText;
+            column3 = row.cells[2].innerText;
+            column4 = row.cells[3].innerText;
+            column5 = row.cells[4].innerText;
+            column6 = row.cells[5].innerText;
+            column7 = row.cells[6].innerText;
+            /* add a new records in the array */
+            rows.push(
+                [
+                    column1,
+                    column2,
+                    column3,
+                    column4,
+                    column5,
+                    column6,
+                    column7,
+                ]
+            );
+
+        }
+        csvContent = "data:text/csv;charset=utf-8,";
+
+        /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
+        rows.forEach(function(rowArray) {
+            row = rowArray.join(",");
+            csvContent += row + "\r\n";
+        });
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "DatewiseReports.csv");
+        document.body.appendChild(link);
+        link.click();
+    }
 </script>
+@endsection

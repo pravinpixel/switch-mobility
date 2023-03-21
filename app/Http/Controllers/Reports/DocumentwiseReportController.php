@@ -8,6 +8,7 @@ use App\Models\DocumentType;
 use App\Models\Project;
 use App\Models\Workflow;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentwiseReportController extends Controller
 {
@@ -23,7 +24,22 @@ class DocumentwiseReportController extends Controller
         $projectDatas = Project::whereNull('deleted_at')->get();
         $workflowDatas = Workflow::whereNull('deleted_at')->get();
         $documentDatas = DocumentType::whereNull('deleted_at')->get();
-        $models= Project::with('workflow', 'employee', 'employee.department', 'docType')->whereNull('deleted_at')->get();
+       // $models= Project::with('workflow', 'employee', 'employee.department', 'docType')->whereNull('deleted_at')->get();
+       
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+        $modeldatas = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees', 'docType');
+
+   
+        if ($empId) {
+            $modeldatas->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
+        }
+        $modeldatas->whereNull('deleted_at');
+        $models= $modeldatas->get();
+      
         $entities = $this->projectController->ReportDataLooping($models);
         return view('Reports/DocumentwiseReport/list', compact(['projectDatas', 'documentDatas', 'workflowDatas','entities']));
     }
@@ -32,7 +48,15 @@ class DocumentwiseReportController extends Controller
         $workflowId = $request->workflowCode;
         $projectId = $request->projectName;
         $documentId = $request->docuName;
-        $modelDatas = Project::with('workflow', 'employee', 'employee.department', 'docType');
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+        $modelDatas = Project::with('workflow', 'employee', 'employee.department', 'docType','projectEmployees');
+        if ($empId) {
+            $modelDatas->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
+        }
         if ($workflowId) {
             $modelDatas->whereHas('workflow', function ($query) use ($workflowId) {
                 $query->where('id', $workflowId);

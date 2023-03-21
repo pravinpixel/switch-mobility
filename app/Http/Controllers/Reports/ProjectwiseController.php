@@ -8,12 +8,26 @@ use App\Models\Project;
 use App\Models\Workflow;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectwiseController extends Controller
 {
     public function index()
     {
-        $models = Project::with('workflow', 'employee', 'employee.department')->whereNull('deleted_at')->get();
+       // $models = Project::with('workflow', 'employee', 'employee.department')->whereNull('deleted_at')->get();
+       $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+       $modeldatas = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+
+      
+       if ($empId) {
+           $modeldatas->whereHas('projectEmployees', function ($q) use ($empId) {
+               if ($empId != "") {
+                   $q->where('employee_id', '=', $empId);
+               }
+           });
+       }
+       $modeldatas->whereNull('deleted_at');
+       $models= $modeldatas->get();
 
         $departmentDatas = Department::whereNull('deleted_at')->get();
         $workflowDatas = Workflow::whereNull('deleted_at')->get();
@@ -27,11 +41,12 @@ class ProjectwiseController extends Controller
         $deptId = $request->department;
         $workflowId = $request->workflowId;
         $projectId = $request->projectId;
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
 
         $workflowDatas =$this->getWorkflowDatasByDepartmentId($deptId);
        
 
-        $models = $this->getModelDatas($deptId, $workflowId, $projectId);
+        $models = $this->getModelDatas($deptId, $workflowId, $projectId,$empId);
 
 
 
@@ -49,9 +64,16 @@ class ProjectwiseController extends Controller
             ->groupBy('projects.workflow_id')
             ->get();
     }
-    public function getModelDatas($deptId, $workflowId = null, $projectId = null)
+    public function getModelDatas($deptId, $workflowId = null, $projectId = null, $empId=null)
     {
-        $modelDatas = Project::with('workflow', 'employee', 'employee.department');
+        $modelDatas = Project::with('workflow', 'employee', 'employee.department','projectEmployees');
+        if ($empId) {
+            $modelDatas->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
+        }
 
         if ($deptId) {
             $modelDatas->whereHas('employee.department', function ($query) use ($deptId) {
@@ -97,7 +119,7 @@ class ProjectwiseController extends Controller
             $workflowCode = $workflowModel->workflow_code;
             $workflowName = $workflowModel->workflow_name;
             $workflowLevel = $workflowModel->total_levels;
-            $initiater = $employeeModel->first_name . "" . $employeeModel->last_name;
+            $initiater = $employeeModel->first_name . " " . $employeeModel->last_name;
             $department = ($departmentModel) ? $departmentModel->name : "";
             $data = ['workflowId' => $workflowId, 'noOfDays' => $noOfDays, 'dueDate' => $model->end_date, 'workflowLevel' => $workflowLevel, 'projectId' => $projectId, 'workflowName' => $workflowName, 'projectCode' => $projectCode, 'projectName' => $projectName, 'workflowCode' => $workflowCode, 'initiater' => $initiater, 'department' => $department];
 

@@ -304,14 +304,14 @@ class EmployeeController extends Controller
                     $error = "Row:" . $rowNo . "  Error:" . $validationResult[$i];
                     array_push($errors, $error);
                 }
-            } else {
+            } 
 
                 $employeeModel = Employee::where('sap_id', $row['sap_id'])->first();
 
                 if ($employeeModel) {
 
                     $baseValidation = $this->basicValidation($rowNo, $row, $employeeModel->id);
-                    if (count($baseValidation)) {
+                    if (count($baseValidation)||$validationResult) {
                         for ($j = 0; $j < count($baseValidation); $j++) {
                             array_push($errors, $baseValidation[$j]);
                         }
@@ -321,7 +321,7 @@ class EmployeeController extends Controller
                     }
                 } else {
                     $baseValidation = $this->basicValidation($rowNo, $row);
-                    if (count($baseValidation)) {
+                    if (count($baseValidation)||$validationResult) {
                         for ($j = 0; $j < count($baseValidation); $j++) {
                             array_push($errors, $baseValidation[$j]);
                         }
@@ -331,7 +331,7 @@ class EmployeeController extends Controller
                         $convertModel = $this->employeeModel($model, $row);
                     }
                 }
-            }
+            
         }
 
 
@@ -357,13 +357,15 @@ class EmployeeController extends Controller
         $department = $this->departemntCheckFunction($row['department']);
 
         if (!$department) {
-            $error = "Row:" . $rowNo . " Error: Department Not Found!(" . $row['department'] . ").";
-            array_push($errors, $error);
+            $departmentModel = new Department();
+            $departmentModel->name = $row['department'];
+            $departmentModel->save();
         }
         $designation = $this->designationCheckFunction($row['designation']);
         if (!$designation) {
-            $error = "Row:" . $rowNo . " Error: Designation Not Found!(" . $row['designation'] . ").";
-            array_push($errors, $error);
+          $designationModel = new Designation();
+          $designationModel->name = $row['designation'];
+          $designationModel->save();
         }
         return $errors;
     }

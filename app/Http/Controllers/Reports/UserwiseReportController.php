@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\Project;
 use App\Models\Workflow;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserwiseReportController extends Controller
 {
@@ -20,7 +21,21 @@ class UserwiseReportController extends Controller
     public function index()
     {
 
-        $models = Project::with('workflow', 'employee', 'employee.department')->whereNull('deleted_at')->get();
+       // $models = Project::with('workflow', 'employee', 'employee.department')->whereNull('deleted_at')->get();
+       $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+
+       $modeldatas = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+
+      
+       if ($empId) {
+           $modeldatas->whereHas('projectEmployees', function ($q) use ($empId) {
+               if ($empId != "") {
+                   $q->where('employee_id', '=', $empId);
+               }
+           });
+       }
+       $modeldatas->whereNull('deleted_at');
+       $models= $modeldatas->get();
         $entities = $this->projectController->ReportDataLooping($models);
 
         $initiatorDatas = Employee::whereNull('deleted_at')->get();
@@ -32,7 +47,16 @@ class UserwiseReportController extends Controller
 
         $workflowId = $request->workflow;
         $employeeId = $request->Employee;
-        $modelDatas = Project::with('workflow', 'employee', 'employee.department');
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+
+        $modelDatas = Project::with('workflow', 'employee', 'employee.department','projectEmployees');
+        if ($empId) {
+            $modelDatas->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
+        }
         if ($workflowId) {
             $modelDatas->whereHas('workflow', function ($query) use ($workflowId) {
                 $query->where('id', $workflowId);
@@ -45,7 +69,10 @@ class UserwiseReportController extends Controller
         }
         $modelDatas->whereNull('deleted_at');
         $models = $modelDatas->get();
+
+
         $entities = $this->projectController->ReportDataLooping($models);
+        
         if(isset($workflowId)){
          $datas = Project::select('employees.first_name','employees.id','employees.sap_id')
             ->leftjoin('employees', 'employees.id', '=', 'projects.initiator_id')

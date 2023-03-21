@@ -185,7 +185,7 @@
 						<!--end:Menu item-->
 
 
-						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('project-view'))
+						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('document-listing-view'))
 						<!--begin:Menu item-->
 						<div class="menu-item">
 							<!--begin:Menu link-->

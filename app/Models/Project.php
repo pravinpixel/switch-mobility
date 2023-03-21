@@ -29,4 +29,8 @@ class Project extends Model
     {
         return $this->hasMany(ProjectMilestone::class, 'project_id', 'id');
     }
+    public function projectEmployees()
+    {
+        return $this->hasMany(ProjectEmployee::class, 'project_id', 'id');
+    }
 }

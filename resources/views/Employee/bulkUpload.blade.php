@@ -328,8 +328,8 @@
                                 <!--begin::Col-->
                                 <div class="col-md-3 fv-row">
                                     <!--begin::Label-->
-                                    <label class="fs-6 fw-semibold mb-2">Sample File Format</label>
-                                    <a class="btn btn-warning btn-sm" href="{{ asset('/bulk1.xlsx') }}" target="_blank" download title="download"><i class="las la-download"></i></a>
+                                    <label class="fs-6 fw-semibold mb-2"></label>
+                                    <a class="btn btn-warning btn-sm" href="{{ asset('/bulk1.xlsx') }}" target="_blank" download title="download">Sample Format <i class="las la-download"></i></a>
 
                                     <!--end::Input-->
                                 </div>
@@ -343,7 +343,7 @@
                                 </div> <!--end::Col-->
                             </div>
                             <br>
-                            <div class="row col-md-12 errorDiv">
+                            <div class="row col-md-6 errorDiv alert alert-warning" style="display: none;">
 
                             </div>
                             <div class="text-center pt-15">
@@ -412,11 +412,12 @@
                 contentType: false,
                 success: function(data) {
                     $(":submit").removeAttr("disabled");
+                    $('.errorDiv').css('display','none');
                     var errorArray = data.data;
                     console.log(errorArray.length);
                     $('.errorDiv').html('');
                     if (data.result == 'failed') {
-
+                        $('.errorDiv').css('display','block');
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
@@ -427,7 +428,7 @@
                         $.each(errorArray, function(key, value) {
                             console.log(value);
 
-                            $('.errorDiv').append('<div class="col-md-6 alert alert-warning"><span style="color:red">' + value + '</div');
+                            $('.errorDiv').append('<span style="color:red">' + value + '</span><br>');
                         });
                     } else {
                         Swal.fire({

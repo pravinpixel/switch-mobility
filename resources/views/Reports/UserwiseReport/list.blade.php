@@ -92,187 +92,251 @@
                                     <div class="col-md-1">
                                         <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
                                         <button class="btn btn-warning resetBtn">Reset</button>
+                                    </div>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <div class="col-md-1">
+                                        <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                        <button class="btn btn-success" onclick="exportData()">Excel</button>
                                     </div>
                                 </div>
                             </div>
 
-
-
-                        </div>
-                        <!--end::Card header-->
-                        <!--begin::Card body-->
-                        <div class="card-body py-4">
-                            <!--begin::Card title-->
-                            <div class="card-title">
-                                <!--begin::Search-->
-                                <div class="d-flex align-items-center position-relative my-1">
-                                    <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                    <!-- <span class="svg-icon svg-icon-1 position-absolute ms-6">
-                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                            xmlns="http://www.w3.org/2000/svg">
-                                                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546"
-                                                                height="2" rx="1" transform="rotate(45 17.0365 15.1223)"
-                                                                fill="currentColor" />
-                                                            <path
-                                                                d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                                                                fill="currentColor" />
-                                                        </svg>
-                                                    </span> -->
-                                    <!--end::Svg Icon-->
-                                    <!-- <input type="text" class="form-control form-control-solid w-250px ps-14 deptSearch"
-                                                        placeholder="Search" /> -->
+                            <!--end::Card header-->
+                            <!--begin::Card body-->
+                            <div class="card-body py-4">
+                                <!--begin::Card title-->
+                                <div class="card-title">
+                                    <!--begin::Search-->
+                                    <div class="d-flex align-items-center position-relative my-1">
+                                        <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                                        <!-- <span class="svg-icon svg-icon-1 position-absolute ms-6">
+                                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546"
+                                                                    height="2" rx="1" transform="rotate(45 17.0365 15.1223)"
+                                                                    fill="currentColor" />
+                                                                <path
+                                                                    d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
+                                                                    fill="currentColor" />
+                                                            </svg>
+                                                        </span> -->
+                                        <!--end::Svg Icon-->
+                                        <!-- <input type="text" class="form-control form-control-solid w-250px ps-14 deptSearch"
+                                                            placeholder="Search" /> -->
+                                    </div>
+                                    <!--end::Search-->
                                 </div>
-                                <!--end::Search-->
-                            </div>
-                            <!--begin::Card title-->
-                            <!--begin::Table-->
-                            <table class="table align-middle table-row-dashed fs-6 gy-5" id="service_table">
-                                <!--begin::Table head-->
-                                <thead>
-                                    <!--begin::Table row-->
-                                    <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                <!--begin::Card title-->
+                                <!--begin::Table-->
+                                <table class="table align-middle table-row-dashed fs-6 gy-5" id="service_table">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                        <!--begin::Table row-->
+                                        <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
 
-                                        <th>S.no</th>
-                                        <th>Project Code</th>
-                                        <th>Project Name</th>
-                                        <th>Workflow Code</th>
-                                        <th>Workflow Name</th>
-                                        <th>Initiator</th>
-                                        <th>Department</th>
-                                        <th>Level</th>
-                                        <th>Due Date</th>
-                                        <th>No of Days</th>
-                                        <th>status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                    <!--end::Table row-->
-                                </thead>
-                                <!--end::Table head-->
-                                <!--begin::Table body-->
-                                <tbody class="text-gray-600 fw-semibold" id="tableContent">
-                                    @foreach ($entities as $entity)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $entity['projectCode'] }}</td>
-                                            <td>{{ $entity['projectName'] }}</td>
-                                            <td>{{ $entity['workflowName'] }}</td>
-                                            <td>{{ $entity['workflowCode'] }}</td>
-                                            <td>{{ $entity['initiater'] }}</td>
-                                            <td>{{ $entity['department'] }}</td>
-                                            <td>{{ $entity['workflowLevel'] }}</td>
-                                            <td>{{ $entity['dueDate'] }}</td>
-                                            <td>{{ $entity['noOfDays'] }}</td>
-                                            <td></td>
-                                            <td><a href={{ route('viewDocListing', $entity['projectId']) }}
-                                                    class="btn btn-primary">View</a></td>
-
+                                            <th>S.no</th>
+                                            <th>Project Code</th>
+                                            <th>Project Name</th>
+                                            <th>Workflow Code</th>
+                                            <th>Workflow Name</th>
+                                            <th>Initiator</th>
+                                            <th>Department</th>
+                                            <th>Level</th>
+                                            <th>Due Date</th>
+                                            <th>No of Days</th>
+                                            <th>status</th>
+                                            <th>Actions</th>
                                         </tr>
-                                    @endforeach
+                                        <!--end::Table row-->
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody class="text-gray-600 fw-semibold" id="tableContent">
+                                        @foreach ($entities as $entity)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $entity['projectCode'] }}</td>
+                                                <td>{{ $entity['projectName'] }}</td>
+                                                <td>{{ $entity['workflowName'] }}</td>
+                                                <td>{{ $entity['workflowCode'] }}</td>
+                                                <td>{{ $entity['initiater'] }}</td>
+                                                <td>{{ $entity['department'] }}</td>
+                                                <td>{{ $entity['workflowLevel'] }}</td>
+                                                <td>{{ $entity['dueDate'] }}</td>
+                                                <td>{{ $entity['noOfDays'] }}</td>
+                                                <td></td>
+                                                <td><div id="{{$entity['projectId']}}" class="btn btn-primary viewDocs">View</div></td>
+
+                                            </tr>
+                                        @endforeach
 
 
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
-    </div>
 
 
+        <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
+        </script>
+        <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 
-    <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
-    </script>
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(
-            function() {
+        <script>
+            $(document).ready(
+                function() {
 
-                var table = $('#service_table').DataTable({
-                    filter: true,
-                    "lengthMenu": [
-                        [10, 25, 50, -1],
-                        [10, 25, 50, "All"]
-                    ],
-                    "searching": true,
-                });
-                $("#initiatorName").select2({
-                    dropdownParent: $("#initiatorNameField")
-                });
-                $("#workflowCode").select2({
-                    dropdownParent: $("#workflowCodeField")
-                });
-
-
-                $('#initiatorName,#workflowCode').on('change', function() {
-                    filterData();
-                });
-
-                function filterData() {
-                    var Employee = $('#initiatorName').val();
-                    var workflow = $('#workflowCode').val();
-                    $.ajax({
-                        url: "{{ route('userWiseReportSearchFilter') }}",
-                        type: 'ajax',
-                        method: 'post',
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            Employee: Employee,
-                            workflow: workflow,
-                        },
-                        success: function(data) {
-                            var entities = data.entities;
-                            var datas = data.datas;
-                            if ( workflow && Employee == '') {
-                                $("#initiatorName").empty();
-                                var wfOption = '<option value=""> Select Workflow Name</option>';
-                                $("#initiatorName").append(wfOption);
-                                $.each(datas, function(key, val) {
-                                    initiatorItems = "<option  value=" + val.id + ">" + val
-                                        .first_name + "(" + val.sap_id + ")</option>";
-                                    $("#initiatorName").append(initiatorItems);
-                                });
-                            }
-                            table.clear().draw();
-                            $.each(entities, function(key, val) {
-                                var sNo = key + 1;
-                                var projectCode = val.projectCode;
-                                var projectName = val.projectName;
-                                var workflowName = val.workflowName;
-                                var workflowCode = val.workflowCode;
-                                var workflowLevel = val.workflowLevel;
-                                var dueDate = val.dueDate;
-                                var noOfDays = val.noOfDays;
-                                var initiater = val.initiater;
-                                var department = val.department;
-                                var projectId = val.projectId;
-                                var activeStatus = "";
-
-                                var editurl = '{{ route('viewDocListing', ':id') }}';
-                                editurl = editurl.replace(':id', projectId);
-                                var viewBtn = '<a href=' + editurl +
-                                    ' class="btn btn-primary">View</a>';
-                                table.row.add([sNo, projectCode, projectName, workflowCode,
-                                    workflowName, initiater, department, workflowLevel,
-                                    dueDate, noOfDays, activeStatus, viewBtn
-                                ]).draw();
-                            });
-
-
-                        },
-                        error: function() {
-                            $("#otp_error").text("Update Error");
-                        }
-
+                   
+                    $("#initiatorName").select2({
+                        dropdownParent: $("#initiatorNameField")
+                    });
+                    $("#workflowCode").select2({
+                        dropdownParent: $("#workflowCodeField")
                     });
 
-                }
+
+                    $('#initiatorName,#workflowCode').on('change', function() {
+                        filterData();   
+                    });
+
+                    function filterData() {
+                        var Employee = $('#initiatorName').val();
+                        var workflow = $('#workflowCode').val();
+                        $.ajax({
+                            url: "{{ route('userWiseReportSearchFilter') }}",
+                            type: 'ajax',
+                            method: 'post',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                Employee: Employee,
+                                workflow: workflow,
+                            },
+                            success: function(data) {
+                                var table = $('#service_table').DataTable();
+                                var entities = data.entities;
+                                var datas = data.datas;
+                                if (workflow && Employee == '') {
+                                    $("#initiatorName").empty();
+                                    var wfOption = '<option value=""> Select Workflow Name</option>';
+                                    $("#initiatorName").append(wfOption);
+                                    $.each(datas, function(key, val) {
+                                        initiatorItems = "<option  value=" + val.id + ">" + val
+                                            .first_name + "(" + val.sap_id + ")</option>";
+                                        $("#initiatorName").append(initiatorItems);
+                                    });
+                                }
+                                table.clear().draw();
+                                $.each(entities, function(key, val) {
+                                    var sNo = key + 1;
+                                    var projectCode = val.projectCode;
+                                    var projectName = val.projectName;
+                                    var workflowName = val.workflowName;
+                                    var workflowCode = val.workflowCode;
+                                    var workflowLevel = val.workflowLevel;
+                                    var dueDate = val.dueDate;
+                                    var noOfDays = val.noOfDays;
+                                    var initiater = val.initiater;
+                                    var department = val.department;
+                                    var projectId = val.projectId;
+                                    var activeStatus = "";
+
+                                    var editurl = '{{ route('viewDocListing', ':id') }}';
+                                    editurl = editurl.replace(':id', projectId);
+                                    var viewBtn = '<div id=' + projectId +
+                                    ' class="btn btn-primary viewDocs">View</div>';
+                                    table.row.add([sNo, projectCode, projectName, workflowCode,
+                                        workflowName, initiater, department, workflowLevel,
+                                        dueDate, noOfDays, activeStatus, viewBtn
+                                    ]).draw();
+                                });
+                                $('#initiatorName  option:selected').prop("selected", false);
+
+
+                            },
+                            error: function() {
+                                $("#otp_error").text("Update Error");
+                            }
+
+                        });
+
+                    }
+                });
+            $('.resetBtn').on('click', function() {
+                console.log("well");
+                $('#workflowCode,#initiatorName').val("").trigger('change');
             });
-        $('.resetBtn').on('click', function() {
-            console.log("well");
-            $('#workflowCode,#initiatorName').val("").trigger('change');
-        });
-    </script>
-@endsection
+            $(document).on('click', '.viewDocs', function () {
+    console.log("well and good");
+    var id = $(this).attr('id');
+   
+
+    var url = "{{route('viewDocListing')}}";
+    var form = $('<form action="' + url + '" method="post">' +
+        ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
+        '</form>');
+    $('body').append(form);
+    form.submit();
+});
+       
+            function exportData() {
+                /* Get the HTML data using Element by Id */
+                var table = document.getElementById("service_table");
+
+                /* Declaring array variable */
+                var rows = [];
+
+                //iterate through rows of table
+                for (var i = 0, row; row = table.rows[i]; i++) {
+                    //rows would be accessed using the "row" variable assigned in the for loop
+                    //Get each cell value/column from the row
+                    column1 = row.cells[0].innerText;
+                    column2 = row.cells[1].innerText;
+                    column3 = row.cells[2].innerText;
+                    column4 = row.cells[3].innerText;
+                    column5 = row.cells[4].innerText;
+                    column6 = row.cells[5].innerText;
+                    column7 = row.cells[6].innerText;
+                    column8 = row.cells[7].innerText;
+                    column9 = row.cells[8].innerText;
+                    column10 = row.cells[9].innerText;
+
+                    /* add a new records in the array */
+                    rows.push(
+                        [
+                            column1,
+                            column2,
+                            column3,
+                            column4,
+                            column5,
+                            column6,
+                            column7,
+                            column8,
+                            column9,
+                            column10,
+                        ]
+                    );
+
+                }
+                csvContent = "data:text/csv;charset=utf-8,";
+              
+                /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
+                rows.forEach(function(rowArray) {
+                    row = rowArray.join(",");
+                 csvContent += row + "\r\n";
+                });
+
+                var encodedUri = encodeURI(csvContent);
+                var link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "userwiseReport.csv");
+                document.body.appendChild(link);
+                link.click();
+            }
+        </script>
+    @endsection

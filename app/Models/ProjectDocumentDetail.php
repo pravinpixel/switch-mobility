@@ -8,5 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectDocumentDetail extends Model
 {
     use HasFactory;
+    public function employee()
+    {
+        return $this->hasOne('App\Models\Employee', 'id', 'updated_by');
+    }
    
 }

@@ -138,8 +138,8 @@
                                     <!--end::Svg Icon-->Add</a>@endif
                                 <!--end::Add user-->
                             </div>
-                          
-                           
+
+
                         </div>
 
                     </div>
@@ -148,17 +148,7 @@
                     <div class="card-body py-4">
                         <div class="card-title">
                             <!--begin::Search-->
-                            <div class="d-flex align-items-center position-relative my-1">
-                                <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                <span class="svg-icon svg-icon-1 position-absolute ms-6">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
-                                        <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
-                                    </svg>
-                                </span>
-                                <!--end::Svg Icon-->
-                                <input type="text"data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-14 search" placeholder="Search" />
-                            </div>
+
                             <!--end::Search-->
                         </div>
                         <!--begin::Table-->
@@ -289,12 +279,7 @@
 
         });
 
-        var table= $('#service_table').DataTable({
-            "lengthMenu": [
-                [10, 25, 50, -1],
-                [10, 25, 50, "All"]
-            ]
-        });
+
         $('.search').on('input', function() {
             var searchData = $('.search').val();
             $.ajax({
@@ -307,13 +292,13 @@
                 },
                 success: function(data) {
                     console.log(data);
-                  
+
                     table.clear().draw();
                     $.each(data, function(key, val) {
                         var sNo = key + 1;
                         var id = val.id;
                         var name = val.name;
-                        var authType = (val.authority_type==1)?"Admin/HOD":"Employee";
+                        var authType = (val.authority_type == 1) ? "Admin/HOD" : "Employee";
 
                         //var activeStatus = (val.is_active == 1) ? "checked" : "";
                         var editurl = '{{ route("roles.edit", ":id") }}';
@@ -363,19 +348,26 @@
                         id: id,
                     },
                     success: function(result) {
-                        if (result) {
+                        console.log(result);
+                        var status = result.status;
+                        var message = result.message;
+                        if (status == "success") {
+                            Swal.fire(
+                                'Deleted!',
+                                message,
+                                'success'
+                            );
                             window.location.reload();
+                        } else {
+                            Swal.fire(
+                                'Deleted!',
+                                message,
+                                'error'
+                            );
                         }
                     }
                 });
-                if (isConfirmed.value) {
-                    Swal.fire(
-                        'Deleted!',
-                        'Department has been deleted.',
-                        'success'
-                    );
 
-                }
             }
         });
     }

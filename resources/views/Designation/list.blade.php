@@ -92,7 +92,7 @@
                     <!--end::Card header-->
                     <!--begin::Card body-->
                     <div class="card-body py-4">
-                        <div class="card-title">
+                        <div class="card-title" style="display:none">
                             <!--begin::Search-->
                             <div class="d-flex align-items-center position-relative my-1">
                                 <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
@@ -204,12 +204,7 @@
 <script>
     $(document).ready(
         function() {
-            var table = $('#service_table').DataTable({
-                "lengthMenu": [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, "All"]
-                ]
-            });
+
             $(document).on('input', '.search', function() {
 
                 //  Swal.fire('Any fool can use a computer');
@@ -352,7 +347,7 @@
                     );
 
                 }
-            }else {             
+            } else {
                 if (chk.checked) {
                     chk.prop("checked", false);
                 } else {

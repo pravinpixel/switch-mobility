@@ -35,7 +35,7 @@
                         </li>
                         <!--end::Item-->
                         <!--begin::Item-->
-                        <li class="breadcrumb-item text-muted">Add</li>
+                        <li class="breadcrumb-item text-muted">Edit</li>
                         <!--end::Item-->
                     </ul>
                     <!--end::Breadcrumb-->
@@ -69,10 +69,10 @@
                                 <!--begin::Col-->
                                 <div class="col-md-12 fv-row">
                                     <!--begin::Label-->
-                                    <label class="required fs-6 fw-semibold mb-2">Enter SAP-ID Or Employee Name<?php echo $userModel->emp_id ?></label>
+                                    <label class="required fs-6 fw-semibold mb-2">Employee Name</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <select class="form-control form-control initiator_id sap_id" name="initiator_id" required>
+                                    <select disabled class="form-control form-control initiator_id sap_id" name="initiator_id" required>
                                         <option value="">Select</option>
                                         @foreach ($employees as $emp)
                                         <?php
@@ -144,12 +144,12 @@
                             </div>
 
                             {{-- FORM --}}
-                            <div class="text-center pt-15">
-                                <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Reset</button>
+                            <div class="text-center pt-15"> 
+                                <button type="reset" class="btn btn-light me-3 reset" data-kt-users-modal-action="cancel">Reset</button>
                                 <a href="{{route('users.index')}}">
                                     <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
-                                <button type="button" class="btn btn-primary submit submitBtn" data-kt-users-modal-action="submit">
-                                    <span class="indicator-label" onclick="rolesValidation();">Save and Exit</span>
+                                <button type="button" onclick="rolesValidation();" class="btn btn-primary submit submitBtn" data-kt-users-modal-action="submit">
+                                    <span class="indicator-label" >Save and Exit</span>
                                     <span class="indicator-progress">Please wait...
                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                 </button>
