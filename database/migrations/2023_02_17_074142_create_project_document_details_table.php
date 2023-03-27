@@ -16,6 +16,9 @@ class CreateProjectDocumentDetailsTable extends Migration
         Schema::create('project_document_details', function (Blueprint $table) {
             $table->increments('id')->unsigned(false);
             $table->integer('version')->nullable();
+            $table->integer('project_id')->nullable(true);
+            $table->integer('upload_level')->nullable(true);
+            $table->integer('updated_by')->nullable(true);
             $table->integer('project_doc_id');
             $table->string('document_name',200)->nullable();
             $table->string('remark',200)->nullable();

@@ -56,7 +56,8 @@ class ApprovalListTempController extends Controller
             'department'        => $department,
             'initiater'=>$employeeName
         ];
-       $path = public_path('front.pdf');
+       $path = public_path('front'.$id.'.pdf');
+     
         if (file_exists($path)) {
             File::delete($path);
         }
