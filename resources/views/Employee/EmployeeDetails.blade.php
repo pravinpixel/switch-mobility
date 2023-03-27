@@ -204,23 +204,23 @@
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <input type="file" class="form-control form-control-solid"
-                                            name="profile_image" id="imgShow2"
+                                            name="profile_image" id="imageShow"
                                             onchange="document.getElementById('blahnew').src = window.URL.createObjectURL(this.files[0])" />
-                                        <img id="blahnew" class="picture2" style="display:none;" width="100"
+                                        <img id="blahnew" class="profilePic" style="display:none;" width="100"  
                                             height="100" />
-                                        <span class="btnAdded1"></span>
+                                        <span class="removebtn"></span>
                                         <?php
-                                        if (isset($model['profile_image'])) {
-
-                                            $noImage = 'noimage.png';
-                                            $image = isset($model['profile_image']) ? $model['sign_image'] : $noImage;
-                                            $pic= '<img src="/images/Employee/' . $image . '" class="editPic1" width="50" height="50" class="w-50" />';
+                                        if ($model) {
+                                            $noPic = 'noimage.png';
+                                            $profilePic = isset($model['profile_image']) ? $model['profile_image'] : $noPic;
+                                            $updatePic= '<img src="/images/Employee/' . $profilePic . '" class="editPic1" width="50" height="50" class="w-50" />';
 
                                         } 
                                         else{
-                                             $pic='<img src="" style="display:none;" class="editPic1" width="50" height="50" class="w-50" />';
+                                            
+                                              $updatePic='<img src="" style="display:none;" class="editPic1" width="50" height="50" class="w-50" />';
                                         } 
-                                        echo $pic;
+                                        echo $updatePic;
                                         ?>
                                         <!--end::Input-->
                                     </div>
@@ -238,19 +238,16 @@
                                             height="100" />
                                         <span class="btnAdded"></span>
                                         <?php
-                                        if (isset($model['sign_image'])) {
-
+                                        if ($model) {
                                             $noImage = 'noimage.png';
                                             $image = isset($model['sign_image']) ? $model['sign_image'] : $noImage;
                                             $pic= '<img src="/images/Employee/' . $image . '" class="editPic" width="50" height="50" class="w-50" />';
                                         } 
                                         else{
-                                             $pic='<img src="" style="display:none;" class="editPic" width="50" height="50" class="w-50" />';
+                                          $pic='<img src="" style="display:none;" class="editPic" width="50" height="50" class="w-50" />';
                                         } 
                                         echo $pic;
                                         ?>
-
-
                                         <!--end::Input-->
                                     </div>
                                     <!--end::Col-->
@@ -325,19 +322,19 @@
                 });
             });
 
-            $("#imgShow2").change(function() {
+            $("#imageShow").change(function() {
 
-                $('.picture2').empty();
-                $('#field1').remove();
-                $('#imgShow2').empty();
-                $('.picture2').removeAttr('style');
+                $('.profilePic').empty();
+                $('#closeBtn').remove();
+                $('#imageShow').empty();
+                $('.profilePic').removeAttr('style');
                 $('.editPic1').remove();
-                $(".btnAdded1").append("<button type='button' id='field1'>Remove</button>");
-                $("#field1").click(function() {
+                $(".removebtn").append("<button type='button' id='closeBtn'>Remove</button>");
+                $("#closeBtn").click(function() {
 
-                    $('.picture2').hide();
-                    $('#imgShow2').val('');
-                    $('#field1').remove();
+                    $('.profilePic').hide();
+                    $('#imageShow').val('');
+                    $('#closeBtn').remove();
                 });
 
             });

@@ -240,7 +240,7 @@
                     </div>
 
                     <!--begin::Table-->
-                    <table class="table align-middle table-row-dashed fs-6 gy-5" id="service_table">
+                    <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
                         <!--begin::Table head-->
                         <thead>
                             <!--begin::Table row-->
@@ -251,9 +251,9 @@
                                 <th class="min-w-125px">Mobile</th>
                                 <th class="min-w-125px">Department</th>
                                 <th class="min-w-125px">Designation</th>
-                                <th class="min-w-125px">Status</th>
+                                <th class="min-w-50px">Status</th>
 
-                                <th class="text-end min-w-100px">Actions</th>
+                                <th class="text-center min-w-125px">Actions</th>
                             </tr>
                             <!--end::Table row-->
                         </thead>

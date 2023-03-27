@@ -238,7 +238,7 @@
                                                 <div data-repeater-item="" class="form-group d-flex flex-wrap align-items-center justify-content-center gap-5">
                                                     <!--begin::Select2-->
                                                     <div class="col-md-4">
-                                                        <select class="form-select product_option1" name="levels[]" data-placeholder="Select a variation" data-kt-ecommerce-catalog-add-product="product_option">
+                                                        <select class="form-select product_option1" required name="levels[]" data-placeholder="Select a variation" data-kt-ecommerce-catalog-add-product="product_option">
                                                             <option value="" disabled selected>Select Level</option>
                                                             @for($i=1;$i<12;$i++) <option value="{{$i}}">Level {{$i}}</option>
                                                                 @endfor
@@ -247,7 +247,7 @@
                                                     <!--end::Select2-->
                                                     <!--begin::Input-->
                                                     <div class="col-md-4 fv-row">
-                                                        <select class="form-select mb-2 designation" onchange="DesChange(this)" disabled data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="approver_designation[]">
+                                                        <select class="form-select mb-2 designation" required onchange="DesChange(this)" disabled data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="approver_designation[]">
                                                             @foreach($employeeDatas as $employeeData)
                                                             <option value="{{$employeeData['id']}}">{{$employeeData['data']}}</option>
                                                             @endforeach
@@ -411,6 +411,7 @@
         } else {
             $(".partialWorkflow select").removeAttr("required");
             $(".fullWorkflow select").attr("required");
+            
         }
         workFlowType($(this).val());
 
@@ -461,6 +462,7 @@
         let evtValue = $(evt).find('option:selected');
         let evtValueAll = evtValue.map(function() {
             return $(this).val();
+
         }).get();
 
         let Options = $(`select[levelCheck=${nameAttr}]`).find('option');
@@ -818,7 +820,7 @@
     }
 
     function RemoveFunction(e) {
-
+$(e).parent().parent().parent().parent().find('.designation').val('').trigger('change');
         $(e).parent().parent().parent().parent().remove();
 
         $(".Partial-input-container").first().find(".removeBtnsm").css("visibility", "hidden").css("pointer-events", "none");
@@ -940,6 +942,12 @@
     }
 
     function RemoveFunctionb(e) {
+        if ($(e).parent().parent().parent().parent().length > 0) {
+  var $designation = $(e).parent().parent().parent().parent().find('.designation');
+  if ($designation.length > 0) {
+    $designation.val('').trigger('change');
+  }
+}
         $(".removeBtn").last().after(`<button type="button" data-repeater-create="" class="btn btn-sm btn-light-primary addLevel" > <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg--> <span class="svg-icon svg-icon-2"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11" y="18" width="12" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" /> <rect x="6" y="11" width="12" height="2" rx="1" fill="currentColor" /> </svg> </span> <!--end::Svg Icon-->Add Level</button>`);
         $(".removeBtn").last().remove();
         $(e).parent().parent().parent().parent().remove();
@@ -1062,11 +1070,17 @@
             }
         }
 
-
+      
     }
 
 
     function RemoveFunctionc(e) {
+        if ($(e).parent().parent().parent().parent().length > 0) {
+  var $designation = $(e).parent().parent().parent().parent().find('.designation');
+  if ($designation.length > 0) {
+    $designation.val('').trigger('change');
+  }
+}
         $(".removeBtn").last().after(`<button type="button" data-repeater-create="" class="btn btn-sm btn-light-primary addLevel" > <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg--> <span class="svg-icon svg-icon-2"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11" y="18" width="12" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" /> <rect x="6" y="11" width="12" height="2" rx="1" fill="currentColor" /> </svg> </span> <!--end::Svg Icon-->Add Level</button>`);
         $(".removeBtn").last().prev(".removeBtnsm").css("visibility", "visible").prop("disabled", false);
         $(".removeBtn").last().remove();

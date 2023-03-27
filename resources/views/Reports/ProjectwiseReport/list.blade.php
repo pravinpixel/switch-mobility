@@ -157,7 +157,7 @@
                         </div>
                         <!--begin::Card title-->
                         <!--begin::Table-->
-                        <table class="table align-middle table-row-dashed fs-6 gy-5" id="service_table">
+                        <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
                             <!--begin::Table head-->
                             <thead>
                                 <!--begin::Table row-->

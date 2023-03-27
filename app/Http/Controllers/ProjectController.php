@@ -48,7 +48,7 @@ class ProjectController extends Controller
         $models->whereNull('deleted_at');
         $models1 = $models->get();
 
-       // dd($models1);
+    
 
         $employees = Employee::where('is_active', 1)->get()->toArray();
 
@@ -201,7 +201,7 @@ class ProjectController extends Controller
                     // $PDoc = projectDocument::where("project_id", $request->project_id)->delete();
                     $path = public_path() . '/projectDocuments/' . $project->ticket_no;
                     if (File::exists($path)) {
-                        File::deleteDirectory($path);
+                       // File::deleteDirectory($path);
                     }
                 }
 
@@ -578,20 +578,27 @@ class ProjectController extends Controller
 
     public function docStatus(Request $request)
     {
+       
+
         $empId = Auth::user()->emp_id;
 
-
+        $parentModel = projectDocument::select('ticket_no', 'type', 'project_name', 'projects.id as projectId')
+        ->leftjoin('projects', 'projects.id', 'project_documents.project_id')
+        ->where('project_documents.id', $request->documentId)
+        ->first();
+        $projectId = $parentModel->projectId;
+        $level = $request->levelId;
         $modelData = ProjectDocumentDetail::where('id', $request->statusdocumentId)->first();
 
         $modelData->status = $request->status;
         $modelData->remark = $request->statusremarks;
         $modelData->updated_by = $empId;
+        $modelData->project_id = $projectId;
+        $modelData->upload_level = $level;
         $modelData->save();
+
         if ($request->file('againestDocument')) {
-            $parentModel = projectDocument::select('ticket_no', 'type', 'project_name', 'projects.id as projectId')
-                ->leftjoin('projects', 'projects.id', 'project_documents.project_id')
-                ->where('project_documents.id', $request->documentId)
-                ->first();
+         
 
             $typeOfDoc = ($parentModel->type == 2) ? 'auxillary_document/' : 'main_document/';
             $typeOfDocFile = ($parentModel->type == 2) ? 'AuxillaryDocument-v' : 'MainDocument-v';

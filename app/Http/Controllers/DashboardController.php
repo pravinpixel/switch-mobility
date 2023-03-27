@@ -26,14 +26,6 @@ class DashboardController extends Controller
     if ($empId) {
       $employee = Employee::where('id', $empId)->first();
       $name = $employee->first_name . " " . $employee->middle_name . " " . $employee->last_name;
-      $EmployeePic=$employee->profile_image;
-if($EmployeePic==null){
-  $image='images/admin-icon-3.jpg';
-}else{
-  $image='images/Employee/'.$EmployeePic;
-
-}
-Session()->put('profile', $image);
       Session()->put('employeeId', $empId);
     } else {
       $name = "Admin";

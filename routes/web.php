@@ -16,6 +16,7 @@ use App\Http\Controllers\Reports\ProjectwiseController;
 use App\Http\Controllers\Reports\UserwiseReportController;
 use App\Http\Controllers\settings\RolesController;
 use App\Http\Controllers\settings\UserController;
+use App\Http\Controllers\Transaction\ApprovalListController;
 use App\Http\Controllers\WorkflowController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -126,10 +127,10 @@ Route::post('projectEdit', [ProjectController::class, 'projectEdit'])->name('pro
 
 
 
-//Project
-//Route::get('project', [ProjectController::class, 'Project'])->name('project')->middleware('is_admin');
-// Route::post('storeProject', [ProjectController::class, 'storeProject'])->name('storeProject')->middleware('is_admin');
-// Route::post('deleteProject', [ProjectController::class, 'deleteProject'])->name('deleteProject')->middleware('is_admin');
+//Approval List
+Route::get('approvalListIndex', [ApprovalListController::class, 'index'])->name('project');
+ Route::post('approvedDocsView', [ApprovalListController::class, 'approvedDocsView'])->name('approvedDocsView');
+ Route::post('approvedDocsDownload', [ApprovalListController::class, 'approvedDocsDownload'])->name('approvedDocsDownload');
 
 Route::get('/', function () {
     return redirect(route('login'));

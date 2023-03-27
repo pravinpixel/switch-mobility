@@ -410,7 +410,7 @@
                     <a class="nav-link <?php if ($i == 0) {
                                             echo 'active';
                                         } ?>" data-toggle="tab" href="#pag<?php echo $levelsArray[$i]['levelId']; ?>" role="tab" aria-controls="home" onclick="get_level_data(<?php echo $levelsArray[$i]['levelId']; ?>,<?php echo $details->id; ?>);">Level <?php echo $levelsArray[$i]['levelId']; ?></a>
-                    </li>
+                </li>
                     @endfor
             </ul>
             <div class="tab-content">
@@ -426,90 +426,7 @@
     </div>
     </div>
     </div>
-    <button class="btn btn-info float-right-btn float-open-btn">
-        MileStone
-    </button>
-    <div class="card shadow-sm right-card right-card-close">
 
-        <div class="card-body">
-            <div class="card-body milstoneBody">
-                <table class="table table-row-bordered">
-                    <thead>
-                        <tr>
-                            <th>Milestone Name</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Level</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($milestoneDatas as $milestoneData)
-                        <tr>
-                            <td>{{$milestoneData->milestone}}</td>
-                            <td>{{$milestoneData->mile_start_date}}</td>
-                            <td>{{$milestoneData->mile_end_date}}</td>
-                            <td>{{$milestoneData->levels_to_be_crossed}}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
-    <style>
-        .float-right-btn {
-            position: fixed;
-
-            top: 50%;
-            transform: translateY(-50%);
-            height: 40px;
-            rotate: -90deg;
-        }
-
-        .float-open-btn {
-            right: -40px;
-        }
-
-        .float-close-btn {
-            right: 364px;
-        }
-
-        .right-card {
-            position: fixed;
-            right: 2px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 400px;
-
-        }
-
-        .right-card-close {
-            right: -400px;
-        }
-
-        .right-card-open {
-            right: 2px;
-        }
-    </style>
-    <script>
-        $(".float-right-btn").click(function(e) {
-            e.stopPropagation();
-            $(this).toggleClass("float-open-btn float-close-btn");
-            $(".right-card").toggleClass("right-card-close right-card-open");
-        });
-        $(".right-card").click(function(event) {
-            event.stopPropagation();
-        });
-        $(document).click(function(e) {
-            if ($(".right-card-open").length != 0) {
-                $(".float-right-btn").toggleClass("float-open-btn float-close-btn");
-                $(".right-card").toggleClass("right-card-close right-card-open");
-            }
-            // $(".right-card").removeClass("right-card-open");
-            // $(".right-card").addClass("right-card-close");
-        });
-    </script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
@@ -534,7 +451,7 @@
 
     // // When the user clicks the button, open the modal 
     // btn.onclick = function() {
-
+    //     console.log("well");
     //     modal.style.display = "block";
     // }
 
@@ -616,7 +533,8 @@
             },
             success: function(result) {
                 var data1 = JSON.parse(result);
-
+                console.log("dahna");
+                console.log(data1);
                 if (data1.length) {
 
                     $("#pag" + level).html("");
@@ -626,11 +544,12 @@
                     //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
                     //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
                     //     newDate = day + '-' + month + '-' + yr;
-                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-5 image_append' + level + '" style="display:inline-flex;flex-flow:row"></div><div class="col-md-2">Due Date:<div class="due_date_' + level + '"></div></div><div class="col-md-1">Priority<p class="priority_' + level + '"></p></div><hr><div>Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div>Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
+                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:inline-flex;flex-flow:row"></div><div class="col-md-2">Due Date:<p class="due_date_' + level + '"></p></div><div class="col-md-2">Priority:<p class="priority_' + level + '"></p></div><hr><div>Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div>Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
                     //if (data.length > 0) {
 
                     $(".image_append" + level).empty();
                     $.each(data1, function(key, val) {
+
                         var dueDate = new Date(val.due_date);
                         var todayDate = new Date();
 
@@ -639,25 +558,28 @@
                         var completionDate = Math.round(Math.abs(getdays));
                         var dateSign = "";
                         if (completionDate) {
-                            dateSign = (dueDate.getTime() <= todayDate.getTime()) ? "-" : "+";
-                        }
+                            dateSign = (dueDate.getTime() <= todayDate.getTime())?"-":"+";
+                                              }
 
 
 
-
+                    
                         var duDateAppend = val.due_date;
-                        var badgeType = (dateSign == '-') ? "danger" : "success";
-                        duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate + '</span></span>';
+                        var badgeType = (dateSign == '-')?"danger":"success";
+                        duDateAppend+=' <span class="menu-badge"><span class="badge badge-'+badgeType+'">'+dateSign+completionDate+'</span></span>';
                         $(".due_date_" + level).empty();
                         $(".due_date_" + level).append(duDateAppend);
+
                         var priority = "";
                         if (val.priority == 4) {
                             priority = "High";
-                        } else if (val.priority == 3) {
+                        }
+                        else if(val.priority == 3) {
                             priority = "Low";
-                        } else if (val.priority == 2) {
+                        }
+                        else if(val.priority == 2) {
                             priority = "Medium";
-                        } else {
+                        }else{
                             priority = "Important";
                         }
                         $(".priority_" + level).empty();
@@ -682,7 +604,7 @@
                         },
                         success: function(result) {
                             var data = JSON.parse(result);
-
+                            console.log("data" + data);
 
                             $(".maindoc_append" + level).empty();
                             $(".auxdoc_append" + level).empty();
@@ -715,12 +637,19 @@
                                     versionMainDocDiv += '<tbody style="">';
                                     var mainDocSize = docMainDetailArray.length;
                                     var showMainDocAction = mainDocSize - 1;
-
-                                    for (var i = docMainDetailArray.length - 1; i >= 0; --i) {
+                                    console.log("showMainDocAction " + showMainDocAction);
+                                    for (var i =docMainDetailArray.length-1; i >= 0; --i) {
 
                                         var remarkData = (docMainDetailArray[i].remark) ? docMainDetailArray[i].remark : "";
-
-
+                                        var updatedBy = docMainDetailArray[i].employee;
+                                        var updatedPerson = "";
+                                        console.log("updatedBy");
+                                        console.log(updatedBy);
+                                       if(updatedBy){
+                                       updatedPerson =updatedBy.first_name+" "+updatedBy.middle_name+" "+updatedBy.last_name;
+                                       }
+                                       console.log("updatedPerson");
+                                       console.log(updatedPerson);
                                         var statusData = "";
                                         if (docMainDetailArray[i].status == 1) {
                                             var statusData = "Waiting  For Approval";
@@ -733,9 +662,9 @@
                                         } else {
                                             var statusData = "Waiting For Approval";
                                         }
-
+                                        console.log("statusData" + statusData);
                                         var dateFormat = new Date(docMainDetailArray[i].updated_at);
-                                        var lastUpdate = ("Date: " + dateFormat.getDate() +
+                                        var lastUpdate = (dateFormat.getDate() +
                                             "/" + (dateFormat.getMonth() + 1) +
                                             "/" + dateFormat.getFullYear() +
                                             " " + dateFormat.getHours() +
@@ -745,25 +674,26 @@
                                         versionMainDocDiv += '<td>ver ' + docMainDetailArray[i].version + '</td>';
                                         versionMainDocDiv += '<td>' + remarkData + '</td>';
                                         versionMainDocDiv += '<td>' + statusData + '</td>';
-                                        versionMainDocDiv += '<td>' + lastUpdate + '</td>';
+                                        versionMainDocDiv += '<td>' +updatedPerson+"("+lastUpdate + ')</td>';
                                         versionMainDocDiv += '<td>';
+                                        console.log(".mainlevelStatus-" + level + "-" + i);
 
-
-                                        // if (i == showMainDocAction) {
-                                        var classData = "mainlevelStatus-" + level + "-" + key;
-                                        var stateData = statusData;
-                                        var state = [{
-                                            "class": classData
-                                        }, {
-                                            "res": stateData
-                                        }];
-                                        levelstageStatus.push(state);
-                                        // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
-
+                                        if (i == showMainDocAction) {
+                                            var classData = "mainlevelStatus-" + level + "-" + key;
+                                            var stateData = statusData;
+                                            var state = [{
+                                                "class": classData
+                                            }, {
+                                                "res": stateData
+                                            }];
+                                            levelstageStatus.push(state);
+                                            // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
+                                            versionMainDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
+                                           
+                                        }
                                         versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
-                                        // versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
-                                        versionMainDocDiv += '</button>';
-                                        // }
+                                            // versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
+                                            versionMainDocDiv += '</button>';
                                         versionMainDocDiv += '</td>';
                                         versionMainDocDiv += '</tr>';
                                     }
@@ -777,12 +707,12 @@
 
                                     $(".maindoc_append" + level).append(versionMainDocDiv);
                                 });
-
+                                console.log("levelstageStatus" + levelstageStatus);
                             }
                             if (data.aux_docs) {
                                 $.each(data.aux_docs, function(key1, val) {
                                     var docAuxDetailArray = val.doc_detail;
-
+                                    console.log(docAuxDetailArray);
                                     var baseUrl = "{{ asset('/') }}";
                                     if (val.status == 0) {
                                         var status = "Waiting";
@@ -802,15 +732,15 @@
                                     versionAuxDocDiv += '<table class="table table-striped documentTable">';
                                     versionAuxDocDiv += '<thead class="documentTableth">';
                                     versionAuxDocDiv += '<tr>';
-                                    versionAuxDocDiv += '<th scope="col">Version ID</th><th scope="col">Last Updated</th> <th scope="col">Action</th>';
+                                    versionAuxDocDiv += '<th scope="col">Version ID</th><th scope="col">Remarks</th> <th scope="col">Status</th><th scope="col">Last Updated</th> <th scope="col">Action</th>';
                                     versionAuxDocDiv += '</tr>';
                                     versionAuxDocDiv += '</thead>';
                                     versionAuxDocDiv += ' <tbody>';
                                     var auxDocSize = docAuxDetailArray.length;
                                     var showAuxDocAction = auxDocSize - 1;
+                                    console.log("showAuxDocAction " + showAuxDocAction);
 
-
-                                    for (j = docAuxDetailArray.length - 1; j >= 0; --j) {
+                                    for (j = docAuxDetailArray.length-1; j >= 0 ; --j) {
                                         var remarkData = (docAuxDetailArray[j].remark) ? docAuxDetailArray[j].remark : "";
 
                                         var dateFormat = new Date(docAuxDetailArray[j].updated_at);
@@ -838,15 +768,16 @@
                                         $(".mainlevelStatus" + j).append("(" + statusData + ")");
                                         versionAuxDocDiv += '<tr>';
                                         versionAuxDocDiv += '<td>ver ' + docAuxDetailArray[j].version + '</td>';
-                                        // versionAuxDocDiv += '<td>' + remarkData + '</td>';
-                                        // versionAuxDocDiv += '<td>' + statusData + '</td>';
+                                        versionAuxDocDiv += '<td>' + remarkData + '</td>';
+                                        versionAuxDocDiv += '<td>' + statusData + '</td>';
                                         versionAuxDocDiv += '<td>' + lastUpdate + '</td>';
                                         versionAuxDocDiv += '<td>';
-                                        // if (j == showAuxDocAction) {
-                                        versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
-                                        // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
-                                        versionAuxDocDiv += '</button>';
-                                        // }
+                                        //if (j == showAuxDocAction) {
+                                           // versionAuxDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docAuxDetailArray[j].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
+                                            versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+                                            // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
+                                            versionAuxDocDiv += '</button>';
+                                        //}
                                         versionAuxDocDiv += '</td>';
                                         versionAuxDocDiv += '</tr>';
                                     }
@@ -878,7 +809,7 @@
                     // });
                     // }
                 } else {
-
+                    console.log("data else");
                     $(".tab-pane").html("");
                     alert('Level -' + level + ' Not Available');
                 }
@@ -915,7 +846,7 @@
     }
 
     function submitStatusForm() {
-
+        console.log("well done");
 
 
 
@@ -932,21 +863,21 @@
 
             data: formData,
             success: function(result) {
-
+                console.log(result.status);
                 var ProjectId1 = "{{ $details->id }}";
                 if (result.status == 'success') {
                     var levelId = $('.statuslevelId').val();
                     closeStatusModel();
                     get_level_data(levelId, ProjectId1);
                 } else {
-
+                    console.log(result);
                     window.location.reload();
                 }
             }
         });
     }
     $(document).on('change', '.status', function() {
-
+        console.log($(this).val());
         if ($(this).val() == 2 || $(this).val() == 3) {
             $('.documentUploadDiv').css('display', 'block');
         } else {
@@ -974,14 +905,14 @@
 
             data: formData,
             success: function(result) {
-
+                console.log(result.status);
                 var ProjectId1 = "{{ $details->id }}";
                 if (result.status == 'success') {
                     var levelId = $('.levelId').val();
                     closeModel();
                     get_level_data(levelId, ProjectId1);
                 } else {
-
+                    console.log(result);
                     window.location.reload();
                 }
             }

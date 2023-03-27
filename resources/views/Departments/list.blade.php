@@ -112,7 +112,7 @@
                         </div>
                         <!--begin::Card title-->
                         <!--begin::Table-->
-                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4" id="service_table">
+                        <table class="table table-row-bordered table-row-gray-300 align-middle gs-0 gy-4" id="service_table">
                             <!--begin::Table head-->
                             <thead>
                                 <!--begin::Table row-->

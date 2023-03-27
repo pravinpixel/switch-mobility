@@ -166,7 +166,7 @@
                                 <!--begin::Row-->
                                 <div class="row g-8">
                                     <!--begin::Col-->
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label class="fs-6 form-label fw-bold text-dark "> Ticket No. </label>
                                         <select class="form-select form-select-solid filterDeptAndDes doclistFilter"
                                             name="ticket_no" data-kt-select2="true" data-placeholder="Ticket No"
@@ -181,7 +181,7 @@
                                     <!--end::Col-->
 
                                     <!--begin::Col-->
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label class="fs-6 form-label fw-bold text-dark ">Project Code / Name </label>
                                         <select class="form-select form-select-solid filterDeptAndDes doclistFilter"
                                             name="project_code_name" data-kt-select2="true"
@@ -193,7 +193,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label class="fs-6 form-label fw-bold text-dark "> WorkFlow Code/Name </label>
                                         <!--begin::Select-->
                                         <select class="form-select form-select-solid filterDeptAndDes doclistFilter"
@@ -237,7 +237,7 @@
                                         <!--end::Select-->
                                     </div>
 
-                                    <div class="col-lg-2">
+                                    <div class="col-lg-3">
                                         <label class="fs-6 form-label fw-bold text-dark"> Users </label>
                                         <!--begin::Select-->
                                         <select class="form-select form-select-solid filterDeptAndDes doclistFilter"
@@ -259,6 +259,11 @@
                                         <input type="date" class="form-control dateWiseFilter" id="endDate"
                                             name="end_date" placeholder="Enter End Date">
                                     </div>
+                                    <div class="col-md-1">
+                                        <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                        <span class="btn btn-warning " onclick="reset()">Reset</span>
+                                    </div>
+                                    
                                     <!--end::Col-->
                                 
 
@@ -347,6 +352,8 @@
         </div>
 
     </div>
+    
+
 @endsection
 <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
 </script>
@@ -419,15 +426,12 @@
                         var viewurl = '{{ route('viewProject', ':id') }}';
                         viewurl = viewurl.replace(':id', projectId);
                         var act = '<span>';
-
                         act += '<div style = "display:inline" id="' + projectId +
                             '" class="viewDocument" title="View Document"><i class="fa-solid fa-eye" style="color:blue"></i></div>';
-
                         if (isSuperAdmin || isAuthorityEdit || isInitiator || isApprover ||
                             isHigherAuthorityPerson == 1) {
                             act += '&nbsp; <div style = "display:inline" id="' + projectId +
                                 '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:blue"></i></div>';
-
                         }
                         act += '</span>';
                         table.row.add([ticketNo, projectCode + projectName, wfCode + wfName,
@@ -435,11 +439,9 @@
                         ]).draw();
                     });
                     $('.doclistFilter option:selected').prop("selected", false);
-                   
-                    
                 },
                 error: function() {
-                    $("#otp_error").text("Update Error");
+                    $("#otp_error").text("Update Error"); 
                 }
             });
         }
@@ -708,5 +710,10 @@
     function remove_more() {
         $(".multi-fields").children("div[class=multi-field]:last").remove()
         // $(".multi-fields .multi-field:last-child").remove();
+    }
+    function reset() {
+       
+        $('.doclistFilter').val("").trigger('change');
+        $("input[type=date]").val("");
     }
 </script>

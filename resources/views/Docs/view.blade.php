@@ -358,39 +358,7 @@
                 <p>{{ $details->first_name . ' ' . $details->last_name }}</p>
             </div>
 
-            <div class="m-0 d-flex justify-content-end pe-3">
-                <a href="#" class="btn btn-sm btn-flex bg-body btn-color-gray-700 btn-active-color-primary fw-bold " data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-
-                    Milestone
-                </a>
-
-                <!--  Drop Down Container -->
-                <div class="menu menu-sub menu-sub-dropdown w-350px w-md-400px " data-kt-menu="true" id="kt_menu_637dc6b4b8b49">
-                    <div class="px-7 py-5">
-                        <div class="fs-5 text-dark fw-bold">Milestone Detail</div>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Milestone Name</th>
-                                    <th>Start Date</th>
-                                    <th>End Date</th>
-                                    <th>Level</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($milestoneDatas as $milestoneData)
-                                <tr>
-                                    <td>{{$milestoneData->milestone}}</td>
-                                    <td>{{$milestoneData->mile_start_date}}</td>
-                                    <td>{{$milestoneData->mile_end_date}}</td>
-                                    <td>{{$milestoneData->levels_to_be_crossed}}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+           
             <div class="col-md-3" style="display: none;">
                 <h4>Initiator</h4>
                 <figure>
@@ -410,7 +378,7 @@
                     <a class="nav-link <?php if ($i == 0) {
                                             echo 'active';
                                         } ?>" data-toggle="tab" href="#pag<?php echo $levelsArray[$i]['levelId']; ?>" role="tab" aria-controls="home" onclick="get_level_data(<?php echo $levelsArray[$i]['levelId']; ?>,<?php echo $details->id; ?>);">Level <?php echo $levelsArray[$i]['levelId']; ?></a>
-                </li>
+                    </li>
                     @endfor
             </ul>
             <div class="tab-content">
@@ -426,56 +394,99 @@
     </div>
     </div>
     </div>
+    <button class="btn btn-info float-right-btn float-open-btn">
+        MileStone
+    </button>
+    <div class="card shadow-sm right-card right-card-close">        
+        <div class="card-body milstoneBody">
+            <table class="table table-row-dashed">
+                <thead>
+                    <tr>
+                        <th>Milestone Name</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($milestoneDatas as $milestoneData)
+                    <tr>
+                        <td>{{$milestoneData->milestone}}</td>
+                        <td>{{$milestoneData->mile_start_date}}</td>
+                        <td>{{$milestoneData->mile_end_date}}</td>
+                        <td>{{$milestoneData->levels_to_be_crossed}}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>       
+    </div>
+    <style>
+        .float-right-btn {
+            position: fixed;
 
+            top: 50%;
+            transform: translateY(-50%);
+            height: 40px;
+            rotate: -90deg;
+        }
+
+        .float-open-btn {
+            right: -40px;
+        }
+
+        .float-close-btn {
+            right: 364px;
+        }
+
+        .right-card {
+            position: fixed;
+            right: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 400px;
+
+        }
+
+        .right-card-close {
+            right: -400px;
+        }
+
+        .right-card-open {
+            right: 2px;
+        }
+    </style>
+    <script>
+        $(".float-right-btn").click(function(e) {
+            e.stopPropagation();
+            $(this).toggleClass("float-open-btn float-close-btn");
+            $(".right-card").toggleClass("right-card-close right-card-open");
+        });
+        $(".right-card").click(function(event) {
+            event.stopPropagation();
+        });
+        $(document).click(function(e) {
+            if ($(".right-card-open").length != 0) {
+                $(".float-right-btn").toggleClass("float-open-btn float-close-btn");
+                $(".right-card").toggleClass("right-card-close right-card-open");
+            }
+            // $(".right-card").removeClass("right-card-open");
+            // $(".right-card").addClass("right-card-close");
+        });
+    </script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
     </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
     </script>
-</body>
 
-</html>
-@endsection
-<script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
-</script>
-<script>
-    // Get the modal
-    var modal = document.getElementById("myModal");
-
-    // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
-
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
-
-    // // When the user clicks the button, open the modal 
-    // btn.onclick = function() {
-    //     console.log("well");
-    //     modal.style.display = "block";
-    // }
-
-    // // When the user clicks on <span> (x), close the modal
-    // span.onclick = function() {
-    //     modal.style.display = "none";
-    // }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-</script>
-<script>
-    $(document).ready(function() {
-        var ProjectId = "{{ $details->id }}";
-        var firstLevel = "{{$levelsArray[0]['levelId']}}";
-
-        get_level_data(firstLevel, ProjectId);
+    @endsection
+    <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
+    </script>
+    <script>
         // Get the modal
         var modal = document.getElementById("myModal");
-        var statusChangeModal = document.getElementById("statusChangeModal");
 
         // Get the button that opens the modal
         var btn = document.getElementById("myBtn");
@@ -483,439 +494,471 @@
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];
 
+        // // When the user clicks the button, open the modal 
+        // btn.onclick = function() {
+        //     console.log("well");
+        //     modal.style.display = "block";
+        // }
 
-    });
+        // // When the user clicks on <span> (x), close the modal
+        // span.onclick = function() {
+        //     modal.style.display = "none";
+        // }
 
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function() {
+            var ProjectId = "{{ $details->id }}";
+            var firstLevel = "{{$levelsArray[0]['levelId']}}";
 
-    function openVersionModel(id, levelId) {
-        $('#versionModel')[0].reset();
-        $('#myModal').css('display', 'block');
-        $('#myModal').find('.documentId').val(id);
-        $('#myModal').find('.levelId').val(levelId);
+            get_level_data(firstLevel, ProjectId);
+            // Get the modal
+            var modal = document.getElementById("myModal");
+            var statusChangeModal = document.getElementById("statusChangeModal");
 
-    }
+            // Get the button that opens the modal
+            var btn = document.getElementById("myBtn");
 
-    function openStatusModel(id, levelId, mainId) {
-        $('#statusModelForm')[0].reset();
-        $('#statusChangeModal').css('display', 'block');
-        $('#statusChangeModal').find('.statusdocumentId').val(id);
-        $('#statusChangeModal').find('.statuslevelId').val(levelId);
-        $('#statusChangeModal').find('.documentId').val(mainId);
-        $('#statusChangeModal').find('.levelId').val(levelId);
-
-    }
-
-    function closeModel() {
-        $('#versionModel')[0].reset();
-
-        $('#myModal').css('display', 'none');
-
-    }
-
-    function closeStatusModel() {
-        $('#statusModelForm')[0].reset();
-
-        $('#statusChangeModal').css('display', 'none');
-
-    }
-
-    function get_level_data(level, project_id) {
-        $(".tab-pane").html("");
-
-        $.ajax({
-            url: "{{ url('getProjectLevel') }}",
-            type: 'ajax',
-            method: 'post',
-            data: {
-                "_token": "{{ csrf_token() }}",
-                level: level,
-                project_id: project_id
-            },
-            success: function(result) {
-                var data1 = JSON.parse(result);
-                console.log("dahna");
-                console.log(data1);
-                if (data1.length) {
-
-                    $("#pag" + level).html("");
-                    $(".image_append" + level).empty();
-                    // var date = new Date(data[0].milestone_created),
-                    //     yr = date.getFullYear(),
-                    //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
-                    //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
-                    //     newDate = day + '-' + month + '-' + yr;
-                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:inline-flex;flex-flow:row"></div><div class="col-md-2">Due Date:<p class="due_date_' + level + '"></p></div><div class="col-md-2">Priority:<p class="priority_' + level + '"></p></div><hr><div>Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div>Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
-                    //if (data.length > 0) {
-
-                    $(".image_append" + level).empty();
-                    $.each(data1, function(key, val) {
-
-                        var dueDate = new Date(val.due_date);
-                        var todayDate = new Date();
-
-                        var millisBetween = dueDate.getTime() - todayDate.getTime();
-                        var getdays = millisBetween / (1000 * 3600 * 24);
-                        var completionDate = Math.round(Math.abs(getdays));
-                        var dateSign = "";
-                        if (completionDate) {
-                            dateSign = (dueDate.getTime() <= todayDate.getTime())?"-":"+";
-                                              }
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
 
 
+        });
 
-                    
-                        var duDateAppend = val.due_date;
-                        var badgeType = (dateSign == '-')?"danger":"success";
-                        duDateAppend+=' <span class="menu-badge"><span class="badge badge-'+badgeType+'">'+dateSign+completionDate+'</span></span>';
-                        $(".due_date_" + level).empty();
-                        $(".due_date_" + level).append(duDateAppend);
 
-                        var priority = "";
-                        if (val.priority == 4) {
-                            priority = "High";
-                        }
-                        else if(val.priority == 3) {
-                            priority = "Low";
-                        }
-                        else if(val.priority == 2) {
-                            priority = "Medium";
-                        }else{
-                            priority = "Important";
-                        }
-                        $(".priority_" + level).empty();
-                        $(".priority_" + level).append(priority);
-                        var images = val.profile_image;
-                        var baseUrl = "{{ asset('images/Employee/') }}";
-                        if (images) {
-                            var profile = images;
-                        } else {
-                            var profile = 'icon-5359553_960_720.png';
-                        }
-                        $(".image_append" + level).append('<figure><img src="' + baseUrl + '/' + profile + '" class="rounded"  width="50" height="50"><figcaption>[' + val.first_name + ' ,' + val.desName + ']&nbsp;</figcaption></figure>');
-                    });
-                    $.ajax({
-                        url: "{{ url('getProjectDocs') }}",
-                        type: 'ajax',
-                        method: 'post',
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            level: level,
-                            project_id: project_id
-                        },
-                        success: function(result) {
-                            var data = JSON.parse(result);
-                            console.log("data" + data);
+        function openVersionModel(id, levelId) {
+            $('#versionModel')[0].reset();
+            $('#myModal').css('display', 'block');
+            $('#myModal').find('.documentId').val(id);
+            $('#myModal').find('.levelId').val(levelId);
 
-                            $(".maindoc_append" + level).empty();
-                            $(".auxdoc_append" + level).empty();
-                            var levelstageStatus = [];
-                            if (data.main_docs) {
-                                $.each(data.main_docs, function(key, val) {
-                                    var docMainDetailArray = val.doc_detail;
+        }
 
-                                    var baseUrl = "{{ asset('/') }}";
-                                    if (val.status == 1) {
-                                        var status = "Pending";
-                                    } else if (val.status == 1) {
-                                        var status = "Declined";
-                                    } else {
-                                        var status = "Approved";
-                                    }
-                                    var versionMainDocDiv = '<div class="row">';
-                                    versionMainDocDiv += '<div class="accordion" id="accordionExample' + key + '">';
-                                    versionMainDocDiv += '<div class="card"> <div class="card-header" id="heading' + key + '">';
-                                    versionMainDocDiv += '<h5 class="mb-0">';
-                                    versionMainDocDiv += '<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold">' + val.original_name + '</h3><p class="text-right mainlevelStatus-' + level + "-" + key + '"></p></button>';
-                                    versionMainDocDiv += '</h5>';
-                                    versionMainDocDiv += '</div>';
-                                    versionMainDocDiv += '<div id="collapse' + key + '" class="collapse fade" aria-labelledby="heading' + key + '" data-parent="#accordionExample' + key + '">';
-                                    versionMainDocDiv += '<div class="card-body">';
-                                    versionMainDocDiv += ' <table class="table table-striped documentTable">';
-                                    versionMainDocDiv += ' <thead class="documentTableth">';
-                                    versionMainDocDiv += ' <tr> <th scope="col">Version ID </th> <th scope="col">Remarks</th> <th scope="col">Status</th><th scope="col">Last Updated</th> <th scope="col">Action</th> </tr>';
-                                    versionMainDocDiv += '</thead>';
-                                    versionMainDocDiv += '<tbody style="">';
-                                    var mainDocSize = docMainDetailArray.length;
-                                    var showMainDocAction = mainDocSize - 1;
-                                    console.log("showMainDocAction " + showMainDocAction);
-                                    for (var i =docMainDetailArray.length-1; i >= 0; --i) {
+        function openStatusModel(id, levelId, mainId) {
+            $('#statusModelForm')[0].reset();
+            $('#statusChangeModal').css('display', 'block');
+            $('#statusChangeModal').find('.statusdocumentId').val(id);
+            $('#statusChangeModal').find('.statuslevelId').val(levelId);
+            $('#statusChangeModal').find('.documentId').val(mainId);
+            $('#statusChangeModal').find('.levelId').val(levelId);
 
-                                        var remarkData = (docMainDetailArray[i].remark) ? docMainDetailArray[i].remark : "";
-                                        var updatedBy = docMainDetailArray[i].employee;
-                                        var updatedPerson = "";
-                                        console.log("updatedBy");
-                                        console.log(updatedBy);
-                                       if(updatedBy){
-                                       updatedPerson =updatedBy.first_name+" "+updatedBy.middle_name+" "+updatedBy.last_name;
-                                       }
-                                       console.log("updatedPerson");
-                                       console.log(updatedPerson);
-                                        var statusData = "";
-                                        if (docMainDetailArray[i].status == 1) {
-                                            var statusData = "Waiting  For Approval";
-                                        } else if (docMainDetailArray[i].status == 2) {
-                                            var statusData = "Declined";
-                                        } else if (docMainDetailArray[i].status == 3) {
-                                            var statusData = "Change Request";
-                                        } else if (docMainDetailArray[i].status == 4) {
-                                            var statusData = "Approved";
+        }
+
+        function closeModel() {
+            $('#versionModel')[0].reset();
+
+            $('#myModal').css('display', 'none');
+
+        }
+
+        function closeStatusModel() {
+            $('#statusModelForm')[0].reset();
+
+            $('#statusChangeModal').css('display', 'none');
+
+        }
+
+        function get_level_data(level, project_id) {
+            $(".tab-pane").html("");
+
+            $.ajax({
+                url: "{{ url('getProjectLevel') }}",
+                type: 'ajax',
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    level: level,
+                    project_id: project_id
+                },
+                success: function(result) {
+                    var data1 = JSON.parse(result);
+                    console.log("dahna");
+                    console.log(data1);
+                    if (data1.length) {
+
+                        $("#pag" + level).html("");
+                        $(".image_append" + level).empty();
+                        // var date = new Date(data[0].milestone_created),
+                        //     yr = date.getFullYear(),
+                        //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
+                        //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
+                        //     newDate = day + '-' + month + '-' + yr;
+                        $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:inline-flex;flex-flow:row"></div><div class="col-md-2">Due Date:<p class="due_date_' + level + '"></p></div><div class="col-md-2">Priority:<p class="priority_' + level + '"></p></div><hr><div>Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div>Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
+                        //if (data.length > 0) {
+
+                        $(".image_append" + level).empty();
+                        $.each(data1, function(key, val) {
+
+                            var dueDate = new Date(val.due_date);
+                            var todayDate = new Date();
+
+                            var millisBetween = dueDate.getTime() - todayDate.getTime();
+                            var getdays = millisBetween / (1000 * 3600 * 24);
+                            var completionDate = Math.round(Math.abs(getdays));
+                            var dateSign = "";
+                            if (completionDate) {
+                                dateSign = (dueDate.getTime() <= todayDate.getTime()) ? "-" : "+";
+                            }
+
+
+
+
+                            var duDateAppend = val.due_date;
+                            var badgeType = (dateSign == '-') ? "danger" : "success";
+                            duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate + '</span></span>';
+                            $(".due_date_" + level).empty();
+                            $(".due_date_" + level).append(duDateAppend);
+
+                            var priority = "";
+                            if (val.priority == 4) {
+                                priority = "High";
+                            } else if (val.priority == 3) {
+                                priority = "Low";
+                            } else if (val.priority == 2) {
+                                priority = "Medium";
+                            } else {
+                                priority = "Important";
+                            }
+                            $(".priority_" + level).empty();
+                            $(".priority_" + level).append(priority);
+                            var images = val.profile_image;
+                            var baseUrl = "{{ asset('images/Employee/') }}";
+                            if (images) {
+                                var profile = images;
+                            } else {
+                                var profile = 'icon-5359553_960_720.png';
+                            }
+                            $(".image_append" + level).append('<figure><img src="' + baseUrl + '/' + profile + '" class="rounded"  width="50" height="50"><figcaption>[' + val.first_name + ' ,' + val.desName + ']&nbsp;</figcaption></figure>');
+                        });
+                        $.ajax({
+                            url: "{{ url('getProjectDocs') }}",
+                            type: 'ajax',
+                            method: 'post',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                level: level,
+                                project_id: project_id
+                            },
+                            success: function(result) {
+                                var data = JSON.parse(result);
+                                console.log("data" + data);
+
+                                $(".maindoc_append" + level).empty();
+                                $(".auxdoc_append" + level).empty();
+                                var levelstageStatus = [];
+                                if (data.main_docs) {
+                                    $.each(data.main_docs, function(key, val) {
+                                        var docMainDetailArray = val.doc_detail;
+
+                                        var baseUrl = "{{ asset('/') }}";
+                                        if (val.status == 1) {
+                                            var status = "Pending";
+                                        } else if (val.status == 1) {
+                                            var status = "Declined";
                                         } else {
-                                            var statusData = "Waiting For Approval";
+                                            var status = "Approved";
                                         }
-                                        console.log("statusData" + statusData);
-                                        var dateFormat = new Date(docMainDetailArray[i].updated_at);
-                                        var lastUpdate = (dateFormat.getDate() +
-                                            "/" + (dateFormat.getMonth() + 1) +
-                                            "/" + dateFormat.getFullYear() +
-                                            " " + dateFormat.getHours() +
-                                            ":" + dateFormat.getMinutes() +
-                                            ":" + dateFormat.getSeconds());
-                                        versionMainDocDiv += '<tr>';
-                                        versionMainDocDiv += '<td>ver ' + docMainDetailArray[i].version + '</td>';
-                                        versionMainDocDiv += '<td>' + remarkData + '</td>';
-                                        versionMainDocDiv += '<td>' + statusData + '</td>';
-                                        versionMainDocDiv += '<td>' +updatedPerson+"("+lastUpdate + ')</td>';
-                                        versionMainDocDiv += '<td>';
-                                        console.log(".mainlevelStatus-" + level + "-" + i);
+                                        var versionMainDocDiv = '<div class="row">';
+                                        versionMainDocDiv += '<div class="accordion" id="accordionExample' + key + '">';
+                                        versionMainDocDiv += '<div class="card"> <div class="card-header" id="heading' + key + '">';
+                                        versionMainDocDiv += '<h5 class="mb-0">';
+                                        versionMainDocDiv += '<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold">' + val.original_name + '</h3><p class="text-right mainlevelStatus-' + level + "-" + key + '"></p></button>';
+                                        versionMainDocDiv += '</h5>';
+                                        versionMainDocDiv += '</div>';
+                                        versionMainDocDiv += '<div id="collapse' + key + '" class="collapse fade" aria-labelledby="heading' + key + '" data-parent="#accordionExample' + key + '">';
+                                        versionMainDocDiv += '<div class="card-body">';
+                                        versionMainDocDiv += ' <table class="table table-striped documentTable">';
+                                        versionMainDocDiv += ' <thead class="documentTableth">';
+                                        versionMainDocDiv += ' <tr> <th scope="col">Version ID </th> <th scope="col">Remarks</th> <th scope="col">Status</th><th scope="col">Last Updated</th> <th scope="col">Action</th> </tr>';
+                                        versionMainDocDiv += '</thead>';
+                                        versionMainDocDiv += '<tbody style="">';
+                                        var mainDocSize = docMainDetailArray.length;
+                                        var showMainDocAction = mainDocSize - 1;
+                                        console.log("showMainDocAction " + showMainDocAction);
+                                        for (var i = docMainDetailArray.length - 1; i >= 0; --i) {
 
-                                        if (i == showMainDocAction) {
-                                            var classData = "mainlevelStatus-" + level + "-" + key;
-                                            var stateData = statusData;
-                                            var state = [{
-                                                "class": classData
-                                            }, {
-                                                "res": stateData
-                                            }];
-                                            levelstageStatus.push(state);
-                                            // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
-                                            versionMainDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
-                                           
-                                        }
-                                        versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+                                            var remarkData = (docMainDetailArray[i].remark) ? docMainDetailArray[i].remark : "";
+                                            var updatedBy = docMainDetailArray[i].employee;
+                                            var updatedPerson = "";
+                                            console.log("updatedBy");
+                                            console.log(updatedBy);
+                                            if (updatedBy) {
+                                                updatedPerson = updatedBy.first_name + " " + updatedBy.middle_name + " " + updatedBy.last_name;
+                                            }
+                                            console.log("updatedPerson");
+                                            console.log(updatedPerson);
+                                            var statusData = "";
+                                            if (docMainDetailArray[i].status == 1) {
+                                                var statusData = "Waiting  For Approval";
+                                            } else if (docMainDetailArray[i].status == 2) {
+                                                var statusData = "Declined";
+                                            } else if (docMainDetailArray[i].status == 3) {
+                                                var statusData = "Change Request";
+                                            } else if (docMainDetailArray[i].status == 4) {
+                                                var statusData = "Approved";
+                                            } else {
+                                                var statusData = "Waiting For Approval";
+                                            }
+                                            console.log("statusData" + statusData);
+                                            var dateFormat = new Date(docMainDetailArray[i].updated_at);
+                                            var lastUpdate = (dateFormat.getDate() +
+                                                "/" + (dateFormat.getMonth() + 1) +
+                                                "/" + dateFormat.getFullYear() +
+                                                " " + dateFormat.getHours() +
+                                                ":" + dateFormat.getMinutes() +
+                                                ":" + dateFormat.getSeconds());
+                                            versionMainDocDiv += '<tr>';
+                                            versionMainDocDiv += '<td>ver ' + docMainDetailArray[i].version + '</td>';
+                                            versionMainDocDiv += '<td>' + remarkData + '</td>';
+                                            versionMainDocDiv += '<td>' + statusData + '</td>';
+                                            versionMainDocDiv += '<td>' + updatedPerson + "(" + lastUpdate + ')</td>';
+                                            versionMainDocDiv += '<td>';
+                                            console.log(".mainlevelStatus-" + level + "-" + i);
+
+                                            if (i == showMainDocAction) {
+                                                var classData = "mainlevelStatus-" + level + "-" + key;
+                                                var stateData = statusData;
+                                                var state = [{
+                                                    "class": classData
+                                                }, {
+                                                    "res": stateData
+                                                }];
+                                                levelstageStatus.push(state);
+                                                // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
+                                                versionMainDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
+
+                                            }
+                                            versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
                                             // versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionMainDocDiv += '</button>';
-                                        versionMainDocDiv += '</td>';
-                                        versionMainDocDiv += '</tr>';
-                                    }
-                                    versionMainDocDiv += '</tbody>';
-                                    versionMainDocDiv += '</table> ';
-                                    versionMainDocDiv += '</div>';
-                                    versionMainDocDiv += '</div>';
-                                    versionMainDocDiv += '</div>';
-                                    versionMainDocDiv += '</div>';
-
-
-                                    $(".maindoc_append" + level).append(versionMainDocDiv);
-                                });
-                                console.log("levelstageStatus" + levelstageStatus);
-                            }
-                            if (data.aux_docs) {
-                                $.each(data.aux_docs, function(key1, val) {
-                                    var docAuxDetailArray = val.doc_detail;
-                                    console.log(docAuxDetailArray);
-                                    var baseUrl = "{{ asset('/') }}";
-                                    if (val.status == 0) {
-                                        var status = "Waiting";
-                                    } else if (val.status == 1) {
-                                        var status = "Approved";
-                                    } else {
-                                        var status = "Pending";
-                                    }
-                                    var versionAuxDocDiv = '<div class="row">';
-                                    versionAuxDocDiv += '<div class="accordion" id="accordionExample1">';
-                                    versionAuxDocDiv += '<div class="card">';
-                                    versionAuxDocDiv += '<div class="card-header" id="heading' + key1 + '">';
-                                    versionAuxDocDiv += ' <h5 class="mb-0"><button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse1' + key1 + '" aria-expanded="false" aria-controls="collapse' + key1 + '"><h3 style = "font-style:bold">' + val.original_name + '</h3><p class="auxlevelStatus' + (key1 - 1) + '"></p></button></h5>';
-                                    versionAuxDocDiv += '</div>';
-                                    versionAuxDocDiv += ' <div id="collapse1' + key1 + '" class="collapse fade" aria-labelledby="heading' + key1 + '" data-parent="#accordionExample1">';
-                                    versionAuxDocDiv += '<div class="card-body">';
-                                    versionAuxDocDiv += '<table class="table table-striped documentTable">';
-                                    versionAuxDocDiv += '<thead class="documentTableth">';
-                                    versionAuxDocDiv += '<tr>';
-                                    versionAuxDocDiv += '<th scope="col">Version ID</th><th scope="col">Remarks</th> <th scope="col">Status</th><th scope="col">Last Updated</th> <th scope="col">Action</th>';
-                                    versionAuxDocDiv += '</tr>';
-                                    versionAuxDocDiv += '</thead>';
-                                    versionAuxDocDiv += ' <tbody>';
-                                    var auxDocSize = docAuxDetailArray.length;
-                                    var showAuxDocAction = auxDocSize - 1;
-                                    console.log("showAuxDocAction " + showAuxDocAction);
-
-                                    for (j = docAuxDetailArray.length-1; j >= 0 ; --j) {
-                                        var remarkData = (docAuxDetailArray[j].remark) ? docAuxDetailArray[j].remark : "";
-
-                                        var dateFormat = new Date(docAuxDetailArray[j].updated_at);
-                                        var lastUpdate = ("Date: " + dateFormat.getDate() +
-                                            "/" + (dateFormat.getMonth() + 1) +
-                                            "/" + dateFormat.getFullYear() +
-                                            " " + dateFormat.getHours() +
-                                            ":" + dateFormat.getMinutes() +
-                                            ":" + dateFormat.getSeconds());
-
-                                        var statusData = "";
-                                        if (docAuxDetailArray[j].status == 1) {
-                                            var statusData = "Waiting For Approval";
-                                        } else if (docAuxDetailArray[j].status == 2) {
-                                            var statusData = "Declined";
-                                        } else if (docAuxDetailArray[j].status == 3) {
-                                            var statusData = "change Request";
-                                        } else if (docAuxDetailArray[j].status == 4) {
-                                            var statusData = "Approved";
-                                        } else {
-                                            var statusData = "Waiting For Approval";
+                                            versionMainDocDiv += '</td>';
+                                            versionMainDocDiv += '</tr>';
                                         }
+                                        versionMainDocDiv += '</tbody>';
+                                        versionMainDocDiv += '</table> ';
+                                        versionMainDocDiv += '</div>';
+                                        versionMainDocDiv += '</div>';
+                                        versionMainDocDiv += '</div>';
+                                        versionMainDocDiv += '</div>';
 
-                                        $(".mainlevelStatus" + j).html("");
-                                        $(".mainlevelStatus" + j).append("(" + statusData + ")");
+
+                                        $(".maindoc_append" + level).append(versionMainDocDiv);
+                                    });
+                                    console.log("levelstageStatus" + levelstageStatus);
+                                }
+                                if (data.aux_docs) {
+                                    $.each(data.aux_docs, function(key1, val) {
+                                        var docAuxDetailArray = val.doc_detail;
+                                        console.log(docAuxDetailArray);
+                                        var baseUrl = "{{ asset('/') }}";
+                                        if (val.status == 0) {
+                                            var status = "Waiting";
+                                        } else if (val.status == 1) {
+                                            var status = "Approved";
+                                        } else {
+                                            var status = "Pending";
+                                        }
+                                        var versionAuxDocDiv = '<div class="row">';
+                                        versionAuxDocDiv += '<div class="accordion" id="accordionExample1">';
+                                        versionAuxDocDiv += '<div class="card">';
+                                        versionAuxDocDiv += '<div class="card-header" id="heading' + key1 + '">';
+                                        versionAuxDocDiv += ' <h5 class="mb-0"><button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse1' + key1 + '" aria-expanded="false" aria-controls="collapse' + key1 + '"><h3 style = "font-style:bold">' + val.original_name + '</h3><p class="auxlevelStatus' + (key1 - 1) + '"></p></button></h5>';
+                                        versionAuxDocDiv += '</div>';
+                                        versionAuxDocDiv += ' <div id="collapse1' + key1 + '" class="collapse fade" aria-labelledby="heading' + key1 + '" data-parent="#accordionExample1">';
+                                        versionAuxDocDiv += '<div class="card-body">';
+                                        versionAuxDocDiv += '<table class="table table-striped documentTable">';
+                                        versionAuxDocDiv += '<thead class="documentTableth">';
                                         versionAuxDocDiv += '<tr>';
-                                        versionAuxDocDiv += '<td>ver ' + docAuxDetailArray[j].version + '</td>';
-                                        versionAuxDocDiv += '<td>' + remarkData + '</td>';
-                                        versionAuxDocDiv += '<td>' + statusData + '</td>';
-                                        versionAuxDocDiv += '<td>' + lastUpdate + '</td>';
-                                        versionAuxDocDiv += '<td>';
-                                        //if (j == showAuxDocAction) {
-                                           // versionAuxDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docAuxDetailArray[j].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
+                                        versionAuxDocDiv += '<th scope="col">Version ID</th><th scope="col">Last Updated</th> <th scope="col">Action</th>';
+                                        versionAuxDocDiv += '</tr>';
+                                        versionAuxDocDiv += '</thead>';
+                                        versionAuxDocDiv += ' <tbody>';
+                                        var auxDocSize = docAuxDetailArray.length;
+                                        var showAuxDocAction = auxDocSize - 1;
+                                        console.log("showAuxDocAction " + showAuxDocAction);
+
+                                        for (j = docAuxDetailArray.length - 1; j >= 0; --j) {
+                                            var remarkData = (docAuxDetailArray[j].remark) ? docAuxDetailArray[j].remark : "";
+
+                                            var dateFormat = new Date(docAuxDetailArray[j].updated_at);
+                                            var lastUpdate = ("Date: " + dateFormat.getDate() +
+                                                "/" + (dateFormat.getMonth() + 1) +
+                                                "/" + dateFormat.getFullYear() +
+                                                " " + dateFormat.getHours() +
+                                                ":" + dateFormat.getMinutes() +
+                                                ":" + dateFormat.getSeconds());
+
+                                            var statusData = "";
+                                            if (docAuxDetailArray[j].status == 1) {
+                                                var statusData = "Waiting For Approval";
+                                            } else if (docAuxDetailArray[j].status == 2) {
+                                                var statusData = "Declined";
+                                            } else if (docAuxDetailArray[j].status == 3) {
+                                                var statusData = "change Request";
+                                            } else if (docAuxDetailArray[j].status == 4) {
+                                                var statusData = "Approved";
+                                            } else {
+                                                var statusData = "Waiting For Approval";
+                                            }
+
+                                            $(".mainlevelStatus" + j).html("");
+                                            $(".mainlevelStatus" + j).append("(" + statusData + ")");
+                                            versionAuxDocDiv += '<tr>';
+                                            versionAuxDocDiv += '<td>ver ' + docAuxDetailArray[j].version + '</td>';
+                                            // versionAuxDocDiv += '<td>' + remarkData + '</td>';
+                                            // versionAuxDocDiv += '<td>' + statusData + '</td>';
+                                            versionAuxDocDiv += '<td>' + lastUpdate + '</td>';
+                                            versionAuxDocDiv += '<td>';
+                                            //if (j == showAuxDocAction) {
+                                            // versionAuxDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docAuxDetailArray[j].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
                                             versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
                                             // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionAuxDocDiv += '</button>';
-                                        //}
-                                        versionAuxDocDiv += '</td>';
-                                        versionAuxDocDiv += '</tr>';
-                                    }
-                                    versionAuxDocDiv += '</tbody>';
-                                    versionAuxDocDiv += '</table>';
-                                    versionAuxDocDiv += '</div>';
-                                    versionAuxDocDiv += '</div>';
-                                    versionAuxDocDiv += '</div>';
-                                    versionAuxDocDiv += '</div>';
-                                    versionAuxDocDiv += '</div>';
-                                    $(".auxdoc_append" + level).append(versionAuxDocDiv);
-                                });
+                                            //}
+                                            versionAuxDocDiv += '</td>';
+                                            versionAuxDocDiv += '</tr>';
+                                        }
+                                        versionAuxDocDiv += '</tbody>';
+                                        versionAuxDocDiv += '</table>';
+                                        versionAuxDocDiv += '</div>';
+                                        versionAuxDocDiv += '</div>';
+                                        versionAuxDocDiv += '</div>';
+                                        versionAuxDocDiv += '</div>';
+                                        versionAuxDocDiv += '</div>';
+                                        $(".auxdoc_append" + level).append(versionAuxDocDiv);
+                                    });
+                                }
+                            },
+                            error: function(err) {
+                                console.log(err);
                             }
-                        },
-                        error: function(err) {
-                            console.log(err);
-                        }
-                    });
-                    // $(".doc_append" + level).empty();
-                    // $(".doc_append" + level).append('<div class="row"> <div class="accordion" id="accordionExample">@foreach ($maindocument as $key=> $md)<div class="card"> <div class="card-header" id="heading<?php echo $key; ?>"> <h5 class="mb-0"><button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse<?php echo $key; ?>" aria-expanded="false" aria-controls="collapse<?php echo $key; ?>"><i class="fa fa-angle-double-right mr-3"></i>{{$md->document}}</button></h5> </div><div id="collapse<?php echo $key; ?>" class="collapse fade" aria-labelledby="heading<?php echo $key; ?>" data-parent="#accordionExample"> <div class="card-body"> TEST </div></div></div>@endforeach</div></div><div class="row"> <div class="accordion" id="accordionExample1">@foreach ($auxdocument as $key1=> $ad)<div class="card"> <div class="card-header" id="heading<?php echo $key1; ?>"> <h5 class="mb-0"><button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse1<?php echo $key1; ?>" aria-expanded="false" aria-controls="collapse<?php echo $key1; ?>"><i class="fa fa-angle-double-right mr-3"></i>{{$ad->document}}</button></h5> </div><div id="collapse1<?php echo $key1; ?>" class="collapse fade" aria-labelledby="heading<?php echo $key1; ?>" data-parent="#accordionExample1"> <div class="card-body"> TEST1 </div></div></div>@endforeach</div></div>');
-                    // }
-                    //OLD
-                    // if(data){
-                    //     $.each(data, function(key, val) {
-                    //         console.log(val.hod_image);
-                    //     var len=key+1;
-                    //     var baseUrl = "{{ asset('images/') }}";
-                    //    $("#pag"+key).html('<div class="tab-pane" id="pag'+key+'" role="tabpanel"><div class="sv-tab-panel"><h3>Level '+len+'</h3><hr><div class="jumbotron"><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6" style="display:inline-flex;flex-flow:row"><figure><img src="'+baseUrl +'/'+ val.hod_image+'" class="rounded" width="50" height="50"><figcaption>'+val.hod_first_name+' '+val.hod_last_name+'</figcaption></figure><figure><img src="'+baseUrl +'/'+ val.staff_image+'" class="rounded" width="50" height="50"><figcaption>'+val.staff_first_name+' '+val.staff_last_name+'</figcaption></figure></div><div class="col-md-4">Milestone:<br>Planned Date:</div></div></div></div></div>');
-                    // });
-                    // }
-                } else {
-                    console.log("data else");
-                    $(".tab-pane").html("");
-                    alert('Level -' + level + ' Not Available');
+                        });
+                        // $(".doc_append" + level).empty();
+                        // $(".doc_append" + level).append('<div class="row"> <div class="accordion" id="accordionExample">@foreach ($maindocument as $key=> $md)<div class="card"> <div class="card-header" id="heading<?php echo $key; ?>"> <h5 class="mb-0"><button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse<?php echo $key; ?>" aria-expanded="false" aria-controls="collapse<?php echo $key; ?>"><i class="fa fa-angle-double-right mr-3"></i>{{$md->document}}</button></h5> </div><div id="collapse<?php echo $key; ?>" class="collapse fade" aria-labelledby="heading<?php echo $key; ?>" data-parent="#accordionExample"> <div class="card-body"> TEST </div></div></div>@endforeach</div></div><div class="row"> <div class="accordion" id="accordionExample1">@foreach ($auxdocument as $key1=> $ad)<div class="card"> <div class="card-header" id="heading<?php echo $key1; ?>"> <h5 class="mb-0"><button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse1<?php echo $key1; ?>" aria-expanded="false" aria-controls="collapse<?php echo $key1; ?>"><i class="fa fa-angle-double-right mr-3"></i>{{$ad->document}}</button></h5> </div><div id="collapse1<?php echo $key1; ?>" class="collapse fade" aria-labelledby="heading<?php echo $key1; ?>" data-parent="#accordionExample1"> <div class="card-body"> TEST1 </div></div></div>@endforeach</div></div>');
+                        // }
+                        //OLD
+                        // if(data){
+                        //     $.each(data, function(key, val) {
+                        //         console.log(val.hod_image);
+                        //     var len=key+1;
+                        //     var baseUrl = "{{ asset('images/') }}";
+                        //    $("#pag"+key).html('<div class="tab-pane" id="pag'+key+'" role="tabpanel"><div class="sv-tab-panel"><h3>Level '+len+'</h3><hr><div class="jumbotron"><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6" style="display:inline-flex;flex-flow:row"><figure><img src="'+baseUrl +'/'+ val.hod_image+'" class="rounded" width="50" height="50"><figcaption>'+val.hod_first_name+' '+val.hod_last_name+'</figcaption></figure><figure><img src="'+baseUrl +'/'+ val.staff_image+'" class="rounded" width="50" height="50"><figcaption>'+val.staff_first_name+' '+val.staff_last_name+'</figcaption></figure></div><div class="col-md-4">Milestone:<br>Planned Date:</div></div></div></div></div>');
+                        // });
+                        // }
+                    } else {
+                        console.log("data else");
+                        $(".tab-pane").html("");
+                        alert('Level -' + level + ' Not Available');
+                    }
+                },
+                error: function(err) {
+                    console.log(err);
                 }
-            },
-            error: function(err) {
-                console.log(err);
-            }
-        });
-    }
-
-
-    function update_status(id) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You can always change the status to active or in-active!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, Change it!'
-        }).then(isConfirmed => {
-            if (isConfirmed.value) {
-
-
-                if (isConfirmed.value) {
-                    Swal.fire(
-                        'Changed!',
-                        'Document status has been changed successfully!',
-                        'success'
-                    );
-                }
-            }
-        });
-    }
-
-    function submitStatusForm() {
-        console.log("well done");
-
-
-
-        var formData = new FormData($('#statusModelForm')[0]);
-        formData.append('csrfmiddlewaretoken', '{{ csrf_token() }}');
-
-        $.ajax({
-            url: "{{ url('docStatus') }}",
-            type: 'ajax',
-            method: 'post',
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-
-            data: formData,
-            success: function(result) {
-                console.log(result.status);
-                var ProjectId1 = "{{ $details->id }}";
-                if (result.status == 'success') {
-                    var levelId = $('.statuslevelId').val();
-                    closeStatusModel();
-                    get_level_data(levelId, ProjectId1);
-                } else {
-                    console.log(result);
-                    window.location.reload();
-                }
-            }
-        });
-    }
-    $(document).on('change', '.status', function() {
-        console.log($(this).val());
-        if ($(this).val() == 2 || $(this).val() == 3) {
-            $('.documentUploadDiv').css('display', 'block');
-        } else {
-            $('.documentUploadDiv').css('display', 'none');
+            });
         }
-    });
-
-    function submitForm() {
-        console.log("well done");
 
 
-        var remark = $('.remarks').val();
-        var documentId = $('.documentId').val();
-        var statusversion = $('.statusversion').val();
-        var formData = new FormData($('#versionModel')[0]);
-        formData.append('csrfmiddlewaretoken', '{{ csrf_token() }}');
+        function update_status(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You can always change the status to active or in-active!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Change it!'
+            }).then(isConfirmed => {
+                if (isConfirmed.value) {
 
-        $.ajax({
-            url: "{{ url('uploadDocumentVersion') }}",
-            type: 'ajax',
-            method: 'post',
-            dataType: 'json',
-            processData: false,
-            contentType: false,
 
-            data: formData,
-            success: function(result) {
-                console.log(result.status);
-                var ProjectId1 = "{{ $details->id }}";
-                if (result.status == 'success') {
-                    var levelId = $('.levelId').val();
-                    closeModel();
-                    get_level_data(levelId, ProjectId1);
-                } else {
-                    console.log(result);
-                    window.location.reload();
+                    if (isConfirmed.value) {
+                        Swal.fire(
+                            'Changed!',
+                            'Document status has been changed successfully!',
+                            'success'
+                        );
+                    }
                 }
+            });
+        }
+
+        function submitStatusForm() {
+            console.log("well done");
+
+
+
+            var formData = new FormData($('#statusModelForm')[0]);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token() }}');
+
+            $.ajax({
+                url: "{{ url('docStatus') }}",
+                type: 'ajax',
+                method: 'post',
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+
+                data: formData,
+                success: function(result) {
+                    console.log(result.status);
+                    var ProjectId1 = "{{ $details->id }}";
+                    if (result.status == 'success') {
+                        var levelId = $('.statuslevelId').val();
+                        closeStatusModel();
+                        get_level_data(levelId, ProjectId1);
+                    } else {
+                        console.log(result);
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+        $(document).on('change', '.status', function() {
+            console.log($(this).val());
+            if ($(this).val() == 2 || $(this).val() == 3) {
+                $('.documentUploadDiv').css('display', 'block');
+            } else {
+                $('.documentUploadDiv').css('display', 'none');
             }
         });
-    }
-</script>
+
+        function submitForm() {
+            console.log("well done");
+
+
+            var remark = $('.remarks').val();
+            var documentId = $('.documentId').val();
+            var statusversion = $('.statusversion').val();
+            var formData = new FormData($('#versionModel')[0]);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token() }}');
+
+            $.ajax({
+                url: "{{ url('uploadDocumentVersion') }}",
+                type: 'ajax',
+                method: 'post',
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+
+                data: formData,
+                success: function(result) {
+                    console.log(result.status);
+                    var ProjectId1 = "{{ $details->id }}";
+                    if (result.status == 'success') {
+                        var levelId = $('.levelId').val();
+                        closeModel();
+                        get_level_data(levelId, ProjectId1);
+                    } else {
+                        console.log(result);
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+    </script>

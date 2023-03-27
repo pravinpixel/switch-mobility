@@ -79,3 +79,6 @@ div:has(.notifyAlert){
         width: 25px !important;
         height: 20px !important;
     }
+    .card:has(form){
+        border:1px solid rgb(1, 193, 138);
+    }

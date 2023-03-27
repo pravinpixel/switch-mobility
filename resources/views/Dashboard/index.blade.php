@@ -169,7 +169,7 @@
                                 <div class="row">
 
                                     <h5 class="section-title h1">Recently Uploaded Documents</h5>
-                                    <table class="table align-middle table-row-dashed fs-6 gy-5" id="service_table">
+                                    <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
                                         <!--begin::Table head-->
                                         <thead>
                                             <!--begin::Table row-->

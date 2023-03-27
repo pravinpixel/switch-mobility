@@ -201,6 +201,23 @@
 						</div>
 						<!--end:Menu item-->
 						@endif
+
+						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('document-listing-view'))
+						<!--begin:Menu item-->
+						<div class="menu-item">
+							<!--begin:Menu link-->
+							<a class="menu-link {{request()->is('approvalListIndex')?'active' :''}}" href="{{url('approvalListIndex')}}">
+								<span class="menu-icon">
+									<span class="svg-icon svg-icon-2">
+										<i class="fas fa-drafting-compass"></i>
+									</span>
+								</span>
+								<span class="menu-title">Approval List</span>
+							</a>
+							<!--end:Menu link-->
+						</div>
+						<!--end:Menu item-->
+						@endif
 						<!--end:Menu item-->
 
 

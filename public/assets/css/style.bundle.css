@@ -1897,6 +1897,10 @@ progress {
 }
 .table > thead {
     vertical-align: bottom;
+    background-color: rgba(53,101,237);
+}
+.table > thead >tr > th{
+    color: white;
 }
 .table-group-divider {
     border-top: 2px solid currentcolor;
@@ -4657,7 +4661,8 @@ fieldset:disabled .btn {
 .page-link.active {
     z-index: 3;
     color: var(--bs-pagination-active-color);
-    background-color: var(--bs-pagination-active-bg);
+    /* background-color: var(--bs-pagination-active-bg); */
+    background-color: rgb(53, 101, 237);
     border-color: var(--bs-pagination-active-border-color);
 }
 .disabled > .page-link,
