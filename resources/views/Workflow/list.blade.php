@@ -503,7 +503,7 @@ $(document).ready(function() {
                         } else {
                             Swal.fire(
                                 'Deleted!',
-                                'Department has been deleted.',
+                                'Workflow has been deleted.',
                                 'success'
                             );
                             window.location.reload();

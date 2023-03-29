@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Transaction;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Models\ProjectEmployee;
 use Carbon\Carbon;
 use File;
 use Illuminate\Support\Facades\Auth;
@@ -27,23 +28,23 @@ class ApprovalListTempController extends Controller
 
         // $models->whereNull('deleted_at');
         // $datas = $models->get();
-      
-        $project = Project::with('docType','department','employee','workflow')->where('id',$id)->first();
-            $docModel  = $project->docType;
-            $departmentModel  = $project->department;
-            $employeeModel  = $project->employee;
-            $workflowModel  = $project->workflow;
-          
-            $timestamp = strtotime($project->created_at);
-            $date = date('Y-m-d H:i:s', $timestamp);
 
-            $docName =($docModel)?$docModel->name:"";
-            $workflowName =($workflowModel)?$workflowModel->workflow_name:"";
-            $workflowCode =($workflowModel)?$workflowModel->workflow_code:"";
-            $department  =($departmentModel)?$departmentModel->name:"";
-            $employeeName =($employeeModel)?$employeeModel->first_name." ".$employeeModel->last_name:"";
+        $project = Project::with('docType', 'department', 'employee', 'workflow')->where('id', $id)->first();
+        $docModel  = $project->docType;
+        $departmentModel  = $project->department;
+        $employeeModel  = $project->employee;
+        $workflowModel  = $project->workflow;
 
-           
+        $timestamp = strtotime($project->created_at);
+        $date = date('Y-m-d H:i:s', $timestamp);
+
+        $docName = ($docModel) ? $docModel->name : "";
+        $workflowName = ($workflowModel) ? $workflowModel->workflow_name : "";
+        $workflowCode = ($workflowModel) ? $workflowModel->workflow_code : "";
+        $department  = ($departmentModel) ? $departmentModel->name : "";
+        $employeeName = ($employeeModel) ? $employeeModel->first_name . " " . $employeeModel->last_name : "";
+
+
         $data = [
             'imagePath'    => public_path('assets/media/logos/limage.png'),
             'ticketNo'         => $project->ticket_no,
@@ -54,18 +55,56 @@ class ApprovalListTempController extends Controller
             'workflowCode'      => $workflowCode,
             'workflowName' =>  $workflowName,
             'department'        => $department,
-            'initiater'=>$employeeName
+            'initiater' => $employeeName
         ];
-       $path = public_path('front'.$id.'.pdf');
-     
+        $path = public_path('front' . $id . '.pdf');
+
         if (file_exists($path)) {
             File::delete($path);
         }
-        $pdf = PDF::loadView('pdf.pdfFormat', $data);
+        $pdf = PDF::loadView('pdf.pdfHeaderFormat', $data);
         $pdf->save($path);
 
 
-      return $path;
+        return $path;
+    }
+    public function FooterPdf($id)
+    {
+
+        $models = ProjectEmployee::with('employee', 'employee.designation', 'projectlevel')->where('project_id', $id)->get();
+
+        $entities = collect($models)->map(function ($model) {
+
+            $employeeModel = $model['employee'];
+            $levelModel = $model['projectlevel'];
+            $date =  ($levelModel) ? $levelModel->due_date : "";
+
+            $designationModel = ($employeeModel) ? $employeeModel['designation'] : "";
+            $designation = ($designationModel) ? $designationModel->name : "";
+            $signImage = ($employeeModel->sign_image) ? $employeeModel->sign_image : "noimage.png";
+            $signImageWithPath = public_path('assets/images/employee/' . $signImage);
+            $employeeName =  ($employeeModel) ? $employeeModel->first_name . " " . $employeeModel->middle_name . " " . $employeeModel->last_name : "";
+
+            $data = [
+                'imagePath'    => public_path('assets/media/logos/limage.png'),
+                'signImagePath'    =>  $signImageWithPath,
+                'employeeName'     => $employeeName,
+                'designation'      => $designation,
+                'date'        => $date
+            ];
+
+            return $data;
+        });
+        $imagePath =  public_path('assets/media/logos/limage.png');
+        $path = public_path('back' . $id . '.pdf');
+
+        if (file_exists($path)) {
+            File::delete($path);
+        }
+
+        $pdf = PDF::loadView('pdf.pdfFooterFormat', compact('entities', 'imagePath'));
+        $pdf->save($path);
+        return $path;
     }
 
     //     public function approvedDocsView(Request $request)

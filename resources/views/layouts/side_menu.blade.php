@@ -273,7 +273,7 @@
 						</div>
 						<!--end:Menu item-->
 
-
+						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('datewise-report'))
 						<div class="menu-item">
 							<!--begin:Menu link-->
 							<a class="menu-link {{request()->is('datewiseReportIndex')?'active' :''}}" href="{{url('datewiseReportIndex')}}">
@@ -286,6 +286,8 @@
 							</a>
 							<!--end:Menu link-->
 						</div>
+						@endif
+						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('projectwise-report'))
 						<div class="menu-item">
 							<!--begin:Menu link-->
 							<a class="menu-link {{request()->is('projectwiseReportIndex')?'active' :''}}" href="{{url('projectwiseReportIndex')}}">
@@ -298,6 +300,8 @@
 							</a>
 							<!--end:Menu link-->
 						</div>
+						@endif
+						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('documentwise-report'))
 						<div class="menu-item">
 							<!--begin:Menu link-->
 							<a class="menu-link {{request()->is('documentWiseReportIndex')?'active' :''}}" href="{{url('documentWiseReportIndex')}}">
@@ -310,7 +314,8 @@
 							</a>
 							<!--end:Menu link-->
 						</div>
-
+						@endif
+						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('userwise-report'))
 						<div class="menu-item">
 							<!--begin:Menu link-->
 							<a class="menu-link {{request()->is('userWiseReportIndex')?'active' :''}}" href="{{url('userWiseReportIndex')}}">
@@ -323,6 +328,7 @@
 							</a>
 							<!--end:Menu link-->
 						</div>
+						@endif
 					</div>
 					<!--end::Menu-->
 				</div>

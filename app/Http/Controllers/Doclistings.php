@@ -16,6 +16,7 @@ use App\Models\Workflowlevels;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class Doclistings extends Controller
@@ -151,6 +152,7 @@ class Doclistings extends Controller
     }
     public function editDocument(Request $request)
     {
+
         $id = $request->id;
 
         $project_details = DB::table('projects as p')
@@ -197,26 +199,52 @@ class Doclistings extends Controller
 
         $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $projectModel->workflow_id)->get();
 
-        $entities = collect($models)->map(function ($model) {
-            $levelDetails = $model['workflowLevelDetail'];
+        // $entities = collect($models)->map(function ($model) {
 
-            $empModel = WorkflowLevelDetail::select('employees.*')->leftjoin('employees', 'employees.id', '=', 'workflow_level_details.employee_id')->where('workflow_level_id', $model->id)->get()->toArray();
+        //     $levelDetails = $model['workflowLevelDetail'];
+
+        //     $empModel = WorkflowLevelDetail::select('employees.*')->leftjoin('employees', 'employees.id', '=', 'workflow_level_details.employee_id')->where('workflow_level_id', $model->id)->get()->toArray();
 
 
-            $datas = ['levelId' => $model->levels, 'designationId' => $empModel];
+        //     $datas = ['levelId' => $model->levels, 'designationId' => $empModel];
 
-            return $datas;
-        });
+        //     return $datas;
+        // });
         // dd($entities);
+        // dd($models);
+        $dataArray = array();
+        for ($i = 0; $i < count($models); $i++) {
+
+            $empId = Session::get('employeeId');
+
+            if ($empId) {
+                $lastLimitLevel = ProjectEmployee::where('project_id', $id)->where('employee_id', $empId)->latest()->first();
+            }
+
+            $empModel = WorkflowLevelDetail::select('employees.*')->leftjoin('employees', 'employees.id', '=', 'workflow_level_details.employee_id')->where('workflow_level_id', $models[$i]->id)->get()->toArray();
+            if ($empId) {
+                if ($models[$i]->levels <= $lastLimitLevel->level) {
+                    Log::info('Looping model Level ' . $models[$i]->levels . "Last Level " . $lastLimitLevel->level);
+
+                    $datas = ['levelId' => $models[$i]->levels, 'designationId' => $empModel, 'test' => 1];
+                    array_push($dataArray, $datas);
+                }
+            } else {
+                $datas = ['levelId' => $models[$i]->levels, 'designationId' => $empModel];
+                array_push($dataArray, $datas);
+            }
+        }
+     
         $milestoneDatas = ProjectMilestone::where('project_id', $id)->get();
 
-        return view('Docs/view', ['milestoneDatas' => $milestoneDatas, 'levelsArray' => $entities, 'levelCount' => $levelCount, 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
+        return view('Docs/view', ['milestoneDatas' => $milestoneDatas, 'levelsArray' => $dataArray, 'levelCount' => $levelCount, 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
     }
 
     public function viewDocListing(Request $request)
     {
         $id = $request->id;
 
+
         $project_details = DB::table('projects as p')
             ->leftjoin('project_levels as pl', 'pl.project_id', '=', 'p.id')
             ->leftJoin('workflows as w', 'w.id', '=', 'p.workflow_id')
@@ -261,59 +289,29 @@ class Doclistings extends Controller
 
         $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $projectModel->workflow_id)->get();
 
+        // dd($models);
         $dataArray = array();
         for ($i = 0; $i < count($models); $i++) {
 
             $empId = Session::get('employeeId');
 
+            if ($empId) {
+                $lastLimitLevel = ProjectEmployee::where('employee_id', $empId)->latest()->first();
+            }
+
             $empModel = WorkflowLevelDetail::select('employees.*')->leftjoin('employees', 'employees.id', '=', 'workflow_level_details.employee_id')->where('workflow_level_id', $models[$i]->id)->get()->toArray();
-            // if ($empId) {
+            if ($empId) {
+                if ($models[$i]->levels <= $lastLimitLevel->level) {
+                    Log::info('Looping model Level ' . $models[$i]->levels . "Last Level " . $lastLimitLevel->level);
 
-            //     $allModels = ProjectEmployee::where('project_id', $id)
-            //         ->where('employee_id', Session::get('employeeId'))
-            //          ->where('level', $models[$i]->levels)                   
-            //         ->get();
-
-
-            //     if ($allModels) {
-
-            //             $datas = ['levelId' => $models[$i]->levels, 'designationId' => $empModel];                       
-            //             array_push($dataArray, $datas);
-            //         }
-            //     }
-            //  else {
-            //     $datas = ['levelId' => $models[$i]->levels, 'designationId' => $empModel];
-            //     array_push($dataArray, $datas);
-            // }}
-            $datas = ['levelId' => $models[$i]->levels, 'designationId' => $empModel];
-            array_push($dataArray, $datas);
+                    $datas = ['levelId' => $models[$i]->levels, 'designationId' => $empModel, 'test' => 1];
+                    array_push($dataArray, $datas);
+                }
+            } else {
+                $datas = ['levelId' => $models[$i]->levels, 'designationId' => $empModel];
+                array_push($dataArray, $datas);
+            }
         }
-
-        // if ($isRelativeEmployee || Session::get('employeeId') == "") {
-        // $datas = ['levelId' => $model->levels, 'designationId' => $empModel];
-
-        // return $datas;
-
-
-
-        // $levelDetails = $model['workflowLevelDetail'];
-        // $isRelativeEmployee = 0;
-        // if (Session::get('employeeId')) {
-        //     $isRelativeEmployee = ProjectEmployee::where('project_id', $id)
-        //         ->where('level', $model->levels)
-        //         ->count();
-        // }
-
-
-        // $empModel = WorkflowLevelDetail::select('employees.*')->leftjoin('employees', 'employees.id', '=', 'workflow_level_details.employee_id')->where('workflow_level_id', $model->id)->get()->toArray();
-
-        // // if ($isRelativeEmployee || Session::get('employeeId') == "") {
-        // $datas = ['levelId' => $model->levels, 'designationId' => $empModel];
-
-        //     return true;
-        //     // }else
-        // });
-
         $milestoneDatas = ProjectMilestone::where('project_id', $id)->get();
 
         return view('Docs/viewDocument', ['milestoneDatas' => $milestoneDatas, 'levelsArray' => $dataArray, 'levelCount' => count($dataArray), 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);

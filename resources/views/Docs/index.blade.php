@@ -201,9 +201,8 @@
                                             data-placeholder="WorkFlow Code/Name" data-allow-clear="true" id="workflow">
                                             <option></option>
                                             @foreach ($workflow as $wf)
-                                                <option value="{{ $wf['workflow_code'] }}"> {{ $wf['workflow_code'] }}
-                                                    {{ $wf['workflow_name'] }}
-                                                </option>
+                                                <option value="{{ $wf['workflow_code'] }}">
+                                                    {{ $wf['workflow_code'] }}{{ $wf['workflow_name'] }} </option>
                                             @endforeach
                                         </select>
                                         <!--end::Select-->
@@ -237,7 +236,7 @@
                                         <!--end::Select-->
                                     </div>
 
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-2">
                                         <label class="fs-6 form-label fw-bold text-dark"> Users </label>
                                         <!--begin::Select-->
                                         <select class="form-select form-select-solid filterDeptAndDes doclistFilter"
@@ -261,11 +260,15 @@
                                     </div>
                                     <div class="col-md-1">
                                         <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                        <span class="btn btn-primary SearchFilter">Search</span>
+                                    </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <div class="col-md-1">
+                                        <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
                                         <span class="btn btn-warning " onclick="reset()">Reset</span>
                                     </div>
-                                    
+
                                     <!--end::Col-->
-                                
+
 
                                     {{-- <div class="col-lg-4 mt-5">
                                     <label class="fs-6 form-label fw-bold text-dark "></label>
@@ -279,7 +282,7 @@
 
 
                             <hr>
-                            <table class="table align-middle table-row-dashed fs-6 gy-5" id="service_table">
+                            <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
                                 <!--begin::Table head-->
                                 <thead>
                                     <!--begin::Table row-->
@@ -352,8 +355,6 @@
         </div>
 
     </div>
-    
-
 @endsection
 <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
 </script>
@@ -372,16 +373,43 @@
                 window.location.reload();
             });
         });
-        $('.dateWiseFilter').on('change', function() {
+        // $('.dateWiseFilter').on('change', function() {
+        //     var startdate = $('#startDate').val();
+        //     var enddate = $('#endDate').val();
+        //     if (startdate && enddate) {
+        //         documnetFilter();
+        //     }
+        // });
+        // $('.doclistFilter').on('change', function() {
+        //     $("input[type=date]").val("");
+        //     documnetFilter();
+        // });
+        $('.SearchFilter').on('click', function() {
+            var ticketNo = $('#select2-ticketno-container').text();
+            var ticketValue = (ticketNo === 'Ticket No') ? '' : ticketNo;
+            var projectCode = $('#select2-projectCode-container').text();
+            var projectValue = (projectCode === 'Project Code / Name') ? '' : projectCode;
+            var workflow = $('#select2-workflow-container').text();
+            var workflowValue = (workflow === 'WorkFlow Code/Name') ? '' : workflow;
+            var department = $('#select2-deptId-container').text();
+            var deptValue = (department === 'Department') ? '' : department;
+            var designation = $('#select2-desgId-container').text();
+            var desgValue = (designation === 'Designation') ? '' : designation;
+            var user = $('#select2-users-container').text();
+            var UserValue = (user === 'Users') ? '' : user;
             var startdate = $('#startDate').val();
             var enddate = $('#endDate').val();
             if (startdate && enddate) {
+                $('.doclistFilter').val("").trigger('change');
                 documnetFilter();
             }
-        });
-        $('.doclistFilter').on('change', function() {
-            $("input[type=date]").val("");
-            documnetFilter();
+            if (ticketValue || projectValue || workflowValue || deptValue || desgValue || UserValue) {
+                $("input[type=date]").val("");
+                documnetFilter();
+            } else {
+                console.log('failed');
+            }
+
         });
         function documnetFilter() {
             var table = $('#service_table').DataTable();
@@ -441,7 +469,7 @@
                     $('.doclistFilter option:selected').prop("selected", false);
                 },
                 error: function() {
-                    $("#otp_error").text("Update Error"); 
+                    $("#otp_error").text("Update Error");
                 }
             });
         }
@@ -712,7 +740,7 @@
         // $(".multi-fields .multi-field:last-child").remove();
     }
     function reset() {
-       
+
         $('.doclistFilter').val("").trigger('change');
         $("input[type=date]").val("");
     }

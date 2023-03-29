@@ -1027,6 +1027,7 @@
 
 
     function get_document_workflow(document_type_id) {
+        if(document_type_id !=""){
         var workflow_id = $('.workflow_id').find(":selected").val();
         $.ajax({
             url: "{{ url('getWorkflowByDocumentType') }}",
@@ -1054,10 +1055,12 @@
             }
         });
     }
-
+    }
 
 
     function get_workflow_type(workflow_id) {
+        console.log(workflow_id);
+        if(workflow_id !=""){
         console.log("Old function done");
         $.ajax({
             url: "{{ url('getWorkflowById') }}",
@@ -1218,7 +1221,7 @@
             });
         }
 
-    }
+    }}
 
     function get_workflow_typeEdit(workflow_id) {
         console.log("this function done");

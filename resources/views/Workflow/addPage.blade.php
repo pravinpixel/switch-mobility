@@ -360,6 +360,7 @@
     }
     $(document).ready(function() {
         // on form submit
+       
         $("#department_form1").on('submit', function() {
             // to each unchecked checkbox
             $(this).find('input[type=checkbox]:not(:checked)').prop('checked', true).val(0);

@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NotifyMail;
+use \App\Mail\SendMail;
 
 class DepartmentController extends Controller
 {
@@ -49,26 +52,33 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
+        $details = [
+            'title' => 'Title: Mail from Real Programmer',
+            'body' => 'Body: This is for testing email using smtp'
+        ];
+ 
+        $mail = \Mail::to('moneyalway@gmail.com')->send(new SendMail($details));
 
-
-        $input = $request->all();
-        if ($request->id) {
-            $model = Department::findOrFail($request->id);
-            $msg = "Updated";
-        } else {
-            $msg = "stored";
-            $model = new Department();
-        }
-        $model->name = $request->name;
-        $model->description = $request->description;
-        $model->save();
-
-        if ($model) {
-            return redirect('department')->with('success', "Department " . $msg . " successfully.");
-        } else {
-            return redirect()->back()->withErrors(['error' => ['Insert Error']]);
-        }
     }
+
+        // $input = $request->all();
+        // if ($request->id) {
+        //     $model = Department::findOrFail($request->id);
+        //     $msg = "Updated";
+        // } else {
+        //     $msg = "stored";
+        //     $model = new Department();
+        // }
+        // $model->name = $request->name;
+        // $model->description = $request->description;
+        // $model->save();
+
+        // if ($model) {
+        //     return redirect('department')->with('success', "Department " . $msg . " successfully.");
+        // } else {
+        //     return redirect()->back()->withErrors(['error' => ['Insert Error']]);
+        // }
+    
 
     /**
      * Remove the specified resource from storage.

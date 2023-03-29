@@ -7,6 +7,9 @@ use App\Imports\EmployeesImport;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Employee;
+use App\Models\ProjectEmployee;
+use App\Models\User;
+use App\Models\WorkflowLevelDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -17,8 +20,9 @@ class EmployeeController extends Controller
 
     public function create()
     {
-        $departments = Department::get();
-        $designation = Designation::get();
+        $departments = Department::where('is_active',1)->get();        
+        $designation = Designation::where('is_active',1)->get();
+
         $model = array();
         return view('Employee/EmployeeDetails', ['model' => $model, 'departments' => $departments, 'designation' => $designation]);
     }
@@ -26,6 +30,7 @@ class EmployeeController extends Controller
     {
         $departments = Department::get();
         $designation = Designation::get();
+        
         $model = Employee::findOrFail($id);
         return view('Employee/EmployeeDetails', ['model' => $model, 'departments' => $departments, 'designation' => $designation]);
     }
@@ -270,6 +275,25 @@ class EmployeeController extends Controller
     public function destroy($id)
     {
 
+        $checkChildData = ProjectEmployee::where('employee_id', $id)->first();
+        $checkChildData1 = WorkflowLevelDetail::where('employee_id', $id)->first();
+        $checkChildData2 = User::where('emp_id', $id)->first();
+        if ($checkChildData || $checkChildData1 || $checkChildData2) {
+            $data = [
+                "message" => "Failed",
+                "data" => "Reference Data exists, Can’t delete."
+            ];
+        } else {
+            $model = Employee::where("id", $id)->delete();
+            $data = [
+                "message" => "Success",
+                "data" => "Employee Deleted Successfully."
+            ];
+        }
+     
+        return response()->json($data);
+
+
         $employee_update = Employee::where("id", $id)->delete();
         echo json_encode($employee_update);
     }
@@ -304,34 +328,33 @@ class EmployeeController extends Controller
                     $error = "Row:" . $rowNo . "  Error:" . $validationResult[$i];
                     array_push($errors, $error);
                 }
-            } 
+            }
 
-                $employeeModel = Employee::where('sap_id', $row['sap_id'])->first();
+            $employeeModel = Employee::where('sap_id', $row['sap_id'])->first();
 
-                if ($employeeModel) {
+            if ($employeeModel) {
 
-                    $baseValidation = $this->basicValidation($rowNo, $row, $employeeModel->id);
-                    if (count($baseValidation)||$validationResult) {
-                        for ($j = 0; $j < count($baseValidation); $j++) {
-                            array_push($errors, $baseValidation[$j]);
-                        }
-                    } else {
-                        $model = $employeeModel;
-                        $convertModel = $this->employeeModel($model, $row);
+                $baseValidation = $this->basicValidation($rowNo, $row, $employeeModel->id);
+                if (count($baseValidation) || $validationResult) {
+                    for ($j = 0; $j < count($baseValidation); $j++) {
+                        array_push($errors, $baseValidation[$j]);
                     }
                 } else {
-                    $baseValidation = $this->basicValidation($rowNo, $row);
-                    if (count($baseValidation)||$validationResult) {
-                        for ($j = 0; $j < count($baseValidation); $j++) {
-                            array_push($errors, $baseValidation[$j]);
-                        }
-                    } else {
-
-                        $model = new Employee();
-                        $convertModel = $this->employeeModel($model, $row);
-                    }
+                    $model = $employeeModel;
+                    $convertModel = $this->employeeModel($model, $row);
                 }
-            
+            } else {
+                $baseValidation = $this->basicValidation($rowNo, $row);
+                if (count($baseValidation) || $validationResult) {
+                    for ($j = 0; $j < count($baseValidation); $j++) {
+                        array_push($errors, $baseValidation[$j]);
+                    }
+                } else {
+
+                    $model = new Employee();
+                    $convertModel = $this->employeeModel($model, $row);
+                }
+            }
         }
 
 
@@ -363,9 +386,9 @@ class EmployeeController extends Controller
         }
         $designation = $this->designationCheckFunction($row['designation']);
         if (!$designation) {
-          $designationModel = new Designation();
-          $designationModel->name = $row['designation'];
-          $designationModel->save();
+            $designationModel = new Designation();
+            $designationModel->name = $row['designation'];
+            $designationModel->save();
         }
         return $errors;
     }

@@ -87,7 +87,7 @@ class WorkflowController extends Controller
             $designationData = ($employeeData['designation']);
 
             $designationName = $designationData->name;
-            $name = $employeeData->first_name.$employeeData->last_name.'('.$employeeData->sap_id.')'.'-('.$designationName.')';
+            $name = $employeeData->first_name." ".$employeeData->middle_name." ".$employeeData->last_name.'('.$employeeData->sap_id.')'.'-('.$designationName.')';
          
            return ['id'=>$employeeData->id,'data'=>$name];
            

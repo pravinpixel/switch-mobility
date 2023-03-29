@@ -338,7 +338,7 @@
                 <p>{{ $details->project_name }}</p>
             </div>
             <div class="col-md-3">
-                <h4>Upoload Date</h4>
+                <h4>Upload Date</h4>
                 <p>{{ $details->created_at }}</p>
             </div>
             <div class="col-md-3">
@@ -354,7 +354,7 @@
                 <p>{{ $details->department }}</p>
             </div>
             <div class="col-md-2">
-                <h4>Initiater </h4>
+                <h4>Initiator </h4>
                 <p>{{ $details->first_name . ' ' . $details->last_name }}</p>
             </div>
 

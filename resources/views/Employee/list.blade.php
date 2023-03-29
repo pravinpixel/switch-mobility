@@ -551,7 +551,7 @@
     }
     $(document).ready(
         function() {
-        
+
 
             $('.emplySelect').on('change', function() {
                 var emplyId = $(this).children("option:selected").val();
@@ -789,19 +789,23 @@
                         id: id,
                     },
                     success: function(result) {
-                        if (result) {
+                        if (result.message == "Failed") {
+                            Swal.fire(
+                                'Deleted!',
+                                result.data,
+                                'error'
+                            );
+                        } else {
+                            Swal.fire(
+                                'Deleted!',
+                                result.data,
+                                'success'
+                            );
                             window.location.reload();
                         }
                     }
                 });
-                if (isConfirmed.value) {
-                    Swal.fire(
-                        'Deleted!',
-                        'Employee has been deleted.',
-                        'success'
-                    );
 
-                }
             }
         });
     }
@@ -851,10 +855,12 @@
 
                 }
             } else {
-                if (chk.checked) {
-                    chk.prop("checked", false);
+                if (status == 1) {
+                    chk.prop('checked', false);
+
                 } else {
-                    chk.prop("checked", true);
+
+                    chk.prop('checked', true).attr('checked', 'checked');
                 }
             }
         });

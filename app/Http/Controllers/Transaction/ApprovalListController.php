@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Transaction;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\ProjectDocumentDetail;
-use Dompdf\Dompdf;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use setasign\Fpdi\Fpdi;
-
 class ApprovalListController extends Controller
 {
     protected $tempController;
@@ -46,12 +48,13 @@ class ApprovalListController extends Controller
     }
     public function approvedDocsDownload(Request $request)
     {
-        
-        $id = $request->id;
-       
-        $frontSheet = $this->tempController->frontPdf($id);
 
-        
+        $id = $request->id;
+
+         $frontSheet = $this->tempController->frontPdf($id);
+
+         $endSheet = $this->tempController->FooterPdf($id);
+
 
         $models = ProjectDocumentDetail::leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
             ->where('project_document_details.project_id', $id)
@@ -59,67 +62,73 @@ class ApprovalListController extends Controller
             ->where('project_document_details.status', 4)
             ->get();
 
+        if (count($models)) {
 
-        $destinationPath = public_path('/temp/' . $id);
-        if (File::exists($destinationPath)) {
+            $destinationPath = public_path('/temp/' . $id);
+            if (File::exists($destinationPath)) {
 
-            File::deleteDirectory($destinationPath);
-        }
-
-        File::makeDirectory($destinationPath, 0777, true, true);
-
-        foreach ($models as $key => $model) {
-
-
-
-            $path = $_SERVER['DOCUMENT_ROOT'] . '/projectDocuments/' . $model->document_name;
-
-
-            $extension = pathinfo($path, PATHINFO_EXTENSION);
-            $pdf_path = $destinationPath . '/' . ($key + 1) . '.pdf';
-            $frontSheetpath = $destinationPath . '/' .($key + 1) .".".($key + 1). '.pdf';
-
-            File::copy($frontSheet, $frontSheetpath);
-
-            if ($extension == "xlsx" || $extension == "xls") {
-
-
-
-                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xlsx");
-                $spreadsheet = $reader->load("$path");
-
-                $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Mpdf');
-
-                $writer->save($pdf_path);
-            } else {
-
-                File::copy($path, $pdf_path);
+                File::deleteDirectory($destinationPath);
             }
-        }
 
-        $files = File::allFiles($destinationPath);
+            File::makeDirectory($destinationPath, 0777, true, true);
+
+            foreach ($models as $key => $model) {
 
 
-        $pdf = new Fpdi();
 
-        // Merge all PDF files into a single file
-        foreach ($files as $key => $file) {
-            // dd($key);
-            // if($key == 1){
-            //     dd("well");
-            // }
+                $path = $_SERVER['DOCUMENT_ROOT'] . '/projectDocuments/' . $model->document_name;
+                $extension = pathinfo($path, PATHINFO_EXTENSION);
+                $pdf_path = $destinationPath . '/' . ($key + 1) .  "." . ($key + 1) . '.pdf';
+                $frontSheetpath = $destinationPath . '/' . ($key + 1) . "." . ($key + 1) . "." . ($key + 1) . '.pdf';
+                $endSheetpath = $destinationPath . '/' . ($key + 1) . '.pdf';
+             
+              
+         
+             
 
-            $pageCount = $pdf->setSourceFile($file->getPathname());
+                  File::copy($frontSheet, $frontSheetpath);
+           
 
-            for ($i = 1; $i <= $pageCount; $i++) {
-                $template = $pdf->importPage($i);
-                $pdf->AddPage();
-                $pdf->useTemplate($template);
+                if ($extension == "xlsx" || $extension == "xls") {
+
+                    $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xlsx");
+                    $spreadsheet = $reader->load("$path");
+
+                    $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Mpdf');
+
+                    $writer->save($pdf_path);
+                } else {
+
+                    File::copy($path, $pdf_path);
+                }
+                File::copy($endSheet, $endSheetpath);
             }
-        }
 
-        $pdf->Output('merged.pdf', 'I');
-        
+            $files = File::allFiles($destinationPath);
+
+
+            $pdf = new Fpdi();
+
+            // Merge all PDF files into a single file
+            foreach ($files as $key => $file) {
+                // dd($key);
+                // if($key == 1){
+                //     dd("well");
+                // }
+
+                $pageCount = $pdf->setSourceFile($file->getPathname());
+
+                for ($i = 1; $i <= $pageCount; $i++) {
+                    $template = $pdf->importPage($i);
+                    $pdf->AddPage();
+                    $pdf->useTemplate($template);
+                }
+            }
+
+            $pdf->Output('merged.pdf', 'I');
+        } else {
+            dd("no data");
+        }
     }
     public function fileDownload($path, $key)
     {

@@ -347,11 +347,13 @@
                     );
 
                 }
-            } else {
-                if (chk.checked) {
-                    chk.prop("checked", false);
+            } else {             
+                if (status ==1) {
+                    chk.prop('checked', false);
+                  
                 } else {
-                    chk.prop("checked", true);
+                   
+                    chk.prop('checked', true).attr('checked', 'checked');
                 }
             }
         });

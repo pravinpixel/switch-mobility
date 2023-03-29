@@ -132,7 +132,7 @@
                                     <th class="min-w-125px">Document Type</th>
                                     <th class="min-w-125px">Work Flow code ,Name</th>
                                     <th class="min-w-125px">Levels</th>
-                                    <th class="min-w-125px">Satuts</th>
+                                    <th class="min-w-125px">Status</th>
                                     <th class="min-w-125px">Actions</th>
 
                                 </tr>
@@ -402,10 +402,12 @@
 
                 }
             }else {             
-                if (chk.checked) {
-                    chk.prop("checked", false);
+                if (status ==1) {
+                    chk.prop('checked', false);
+                  
                 } else {
-                    chk.prop("checked", true);
+                   
+                    chk.prop('checked', true).attr('checked', 'checked');
                 }
             }
         });

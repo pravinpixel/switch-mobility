@@ -61,9 +61,9 @@ class ProjectController extends Controller
     }
     public function create()
     {
-        $employee = Employee::whereNull('deleted_at')->get();
-        $document_type = DocumentType::whereNull('deleted_at')->get();
-        $workflow = Workflow::whereNull('deleted_at')->get();
+        $employee = Employee::where('is_active',1)->whereNull('deleted_at')->get();
+        $document_type = DocumentType::where('is_active',1)->whereNull('deleted_at')->get();
+        $workflow = Workflow::where('is_active',1)->whereNull('deleted_at')->get();
         $project = array();
         return view('Projects/create', compact('employee', 'document_type', 'workflow', 'project'));
     }
@@ -182,7 +182,8 @@ class ProjectController extends Controller
 
             Log::info('ProjectController->Store:-ProjectData ' . json_encode($project));
             if ($project) {
-                $project->ticket_no = "WF" .  date('Y-m-d') . '-' . $project->id;
+                $ticket = substr($project->project_name, 0, 3).date('YmdHis');
+                $project->ticket_no = $ticket;
                 $project->save();
                
 
