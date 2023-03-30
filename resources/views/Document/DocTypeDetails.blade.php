@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <style>
     th.tdStyle {
         min-width: 150px;
@@ -13,7 +14,9 @@
         text-align: center !important;
 
     }
-
+   .work_levels{
+    display: none;
+   }
     td.tdStyle {
         min-width: 150px;
         display: inline-block;
@@ -173,7 +176,7 @@
 <script>
     $(document).ready(function() {
         console.log($('.id').val());
-        $(".work_levels").hide();
+       
         var wfid = $('.workflow_id').val();
         if (wfid) {
             get_work_flow_levels(wfid)

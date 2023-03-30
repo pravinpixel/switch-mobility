@@ -429,11 +429,11 @@
     <button class="btn btn-info float-right-btn float-open-btn">
         MileStone
     </button>
-    <div class="card shadow-sm right-card right-card-close">
+    <div class="card shadow-sm right-card right-card-close overflow-hidden">
 
-        <div class="card-body">
-            <div class="card-body milstoneBody">
-                <table class="table table-row-bordered">
+        <div class="card-body p-0">
+            <div class="card-body milstoneBody p-0">
+                <table class="table table-hover table-row-bordered">
                     <thead>
                         <tr>
                             <th>Milestone Name</th>
@@ -451,6 +451,7 @@
                             <td>{{$milestoneData->levels_to_be_crossed}}</td>
                         </tr>
                         @endforeach
+          
                     </tbody>
                 </table>
             </div>
@@ -626,7 +627,7 @@
                     //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
                     //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
                     //     newDate = day + '-' + month + '-' + yr;
-                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-5 image_append' + level + '" style="display:inline-flex;flex-flow:row"></div><div class="col-md-2">Due Date:<div class="due_date_' + level + '"></div></div><div class="col-md-1">Priority<p class="priority_' + level + '"></p></div><hr><div>Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div>Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
+                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-5 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<div class="due_date_' + level + '"></div></div><div class="col-md-1">Priority<p class="priority_' + level + '"></p></div><hr><div>Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div>Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
                     //if (data.length > 0) {
 
                     $(".image_append" + level).empty();
@@ -669,7 +670,7 @@
                         } else {
                             var profile = 'icon-5359553_960_720.png';
                         }
-                        $(".image_append" + level).append('<figure><img src="' + baseUrl + '/' + profile + '" class="rounded"  width="50" height="50"><figcaption>[' + val.first_name + ' ,' + val.desName + ']&nbsp;</figcaption></figure>');
+                        $(".image_append" + level).append('<figure><img src="' + baseUrl + '/' + profile + '" class="rounded"  width="50" height="50"><figcaption  style="white-space: nowrap;">[' + val.first_name + ' ,' + val.desName + ']&nbsp;</figcaption></figure>');
                     });
                     $.ajax({
                         url: "{{ url('getProjectDocs') }}",
