@@ -175,12 +175,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,      
-<<<<<<< Updated upstream
+
         // Webklex\PDFMerger\Providers\PDFMergerServiceProvider::class,
         // Barryvdh\DomPDF\ServiceProvider::class,
-=======
-       
->>>>>>> Stashed changes
     ],
 
     /*
