@@ -189,7 +189,7 @@
                                             <option></option>
                                             @foreach ($projects as $project)
                                                 <option value="{{ $project['project_code'] }}">
-                                                    {{ $project['project_code'] }} {{ $project['project_name'] }}</option>
+                                                {{ $project['project_name'] }}( {{ $project['project_code'] }}) </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -202,7 +202,7 @@
                                             <option></option>
                                             @foreach ($workflow as $wf)
                                                 <option value="{{ $wf['workflow_code'] }}">
-                                                    {{ $wf['workflow_code'] }}{{ $wf['workflow_name'] }} </option>
+                                                {{ $wf['workflow_name'] }}({{ $wf['workflow_code'] }}) </option>
                                             @endforeach
                                         </select>
                                         <!--end::Select-->
@@ -250,12 +250,12 @@
                                     </div>
                                     <div class="col-sm-2">
                                         <label class="fs-6 form-label fw-bold text-dark">Start Date</label>
-                                        <input type="date" class="form-control dateWiseFilter" id="startDate"
+                                        <input type="date" class="form-control dateWiseFilter filterDeptAndDes" id="startDate"
                                             name="start_date" placeholder="Enter Start Date">
                                     </div>
                                     <div class="col-sm-2">
                                         <label class="fs-6 form-label fw-bold text-dark">End Date</label>
-                                        <input type="date" class="form-control dateWiseFilter" id="endDate"
+                                        <input type="date" class="form-control dateWiseFilter filterDeptAndDes" id="endDate"
                                             name="end_date" placeholder="Enter End Date">
                                     </div>
                                     <div class="col-md-1">
@@ -312,7 +312,7 @@
 
                                             <!--end::Checkbox-->
                                             <!--begin::User=-->
-                                            <td class="d-flex align-items-center">
+                                            <td class="">
                                                 {{ $d->ticket_no }}
                                             </td>
 
@@ -474,6 +474,11 @@
             });
         }
     });
+    $(document).on('change click','.filterDeptAndDes',function(){
+        console.log("well");
+        $('.filterDeptAndDes').not($(this)).val('').trigger('change');
+    });
+  
     $(document).on('click', '.viewDocument', function() {
         console.log("well and good");
 

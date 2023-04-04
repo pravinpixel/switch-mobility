@@ -406,6 +406,7 @@
 
             <ul class="nav nav-tabs" role="tablist">
                 <h4>Approval Status</h4>
+
                 @for ($i = 0; $i < count($levelsArray); $i++) <li class="nav-item">
                     <a class="nav-link <?php if ($i == 0) {
                                             echo 'active';
@@ -420,6 +421,7 @@
 
             </div>
             @endfor
+
         </div>
 
 
@@ -451,7 +453,7 @@
                             <td>{{$milestoneData->levels_to_be_crossed}}</td>
                         </tr>
                         @endforeach
-          
+
                     </tbody>
                 </table>
             </div>
@@ -627,7 +629,7 @@
                     //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
                     //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
                     //     newDate = day + '-' + month + '-' + yr;
-                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-5 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<div class="due_date_' + level + '"></div></div><div class="col-md-1">Priority<p class="priority_' + level + '"></p></div><hr><div>Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div>Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
+                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="" ><div class="row"> <div class="col-md-2">Approvers</div><div class="col-md-5 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<div class="due_date_' + level + '"></div></div><div class="col-md-1">Priority<p class="priority_' + level + '"></p></div></div><div class="p-0  w-100" style="border-top:1px solid lightgrey;text-align:left;padding:5px 0;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto;"></div><div style="text-align:left;padding:5px 0;" >&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
                     //if (data.length > 0) {
 
                     $(".image_append" + level).empty();
@@ -690,21 +692,34 @@
                             var levelstageStatus = [];
                             if (data.main_docs) {
                                 $.each(data.main_docs, function(key, val) {
+                                    var currentStatusId = val.status;
+
+                                    if (currentStatusId == 2) {
+                                        var currentStatusData = "Declined";
+                                    } else if (currentStatusId == 3) {
+                                        var currentStatusData = "Change Request";
+                                    } else if (currentStatusId == 4) {
+                                        var currentStatusData = "Approved";
+                                    } else {
+                                        var currentStatusData = "Waiting For Approval";
+                                    }
+
                                     var docMainDetailArray = val.doc_detail;
 
                                     var baseUrl = "{{ asset('/') }}";
+
                                     if (val.status == 1) {
                                         var status = "Pending";
-                                    } else if (val.status == 1) {
+                                    } else if (val.status == 2) {
                                         var status = "Declined";
                                     } else {
                                         var status = "Approved";
                                     }
-                                    var versionMainDocDiv = '<div class="row">';
-                                    versionMainDocDiv += '<div class="accordion" id="accordionExample' + key + '">';
-                                    versionMainDocDiv += '<div class="card"> <div class="card-header" id="heading' + key + '">';
-                                    versionMainDocDiv += '<h5 class="mb-0">';
-                                    versionMainDocDiv += '<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold">' + val.original_name + '</h3><p class="text-right mainlevelStatus-' + level + "-" + key + '"></p></button>';
+                                    var versionMainDocDiv = '<div class="">';
+                                    versionMainDocDiv += '<div class="accordion " style="margin:auto;width:98%;" id="accordionExample' + key + '">';
+                                    versionMainDocDiv += '<div class="card p-0"> <div class=" border-0" id="heading' + key + '">';
+                                    versionMainDocDiv += '<h5 class="mb-0 w-100">';
+                                    versionMainDocDiv += '<button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold;padding-left:10px;">' + val.original_name + '</h3> <p class="text-right mainlevelStatus-' + level + "-" + key + '"></p> <p class="btn btn-light-warning status-accordion" style="margin-right:40px;">'+currentStatusData+'</p></button>';
                                     versionMainDocDiv += '</h5>';
                                     versionMainDocDiv += '</div>';
                                     versionMainDocDiv += '<div id="collapse' + key + '" class="collapse fade" aria-labelledby="heading' + key + '" data-parent="#accordionExample' + key + '">';
@@ -725,8 +740,10 @@
                                         var statusData = "";
                                         if (docMainDetailArray[i].status == 1) {
                                             var statusData = "Waiting  For Approval";
+
                                         } else if (docMainDetailArray[i].status == 2) {
                                             var statusData = "Declined";
+
                                         } else if (docMainDetailArray[i].status == 3) {
                                             var statusData = "Change Request";
                                         } else if (docMainDetailArray[i].status == 4) {
@@ -735,6 +752,8 @@
                                             var statusData = "Waiting For Approval";
                                         }
 
+                                        // $(".status").html(statusData);
+                                        console.log($(".status-accordion").html());
                                         var dateFormat = new Date(docMainDetailArray[i].updated_at);
                                         var lastUpdate = ("Date: " + dateFormat.getDate() +
                                             "/" + (dateFormat.getMonth() + 1) +
@@ -793,10 +812,10 @@
                                         var status = "Pending";
                                     }
                                     var versionAuxDocDiv = '<div class="row">';
-                                    versionAuxDocDiv += '<div class="accordion" id="accordionExample1">';
+                                    versionAuxDocDiv += '<div class="accordion" style="margin:auto;width:98%;" id="accordionExample1">';
                                     versionAuxDocDiv += '<div class="card">';
-                                    versionAuxDocDiv += '<div class="card-header" id="heading' + key1 + '">';
-                                    versionAuxDocDiv += ' <h5 class="mb-0"><button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse1' + key1 + '" aria-expanded="false" aria-controls="collapse' + key1 + '"><h3 style = "font-style:bold">' + val.original_name + '</h3><p class="auxlevelStatus' + (key1 - 1) + '"></p></button></h5>';
+                                    versionAuxDocDiv += '<div class="border-0" id="heading' + key1 + '">';
+                                    versionAuxDocDiv += ' <h5 class="mb-0 w-100"><button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse1' + key1 + '" aria-expanded="false" aria-controls="collapse' + key1 + '"><h3 style = "font-style:bold;padding-left:10px;">' + val.original_name + '</h3><p class="auxlevelStatus' + (key1 - 1) + '"></p><p class="btn btn-light-danger status-accordion" style="margin-right:40px;visibility:hidden;">asdas</p></button></h5>';
                                     versionAuxDocDiv += '</div>';
                                     versionAuxDocDiv += ' <div id="collapse1' + key1 + '" class="collapse fade" aria-labelledby="heading' + key1 + '" data-parent="#accordionExample1">';
                                     versionAuxDocDiv += '<div class="card-body">';

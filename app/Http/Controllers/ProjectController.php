@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Email\EmailController;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\DocumentType;
@@ -25,10 +26,11 @@ use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
-    protected $wfController;
-    public function __construct(WorkflowController $wfController)
+    protected $wfController,$emailController;
+    public function __construct(WorkflowController $wfController,EmailController $emailController)
     {
         $this->wfController = $wfController;
+        $this->emailController = $emailController;
     }
     public function index()
     {
@@ -151,6 +153,8 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
+        
+        
         //Log::info('ProjectController->Store:-Inside ' . json_encode($request->all()));
         // $fileArray = $_FILES['main_document']['name'][0];
         // dd($fileArray);
@@ -204,6 +208,8 @@ class ProjectController extends Controller
                     if (File::exists($path)) {
                        // File::deleteDirectory($path);
                     }
+                }else{
+                    $mail = $this->emailController->SendProjectInitiaterEmail($request->initiator_id,$request->project_name,$request->project_code);
                 }
 
                 $MainDocumentCount = (isset($request->main_document)) ? count($request->main_document) : 0;
@@ -219,7 +225,9 @@ class ProjectController extends Controller
                         $banner = $_FILES['main_document']['name'][$d];
                         $bannerpath = $upload_path . $fileName;
 
-                        if (move_uploaded_file($_FILES["main_document"]["tmp_name"][$d], $bannerpath)) {
+                        if (move_uploaded_file($_FILES["main_document"]["tmp_name"][$d], $bannerpath))
+                        {
+
                             $doc = new projectDocument();
                             $doc->type = 1;
                             $doc->project_id = $project->id;
@@ -227,10 +235,12 @@ class ProjectController extends Controller
                             $doc->document = $halfPath . $fileName;
                             $doc->is_latest = 1;
                             $doc->original_name = $fileName;
+                            $doc->status = 1;
                             $doc->save();
 
                             $docdetail = new ProjectDocumentDetail();
                             $docdetail->project_doc_id =  $doc->id;
+                            $docdetail->project_id = $project->id;
                             $docdetail->version = 1;
                             $docdetail->document_name = $halfPath . $fileName;
                             $docdetail->status = 1;
@@ -263,6 +273,7 @@ class ProjectController extends Controller
 
                             $docdetail = new ProjectDocumentDetail();
                             $docdetail->project_doc_id =  $doc->id;
+                            $doc->project_id = $project->id;
                             $docdetail->version = 1;
                             $docdetail->document_name = $halfPath . $fileName;
                             $docdetail->status = 1;
@@ -587,6 +598,26 @@ class ProjectController extends Controller
         ->leftjoin('projects', 'projects.id', 'project_documents.project_id')
         ->where('project_documents.id', $request->documentId)
         ->first();
+        if($parentModel){
+            $projectId = $parentModel->projectId;
+            $getAllDocMentModel = projectDocument::where('project_id',$projectId)->count();
+            $getAllunApprovedDocMentModel = projectDocument::where('project_id',$projectId)->where('status','!=',4)->get();
+           if(count($getAllunApprovedDocMentModel) == 1 ){
+            if($getAllunApprovedDocMentModel[0]->id == $request->documentId && $request->status == 4)
+            {
+                
+                $pModel = Project::where('id',$projectId)->first();
+                $pModel->current_status = 4;
+                $pModel->save();
+            }
+           }
+
+        }
+        
+        $modelMain = projectDocument::where('id',$request->documentId)->first();
+        $modelMain->status = $request->status;
+        $modelMain->save();
+
         $projectId = $parentModel->projectId;
         $level = $request->levelId;
         $modelData = ProjectDocumentDetail::where('id', $request->statusdocumentId)->first();
@@ -637,7 +668,7 @@ class ProjectController extends Controller
                 $model->status = 1;
                 $model->document_name = $parentModel->ticket_no . '/' . $typeOfDoc . $fileName1;
                 $model->updated_by = $empId;
-
+                $model->project_id = $projectId;
                 $model->save();
 
                 $ProjectDocumentModelVersion = projectDocument::findOrFail($request->documentId);
