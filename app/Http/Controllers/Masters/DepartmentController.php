@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Masters;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Email\EmailController;
 use App\Models\Department;
 use App\Models\Employee;
 use Illuminate\Http\Request;
@@ -17,6 +18,11 @@ class DepartmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    protected $emailController;
+    public function __construct(EmailController $emailController)
+    {
+        $this->emailController = $emailController;
+    }
     public function index()
     {
         $departments = Department::orderBy('id', 'desc')->get()->toArray();
@@ -29,9 +35,8 @@ class DepartmentController extends Controller
     }
     public function edit($id)
     {
-       
+
         $model = Department::findOrFail($id);
-        dd($model);
         return view('Departments/DepartmentDetail', compact('model'));
     }
     public function departmentValidation(Request $request)
@@ -52,34 +57,35 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        $details = [
-            'title' => 'Title: Mail from Real Programmer',
-            'body' => 'Body: This is for testing email using smtp'
-        ];
- 
-        $mail = \Mail::to('moneyalway@gmail.com')->send(new SendMail($details));
+        //         $details = [
+        //             'title' => 'Title: Mail from Real Programmer',
+        //             'body' => 'Body: This is for testing email using smtp'
+        //         ];
+        //         $ccMail = "smartdhana20@gmail.com";
+        //         $mail = Mail::to('dhanaraj7927@gmail.com') ->cc($ccMail)->send(new SendMail("New Project assigned to Initiator",$details));
 
+
+        // dd("well");
+
+       
+        $input = $request->all();
+        if ($request->id) {
+            $model = Department::findOrFail($request->id);
+            $msg = "Updated";
+        } else {
+            $msg = "stored";
+            $model = new Department();
+        }
+        $model->name = $request->name;
+        $model->description = $request->description;
+        $model->save();
+
+        if ($model) {
+            return redirect('department')->with('success', "Department " . $msg . " successfully.");
+        } else {
+            return redirect()->back()->withErrors(['error' => ['Insert Error']]);
+        }
     }
-
-        // $input = $request->all();
-        // if ($request->id) {
-        //     $model = Department::findOrFail($request->id);
-        //     $msg = "Updated";
-        // } else {
-        //     $msg = "stored";
-        //     $model = new Department();
-        // }
-        // $model->name = $request->name;
-        // $model->description = $request->description;
-        // $model->save();
-
-        // if ($model) {
-        //     return redirect('department')->with('success', "Department " . $msg . " successfully.");
-        // } else {
-        //     return redirect()->back()->withErrors(['error' => ['Insert Error']]);
-        // }
-    
-
     /**
      * Remove the specified resource from storage.
      *
@@ -118,10 +124,10 @@ class DepartmentController extends Controller
     }
     public function departmentEdit(Request $request)
     {
-       
-      $id =$request->id;    
-      $model = Department::findOrFail($id);
-  
-      return view('Departments/DepartmentDetail', compact('model'));
+
+        $id = $request->id;
+        $model = Department::findOrFail($id);
+
+        return view('Departments/DepartmentDetail', compact('model'));
     }
 }

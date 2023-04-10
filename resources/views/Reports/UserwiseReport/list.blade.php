@@ -95,7 +95,7 @@
                                     </div>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <div class="col-md-1">
                                         <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                        <button class="btn btn-success" onclick="exportData()">Excel</button>
+                                        <button class="btn btn-success" onclick="exportData()">ExportExcel</button>
                                     </div>
                                 </div>
                             </div>
@@ -270,6 +270,7 @@
             $('.resetBtn').on('click', function() {
                 console.log("well");
                 $('#workflowCode,#initiatorName').val("").trigger('change');
+                location.reload();
             });
             $(document).on('click', '.viewDocs', function () {
     console.log("well and good");

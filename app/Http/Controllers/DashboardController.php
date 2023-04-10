@@ -7,8 +7,10 @@ use App\Models\Designation;
 use App\Models\DocumentType;
 use App\Models\Employee;
 use App\Models\Project;
+use App\Models\ProjectApprover;
 use App\Models\projectDocument;
 use App\Models\ProjectDocumentDetail;
+use App\Models\ProjectEmployee;
 use App\Models\ProjectLevels;
 use App\Models\ProjectMilestone;
 use App\Models\Workflow;
@@ -20,18 +22,25 @@ use Illuminate\Support\Facades\Session as FacadesSession;
 
 class DashboardController extends Controller
 {
+  protected $basicController;
+  public function __construct(BasicController $basicController)
+  {
+      $this->basicController = $basicController;
+  }
   public function index()
   {
     $empId = Auth::user()->emp_id;
-    if ($empId) {
-      $employee = Employee::where('id', $empId)->first();
-      $name = $employee->first_name . " " . $employee->middle_name . " " . $employee->last_name;
-      Session()->put('employeeId', $empId);
-    } else {
-      $name = "Admin";
-       Session()->put('employeeId', "");
-    }
-    Session()->put('logginedUser', $name);
+    // if ($empId) {
+    //   $employee = Employee::where('id', $empId)->first();
+     
+    //   $name = $employee->first_name . " " . $employee->middle_name . " " . $employee->last_name;
+    //   Session()->put('employeeId', $empId);
+    // } else {
+    //   $name = "Admin";
+    //   Session()->put('employeeId', "");
+    // }
+    // Session()->put('logginedUser', $name);
+    $this->basicController->BasicFunction();
     $role = auth()->user()->roles->first();
     if ($role) {
       $type = ($role->authority_type == 1) ? 1 : 0;
@@ -42,21 +51,58 @@ class DashboardController extends Controller
     }
     $data = Session('authorityType');
 
-    $totProject = Project::whereNull('deleted_at')->count();
-    $totDocs = ProjectDocumentDetail::whereNull('deleted_at')->count();
-    $totApprovedDocs = ProjectDocumentDetail::where('status', 4)->whereNull('deleted_at')->count();
-    $totDeclinedDocs = ProjectDocumentDetail::where('status', 2)->whereNull('deleted_at')->count();
+    $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+    if ($empId) {
+      $models->whereHas('projectEmployees', function ($q) use ($empId) {
+        if ($empId != "") {
+          $q->where('employee_id', '=', $empId);
+        }
+      });
+    }
+
+    $models->whereNull('deleted_at');
+    $models1 = $models->get();
+
+    $includedProjects = array();
+
+    foreach ($models1 as $key => $value){
+    
+        $includedProjects[$key] = $value['id'];
+    }
+
+    $totProject = count($models1);
+
+
+    if ($empId) {
+      $gettotDocs = ProjectDocument::whereIn('project_id',$includedProjects)->get();     
+      $totDocs = count($gettotDocs);
+      $gettotApprovedDocs = projectDocument::whereIn('project_id',$includedProjects)->where('status', 4)->whereNull('deleted_at')->get();
+    
+      $totApprovedDocs = count($gettotApprovedDocs);
+      $gettotDeclinedDocs = projectDocument::whereIn('project_id',$includedProjects)->where('status', 2)->whereNull('deleted_at')->get();
+      $gettotPendingDocs = projectDocument::whereIn('project_id',$includedProjects)->where('status', 1)->whereNull('deleted_at')->get();
+     
+      $totDeclinedDocs = count($gettotDeclinedDocs);
+      
+      $totPendingDocs = count($gettotPendingDocs);
+      
+    
+    } else {
+      $totDocs = projectDocument::whereNull('deleted_at')
+        ->count();
+      $totApprovedDocs = projectDocument::where('status', 4)->whereNull('deleted_at')->count();
+      $totDeclinedDocs = projectDocument::where('status', 2)->whereNull('deleted_at')->count();
+      $totPendingDocs = projectDocument::where('status', 1)->whereNull('deleted_at')->count();
+    }
+   
+   
+   
     // dd($totProject);
     $project = $this->get_all_projects();
 
+    $order_at = $models1;
 
-    $project_document = projectDocument::all();
-    $approved_project_document = projectDocument::where('status', 1)->get()->toArray();
-    $pending_project_document = projectDocument::where('status', 0)->get()->toArray();
-    $declined_project_document = projectDocument::where('status', 2)->get()->toArray();
-    $overdue_project_document = $this->overdue_project_document();
-    $order_at = $project;
-    return view('Dashboard/index', ['totDeclinedDocs' => $totDeclinedDocs, 'totApprovedDocs' => $totApprovedDocs, 'totProject' => $totProject, 'totDocs' => $totDocs, 'order_at' => $order_at, 'project' => $project, 'project_document' => $project_document, 'approved_project_document' => $approved_project_document, 'pending_project_document' => $pending_project_document, 'declined_project_document' => $declined_project_document, 'overdue_project_document' => $overdue_project_document]);
+    return view('Dashboard/index', ['totPendingDocs'=>$totPendingDocs,'totDeclinedDocs' => $totDeclinedDocs, 'totApprovedDocs' => $totApprovedDocs, 'totProject' => $totProject, 'totDocs' => $totDocs, 'order_at' => $order_at, 'project' => $project]);
   }
   public function get_all_projects()
   {

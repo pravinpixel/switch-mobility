@@ -291,7 +291,7 @@
                                                                         <rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor" /></svg> </span>
                                                                 <!--end::Svg Icon-->Remove</button>
                                                             @else
-                                                            <button type="button" data-repeater-delete="" class="btn btn-sm btn-icon btn-light-danger" style="visibility: hidden;" disabled>
+                                                            <button type="button" data-repeater-delete="" class="btn btn-sm btn-icon btn-light-danger" style="visibility: ;"  onclick="RemoveFunctionc(this)">
                                                                 <!--begin::Svg Icon | path: icons/duotune/arrows/arr088.svg-->
                                                                 <span class="svg-icon svg-icon-1">
                                                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

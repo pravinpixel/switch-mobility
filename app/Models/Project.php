@@ -18,7 +18,7 @@ class Project extends Model
     }
     public function department()
     {
-        return $this->hasOne('App\Models\department', 'id', 'initiator_id');
+        return $this->hasOne('App\Models\Department', 'id', 'initiator_id');
     }
     public function docType()
     {

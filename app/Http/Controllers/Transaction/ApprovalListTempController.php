@@ -29,10 +29,13 @@ class ApprovalListTempController extends Controller
         // $models->whereNull('deleted_at');
         // $datas = $models->get();
 
-        $project = Project::with('docType', 'department', 'employee', 'workflow')->where('id', $id)->first();
+        $project = Project::with('docType', 'employee', 'employee.department', 'workflow')->where('id', $id)->first();
         $docModel  = $project->docType;
-        $departmentModel  = $project->department;
+        
         $employeeModel  = $project->employee;
+        
+        $departmentModel  = $employeeModel->department;
+     
         $workflowModel  = $project->workflow;
 
         $timestamp = strtotime($project->created_at);
@@ -71,26 +74,35 @@ class ApprovalListTempController extends Controller
     public function FooterPdf($id)
     {
 
-        $models = ProjectEmployee::with('employee', 'employee.designation', 'projectlevel')->where('project_id', $id)->get();
+        $models = ProjectEmployee::with('employee', 'employee.designation',  'employee.department', 'projectlevel')->where('project_id', $id)->get();
 
         $entities = collect($models)->map(function ($model) {
 
             $employeeModel = $model['employee'];
             $levelModel = $model['projectlevel'];
             $date =  ($levelModel) ? $levelModel->due_date : "";
-
+            if ($date) {
+                $newDateFormat = Carbon::createFromFormat('Y-m-d', $date)->format('d-m-Y');
+            } else {
+                $newDateFormat = "";
+            }
             $designationModel = ($employeeModel) ? $employeeModel['designation'] : "";
+            $departmentModel = ($employeeModel) ? $employeeModel['department'] : "";
             $designation = ($designationModel) ? $designationModel->name : "";
+            $department = ($departmentModel) ? $departmentModel->name : "";
             $signImage = ($employeeModel->sign_image) ? $employeeModel->sign_image : "noimage.png";
-            $signImageWithPath = public_path('assets/images/employee/' . $signImage);
+            $signImageWithPath = public_path('images/employee/' . $signImage);
+            //dd($signImageWithPath);
             $employeeName =  ($employeeModel) ? $employeeModel->first_name . " " . $employeeModel->middle_name . " " . $employeeModel->last_name : "";
-
+            
             $data = [
                 'imagePath'    => public_path('assets/media/logos/limage.png'),
                 'signImagePath'    =>  $signImageWithPath,
                 'employeeName'     => $employeeName,
                 'designation'      => $designation,
-                'date'        => $date
+                'date'        => $newDateFormat,
+                'level' => $model->level,
+                'department' => $department
             ];
 
             return $data;

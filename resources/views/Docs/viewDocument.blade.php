@@ -359,10 +359,10 @@
             </div>
 
             <div class="m-0 d-flex justify-content-end pe-3">
-                <a href="#" class="btn btn-sm btn-flex bg-body btn-color-gray-700 btn-active-color-primary fw-bold " data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                <!-- <a href="#" class="btn btn-sm btn-flex bg-body btn-color-gray-700 btn-active-color-primary fw-bold " data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
 
-                    Milestone
-                </a>
+                    Milestone1
+                </a> -->
 
                 <!--  Drop Down Container -->
                 <div class="menu menu-sub menu-sub-dropdown w-350px w-md-400px " data-kt-menu="true" id="kt_menu_637dc6b4b8b49">

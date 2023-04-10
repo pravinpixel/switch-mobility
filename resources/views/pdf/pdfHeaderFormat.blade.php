@@ -15,9 +15,10 @@
         <h1 style="margin: 0 auto;display:inline-block">Online Approval Management</h1>
     </div>
     <br>
-    <div class="container" style=" width:98%;background-color: white;border-top: 5px solid darkblue;border-radius: 5px;margin:auto">
+    <div class="container" style="height:48%; width:98%;background-color: white;border-top: 5px solid darkblue;border-radius: 5px;margin:auto">
+    <br>  
     <br>    
-    <div class="top-row" style="">
+    <div class="top-row" style="height:20%">
             <div class="element" style="width: 18%;;margin: 0 20px;text-align: center;display:inline-block">
                 <p style="font-size:10px"><b>Ticket Number</b></p>
                 <p style="font-size:10px">{{$ticketNo}}</p>

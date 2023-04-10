@@ -153,9 +153,9 @@
                         {{ session('success') }}
                     </div>
                     @endif
-                    @if (session('error'))
+                    @if($errors->any())
                     <div class="alert alert-danger" role="alert">
-                        {{ session('error') }}
+                        {{ implode('', $errors->all(':message')) }}
                     </div>
                     @endif
 
@@ -232,7 +232,7 @@
     $(document).on('click', '.actionDocs', function() {
 
         var id = $(this).attr('id');
-        var screen = $(this).attr('screen');   
+        var screen = $(this).attr('screen');
         if (screen == "view") {
             var url = "{{ route('approvedDocsView') }}";
         } else {

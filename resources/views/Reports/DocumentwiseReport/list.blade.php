@@ -27,7 +27,7 @@
                         </li>
                         <!--end::Item-->
                         <!--begin::Item-->
-                        <li class="breadcrumb-item text-muted">Documentwise Report1</li>
+                        <li class="breadcrumb-item text-muted">Documentwise Report</li>
                         <!--end::Item-->
                         <!--begin::Item-->
                         <li class="breadcrumb-item">
@@ -105,7 +105,7 @@
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                 <div class="col-md-1">
                                     <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <button class="btn btn-success" onclick="exportData()">Excel</button>
+                                    <button class="btn btn-success" onclick="exportData()">ExportExcel</button>
                                 </div>
                             </div>
 
@@ -221,6 +221,7 @@
             });
 
             function filterData() {
+               
                 var workflow = $('#workflowCode').val();
                 var docuName = $('#documentName').val();
                 var projectName = $('#projectName').val();
@@ -280,6 +281,7 @@
                                         department, workflowLevel, dueDate, noOfDays,
                                         activeStatus, viewBtn
                                     ]).draw();
+                             
                                 });
                             }
                         },
@@ -295,6 +297,11 @@
 
     function reset() {
         $('#documentName,#projectName,#workflowCode').val("").trigger('change');
+        location.reload();
+        // $("#service_table").load(location.href + " #service_table").abort();
+       
+       
+
     }
 
     function exportData() {

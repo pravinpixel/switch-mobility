@@ -7,16 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Email</title>
 </head>
-@php
-$url = route('tempOpen', ['id' =>$projectId]);
-@endphp
+
 <body>
     <div>Hello <b> {{$empName}}</b>,
 
         <br> Greetings from <b>Switch Mobility</b>,
 
-        <p>This email is to notify you that you have been assigned as an initiator to the project<b> {{$projectName}} </b>-<b> {{$projectCode}}</b>.
-            Please do login with your credentials in our portal <b><a href="{{ $url }}">Click Link</a></b> to kick start your project activities<a href="http://127.0.0.1:8000/workflow/create">Click Link</a></p>
+        <p>This email is to notify you that your action is in due for <b>{{$difDate}}</b> days to the project <b>{{$projectName}}</b> - <b>{{$projectCode}}</b>. Please do login with your credentials in our portal <b>Link</b> to review the remarks and further actions
+        </p>
 
         <br>
         Regards,

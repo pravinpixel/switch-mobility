@@ -131,7 +131,9 @@
             $('.submitBtn').removeAttr('disabled');
             $('.reset').css('display','none');
         }
-
+        $('.reset').on('click', function() {
+            $('.submitBtn').attr('disabled', 'true');
+        });
 
     });
     $(document).on('input', '.name', function() {

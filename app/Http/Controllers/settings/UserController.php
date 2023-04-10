@@ -19,7 +19,7 @@ class UserController extends Controller
     public function index()
     {
         $models = User::whereNull('is_super_admin')->orderBy('id', 'DESC')->get();
-        $roles = Role::select('name', 'id')->get();
+        $roles = Role::select('name', 'id')->get();     
         $employees = Employee::doesntHave('user')->get();
         return view('Settings/User/list', ['models' => $models, 'roles' => $roles, 'employees' => $employees]);
     }
@@ -32,7 +32,7 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::select('name', 'id')->get();
-        $employees = Employee::doesntHave('user')->get();
+        $employees = Employee::doesntHave('user')->where('is_active', 1)->get();
         $userDetails = array();
         return view('Settings.User.userCreate', ['roles' => $roles, 'employees' => $employees, 'userDetails' => $userDetails]);
     }

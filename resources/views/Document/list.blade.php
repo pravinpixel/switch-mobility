@@ -148,7 +148,7 @@
 
                                     <!--end::Checkbox-->
                                     <!--begin::User=-->
-                                    <td class="d-flex align-items-center">
+                                    <td class="">
                                         {{$key+1}}
                                     </td>
 

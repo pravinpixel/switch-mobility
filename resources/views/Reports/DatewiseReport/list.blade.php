@@ -80,9 +80,9 @@
 
 
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-2">
                                     <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <button class="btn btn-success" onclick="exportData()">Excel</button>
+                                    <button class="btn btn-success" onclick="exportData()">ExportExcel</button>
                                 </div>
                             </div>
                         </div>

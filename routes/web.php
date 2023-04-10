@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BasicController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Doclistings;
 use App\Http\Controllers\EmployeeController;
@@ -32,10 +33,13 @@ Route::group([
     'middleware' => ['auth','is_admin','web']
 ], function () {
     Route::get('home', [HomeController::class, 'adminHome'])->name('home');
+    Route::get('doclistingIndex/{type}', [Doclistings::class, 'filterindex'])->name('doclistingIndex');
+
     Route::resource('roles', RolesController::class);
     //Dept
     Route::resource('dashboard', DashboardController::class);
     Route::resource('doclisting', Doclistings::class);
+
     Route::post('docListingSearch', [Doclistings::class, 'docListingSearch'])->name('docListingSearch');
     Route::post('Search', [Doclistings::class, 'Search'])->name('Search')->middleware('is_admin');
     Route::resource('department', DepartmentController::class);
@@ -138,3 +142,4 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('tempOpen/{id}', [BasicController::class, 'tempOpen'])->name('tempOpen');

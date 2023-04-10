@@ -9,10 +9,18 @@ use App\Models\ProjectDocumentDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use Dompdf\Dompdf;
-use Dompdf\Options;
+
+
+use Illuminate\Support\Facades\Log;
 use setasign\Fpdi\Fpdi;
+
+
+use Illuminate\Support\Facades\Redirect;
+
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Writer\Pdf\Dompdf;
+use Dompdf\Dompdf as BaseDompdf;
+
 class ApprovalListController extends Controller
 {
     protected $tempController;
@@ -51,9 +59,10 @@ class ApprovalListController extends Controller
 
         $id = $request->id;
 
-         $frontSheet = $this->tempController->frontPdf($id);
+        $frontSheet = $this->tempController->frontPdf($id);
 
-         $endSheet = $this->tempController->FooterPdf($id);
+
+        $endSheet = $this->tempController->FooterPdf($id);
 
 
         $models = ProjectDocumentDetail::leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
@@ -76,36 +85,62 @@ class ApprovalListController extends Controller
 
 
 
-                $path = $_SERVER['DOCUMENT_ROOT'] . '/projectDocuments/' . $model->document_name;
+                $path = public_path('projectDocuments/' . $model->document_name);
+
                 $extension = pathinfo($path, PATHINFO_EXTENSION);
                 $pdf_path = $destinationPath . '/' . ($key + 1) .  "." . ($key + 1) . '.pdf';
                 $frontSheetpath = $destinationPath . '/' . ($key + 1) . "." . ($key + 1) . "." . ($key + 1) . '.pdf';
                 $endSheetpath = $destinationPath . '/' . ($key + 1) . '.pdf';
-             
-              
-         
-             
 
-                  File::copy($frontSheet, $frontSheetpath);
-           
 
-                if ($extension == "xlsx" || $extension == "xls") {
+                File::copy($frontSheet, $frontSheetpath);
 
-                    $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xlsx");
-                    $spreadsheet = $reader->load("$path");
 
-                    $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Mpdf');
+                if ($extension == "xlsx" || $extension == "xls" || $extension == "csv") {
 
-                    $writer->save($pdf_path);
+                    // $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xlsx");
+                    // $spreadsheet = $reader->load("$path");
+                    // Log::info("passedLine no 100 term ".$key+1);
+                    // $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Mpdf');
+                    // Log::info("passedLine no 102 term ".$key+1);
+                    // $writer->save($pdf_path);
+                    Log::info("passedLine no 103 term " . $key + 1);
+                    // Load the Excel file
+                    // Load the Excel file
+                    // $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
+                    // // Convert the Excel file to PDF
+                    // $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Dompdf');
+                    // $writer->save($pdf_path);
+                    // Load the Excel file
+                    // Load the Excel file
+                    $spreadsheet = IOFactory::load($path);
+
+                    // Set the active sheet
+                    $spreadsheet->setActiveSheetIndex(0);
+                    // Create a PDF writer
+                    $pdfWriter = new Dompdf($spreadsheet);
+                    $pdfWriter->save($pdf_path);
+                    // Set the PDF orientation and paper size
+                  //  $pdfWriter->setPaper(BaseDompdf::PAPER_LETTER);
+                   // $pdfWriter->setOrientation(BaseDompdf::ORIENTATION_PORTRAIT);
+                 
+
+                    // Loop through all the sheets              
+
+
+
+
+                    Log::info("passedLine no 110 term " . $key + 1);
                 } else {
 
                     File::copy($path, $pdf_path);
                 }
                 File::copy($endSheet, $endSheetpath);
             }
+            Log::info("passedLine no 111 ter ");
 
             $files = File::allFiles($destinationPath);
-
+            // $sheetq = $this->tempController->genarate($destinationPath);
 
             $pdf = new Fpdi();
 
@@ -116,18 +151,21 @@ class ApprovalListController extends Controller
                 //     dd("well");
                 // }
 
+
                 $pageCount = $pdf->setSourceFile($file->getPathname());
 
                 for ($i = 1; $i <= $pageCount; $i++) {
                     $template = $pdf->importPage($i);
                     $pdf->AddPage();
+
                     $pdf->useTemplate($template);
                 }
             }
-
+            Log::info("passedLine no 132 ter ");
             $pdf->Output('merged.pdf', 'I');
         } else {
-            dd("no data");
+            $msg = "Approved Docs Not Available!";
+            return Redirect::back()->withErrors($msg);
         }
     }
     public function fileDownload($path, $key)

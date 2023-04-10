@@ -324,7 +324,7 @@
                                     <!--begin::User=-->
                                    
 
-                                    <td class="d-flex align-items-center">
+                                    <td class="">
                                         <!--begin:: Avatar -->
                                         <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
                                             <a href="javascript:void(0);">

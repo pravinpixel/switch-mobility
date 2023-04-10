@@ -8,6 +8,8 @@ use App\Models\DocumentType;
 use App\Models\Employee;
 use App\Models\Project;
 use App\Models\ProjectApprover;
+use App\Models\projectDocument;
+use App\Models\ProjectDocumentDetail;
 use App\Models\ProjectEmployee;
 use App\Models\ProjectMilestone;
 use App\Models\Workflow;
@@ -21,6 +23,99 @@ use Illuminate\Support\Facades\Session;
 
 class Doclistings extends Controller
 {
+    protected $basicController;
+    public function __construct(BasicController $basicController)
+    {
+        $this->basicController = $basicController;
+    }
+    public function filterindex($type = null)
+    {
+
+
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+
+        if ($empId) {
+            $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+            if ($empId) {
+                $models->whereHas('projectEmployees', function ($q) use ($empId) {
+                    if ($empId != "") {
+                        $q->where('employee_id', '=', $empId);
+                    }
+                });
+            }
+
+            $models->whereNull('deleted_at');
+            $models1 = $models->get();
+            $includedFilterProject = array();
+            $finalFilterProject = array();
+
+            foreach ($models1 as $modelData) {
+                array_push($includedFilterProject, $modelData->id);
+            }
+
+            if ($type == "approved") {
+
+                $filterModels = projectDocument::select('project_id')->whereIn('project_id', $includedFilterProject)
+                    ->where('status', 4)
+                    ->whereNull('deleted_at')
+                    ->get();
+            } else if ($type == "declined") {
+
+                $filterModels = projectDocument::select('project_id')
+                    ->whereIn('project_id', $includedFilterProject)
+                    ->where('status', 2)
+                    ->whereNull('deleted_at')
+                    ->get();
+            } else if ($type == "pending") {
+
+                $filterModels = projectDocument::select('project_id')->whereIn('project_id', $includedFilterProject)
+                    ->where('status', 1)
+                    ->whereNull('deleted_at')
+                    ->get();
+            }
+
+            foreach ($filterModels as $filterModel) {
+
+                array_push($finalFilterProject, $filterModel->project_id);
+            }
+            $finalFilterProject = array_unique($finalFilterProject);
+            $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+            if ($empId) {
+                $models->whereHas('projectEmployees', function ($q) use ($empId) {
+                    if ($empId != "") {
+                        $q->where('employee_id', '=', $empId);
+                    }
+                });
+            }
+
+            $models->whereIn('id', $finalFilterProject);
+            $models->whereNull('deleted_at');
+            $models1 = $models->get();
+        } else {
+
+            $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+            if ($empId) {
+                $models->whereHas('projectEmployees', function ($q) use ($empId) {
+                    if ($empId != "") {
+                        $q->where('employee_id', '=', $empId);
+                    }
+                });
+            }
+
+            $models->whereNull('deleted_at');
+            $models1 = $models->get();
+        }
+
+        $project = $this->projectLooping($models1);
+        $employees = Employee::where(['is_active' => 1])->get();
+        $departments = Department::where(['is_active' => 1])->get();
+        $designation = Designation::where(['is_active' => 1])->get();
+        $document_type = DocumentType::where(['is_active' => 1])->get();
+        $workflow = Workflow::where(['is_active' => 1])->get();
+        $projectList = $project;
+
+        return view('Docs/index', ['order_at' => $projectList, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation, 'projects' => $project]);
+    }
     public function index()
     {
 
@@ -153,7 +248,25 @@ class Doclistings extends Controller
     public function editDocument(Request $request)
     {
 
+        if (Session::get('tempProject')) {
+            $this->basicController->BasicFunction();
+            Session::forget('tempProject');
+        }
+
         $id = $request->id;
+        $empId = Session::get('employeeId');
+        if ($empId) {
+            $includeEmployees = $this->getEmployeeInProject($id);
+            if ($includeEmployees) {
+                if (!in_array($empId, $includeEmployees)) {
+                    abort(404);
+                }
+            } else {
+                abort(404);
+            }
+        }
+
+
 
         $project_details = DB::table('projects as p')
             ->leftjoin('project_levels as pl', 'pl.project_id', '=', 'p.id')
@@ -234,7 +347,7 @@ class Doclistings extends Controller
                 array_push($dataArray, $datas);
             }
         }
-     
+
         $milestoneDatas = ProjectMilestone::where('project_id', $id)->get();
 
         return view('Docs/view', ['milestoneDatas' => $milestoneDatas, 'levelsArray' => $dataArray, 'levelCount' => $levelCount, 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
@@ -315,5 +428,17 @@ class Doclistings extends Controller
         $milestoneDatas = ProjectMilestone::where('project_id', $id)->get();
 
         return view('Docs/viewDocument', ['milestoneDatas' => $milestoneDatas, 'levelsArray' => $dataArray, 'levelCount' => count($dataArray), 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
+    }
+    public function getEmployeeInProject($projectId)
+    {
+        $models = ProjectEmployee::with('employee')->where('project_id', $projectId)->groupBy('employee_id')->get();
+        $employeeArray = [];
+        foreach ($models as $model) {
+            $employee = $model['employee'];
+            $email = $employee->id;
+
+            $employeeArray[] = $email;
+        }
+        return $employeeArray;
     }
 }

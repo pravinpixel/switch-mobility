@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Doclistings;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
+
 class LoginController extends Controller
 {
     /*
@@ -35,35 +38,54 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    protected $docController;
+    public function __construct(Doclistings $docController)
     {
         $this->middleware('guest')->except('logout');
+        $this->docController = $docController;
     }
 
     public function login(Request $request)
-    {   
+    {
+
         $input = $request->all();
-   
+
         $this->validate($request, [
             'username' => 'required',
             'password' => 'required',
         ]);
-   
+
         $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-        if(auth()->attempt(array($fieldType => $input['username'], 'password' => $input['password'])))
-        {
-           
+        if (auth()->attempt(array($fieldType => $input['username'], 'password' => $input['password']))) {
+        
+
             if (auth()->user()->is_admin == 1) {
-                return redirect()->route('dashboard.index');
-            }else{
-                return redirect()->route('dashboard.index');
+                if (Session::get('tempProject')) {
+                   
+                    $content = new Request(['id' => Session::get('tempProject')]);
+
+                    $transactionController = app()->make(Doclistings::class);
+                    return $transactionController->editDocument($content);
+                    
+                } else {
+                  
+
+                    return redirect()->route('dashboard.index');
+                }
+            } else {
+                if (Session::get('tempProject')) {
+                 
+                    $content = new Request(['id' => Session::get('tempProject')]);
+                    $this->docController->editDocument($content);
+                } else {
+                 
+                    return redirect()->route('dashboard.index');
+                }
             }
-        }else{
+        } else {
             // return redirect()->route('login')
             //     ->with('error','Email-Address And Password Are Wrong.');
-                return Redirect::back()->withErrors('Username or Password Wrong.');
+            return Redirect::back()->withErrors('Username or Password Wrong.');
         }
-          
     }
-  
 }

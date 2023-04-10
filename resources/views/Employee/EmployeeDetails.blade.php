@@ -139,7 +139,7 @@
                                         <label class="required fs-6 fw-semibold mb-2">Department</label>
                                         <!--end::Label-->
                                         <!--begin::Input-->
-                                        <select class="form-control form-control-solid department" name="department_id">
+                                        <select class="form-control form-control-solid department deptAndDesg" name="department_id">
                                             <option value="">Select</option>
                                             @foreach ($departments as $dept)
                                                 <?php
@@ -163,7 +163,7 @@
                                         <label class="required fs-6 fw-semibold mb-2">Designation</label>
                                         <!--end::Label-->
                                         <!--begin::Input-->
-                                        <select class="form-control form-control-solid designation_id"
+                                        <select class="form-control form-control-solid designation_id deptAndDesg"
                                             name="designation_id">
                                             <option value="">Select</option>
                                             @foreach ($designation as $des)
@@ -267,8 +267,7 @@
                                 </div>
                                 <div class="text-center pt-15">
                                     <button type="reset" class="btn btn-light me-3 reset"
-                                        data-kt-users-modal-action="cancel"
-                                        onclick=" document.location.reload();">Reset</button>
+                                        data-kt-users-modal-action="cancel">Reset</button>
                                     <a href="{{ route('employees.index') }}">
                                         <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
                                     <button type="button" onclick="finalValidation();" class="btn btn-primary submit"
@@ -302,6 +301,9 @@
             });
             $(".department").select2({
                 dropdownParent: $("#form")
+            });
+            $('.reset').on('click',function(){
+                $('.deptAndDesg').val("").trigger('change');
             });
 
             if ($('.id').val()) {
