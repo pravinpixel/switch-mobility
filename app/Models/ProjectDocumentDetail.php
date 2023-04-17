@@ -15,7 +15,7 @@ class ProjectDocumentDetail extends Model
 
     public function documentName()
     {
-        return $this->hasOne('App\Models\projectDOcument', 'id', 'project_doc_id');
+        return $this->hasOne('App\Models\projectDocument', 'id', 'project_doc_id');
     }
    
 }
