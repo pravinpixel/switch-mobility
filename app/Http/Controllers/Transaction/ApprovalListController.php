@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Imagick;
 use PDF;
+use PhpOffice\PhpSpreadsheet\Writer\Pdf\Dompdf as PdfWriter;
 
 class ApprovalListController extends Controller
 {
@@ -218,6 +219,7 @@ class ApprovalListController extends Controller
     public function approvedDocsDownload(Request $request)
     {
 
+
         // // Load the Excel file
         // $spreadsheet = IOFactory::load(public_path('temp/FinancialSample.xlsx'));
 
@@ -235,7 +237,7 @@ class ApprovalListController extends Controller
         $projectId = $projectDocModel->project_id;
         $project = Project::with('docType', 'employee', 'employee.department', 'workflow')->where('id', $projectId)->first();
         $projectApprovers = $this->projectApprovers($projectId);
-      
+
         $docModel  = $project->docType;
 
         $employeeModel  = $project->employee;
@@ -245,17 +247,40 @@ class ApprovalListController extends Controller
         $workflowModel  = $project->workflow;
 
         $timestamp = strtotime($project->created_at);
-        $date = date('Y-m-d H:i:s', $timestamp);
+        $date = date('d-m-Y', $timestamp);
 
         $docName = ($docModel) ? $docModel->name : "";
         $workflowName = ($workflowModel) ? $workflowModel->workflow_name : "";
         $workflowCode = ($workflowModel) ? $workflowModel->workflow_code : "";
         $department  = ($departmentModel) ? $departmentModel->name : "";
         $employeeName = ($employeeModel) ? $employeeModel->first_name . " " . $employeeModel->last_name : "";
+        $extension = \File::extension($model->document_name);
 
+        if ($extension == "xlsx") {
 
+            $xltoPdf = public_path('/xlToPdf' . '/' . $request->id);
+            $newPdfName = "temp.pdf";
+            $pdfPath = $xltoPdf . '/' . $newPdfName;
 
-        $pdfPath = public_path('projectDocuments/' . $model->document_name);
+            if (File::exists($xltoPdf)) {
+
+                File::deleteDirectory($xltoPdf);
+            }
+            File::makeDirectory($xltoPdf, $mode = 0777, true, true);
+            $xlPath = public_path('projectDocuments/' . $model->document_name);
+
+            $spreadsheet = IOFactory::load($xlPath);
+
+            // Create a PDF Writer
+            $writer = new PdfWriter($spreadsheet);
+
+            // Save the PDF file
+            $writer->save($pdfPath);
+          
+        } else {
+            $pdfPath = public_path('projectDocuments/' . $model->document_name);
+        }
+
 
         $imagePath = public_path('DocumentImages/' . $id);
         if (File::exists($imagePath)) {
@@ -308,7 +333,7 @@ class ApprovalListController extends Controller
                 'workflowName' => $workflowName,
                 'department'        => $department,
                 'initiater' => $employeeName,
-                'projectApprovers'=>$projectApprovers
+                'projectApprovers' => $projectApprovers
             ];
 
             $pdf = PDF::loadView('pdf.pdf', $data);
@@ -336,8 +361,7 @@ class ApprovalListController extends Controller
 
             $pageCount = $pdf->setSourceFile($ffile->getPathname());
 
-            for ($i = 1; $i <= $pageCount; $i++)
-            {
+            for ($i = 1; $i <= $pageCount; $i++) {
                 $template = $pdf->importPage($i);
                 $pdf->AddPage();
 
@@ -345,14 +369,14 @@ class ApprovalListController extends Controller
             }
         }
         Log::info("passedLine no 132 ter ");
-        return $pdf->Output('ApprovedDocs.pdf', 'D');
+        return $pdf->Output('ApprovedDocs.pdf', 'I');
     }
 
     public function projectApprovers($projectId)
     {
 
-        $models = ProjectEmployee::with('employee', 'employee.designation')->where('project_id', $projectId)->where('type', 2)->groupby('project_employees.employee_id')->get();
-      
+        $models = ProjectEmployee::with('employee', 'employee.designation')->where('project_id', $projectId)->where('type', 2)->groupby('project_employees.employee_id')->orderby('project_employees.level')->limit(11)->get();
+
         $entities = collect($models)->map(function ($model) {
 
             $empModel = $model['employee'];
@@ -369,9 +393,9 @@ class ApprovalListController extends Controller
             $signImageWithPath = public_path('images/employee/' . $signImage);
             $updateDate =  \Carbon\Carbon::createFromFormat('Y-m-d H:i:s',  $model->updated_at)->format('d-m-Y');
 
-            $resData = ['appproverName' => $appproverName, 'designation' => $designation,'level'=>$model->level,'updatedate'=>$updateDate,'signImageWithPath'=>$signImageWithPath];
+            $resData = ['appproverName' => $appproverName, 'designation' => $designation, 'level' => $model->level, 'updatedate' => $updateDate, 'signImageWithPath' => $signImageWithPath];
             return $resData;
         });
-       return $entities;
+        return $entities;
     }
 }
