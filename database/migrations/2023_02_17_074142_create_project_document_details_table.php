@@ -23,6 +23,7 @@ class CreateProjectDocumentDetailsTable extends Migration
             $table->string('document_name',200)->nullable();
             $table->string('remark',200)->nullable();
             $table->integer('status')->nullable();
+            $table->integer('is_latest')->nullable();
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
             $table->foreign('project_doc_id')->references('id')->on('project_documents')

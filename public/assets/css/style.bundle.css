@@ -52331,13 +52331,20 @@ table > tr > *{
 }
 [data-toggle="collapse"][aria-expanded]{
     position: relative;
-    padding-right: 20px !important;
+
+}
+button[data-toggle="collapse"][aria-expanded="true"]{
+    border-bottom: 2px solid #3565ed !important;
+
+}
+[data-toggle="collapse"][aria-expanded="true"] h3{
+    color: #3565ed !important;
 }
 [data-toggle="collapse"][aria-expanded] h3::after {
     position: absolute;
     display: block;
     
-    right: 0;
+    right: 10px;
     line-height: 9px;
     font-size: .8em;
     position: absolute;

@@ -9,16 +9,16 @@
 </head>
 
 
-<body style="background-color: #CCFFFF">
+<body style="">
     <div class="top-bar" style="border: 2px solid black;background-color: white;padding: 10px 0 0 10px;">
         <img src="{{$imagePath}}" alt="Left Image" style="width: 150px;display:inline-block;">
         <h1 style="margin: 0 auto;display:inline-block">Online Approval Management</h1>
     </div>
     <br>
     <div class="container" style="height:48%; width:98%;background-color: white;border-top: 5px solid darkblue;border-radius: 5px;margin:auto">
-    <br>  
-    <br>    
-    <div class="top-row" style="height:20%">
+        <br>
+        <br>
+        <div class="top-row" style="height:20%">
             <div class="element" style="width: 18%;;margin: 0 20px;text-align: center;display:inline-block">
                 <p style="font-size:10px"><b>Ticket Number</b></p>
                 <p style="font-size:10px">{{$ticketNo}}</p>

@@ -26,6 +26,7 @@ class CreateProjectsTable extends Migration
             $table->string('role',200)->nullable();
             $table->integer('delete_flag')->default(0)->nullable();         
             $table->integer('is_active')->default(1);
+            $table->integer('current_status')->default(0);
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
             $table->foreign('initiator_id')->references('id')->on('employees')

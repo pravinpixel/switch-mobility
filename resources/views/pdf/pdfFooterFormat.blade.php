@@ -9,7 +9,7 @@
 </head>
 
 
-<body style="background-color: #CCFFFF">
+<body style="">
     <div class="top-bar" style="border: 2px solid black;background-color: white;padding: 10px 0 0 10px;">
         <img src="{{$imagePath}}" alt="Left Image" style="width: 150px;display:inline-block;">
         <h1 style="margin: 0 auto;display:inline-block">Online Approval Management</h1>

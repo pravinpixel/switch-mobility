@@ -193,8 +193,8 @@
                                     <td>{{ date('d-m-Y', strtotime($data->start_date)) }}</td>
                                     <td>{{ date('d-m-Y', strtotime($data->end_date)) }}</td>
                                     <td>
-                                        <a id="{{$data->id}}" screen="view" class="actionDocs badge badge-warning">View</a>
-                                        <a id="{{$data->id}}" screen="approving" class="actionDocs badge badge-info">Approved</a>
+                                        <a id="{{$data->id}}" screen="view"  class="actionDocs badge badge-info">View Approved Docs</a>
+                                        <!-- <a id="{{$data->id}}" screen="approving" class="actionDocs badge badge-info">Approved</a> -->
                                     </td>
 
                                 </tr>

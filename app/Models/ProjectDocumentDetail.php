@@ -12,5 +12,10 @@ class ProjectDocumentDetail extends Model
     {
         return $this->hasOne('App\Models\Employee', 'id', 'updated_by');
     }
+
+    public function documentName()
+    {
+        return $this->hasOne('App\Models\projectDOcument', 'id', 'project_doc_id');
+    }
    
 }
