@@ -17,8 +17,8 @@ use App\Models\Workflowlevels;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-
-
+use PhpOffice\PhpWord\TemplateProcessor;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Log;
 use setasign\Fpdi\Fpdi;
 
@@ -34,6 +34,8 @@ use Illuminate\Support\Facades\Storage;
 use Imagick;
 use PDF;
 use PhpOffice\PhpSpreadsheet\Writer\Pdf\Dompdf as PdfWriter;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Settings;
 
 class ApprovalListController extends Controller
 {
@@ -255,9 +257,9 @@ class ApprovalListController extends Controller
         $department  = ($departmentModel) ? $departmentModel->name : "";
         $employeeName = ($employeeModel) ? $employeeModel->first_name . " " . $employeeModel->last_name : "";
         $extension = \File::extension($model->document_name);
-
+        $filePath = public_path('projectDocuments/' . $model->document_name);
         if ($extension == "xlsx") {
-
+            $new  = $this->tempController->excelltopdf($filePath);
             $xltoPdf = public_path('/xlToPdf' . '/' . $request->id);
             $newPdfName = "temp.pdf";
             $pdfPath = $xltoPdf . '/' . $newPdfName;
@@ -276,9 +278,30 @@ class ApprovalListController extends Controller
 
             // Save the PDF file
             $writer->save($pdfPath);
-          
-        } else {
+        } else if ($extension == "pdf") {
             $pdfPath = public_path('projectDocuments/' . $model->document_name);
+        } else {
+
+            $filePath = public_path('projectDocuments/' . $model->document_name);
+
+            $xltoPdf = public_path('/xlToPdf');
+            $newPdfName = "temp" . $request->id . ".pdf";
+
+
+            $pdfPath = $xltoPdf . '/' . $newPdfName;
+            if (File::exists($pdfPath)) {
+
+                File::deleteDirectory($pdfPath);
+            }
+
+
+            $domPdfPath = base_path('vendor/dompdf/dompdf');
+            \PhpOffice\PhpWord\Settings::setPdfRendererPath($domPdfPath);
+            \PhpOffice\PhpWord\Settings::setPdfRendererName('DomPDF');
+            $Content = \PhpOffice\PhpWord\IOFactory::load($filePath);
+
+            $PDFWriter = \PhpOffice\PhpWord\IOFactory::createWriter($Content, 'PDF');
+            $PDFWriter->save($pdfPath);
         }
 
 
@@ -397,5 +420,9 @@ class ApprovalListController extends Controller
             return $resData;
         });
         return $entities;
+    }
+    public function excelToPdf($path)
+    {
+        $pdfPath = public_path('dhana/rest1.pdf');
     }
 }

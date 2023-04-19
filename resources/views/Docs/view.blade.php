@@ -608,11 +608,16 @@
 
 
 
-
-                            var duDateAppend = val.due_date;
+                            var dateAr = val.due_date.split('-');                         
+                            var cnewDate = dateAr[1] + '-' + dateAr[2] + '-' + dateAr[0].slice(-2);
+                            var duDateAppend = cnewDate;
+                           
                             var badgeType = (dateSign == '-') ? "danger" : "success";
                             duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate + '</span></span>';
                             $(".due_date_" + level).empty();
+
+                           
+                       
                             $(".due_date_" + level).append(duDateAppend);
 
                             var priority = "";
@@ -646,7 +651,7 @@
                                 project_id: project_id
                             },
                             success: function(result) {
-                                var data = JSON.parse(result);                            
+                                var data = JSON.parse(result);
 
 
                                 $(".maindoc_append" + level).empty();
@@ -684,7 +689,7 @@
                                         versionMainDocDiv += '<div class="accordion " style="margin:auto;width:98%;" id="accordionExample' + key + '">';
                                         versionMainDocDiv += '<div class="card p-0"> <div class=" border-0" id="heading' + key + '">';
                                         versionMainDocDiv += '<h5 class="mb-0 w-100">';
-                                        versionMainDocDiv += '<button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold;padding-left:10px;">' + val.original_name + '</h3> <p class="text-right mainlevelStatus-' + level + "-" + key + '"></p> <p class="btn btn-light-warning status-accordion" style="margin-right:40px;">'+currentStatusData+'</p></button>';
+                                        versionMainDocDiv += '<button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold;padding-left:10px;">' + val.original_name + '</h3> <p class="text-right mainlevelStatus-' + level + "-" + key + '"></p> <p class="btn btn-light-warning status-accordion" style="margin-right:40px;">' + currentStatusData + '</p></button>';
                                         versionMainDocDiv += '</h5>';
                                         versionMainDocDiv += '</div>';
                                         versionMainDocDiv += '<div id="collapse' + key + '" class="collapse fade" aria-labelledby="heading' + key + '" data-parent="#accordionExample' + key + '">';

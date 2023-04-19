@@ -185,7 +185,7 @@
                                                 <a href="{{url('doclistingIndex')}}">
                                                     @endif
                                                     <!--begin::Number-->
-                                                    <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1"><?php echo count($project); ?></span>
+                                                    <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1"><?php echo $totalOverDueProjects; ?></span>
                                                     <!--end::Number-->
                                                     <!--begin::Desc-->
                                                     <span class="text-gray-500 fw-semibold fs-6">Documents Overdue</span>
@@ -202,20 +202,129 @@
 
                                 </div>
                                 <br>
+                                <div class="col-md-12" style=" display: flex;justify-content: center;">
+                                    <div class="col-md-6">
+                                        <!-- <h1 class="text-center">Laravel 9 Dynamic Bar Chart Example - Techsolutionstuff</h1> -->
+                                        <div id="barchart_material" style="width: 500px; height: 400px;"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- <h1 class="text-center">Laravel 9 Dynamic Bar Chart Example - Techsolutionstuff</h1> -->
+                                        <div id="barchart_material1" style="width: 500px; height: 400px;"></div>
+                                    </div>
+                                </div>
+                                <br>
                                 <div class="row">
 
-                                    <h5 class="section-title h1">Recently Uploaded Documents</h5>
+                                    <h5 class="section-title h1">My Initiating Projects</h5>
                                     <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
                                         <!--begin::Table head-->
                                         <thead>
                                             <!--begin::Table row-->
-                                            <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                            <tr class="text-end text-muted fw-bold fs-7 text-uppercase gs-0">
 
-                                                <th class="min-w-125px">Ticket No</th>
-                                                <th class="min-w-125px">Project Code & Name</th>
-                                                <th class="min-w-125px">Work Flow Code & Name</th>
-                                                <th class="min-w-125px">Initiator</th>
-                                                <th class="min-w-125px">Department</th>
+                                                <th>Ticket No</th>
+                                                <th>Project Code & Name</th>
+                                                <th>Work Flow Code & Name</th>
+                                                <th>Department</th>
+
+                                            </tr>
+                                            <!--end::Table row-->
+                                        </thead>
+                                        <!--end::Table head-->
+                                        <!--begin::Table body-->
+                                        <tbody class="text-gray-600 fw-semibold">
+                                            <!--begin::Table row-->
+                                            @foreach ($initiatingProjects as $key => $d)
+
+                                            <?php
+                                            $WorkFlow = $d->workflow;
+                                            $initiator = $d->employee;
+                                            $department = $initiator->department;
+                                            ?>
+                                            <tr class="editDocument" id="{{ $d->id}}">
+                                                <!--begin::Checkbox-->
+
+                                                <!--end::Checkbox-->
+                                                <!--begin::User=-->
+                                                <td class="">
+                                                    {{ $d->ticket_no }}
+                                                </td>
+
+                                                <td>{{ $d->project_name . ' ' . $d->project_code }}</td>
+                                                <td>{{ $WorkFlow->workflow_name . ' & ' . $WorkFlow->workflow_code }}</td>
+
+                                                <td>{{ $department->name }}</td>
+
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br>
+                                <div class="row">
+
+                                    <h5 class="section-title h1">My Approving Projects</h5>
+                                    <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table1">
+                                        <!--begin::Table head-->
+                                        <thead>
+                                            <!--begin::Table row-->
+                                            <tr class="text-muted fw-bold fs-7 text-uppercase gs-0">
+
+                                                <th>Ticket No</th>
+                                                <th>Project Name</th>
+                                                <th>Project Code</th>
+                                                <th>Work Flow Name</th>
+                                                <th>Work Flow Code</th>
+                                                <th style="width: 140px;">Department</th>
+                                                <th style="width: 100px;">Start Date</th>
+                                                <th style="width: 100px;">End Date</th>
+                                                <th style="width: 100px;">Due Date</th>
+                                                <th style="width: 20px;">Level</th>
+
+                                            </tr>
+                                            <!--end::Table row-->
+                                        </thead>
+                                        <!--end::Table head-->
+                                        <!--begin::Table body-->
+                                        <tbody class="text-gray-600 fw-semibold">
+                                            <!--begin::Table row-->
+                                            @foreach ($approvingProjects as $key => $d)
+
+
+                                            <tr class="editDocument" id="{{ $d['projectId'] }}">
+                                                <td>{{ $d['ticketNo'] }}</td>
+                                                <td>{{ $d['projectName'] }}</td>
+                                                <td>{{ $d['projectCode'] }}</td>
+
+                                                <td>{{ $d['wfname'] }}</td>
+                                                <td>{{ $d['wfCode'] }}</td>
+                                                <td>{{ $d['department'] }}</td>
+                                                <td style="width: 70px;">{{ $d['startDate'] }}</td>
+                                                <td style="width: 70px;">{{ $d['endDate'] }}</td>
+                                                <td style="width: 80px;">{{ $d['dueDate'] }}</td>
+                                                <td style="width: 40px;">{{ $d['level'] }}</td>
+
+
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br>
+                                <div class="row">
+
+                                    <h5 class="section-title h1">Recently Uploaded Documents</h5>
+                                    <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table2">
+                                        <!--begin::Table head-->
+                                        <thead>
+                                            <!--begin::Table row-->
+                                            <tr class=" text-muted fw-bold fs-7 text-uppercase gs-0">
+
+                                                <th>Ticket No</th>
+                                                <th>Project Code & Name</th>
+                                                <th>Work Flow Code & Name</th>
+                                                <th>Initiator</th>
+                                                <th align="right">Department</th>
 
                                             </tr>
                                             <!--end::Table row-->
@@ -227,23 +336,23 @@
                                             @foreach ($order_at as $key => $d)
 
                                             <?php
-                                        $WorkFlow = $d->workflow;
-                                        $initiator = $d->employee;
-                                        $department = $initiator->department;
-                                        ?>
-                                        <tr>
-                                            <!--begin::Checkbox-->
+                                            $WorkFlow = $d->workflow;
+                                            $initiator = $d->employee;
+                                            $department = $initiator->department;
+                                            ?>
+                                            <tr>
+                                                <!--begin::Checkbox-->
 
-                                            <!--end::Checkbox-->
-                                            <!--begin::User=-->
-                                            <td class="">
-                                                {{ $d->ticket_no }}
-                                            </td>
+                                                <!--end::Checkbox-->
+                                                <!--begin::User=-->
+                                                <td class="">
+                                                    {{ $d->ticket_no }}
+                                                </td>
 
-                                            <td>{{ $d->project_name . ' ' . $d->project_code }}</td>
-                                            <td>{{ $WorkFlow->workflow_name . ' & ' . $WorkFlow->workflow_code }}</td>
-                                            <td>{{ $initiator->first_name . ' ' . $initiator->last_name }}</td>
-                                            <td>{{ $department->name }}</td>
+                                                <td>{{ $d->project_name . ' ' . $d->project_code }}</td>
+                                                <td>{{ $WorkFlow->workflow_name . ' & ' . $WorkFlow->workflow_code }}</td>
+                                                <td>{{ $initiator->first_name . ' ' . $initiator->last_name }}</td>
+                                                <td>{{ $department->name }}</td>
 
                                             </tr>
                                             @endforeach
@@ -251,6 +360,8 @@
                                     </table>
                                 </div>
 
+
+                            
 
                             </div>
                     </div>
@@ -269,41 +380,130 @@
 </section>
 <!-- Team -->
 @endsection
+<script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.3.1/echarts.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    function delete_item(id) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then(isConfirmed => {
-            if (isConfirmed.value) {
-                $.ajax({
-                    url: "{{ url('projects') }}" + "/" + id,
-                    type: 'ajax',
-                    method: 'delete',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        id: id,
-                    },
-                    success: function(result) {
-                        if (result) {
-                            window.location.reload();
-                        }
-                    }
-                });
-                if (isConfirmed.value) {
-                    Swal.fire(
-                        'Deleted!',
-                        'Project has been deleted.',
-                        'success'
-                    );
+    $(document).ready(
+        function() {
+            chart1();
+            chart2();
 
-                }
-            }
+
         });
+
+    function chart1() {
+        var bars_basic_element = document.getElementById('barchart_material');
+        if (bars_basic_element) {
+            var totalDocs = "{{$totDocs}}";
+            var intervallimit = 1;
+            if (totalDocs > 10) {
+                intervallimit = 10;
+            }
+            console.log(intervallimit);
+            var bars_basic = echarts.init(bars_basic_element);
+            bars_basic.setOption({
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [{
+                    type: 'category',
+                    data: ['Total Docs', 'Approved', 'Declined', 'Pending'],
+                    axisTick: {
+                        alignWithLabel: true
+                    }
+                }],
+                yAxis: [{
+                    type: 'value',
+                    interval: intervallimit,
+                    name:'Docs'
+                }],
+                series: [{
+                    name: 'Total',
+                    type: 'bar',
+                    barWidth: '20%',
+                    data: [
+                        '{{$totDocs}}',
+                        '{{$totApprovedDocs}}',
+                        '{{$totDeclinedDocs}}',
+                        '{{$totPendingDocs}}'
+                    ]
+                }]
+            });
+        }
     }
+
+    function chart2() {
+        var totalProject = "{{$totProject}}";
+        var intervallimit = 1;
+        if (totalProject > 10) {
+            intervallimit = 10;
+        }
+
+        var bars_basic_element1 = document.getElementById('barchart_material1');
+        if (bars_basic_element1) {
+            console.log("done");
+            var bars_basic1 = echarts.init(bars_basic_element1);
+            bars_basic1.setOption({
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [{
+                    type: 'category',
+                    data: ['Total Projects', 'Approved', 'Pending', 'Overdue'],
+                    axisTick: {
+                        alignWithLabel: true
+                    }
+                }],
+                yAxis: [{
+                    type: 'value',
+                    interval: intervallimit,
+                    name:'Projects'
+                }],
+                series: [{
+                    name: 'Total',
+                    type: 'bar',
+                    barWidth: '20%',
+                    data: [
+                        '{{$totProject}}',
+                        '{{$totalAppprovedProjects}}',
+                        '{{$totalPendingProjects}}',
+                        '{{$totalOverDueProjects}}'
+                    ]
+                }]
+            });
+        }
+    }
+
+    $(document).on('dblclick', '.editDocument', function() {
+
+        var id = $(this).attr('id');
+
+
+        var url = "{{ route('editDocument') }}";
+        var form = $('<form action="' + url + '" method="post">' +
+            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
+            '</form>');
+        $('body').append(form);
+        form.submit();
+    });
 </script>
