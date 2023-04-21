@@ -83,7 +83,7 @@ class ApprovalListController extends Controller
         $details = $project_details->first();
 
 
-        $models = ProjectDocumentDetail::select('project_documents.original_name', 'project_documents.id')->leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
+        $models = ProjectDocumentDetail::select('document_name','project_documents.original_name', 'project_documents.id')->leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
             ->where('project_document_details.project_id', $id)
             ->where('project_documents.type', 1)
             ->where('project_document_details.status', 4)

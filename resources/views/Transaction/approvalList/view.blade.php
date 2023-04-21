@@ -373,7 +373,7 @@
         <div class="vertical-tabs">
 
 
-            <div class="tab-content">
+            <div class="tab-content1" style="width:100%!important">
                 <div class="card-body">
                     <table class="table table-striped documentTable">
                         <thead class="documentTableth">
@@ -385,9 +385,11 @@
                         </thead>
                         <tbody style="">
                             @foreach($models as $model)
+                           
                             <tr>
                                 <td>{{$model->original_name}}</td>
-                                <td><a target="_blank" class="btn btn-success btn-xs actionDocs" title="download" id="{{$model->id}}"><i class="las la-download"></i></a></td>
+                                <td><a download="OriginalDocs" href="{{ asset('/projectDocuments/') }}<?php echo "/".$model->document_name; ?>" class="btn btn-warning btn-xs" title="Orginal Document Download" id="{{$model->id}}">Orginal Document<i class="las la-download" style="font-size: 20px;"></i></a>
+                                <a target="_blank" class="btn btn-success btn-xs actionDocs" title="Conversion Document Download" id="{{$model->id}}"><i class="las la-download"></i></a></td>
                             </tr>
                             @endforeach
 

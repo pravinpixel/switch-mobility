@@ -244,7 +244,7 @@
                     $.each(levels, function(key, val) {
                         var designationData = val.designationId;
 
-                        $(".append_div_partial").append('<tr style="border: 1px solid black;border-collapse: collapse;"><td class="" ><label>Level-<span class="level_name1">' + val.levelId + '</span></label></td><td class="">' + designationData + '</td></tr>');
+                        $(".append_div_partial").append('<tr style="border: 0.8px solid black;border-collapse: collapse;"><td class="" ><label>Level-<span class="level_name1">' + val.levelId + '</span></label></td><td class="">' + designationData + '</td></tr>');
                     });
                 }
             }

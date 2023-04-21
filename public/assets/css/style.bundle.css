@@ -38003,8 +38003,9 @@ code:not([class*="language-"]) {
     min-height: inherit;
 }
 .table tr{
-    font-size: 0.8rem!important;
+    font-size: 1rem!important;
     height: 4px!important;
+    
 }
 
 .table td:first-child,
