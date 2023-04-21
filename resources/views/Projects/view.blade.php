@@ -258,7 +258,7 @@
                 </div>
                 <div class="text-center pt-15">
                     <button type="button" class="btn btn-danger me-3" onclick="closeModel()">Cancel</button>
-                    <button type="button" class="btn btn-primary store" onclick="submitForm()">
+                    <button type="button" class="btn switchPrimaryBtn  store" onclick="submitForm()">
                         <span class="indicator-label">Update and Exit</span>
                         <span class="indicator-progress">Please wait...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -305,7 +305,7 @@
 
                 <div class="text-center pt-15">
                     <button type="button" class="btn btn-danger me-3" onclick="closeStatusModel()">Cancel</button>
-                    <button type="button" class="btn btn-primary store" onclick="submitStatusForm()">
+                    <button type="button" class="btn switchPrimaryBtn  store" onclick="submitStatusForm()">
                         <span class="indicator-label">Update and Exit</span>
                         <span class="indicator-progress">Please wait...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -556,9 +556,9 @@
                                         versionMainDocDiv += '<td>' + statusData + '</td>';
                                         versionMainDocDiv += '<td>';
                                         if (i == showMainDocAction) {
-                                            versionMainDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
+                                            versionMainDocDiv += '<a class="btn switchPrimaryBtn btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
                                             versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
-                                            versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
+                                            versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm switchPrimaryBtn " onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionMainDocDiv += '</button>';
                                         }
                                         versionMainDocDiv += '</td>';
@@ -631,9 +631,9 @@
                                         versionAuxDocDiv += '<td>' + statusData + '</td>';
                                         versionAuxDocDiv += '<td>';
                                         if (j == showAuxDocAction) {
-                                            versionAuxDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docAuxDetailArray[j].id + ',' + level + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
+                                            versionAuxDocDiv += '<a class="btn switchPrimaryBtn  btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docAuxDetailArray[j].id + ',' + level + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
                                             versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
-                                            versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
+                                            versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm switchPrimaryBtn " onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionAuxDocDiv += '</button>';
                                         }
                                         versionAuxDocDiv += '</td>';
@@ -685,7 +685,7 @@
             text: "You can always change the status to active or in-active!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#3565ed',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, Change it!'
         }).then(isConfirmed => {

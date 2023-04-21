@@ -69,7 +69,7 @@
                                 <!--begin::Filter-->
 
                                 <!--begin::Add user-->
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user">
+                                <button type="button" class="btn switchPrimaryBtn " data-bs-toggle="modal" data-bs-target="#kt_modal_add_user">
                                     <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                                     <span class="svg-icon svg-icon-2">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -269,7 +269,7 @@
                                                 {{-- FORM --}}
                                                 <div class="text-center pt-15">
                                                     <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Reset</button>
-                                                    <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
+                                                    <button type="submit" class="btn switchPrimaryBtn " data-kt-users-modal-action="submit">
                                                         <span class="indicator-label">Save and Exit</span>
                                                         <span class="indicator-progress">Please wait...
                                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -545,7 +545,7 @@
                     {{-- FORM --}}
                     <div class="text-center pt-15">
                         <button type="reset" class="btn btn-light-danger me-3" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
+                        <button type="submit" class="btn switchPrimaryBtn " data-kt-users-modal-action="submit">
                             <span class="indicator-label">Update and Exit</span>
                             <span class="indicator-progress">Please wait...
                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -749,7 +749,7 @@ $(document).ready(function() {
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#3565ed',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then(isConfirmed => {

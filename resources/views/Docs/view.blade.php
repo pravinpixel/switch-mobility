@@ -252,7 +252,7 @@
 
                 <div class="text-center pt-15">
                     <button type="button" class="btn btn-danger me-3" onclick="closeModel()">Cancel</button>
-                    <button type="button" class="btn btn-primary store" onclick="submitForm()">
+                    <button type="button" class="btn switchPrimaryBtn store" onclick="submitForm()">
                         <span class="indicator-label">Update and Exit</span>
                         <span class="indicator-progress">Please wait...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -308,7 +308,7 @@
 
                 <div class="text-center pt-15">
                     <button type="button" class="btn btn-danger me-3" onclick="closeStatusModel()">Cancel</button>
-                    <button type="button" class="btn btn-primary store" onclick="submitStatusForm()">
+                    <button type="button" class="btn switchPrimaryBtn store" onclick="submitStatusForm()">
                         <span class="indicator-label">Update and Exit</span>
                         <span class="indicator-progress">Please wait...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -319,7 +319,7 @@
 
     </div>
     <div class="text-center container">
-        <h3 class="breadcrumbs">Documents > Ticket No. #{{ $details->ticket_no }}</h3>
+        <h3 class="breadcrumbs">Edit Documents > Ticket No. #{{ $details->ticket_no }}</h3>
 
 
 
@@ -394,7 +394,7 @@
     </div>
     </div>
     </div>
-    <button class="btn btn-info float-right-btn float-open-btn">
+    <button class="btn switchPrimaryBtn float-right-btn float-open-btn">
         MileStone
     </button>
     <div class="card shadow-sm right-card right-card-close p-0 overflow-hidden">
@@ -444,12 +444,12 @@
             right: 2px;
             top: 50%;
             transform: translateY(-50%);
-            width: 400px;
+            width: 418px;
 
         }
 
         .right-card-close {
-            right: -400px;
+            right: -418px;
         }
 
         .right-card-open {
@@ -589,7 +589,7 @@
                         //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
                         //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
                         //     newDate = day + '-' + month + '-' + yr;
-                        $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<p class="due_date_' + level + '"></p></div><div class="col-md-2">Priority:<p class="priority_' + level + '"></p></div><hr><div style="text-align:left;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div style="text-align:left">&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
+                        $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<p class="due_date_' + level + '"></p></div><div class="col-md-2">Priority:<p class="priority_' + level + '"></p></div><hr><div style="text-align:left;font-weight:bold;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><br><div style="text-align:left;font-weight:bold;">&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
                         //if (data.length > 0) {
 
                         $(".image_append" + level).empty();
@@ -613,7 +613,7 @@
                             var duDateAppend = cnewDate;
                            
                             var badgeType = (dateSign == '-') ? "danger" : "success";
-                            duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate + '</span></span>';
+                            duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate + ' Day</span></span>';
                             $(".due_date_" + level).empty();
 
                            
@@ -752,7 +752,7 @@
                                                 }];
                                                 levelstageStatus.push(state);
                                                 // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
-                                                versionMainDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
+                                                versionMainDocDiv += '<a class="btn switchPrimaryBtn btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
 
                                             }
                                             versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
@@ -837,7 +837,7 @@
                                             versionAuxDocDiv += '<td>' + lastUpdate + '</td>';
                                             versionAuxDocDiv += '<td>';
                                             //if (j == showAuxDocAction) {
-                                            // versionAuxDocDiv += '<a class="btn btn-info btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docAuxDetailArray[j].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
+                                            // versionAuxDocDiv += '<a class="btn switchPrimaryBtn  btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docAuxDetailArray[j].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
                                             versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
                                             // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionAuxDocDiv += '</button>';
@@ -891,7 +891,7 @@
                 text: "You can always change the status to active or in-active!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
+                confirmButtonColor: '#3565ed',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, Change it!'
             }).then(isConfirmed => {

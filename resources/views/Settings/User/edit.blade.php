@@ -148,7 +148,7 @@
                                 <button type="reset" class="btn btn-light me-3 reset" data-kt-users-modal-action="cancel">Reset</button>
                                 <a href="{{route('users.index')}}">
                                     <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
-                                <button type="button" onclick="rolesValidation();" class="btn btn-primary submit submitBtn" data-kt-users-modal-action="submit">
+                                <button type="button" onclick="rolesValidation();" class="btn switchPrimaryBtn  submit submitBtn" data-kt-users-modal-action="submit">
                                     <span class="indicator-label" >Save and Exit</span>
                                     <span class="indicator-progress">Please wait...
                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>

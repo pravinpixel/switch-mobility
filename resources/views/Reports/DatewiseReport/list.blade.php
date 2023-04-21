@@ -222,7 +222,7 @@
 
                                 var editurl = '{{ route("viewDocListing", ":id") }}';
                                 editurl = editurl.replace(':id', projectId);
-                                var viewBtn = '<div id=' + projectId + ' class="btn btn-primary viewDocs">View</div>';
+                                var viewBtn = '<div id=' + projectId + ' class="btn switchPrimaryBtn  viewDocs">View</div>';
 
 
                                 table.row.add([sNo, projectCode, projectName, workflowName, workflowCode, initiater, department, activeStatus, viewBtn]).draw();

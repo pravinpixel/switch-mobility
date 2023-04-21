@@ -301,7 +301,7 @@
                     <button type="button" class="btn btn-light me-3" onclick="resetForm()">Reset</button>
                     <a href="{{route('workflow.index')}}">
                         <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
-                    <button type="submit" class="btn btn-primary " id="submitBtn" data-kt-users-modal-action="submit">
+                    <button type="submit" class="btn switchPrimaryBtn  " id="submitBtn" data-kt-users-modal-action="submit">
                         <span class="indicator-label">Save and Exit</span>
                         <span class="indicator-progress">Please wait...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -797,7 +797,7 @@
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#3565ed',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then(isConfirmed => {

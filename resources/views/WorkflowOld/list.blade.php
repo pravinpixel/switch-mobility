@@ -142,7 +142,7 @@
 
                                 <!--begin::Add user-->
                                 
-                               <a href="{{ route('workflow.create') }}"><button type="button" class="btn btn-primary ">
+                               <a href="{{ route('workflow.create') }}"><button type="button" class="btn switchPrimaryBtn  ">
                                     <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                                     <span class="svg-icon svg-icon-2">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -480,7 +480,7 @@ $(document).ready(function() {
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#3565ed',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then(isConfirmed => {
@@ -540,7 +540,7 @@ $(document).ready(function() {
             text: "Are You Sure To " + activeStatus + " This Workflow!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#3565ed',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, Change it!'
         }).then(isConfirmed => {

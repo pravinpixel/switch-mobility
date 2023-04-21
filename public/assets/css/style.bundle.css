@@ -1885,6 +1885,9 @@ progress {
     color: var(--bs-table-color);
     vertical-align: top;
     border-color: var(--bs-table-border-color);
+    border-top: 4px solid #09ee84 !important;
+    border-top-left-radius: 5px!important;
+    border-top-right-radius: 5px!important;
 }
 .table > :not(caption) > * > * {
     padding: 0.75rem 0.75rem;
@@ -1898,6 +1901,7 @@ progress {
 .table > thead {
     vertical-align: bottom;
     background-color: rgba(53,101,237);
+    
 }
 .table > thead >tr > th{
     color: white;
@@ -4298,6 +4302,7 @@ fieldset:disabled .btn {
     border: var(--bs-card-border-width) solid var(--bs-card-border-color);
     border-radius: var(--bs-card-border-radius);
     box-shadow: var(--bs-card-box-shadow);
+    border: 1px solid rgb(1, 193, 138)!important;
 }
 .card > hr {
     margin-right: 0;
@@ -37997,6 +38002,11 @@ code:not([class*="language-"]) {
     height: inherit;
     min-height: inherit;
 }
+.table tr{
+    font-size: 0.8rem!important;
+    height: 4px!important;
+}
+
 .table td:first-child,
 .table th:first-child,
 .table tr:first-child {
@@ -52361,4 +52371,8 @@ button[data-toggle="collapse"][aria-expanded="true"]{
   table > thead > tr > th{
     font-weight: 600 !important;
     font-size: 12px !important;
+  }
+  .switchPrimaryBtn,.switchPrimaryBtn:hover,.switchPrimaryBtn:disabled{
+   background-color: #3565ed;
+   color:white;
   }

@@ -252,7 +252,7 @@
 
                 <div class="text-center pt-15">
                     <button type="button" class="btn btn-danger me-3" onclick="closeModel()">Cancel</button>
-                    <button type="button" class="btn btn-primary store" onclick="submitForm()">
+                    <button type="button" class="btn switchPrimaryBtn  store" onclick="submitForm()">
                         <span class="indicator-label">Update and Exit</span>
                         <span class="indicator-progress">Please wait...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -308,7 +308,7 @@
 
                 <div class="text-center pt-15">
                     <button type="button" class="btn btn-danger me-3" onclick="closeStatusModel()">Cancel</button>
-                    <button type="button" class="btn btn-primary store" onclick="submitStatusForm()">
+                    <button type="button" class="btn switchPrimaryBtn  store" onclick="submitStatusForm()">
                         <span class="indicator-label">Update and Exit</span>
                         <span class="indicator-progress">Please wait...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -319,7 +319,7 @@
 
     </div>
     <div class="text-center container">
-        <h3 class="breadcrumbs">Documents > Ticket No. #{{ $details->ticket_no }}</h3>
+        <h3 class="breadcrumbs">Approved Documents> Ticket No. #{{ $details->ticket_no }}</h3>
 
 
 
@@ -338,7 +338,7 @@
                 <p>{{ $details->project_name }}</p>
             </div>
             <div class="col-md-3">
-                <h4>Upoload Date</h4>
+                <h4>Upload Date</h4>
                 <p>{{ $details->created_at }}</p>
             </div>
             <div class="col-md-3">
@@ -354,7 +354,7 @@
                 <p>{{ $details->department }}</p>
             </div>
             <div class="col-md-2">
-                <h4>Initiater </h4>
+                <h4>Initiator </h4>
                 <p>{{ $details->first_name . ' ' . $details->last_name }}</p>
             </div>
 
@@ -402,7 +402,7 @@
         </div>
     </div>
     </div>
-    <button class="btn btn-info float-right-btn float-open-btn">
+    <button class="btn switchPrimaryBtn float-right-btn float-open-btn">
         MileStone
     </button>
     <div class="card shadow-sm right-card right-card-close p-0 overflow-hidden">
@@ -452,12 +452,12 @@
             right: 2px;
             top: 50%;
             transform: translateY(-50%);
-            width: 400px;
+            width: 418px;
 
         }
 
         .right-card-close {
-            right: -400px;
+            right: -418px;
         }
 
         .right-card-open {

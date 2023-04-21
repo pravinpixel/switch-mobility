@@ -114,6 +114,7 @@ class ProjectwiseController extends Controller
             $projectId = $model->id;
             $projectCode = $model->project_code;
             $projectName = $model->project_name;
+            $ticketNo = $model->ticket_no;
 
             $workflowId = $workflowModel->id;
             $workflowCode = $workflowModel->workflow_code;
@@ -121,7 +122,7 @@ class ProjectwiseController extends Controller
             $workflowLevel = $workflowModel->total_levels;
             $initiater = $employeeModel->first_name . " " . $employeeModel->last_name;
             $department = ($departmentModel) ? $departmentModel->name : "";
-            $data = ['workflowId' => $workflowId, 'noOfDays' => $noOfDays, 'dueDate' => $model->end_date, 'workflowLevel' => $workflowLevel, 'projectId' => $projectId, 'workflowName' => $workflowName, 'projectCode' => $projectCode, 'projectName' => $projectName, 'workflowCode' => $workflowCode, 'initiater' => $initiater, 'department' => $department];
+            $data = ['ticketNo'=>$ticketNo,'workflowId' => $workflowId, 'noOfDays' => $noOfDays, 'dueDate' => $model->end_date, 'workflowLevel' => $workflowLevel, 'projectId' => $projectId, 'workflowName' => $workflowName, 'projectCode' => $projectCode, 'projectName' => $projectName, 'workflowCode' => $workflowCode, 'initiater' => $initiater, 'department' => $department];
 
             return $data;
         });

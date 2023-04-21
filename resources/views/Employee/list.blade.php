@@ -65,13 +65,13 @@
     .badge-sm {
         min-width: 1.8em;
         padding: .25em !important;
-        margin-top: 0.9em;
-        margin-left: -4.9em;
+        margin-top: 1.5em;
+        margin-left: -20.9em;
         margin-right: .1em;
         color: white !important;
         cursor: pointer;
-        width: 25px !important;
-        height: 20px !important;
+        width: 65px !important;
+        height: 40px !important;
     }
 </style>
 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -133,226 +133,169 @@
 
                     <!--end::Card header-->
                     <!--begin::Card body-->
-                    <div class="card-body py-4">
-                        <div class="card-header  py-3 gap-1 gap-md-5">
-                            <!--begin::Card title-->
-
-                            <!--begin::Search-->
-                            <div class="d-flex " style="display:none">
-
-                                <span class="svg-icon svg-icon-1 position-absolute ms-4" style="display:none">
-                                    <svg width="20" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
-                                        <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
-                                    </svg>
-                                </span>
-
-                                <input style="display:none" type="text" class="form-control form-control-solid w-250px ps-14 tableSearch" placeholder="Search " />
-                            </div>
-                            <!--end::Search-->
-
-                            <!--begin::Flatpickr-->
-
-                            <!--end::Flatpickr-->
-
-                            {{-- <div class="w-100 mw-150px"  style="display: none">
-                                    <!--begin::Select2-->
-                                    <select class="form-select form-select-solid emplySelect" data-kt-select2="true"
-                                        name="employee" data-placeholder="Name" data-allow-clear="true">
-
+                    <div class="card-body">
+                        <div class="" style="">
+                            <div class="row g-8">
+                                <!--begin::Col-->
+                                <div class="col-md-3">
+                                    <label class="fs-6 form-label fw-bold text-dark "> Department </label>
+                                    <select class="form-select form-select-solid filterDeptAndDes" data-kt-select2="true" data-placeholder="Department" data-allow-clear="true" id="deptFilter">
                                         <option></option>
-                                        @foreach ($employee as $emply)
-                                            <option value="{{ $emply['id'] }}" name="employee">{{ $emply['first_name'] }}
-                            </option>
-                            @endforeach
-                            </select>
-                            <!--end::Select2-->
+                                        @foreach ($departments as $department)
+                                        <option value="{{ $department['id'] }}">
+                                            {{ $department['name'] }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="fs-6 form-label fw-bold text-dark ">Project Code / Name </label>
+                                    <select class="form-select form-select-solid filterDeptAndDes" name="project_code_name" data-kt-select2="true" data-placeholder="Desgination" data-allow-clear="true" id="designationFilter">
+                                        <option></option>
+                                        @foreach ($designation as $des)
+                                        <option value="{{ $des['name'] }}">
+                                            {{ $des['id'] }}( {{ $des['name'] }})
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                    <span class="btn btn-warning " onclick="resetFilter()">Reset</span>
+                                </div>
+                                @if (auth()->user()->is_super_admin == 1 ||
+                                auth()->user()->can('employee-create'))
+                                <div class="col-md-1">
+                                    <a href="{{url('employees/create')}}">
+                                        <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                        <span class="btn switchPrimaryBtn  ">+Add</span>
+                                    </a>
+                                </div>
+                                @endif
+                                <div class="col-md-1">
+                                    <a href="{{url('bulkUploadCreate')}}">
+                                        <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                        <span class="btn btn-success ">Import</span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="w-100 mw-150px" style="display: none">
-                            <!--begin::Select2-->
-                            <select class="form-select form-select-solid emplySelect" data-kt-select2="true" data-placeholder="SAP_id" data-allow-clear="true">
-                                <option></option>
-                                @foreach ($employee as $emply)
-                                <option value="{{ $emply['id'] }}" name="employee">{{ $emply['sap_id'] }}
-                                </option>
-                                @endforeach
-                            </select>
-                            <!--end::Select2-->
-                        </div>
-                        <div class="w-100 mw-150px" style="display: none">
-                            <!--begin::Select2-->
-                            <select class="form-select form-select-solid  emplySelect" data-kt-select2="true" data-placeholder="Mobile" data-allow-clear="true">
-                                <option></option>
-                                @foreach ($employee as $emply)
-                                <option value="{{ $emply['id'] }}" name="employee">{{ $emply['mobile'] }}
-                                </option>
-                                @endforeach
-                            </select>
-                            <!--end::Select2-->
-                        </div> --}}
-                        <div class="col-md-2">
-                            <!--begin::Select2-->
-                            <select class="form-select form-select-solid filterDeptAndDes" data-kt-select2="true" data-placeholder="Department" data-allow-clear="true" id="deptFilter">
-                                <option value=""></option>
-                                @foreach ($departments as $dept)
-                                <option value="{{ $dept['id'] }}">{{ $dept['name'] }}
-                                </option>
-                                @endforeach
-                            </select>
-                            <!--end::Select2-->
-                        </div>
-                        <div class="col-md-2">
-                            <!--begin::Select2-->
-                            <select class="form-select form-select-solid filterDeptAndDes" data-kt-select2="true" data-placeholder="Desgination" data-allow-clear="true" id="designationFilter">
-                                <option value=""></option>
-                                @foreach ($designation as $desg)
-                                <option value="{{ $desg['id'] }}">{{ $desg['name'] }}
-                                </option>
-                                @endforeach
-                            </select>
-                            <!--end::Select2-->
-                        </div>
-                        <button class="badge badge-warning badge-sm" onclick="resetFilter()"><i class="fa fa-refresh" aria-hidden="true" style="color: #172d93;"></i></button>
-                        @if (auth()->user()->is_super_admin == 1 ||
-                        auth()->user()->can('employee-create'))
-                        <a href="{{url('employees/create')}}">
-                            <button type="button" class="btn btn-primary">
-                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
-                                <span class="svg-icon svg-icon-2">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor" />
-                                        <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
-                                    </svg>
-                                </span>
-                                <!--end::Svg Icon-->Add
-                            </button>
-                        </a><a href="{{url('bulkUploadCreate')}}">
-                            <button type="button" class="btn btn-info" style="width:150px;height:50px">
-                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
 
-                                <!--end::Svg Icon-->Bulk Upload
-                            </button>
-                        </a>
-                        @endif
+                        <!--begin::Table-->
+                        <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
+                            <!--begin::Table head-->
+                            <thead>
+                                <!--begin::Table row-->
+                                <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
 
+                                    <th class="min-w-125px">Name</th>
+                                    <th class="min-w-125px">SAP-ID</th>
+                                    <th class="min-w-125px">Mobile</th>
+                                    <th class="min-w-125px">Department</th>
+                                    <th class="min-w-125px">Designation</th>
+                                    <th class="min-w-50px">Status</th>
 
-                        <!--end::Card toolbar-->
-                    </div>
+                                    <th class="text-center min-w-125px">Actions</th>
+                                </tr>
+                                <!--end::Table row-->
+                            </thead>
+                            <!--end::Table head-->
+                            <!--begin::Table body-->
+                            <tbody class="text-gray-600 fw-semibold">
+                                <!--begin::Table row-->
+                                @foreach ($employee_all as $key => $d)
+                                <tr>
+                                    <!--begin::Checkbox-->
 
-                    <!--begin::Table-->
-                    <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
-                        <!--begin::Table head-->
-                        <thead>
-                            <!--begin::Table row-->
-                            <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                    <!--end::Checkbox-->
+                                    <!--begin::User=-->
 
-                                <th class="min-w-125px">Name</th>
-                                <th class="min-w-125px">SAP-ID</th>
-                                <th class="min-w-125px">Mobile</th>
-                                <th class="min-w-125px">Department</th>
-                                <th class="min-w-125px">Designation</th>
-                                <th class="min-w-50px">Status</th>
+                                    <?php if ($d->profile_image) {
+                                        $pImage = $d->profile_image;
+                                    } else {
+                                        $pImage = "noimage.png";
+                                    } ?>
 
-                                <th class="text-center min-w-125px">Actions</th>
-                            </tr>
-                            <!--end::Table row-->
-                        </thead>
-                        <!--end::Table head-->
-                        <!--begin::Table body-->
-                        <tbody class="text-gray-600 fw-semibold">
-                            <!--begin::Table row-->
-                            @foreach ($employee_all as $key => $d)
-                            <tr>
-                                <!--begin::Checkbox-->
+                                    <td class="">
+                                        <!--begin:: Avatar -->
+                                        <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                                            <a href="javascript:void(0);">
+                                                <div class="symbol-label">
+                                                    <img src="{{ asset('images/Employee/' . $pImage) }}" alt="" width="50" height="50" class="w-100" />
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <!--end::Avatar-->
+                                        <!--begin::User details-->
+                                        <div class="d-flex flex-column">
+                                            <a href="javascript:void(0);" class="text-gray-800 text-hover-primary mb-1"><?php echo $d->first_name . ' ' . $d->last_name; ?></a>
+                                            <span>Email:{{ $d->email }}</span>
+                                        </div>
+                                        <!--begin::User details-->
+                                    </td>
+                                    <td>{{ $d->sap_id }}</td>
+                                    <td>{{ $d->mobile }}</td>
+                                    <td>{{ $d->department_name }}</td>
+                                    <td>{{ $d->designation_name }}</td>
+                                    <td>
+                                        <label class="switch">
+                                            <input type="checkbox" data-id="{{ $d->id }}" value="" class="status" <?php echo $d->is_active == 1 ? 'checked' : ''; ?>>
+                                            <span class="slider round"></span>
+                                        </label>
 
-                                <!--end::Checkbox-->
-                                <!--begin::User=-->
-
-                                <?php if ($d->profile_image) {
-                                    $pImage = $d->profile_image;
-                                } else {
-                                    $pImage = "noimage.png";
-                                } ?>
-
-                                <td class="">
-                                    <!--begin:: Avatar -->
-                                    <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                        <a href="javascript:void(0);">
-                                            <div class="symbol-label">
-                                                <img src="{{ asset('images/Employee/' . $pImage) }}" alt="" width="50" height="50" class="w-100" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <!--end::Avatar-->
-                                    <!--begin::User details-->
-                                    <div class="d-flex flex-column">
-                                        <a href="javascript:void(0);" class="text-gray-800 text-hover-primary mb-1"><?php echo $d->first_name . ' ' . $d->last_name; ?></a>
-                                        <span>Email:{{ $d->email }}</span>
-                                    </div>
-                                    <!--begin::User details-->
-                                </td>
-                                <td>{{ $d->sap_id }}</td>
-                                <td>{{ $d->mobile }}</td>
-                                <td>{{ $d->department_name }}</td>
-                                <td>{{ $d->designation_name }}</td>
-                                <td>
-                                    <label class="switch">
-                                        <input type="checkbox" data-id="{{ $d->id }}" value="" class="status" <?php echo $d->is_active == 1 ? 'checked' : ''; ?>>
-                                        <span class="slider round"></span>
-                                    </label>
-
-                                </td>
-                                <td>
-                                    <div class="d-flex my-3 ms-9">
-                                        <!--begin::Edit-->
-                                        @if (auth()->user()->is_super_admin == 1 ||
-                                        auth()->user()->can('employee-edit'))
-                                        <a href="{{route('employees.edit',$d->id)}}" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3">
-                                            <span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit">
-                                                <!--begin::Svg Icon | path: icons/duotune/art/art005.svg-->
+                                    </td>
+                                    <td>
+                                        <div class="d-flex my-3 ms-9">
+                                            <!--begin::Edit-->
+                                            @if (auth()->user()->is_super_admin == 1 ||
+                                            auth()->user()->can('employee-edit'))
+                                            <a href="{{route('employees.edit',$d->id)}}" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3">
+                                                <span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit">
+                                                    <!--begin::Svg Icon | path: icons/duotune/art/art005.svg-->
+                                                    <span class="svg-icon svg-icon-3">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path opacity="0.3" d="M21.4 8.35303L19.241 10.511L13.485 4.755L15.643 2.59595C16.0248 2.21423 16.5426 1.99988 17.0825 1.99988C17.6224 1.99988 18.1402 2.21423 18.522 2.59595L21.4 5.474C21.7817 5.85581 21.9962 6.37355 21.9962 6.91345C21.9962 7.45335 21.7817 7.97122 21.4 8.35303ZM3.68699 21.932L9.88699 19.865L4.13099 14.109L2.06399 20.309C1.98815 20.5354 1.97703 20.7787 2.03189 21.0111C2.08674 21.2436 2.2054 21.4561 2.37449 21.6248C2.54359 21.7934 2.75641 21.9115 2.989 21.9658C3.22158 22.0201 3.4647 22.0084 3.69099 21.932H3.68699Z" fill="currentColor" />
+                                                            <path d="M5.574 21.3L3.692 21.928C3.46591 22.0032 3.22334 22.0141 2.99144 21.9594C2.75954 21.9046 2.54744 21.7864 2.3789 21.6179C2.21036 21.4495 2.09202 21.2375 2.03711 21.0056C1.9822 20.7737 1.99289 20.5312 2.06799 20.3051L2.696 18.422L5.574 21.3ZM4.13499 14.105L9.891 19.861L19.245 10.507L13.489 4.75098L4.13499 14.105Z" fill="currentColor" />
+                                                        </svg>
+                                                    </span>
+                                                    <!--end::Svg Icon-->
+                                                </span>
+                                            </a>
+                                            @endif
+                                            <!--end::Edit-->
+                                            @if (auth()->user()->is_super_admin == 1 ||
+                                            auth()->user()->can('employee-delete'))
+                                            <!--begin::Delete-->
+                                            <a class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" href="javascript:void(0);" class="menu-link px-3" onclick="delete_item(<?php echo $d->id; ?>);">
+                                                <!--begin::Svg Icon | path: icons/duotune/general/gen027.svg-->
                                                 <span class="svg-icon svg-icon-3">
                                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path opacity="0.3" d="M21.4 8.35303L19.241 10.511L13.485 4.755L15.643 2.59595C16.0248 2.21423 16.5426 1.99988 17.0825 1.99988C17.6224 1.99988 18.1402 2.21423 18.522 2.59595L21.4 5.474C21.7817 5.85581 21.9962 6.37355 21.9962 6.91345C21.9962 7.45335 21.7817 7.97122 21.4 8.35303ZM3.68699 21.932L9.88699 19.865L4.13099 14.109L2.06399 20.309C1.98815 20.5354 1.97703 20.7787 2.03189 21.0111C2.08674 21.2436 2.2054 21.4561 2.37449 21.6248C2.54359 21.7934 2.75641 21.9115 2.989 21.9658C3.22158 22.0201 3.4647 22.0084 3.69099 21.932H3.68699Z" fill="currentColor" />
-                                                        <path d="M5.574 21.3L3.692 21.928C3.46591 22.0032 3.22334 22.0141 2.99144 21.9594C2.75954 21.9046 2.54744 21.7864 2.3789 21.6179C2.21036 21.4495 2.09202 21.2375 2.03711 21.0056C1.9822 20.7737 1.99289 20.5312 2.06799 20.3051L2.696 18.422L5.574 21.3ZM4.13499 14.105L9.891 19.861L19.245 10.507L13.489 4.75098L4.13499 14.105Z" fill="currentColor" />
+                                                        <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor" />
+                                                        <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor" />
+                                                        <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor" />
                                                     </svg>
                                                 </span>
                                                 <!--end::Svg Icon-->
-                                            </span>
-                                        </a>
-                                        @endif
-                                        <!--end::Edit-->
-                                        @if (auth()->user()->is_super_admin == 1 ||
-                                        auth()->user()->can('employee-delete'))
-                                        <!--begin::Delete-->
-                                        <a class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" href="javascript:void(0);" class="menu-link px-3" onclick="delete_item(<?php echo $d->id; ?>);">
-                                            <!--begin::Svg Icon | path: icons/duotune/general/gen027.svg-->
-                                            <span class="svg-icon svg-icon-3">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor" />
-                                                    <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor" />
-                                                    <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor" />
-                                                </svg>
-                                            </span>
-                                            <!--end::Svg Icon-->
-                                        </a>
-                                        @endif
-                                        <!--end::Delete-->
-                                        <!--begin::More-->
+                                            </a>
+                                            @endif
+                                            <!--end::Delete-->
+                                            <!--begin::More-->
 
 
-                                        <!--end::More-->
-                                    </div>
-                                </td>
+                                            <!--end::More-->
+                                        </div>
+                                    </td>
 
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 </div>
 
@@ -775,7 +718,7 @@
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#3565ed',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then(isConfirmed => {
@@ -826,7 +769,7 @@
             text: "Are You Sure To " + activeStatus + " This Employee!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#3565ed',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, Change it!'
         }).then(isConfirmed => {

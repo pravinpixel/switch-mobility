@@ -4,8 +4,8 @@
 <style>
  
     input.permission {
-        width: 40px;
-        height: 40px;
+        width: 25px;
+        height: 25px;
     }
 
     .accordion {
@@ -346,7 +346,7 @@
                                     <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Reset</button>
                                     <a href="{{route('roles.index')}}">
                                         <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
-                                    <button type="submit" id="submitBtn" class="btn btn-primary" data-kt-users-modal-action="submit">
+                                    <button type="submit" id="submitBtn" class="btn switchPrimaryBtn " data-kt-users-modal-action="submit">
                                         <span class="indicator-label">Save and Exit</span>
                                         <span class="indicator-progress">Please wait...
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>

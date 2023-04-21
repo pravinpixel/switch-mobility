@@ -156,15 +156,16 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $entity['projectCode'] }}</td>
                                                 <td>{{ $entity['projectName'] }}</td>
-                                                <td>{{ $entity['workflowName'] }}</td>
                                                 <td>{{ $entity['workflowCode'] }}</td>
+                                                <td>{{ $entity['workflowName'] }}</td>
+                                             
                                                 <td>{{ $entity['initiater'] }}</td>
                                                 <td>{{ $entity['department'] }}</td>
                                                 <td>{{ $entity['workflowLevel'] }}</td>
                                                 <td>{{ $entity['dueDate'] }}</td>
                                                 <td>{{ $entity['noOfDays'] }}</td>
                                                 <td></td>
-                                                <td><div id="{{$entity['projectId']}}" class="btn btn-primary viewDocs">View</div></td>
+                                                <td><div id="{{$entity['projectId']}}" class="btn btn-success viewDocs">View</div></td>
 
                                             </tr>
                                         @endforeach
@@ -249,7 +250,7 @@
                                     var editurl = '{{ route('viewDocListing', ':id') }}';
                                     editurl = editurl.replace(':id', projectId);
                                     var viewBtn = '<div id=' + projectId +
-                                    ' class="btn btn-primary viewDocs">View</div>';
+                                    ' class="btn btn-success viewDocs">View</div>';
                                     table.row.add([sNo, projectCode, projectName, workflowCode,
                                         workflowName, initiater, department, workflowLevel,
                                         dueDate, noOfDays, activeStatus, viewBtn

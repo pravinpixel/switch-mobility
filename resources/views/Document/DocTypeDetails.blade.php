@@ -157,7 +157,7 @@
                                 <button type="reset" class="btn btn-light me-3 reset " onclick=" document.location.reload();">Reset</button>
                                 <a href="{{route('documentType.index')}}">
                                     <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
-                                <button onclick="validation();" type="button" class="btn btn-primary submitBtn" data-kt-users-modal-action="submit">
+                                <button onclick="validation();" type="button" class="btn switchPrimaryBtn submitBtn" data-kt-users-modal-action="submit">
                                     <span class="indicator-label" >Save and Exit</span>
                                     <span class="indicator-progress">Please wait...
                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>

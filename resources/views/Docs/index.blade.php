@@ -260,7 +260,7 @@
                                     </div>
                                     <div class="col-md-1">
                                         <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                        <span class="btn btn-primary SearchFilter">Search</span>
+                                        <span class="btn btn-success SearchFilter">Search</span>
                                     </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <div class="col-md-1">
                                         <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
@@ -272,7 +272,7 @@
 
                                     {{-- <div class="col-lg-4 mt-5">
                                     <label class="fs-6 form-label fw-bold text-dark "></label>
-                                    <button type="submit" class="form-control btn btn-primary" data-kt-users-modal-action="submit">Search</button>
+                                    <button type="submit" class="form-control btn switchPrimaryBtn" data-kt-users-modal-action="submit">Search</button>
                                     </div>   
 
                             </div> --}}
@@ -629,7 +629,7 @@
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#3565ed',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then(isConfirmed => {

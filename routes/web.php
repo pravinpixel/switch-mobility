@@ -38,6 +38,8 @@ Route::group([
     Route::resource('roles', RolesController::class);
     //Dept
     Route::resource('dashboard', DashboardController::class);
+    Route::post('dashboardSearch', [DashboardController::class, 'dashboardSearch'])->name('dashboardSearch');
+
     Route::resource('doclisting', Doclistings::class);
 
     Route::post('docListingSearch', [Doclistings::class, 'docListingSearch'])->name('docListingSearch');

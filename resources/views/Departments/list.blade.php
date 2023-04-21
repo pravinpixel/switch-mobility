@@ -70,15 +70,7 @@
                                 @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('department-create'))
                                 <!--begin::Add user-->
                                 <a href="{{url('department/create')}}">
-                                    <button type="button" class="btn btn-primary">
-                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
-                                        <span class="svg-icon svg-icon-2">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor" />
-                                                <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
-                                            </svg>
-                                        </span>
-                                        <!--end::Svg Icon-->Add</button></a>
+                                    <button type="button" class="btn switchPrimaryBtn">+ Add</button></a>
                                 @endif
                                 <!--end::Add user-->
                             </div>
@@ -289,7 +281,7 @@
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#3565ed',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then(isConfirmed => {
@@ -349,7 +341,7 @@
             text: "Are You Sure To " + activeStatus + " This Department!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#3565ed',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, Change it!'
         }).then(isConfirmed => {

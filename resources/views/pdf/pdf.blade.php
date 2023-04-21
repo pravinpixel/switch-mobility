@@ -46,7 +46,7 @@
                         <p style="font-size:10px"><b>Department</b><br>{{$department}}</p>
                     </div>
                     <div class="element" style="width: 18%;margin: 0 20px;text-align: center;display:inline-block">
-                        <p style="font-size:10px"><b>Initiater</b><br>{{$initiater}}</p>
+                        <p style="font-size:10px"><b>Initiator</b><br>{{$initiater}}</p>
                     </div>
                 </div>
             </div>

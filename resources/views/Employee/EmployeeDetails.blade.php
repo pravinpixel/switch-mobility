@@ -213,15 +213,17 @@
                                         if ($model) {
                                             $noPic = 'noimage.png';
                                             $profilePic = isset($model['profile_image']) ? $model['profile_image'] : $noPic;
+
                                             $updatePic= '<img src="/images/Employee/' . $profilePic . '" class="editPic1" width="50" height="50" class="w-50" />';
 
                                         } 
                                         else{
-                                            
+                                            $profilePic="";
                                               $updatePic='<img src="" style="display:none;" class="editPic1" width="50" height="50" class="w-50" />';
                                         } 
-                                        echo $updatePic;
+                                       
                                         ?>
+                                          <img src="{{ asset('images') . '/Employee/' . $profilePic }}" class="editPic1" width="50" height="50" class="w-50">
                                         <!--end::Input-->
                                     </div>
                                     <!--end::Col-->
@@ -241,13 +243,14 @@
                                         if ($model) {
                                             $noImage = 'noimage.png';
                                             $image = isset($model['sign_image']) ? $model['sign_image'] : $noImage;
-                                            $pic= '<img src="/images/Employee/' . $image . '" class="editPic" width="50" height="50" class="w-50" />';
+                                            $pic= $image;
                                         } 
                                         else{
-                                          $pic='<img src="" style="display:none;" class="editPic" width="50" height="50" class="w-50" />';
+                                          $pic='';
                                         } 
-                                        echo $pic;
+                                      
                                         ?>
+                                         <img src="{{ asset('images') . '/Employee/' . $pic }}" class="editPic" width="50" height="50" class="w-50">
                                         <!--end::Input-->
                                     </div>
                                     <!--end::Col-->
@@ -256,7 +259,7 @@
                                     <!--begin::Col-->
                                     <div class="col-md-12 fv-row">
                                         <!--begin::Label-->
-                                        <label class="fs-6 fw-semibold mb-2">official Communication Address</label>
+                                        <label class="fs-6 fw-semibold mb-2">Official Communication Address</label>
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <textarea class="form-control form-control-solid" name="address" rows="4" cols="50"><?php echo $model ? $model->address : ''; ?></textarea>
@@ -270,7 +273,7 @@
                                         data-kt-users-modal-action="cancel">Reset</button>
                                     <a href="{{ route('employees.index') }}">
                                         <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
-                                    <button type="button" onclick="finalValidation();" class="btn btn-primary submit"
+                                    <button type="button" onclick="finalValidation();" class="btn switchPrimaryBtn  submit"
                                         data-kt-users-modal-action="submit">
                                         <span class="indicator-label">Save and Exit</span>
                                         <span class="indicator-progress">Please wait...

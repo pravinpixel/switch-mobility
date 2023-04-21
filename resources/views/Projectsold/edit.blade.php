@@ -602,8 +602,8 @@
                 <!--end::Wrapper-->
                 <!--begin::Wrapper-->
                 <div>
-                    <!-- <button type="submit" class="btn btn-lg btn-primary" data-kt-stepper-action="submit"> -->
-                    <button type="button" class="btn btn-lg btn-primary nextlevel" data-kt-stepper-action="submit" onclick="nextLevel(this)">
+                    <!-- <button type="submit" class="btn btn-lg switchPrimaryBtn " data-kt-stepper-action="submit"> -->
+                    <button type="button" class="btn btn-lg switchPrimaryBtn  nextlevel" data-kt-stepper-action="submit" onclick="nextLevel(this)">
                         <span class="indicator-label  ">Next
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
 
@@ -611,7 +611,7 @@
                         </span>
 
                     </button>
-                    <button type="button" class="btn btn-lg btn-primary btn-tab-switch" data-kt-stepper-action="next" validate="need">Continue
+                    <button type="button" class="btn btn-lg switchPrimaryBtn  btn-tab-switch" data-kt-stepper-action="next" validate="need">Continue
                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
                         <span class="svg-icon svg-icon-3 ms-1 me-0">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1417,7 +1417,7 @@
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#3565ed',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then(isConfirmed => {
@@ -1573,7 +1573,7 @@
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#3565ed',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then(isConfirmed => {

@@ -157,7 +157,7 @@
                                     <td>{{$entity['noOfDays']}}</td>
                                     <td></td>
                                     <td>
-                                        <div id="{{$entity['projectId']}}" class="btn btn-primary viewDocs">View</div>
+                                        <div id="{{$entity['projectId']}}" class="btn switchPrimaryBtn  viewDocs">View</div>
                                     </td>
 
 
@@ -272,7 +272,7 @@
                                     var activeStatus = "";
                                 
                                     var viewBtn = '<div id=' + projectId +
-                                        ' class="btn btn-primary viewDocs">View</div>';
+                                        ' class="btn switchPrimaryBtn  viewDocs">View</div>';
                                     var projectNameOptionItems = "<option value=" + projectId +
                                         ">" +
                                         projectName + "(" + projectCode + ")</option>";

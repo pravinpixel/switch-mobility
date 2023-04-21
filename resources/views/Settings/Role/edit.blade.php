@@ -365,7 +365,7 @@
                             <div class="text-center pt-15">
                             <a href="{{route('roles.index')}}">
                                     <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
-                                <button type="submit" id="updateBtn" class="btn btn-primary" data-kt-users-modal-action="submit">
+                                <button type="submit" id="updateBtn" class="btn switchPrimaryBtn " data-kt-users-modal-action="submit">
                                     <span class="indicator-label">Update and Exit</span>
                                     <span class="indicator-progress">Please wait...
                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>

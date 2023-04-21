@@ -130,7 +130,7 @@
                         <div class="app-navbar flex-shrink-0">
                             {{-- <h3>Loggined In:{{Session('logginedUser')}}</h3> --}}
                             <div class="app-navbar-item ms-1 ms-md-3" id="kt_header_user_menu_toggle">
-                                <h6 class="badge badge-primary badge-lg">{{Session('logginedUser')}}</h6>&nbsp;&nbsp;
+                                <h6 class="badge switchPrimaryBtn badge-lg">{{Session('logginedUser')}}</h6>&nbsp;&nbsp;
                                 <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="{default: " click", lg: "hover" }" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                                     <?php
                                     $pic = App\Models\Employee::where(['id' => Session('employeeId')])->pluck('profile_image')->first();

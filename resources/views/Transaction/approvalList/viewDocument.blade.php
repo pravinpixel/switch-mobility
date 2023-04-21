@@ -252,7 +252,7 @@
 
                 <div class="text-center pt-15">
                     <button type="button" class="btn btn-danger me-3" onclick="closeModel()">Cancel</button>
-                    <button type="button" class="btn btn-primary store" onclick="submitForm()">
+                    <button type="button" class="btn switchPrimaryBtn  store" onclick="submitForm()">
                         <span class="indicator-label">Update and Exit</span>
                         <span class="indicator-progress">Please wait...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -308,7 +308,7 @@
 
                 <div class="text-center pt-15">
                     <button type="button" class="btn btn-danger me-3" onclick="closeStatusModel()">Cancel</button>
-                    <button type="button" class="btn btn-primary store" onclick="submitStatusForm()">
+                    <button type="button" class="btn switchPrimaryBtn  store" onclick="submitStatusForm()">
                         <span class="indicator-label">Update and Exit</span>
                         <span class="indicator-progress">Please wait...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -338,7 +338,7 @@
                 <p>{{ $details->project_name }}</p>
             </div>
             <div class="col-md-3">
-                <h4>Upoload Date</h4>
+                <h4>Upload Date</h4>
                 <p>{{ $details->created_at }}</p>
             </div>
             <div class="col-md-3">
@@ -354,7 +354,7 @@
                 <p>{{ $details->department }}</p>
             </div>
             <div class="col-md-2">
-                <h4>Initiater </h4>
+                <h4>Initiator </h4>
                 <p>{{ $details->first_name . ' ' . $details->last_name }}</p>
             </div>
 
@@ -678,7 +678,7 @@
                                             // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
 
                                             versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
-                                            // versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
+                                            // versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm switchPrimaryBtn " onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionMainDocDiv += '</button>';
                                        // }
                                         versionMainDocDiv += '</td>';
@@ -761,7 +761,7 @@
                                         versionAuxDocDiv += '<td>';
                                        // if (j == showAuxDocAction) {
                                              versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
-                                            // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
+                                            // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm switchPrimaryBtn " onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionAuxDocDiv += '</button>';
                                        // }
                                         versionAuxDocDiv += '</td>';
@@ -813,7 +813,7 @@
             text: "You can always change the status to active or in-active!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#3565ed',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, Change it!'
         }).then(isConfirmed => {
