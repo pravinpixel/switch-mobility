@@ -1,1 +1,0 @@
-ALTER TABLE roles ADD authority_type INTEGER;
