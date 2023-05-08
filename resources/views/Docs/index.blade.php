@@ -323,7 +323,7 @@
                                             <td>
                                                 <span>
 
-                                                    <div style="display:inline" id="{{ $d->id }}"
+                                                    <div style="display:inline;cursor: pointer;" id="{{ $d->id }}"
                                                         class="viewDocument" title="View Document"><i
                                                             class="fa-solid fa-eye" style="color:blue"></i></div>
 
@@ -332,7 +332,7 @@
                                                             $d['initiatorStatus'] == 'yes' ||
                                                             $d['approverStatus'] == 'yes' ||
                                                             Session('authorityType') == 1)
-                                                        &nbsp; <div style="display:inline" id="{{ $d->id }}"
+                                                        &nbsp; <div style="display:inline;cursor: pointer;" id="{{ $d->id }}"
                                                             class="editDocument" title="Edit Document"><i
                                                                 class="fa-solid fa-pen" style="color:blue"></i></div>
                                                 </span>

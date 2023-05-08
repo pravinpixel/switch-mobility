@@ -319,11 +319,15 @@
 
     </div>
     <div class="text-center container">
-        <h3 class="breadcrumbs">Edit Documents > Ticket No. #{{ $details->ticket_no }}</h3>
-
-
-
-
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="breadcrumbs">Edit Documents > Ticket No. #{{ $details->ticket_no }}</h3>
+            </div>
+            <div class="col-md-2">
+                <label> </label> <label> </label>
+                <a href="{{url('doclisting')}}" class="btn switchPrimaryBtn btn-sm" style="margin-right:-850px">Back</a>
+            </div>
+        </div>
         <div class="row top-tap">
             <div class="col-md-3">
                 <h4>Ticket Number</h4>
@@ -353,7 +357,7 @@
                 <h4>Department </h4>
                 <p>{{ $details->department }}</p>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <h4>Initiator </h4>
                 <p>{{ $details->first_name . ' ' . $details->last_name }}</p>
             </div>
@@ -388,10 +392,12 @@
 
             </div>
             @endfor
+            <!-- <a href="{{url('doclisting')}}"> <button class="btn switchPrimaryBtn"style="margin-left:-1250px!important">Back</button></a> -->
         </div>
 
 
     </div>
+
     </div>
     </div>
     <button class="btn switchPrimaryBtn float-right-btn float-open-btn">
@@ -541,6 +547,8 @@
         }
 
         function openStatusModel(id, levelId, mainId) {
+            console.log("documentId " + mainId);
+
             $('#statusModelForm')[0].reset();
             $('#statusChangeModal').css('display', 'block');
             $('#statusChangeModal').find('.statusdocumentId').val(id);
@@ -589,7 +597,7 @@
                         //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
                         //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
                         //     newDate = day + '-' + month + '-' + yr;
-                        $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<p class="due_date_' + level + '"></p></div><div class="col-md-2">Priority:<p class="priority_' + level + '"></p></div><hr><div style="text-align:left;font-weight:bold;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><br><div style="text-align:left;font-weight:bold;">&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
+                        $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<p class="due_date_' + level + '"></p></div><div class="col-md-2">Priority:<p class="priority_' + level + '"></p></div><hr><div style="text-align:left;font-weight:bold;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div style="text-align:left;font-weight:bold;">&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
                         //if (data.length > 0) {
 
                         $(".image_append" + level).empty();
@@ -608,16 +616,16 @@
 
 
 
-                            var dateAr = val.due_date.split('-');                         
+                            var dateAr = val.due_date.split('-');
                             var cnewDate = dateAr[1] + '-' + dateAr[2] + '-' + dateAr[0].slice(-2);
                             var duDateAppend = cnewDate;
-                           
+
                             var badgeType = (dateSign == '-') ? "danger" : "success";
                             duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate + ' Day</span></span>';
                             $(".due_date_" + level).empty();
 
-                           
-                       
+
+
                             $(".due_date_" + level).append(duDateAppend);
 
                             var priority = "";
@@ -642,7 +650,7 @@
                             $(".image_append" + level).append('<figure><img src="' + baseUrl + '/' + profile + '" class="rounded"  width="50" height="50"><figcaption  style="white-space: nowrap;">[' + val.first_name + ' ,' + val.desName + ']&nbsp;</figcaption></figure>');
                         });
                         $.ajax({
-                            url: "{{ url('getProjectDocs') }}",
+                            url: "{{ url('getlevelwiseDocument') }}",
                             type: 'ajax',
                             method: 'post',
                             data: {
@@ -651,69 +659,90 @@
                                 project_id: project_id
                             },
                             success: function(result) {
-                                var data = JSON.parse(result);
+                                var data = result;
+                                var lastLevelProject = data.lastLevel;
+                                var approverLevels = data.approverLevels;
+                                var ApproverExactLevel = data.ApproverExactLevel;
+                                console.log("approverLevels " + approverLevels);  
+                                console.log("level " + level);                               
+                                console.log("ApproverExactLevel " + ApproverExactLevel);
+
+                                var showLastLevelBtn = false;
+                                if (lastLevelProject == level) {
+                                    showLastLevelBtn = true;
+                                }
+                                console.log('lastLevelProject ' + lastLevelProject);
+
+
+                                var baseUrl = "{{ asset('/') }}";
 
 
                                 $(".maindoc_append" + level).empty();
                                 $(".auxdoc_append" + level).empty();
                                 var levelstageStatus = [];
                                 if (data.main_docs) {
+
                                     $.each(data.main_docs, function(key, val) {
+
                                         var currentStatusId = val.status;
+                                        var currentFileName = val.file_name;
 
+
+                                        //by dhana
+                                        // var doc_status_with_level = val.doc_status_with_level;
+                                        // var currentStatusId = doc_status_with_level.status;
+                                        // var currentFileName = doc_status_with_level.file_name;
+                                        var currentStatusData = "Waiting For Approval";
+                                        var statusColour = "warning";
                                         if (currentStatusId == 2) {
-                                            var currentStatusData = "Declined";
+                                            currentStatusData = "Declined";
                                         } else if (currentStatusId == 3) {
-                                            var currentStatusData = "Change Request";
+                                            currentStatusData = "Change Request";
                                         } else if (currentStatusId == 4) {
-                                            var currentStatusData = "Approved";
-                                        } else {
-                                            var currentStatusData = "Waiting For Approval";
+                                            currentStatusData = "Approved";
+                                            statusColour = "success";
                                         }
 
+                                        var docMainDetailArray = val.get_doc_detail;
 
 
-
-                                        var docMainDetailArray = val.doc_detail;
-
-                                        var baseUrl = "{{ asset('/') }}";
-                                        if (val.status == 1) {
-                                            var status = "Pending";
-                                        } else if (val.status == 1) {
-                                            var status = "Declined";
-                                        } else {
-                                            var status = "Approved";
-                                        }
+                                        // if (val.status == 1) {
+                                        //     var status = "Pending";
+                                        // } else if (val.status == 1) {
+                                        //     var status = "Declined";
+                                        // } else {
+                                        //     var status = "Approved";
+                                        // }
 
                                         var versionMainDocDiv = '<div class="">';
                                         versionMainDocDiv += '<div class="accordion " style="margin:auto;width:98%;" id="accordionExample' + key + '">';
                                         versionMainDocDiv += '<div class="card p-0"> <div class=" border-0" id="heading' + key + '">';
                                         versionMainDocDiv += '<h5 class="mb-0 w-100">';
-                                        versionMainDocDiv += '<button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold;padding-left:10px;">' + val.original_name + '</h3> <p class="text-right mainlevelStatus-' + level + "-" + key + '"></p> <p class="btn btn-light-warning status-accordion" style="margin-right:40px;">' + currentStatusData + '</p></button>';
+                                        versionMainDocDiv += '<button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold;padding-left:10px;">' + currentFileName + '</h3> <p class="text-right mainlevelStatus-' + level + "-" + key + '"></p> <p class="btn btn-' + statusColour + ' status-accordion" style="margin-right:40px;">' + currentStatusData + '</p></button>';
                                         versionMainDocDiv += '</h5>';
                                         versionMainDocDiv += '</div>';
                                         versionMainDocDiv += '<div id="collapse' + key + '" class="collapse fade" aria-labelledby="heading' + key + '" data-parent="#accordionExample' + key + '">';
                                         versionMainDocDiv += '<div class="card-body">';
                                         versionMainDocDiv += ' <table class="table table-striped documentTable">';
                                         versionMainDocDiv += ' <thead class="documentTableth">';
-                                        versionMainDocDiv += ' <tr> <th scope="col">Version ID </th> <th scope="col">Remarks</th> <th scope="col">Status</th><th scope="col">Last Updated</th> <th scope="col">Action</th> </tr>';
+                                        versionMainDocDiv += ' <tr> <th scope="col">Version ID </th> <th scope="col">Level</th><th scope="col">Remarks</th> <th scope="col">Status</th><th scope="col">Last Updated</th> <th scope="col">Action</th> </tr>';
                                         versionMainDocDiv += '</thead>';
                                         versionMainDocDiv += '<tbody style="">';
+                                        //By dhana
                                         var mainDocSize = docMainDetailArray.length;
                                         var showMainDocAction = mainDocSize - 1;
-                                        console.log("showMainDocAction " + showMainDocAction);
-                                        for (var i = docMainDetailArray.length - 1; i >= 0; --i) {
 
+
+                                        for (var i = docMainDetailArray.length - 1; i >= 0; --i) {
+                                            console.log('Current Docs Level ' + docMainDetailArray[i].status);
                                             var remarkData = (docMainDetailArray[i].remark) ? docMainDetailArray[i].remark : "";
                                             var updatedBy = docMainDetailArray[i].employee;
                                             var updatedPerson = "";
-                                            console.log("updatedBy");
-                                            console.log(updatedBy);
+
                                             if (updatedBy) {
                                                 updatedPerson = updatedBy.first_name + " " + updatedBy.middle_name + " " + updatedBy.last_name;
                                             }
-                                            console.log("updatedPerson");
-                                            console.log(updatedPerson);
+
                                             var statusData = "";
                                             if (docMainDetailArray[i].status == 1) {
                                                 var statusData = "Waiting  For Approval";
@@ -726,7 +755,7 @@
                                             } else {
                                                 var statusData = "Waiting For Approval";
                                             }
-                                            console.log("statusData" + statusData);
+
                                             var dateFormat = new Date(docMainDetailArray[i].updated_at);
                                             var lastUpdate = (dateFormat.getDate() +
                                                 "/" + (dateFormat.getMonth() + 1) +
@@ -735,7 +764,9 @@
                                                 ":" + dateFormat.getMinutes() +
                                                 ":" + dateFormat.getSeconds());
                                             versionMainDocDiv += '<tr>';
+
                                             versionMainDocDiv += '<td>ver ' + docMainDetailArray[i].version + '</td>';
+                                            versionMainDocDiv += '<td>Level- ' + docMainDetailArray[i].upload_level + '</td>';
                                             versionMainDocDiv += '<td>' + remarkData + '</td>';
                                             versionMainDocDiv += '<td>' + statusData + '</td>';
                                             versionMainDocDiv += '<td>' + updatedPerson + "(" + lastUpdate + ')</td>';
@@ -752,10 +783,13 @@
                                                 }];
                                                 levelstageStatus.push(state);
                                                 // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
-                                                versionMainDocDiv += '<a class="btn switchPrimaryBtn btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
-
+                                                if (docMainDetailArray[i].status == 1 || showLastLevelBtn) {
+                                                    if (ApproverExactLevel) {
+                                                        versionMainDocDiv += '<a class="btn switchPrimaryBtn btn-sm" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.doc_id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
+                                                    }
+                                                }
                                             }
-                                            versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+                                            versionMainDocDiv += '<a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
                                             // versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionMainDocDiv += '</button>';
                                             versionMainDocDiv += '</td>';
@@ -774,86 +808,110 @@
                                     console.log("levelstageStatus" + levelstageStatus);
                                 }
                                 if (data.aux_docs) {
-                                    $.each(data.aux_docs, function(key1, val) {
-                                        var docAuxDetailArray = val.doc_detail;
-                                        console.log(docAuxDetailArray);
-                                        var baseUrl = "{{ asset('/') }}";
-                                        if (val.status == 0) {
-                                            var status = "Waiting";
-                                        } else if (val.status == 1) {
-                                            var status = "Approved";
-                                        } else {
-                                            var status = "Pending";
-                                        }
-                                        var versionAuxDocDiv = '<div class="row">';
-                                        versionAuxDocDiv += '<div class="accordion" style="margin:auto;width:98%;" id="accordionExample1">';
-                                        versionAuxDocDiv += '<div class="card">';
-                                        versionAuxDocDiv += '<div class="border-0" id="heading' + key1 + '">';
-                                        versionAuxDocDiv += ' <h5 class="mb-0 w-100"><button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse1' + key1 + '" aria-expanded="false" aria-controls="collapse' + key1 + '"><h3 style = "font-style:bold;padding-left:10px;">' + val.original_name + '</h3><p class="auxlevelStatus' + (key1 - 1) + '"></p><p class="btn btn-light-danger status-accordion" style="margin-right:40px;visibility:hidden;">asdas</p></button></h5>';
-                                        versionAuxDocDiv += '</div>';
-                                        versionAuxDocDiv += ' <div id="collapse1' + key1 + '" class="collapse fade" aria-labelledby="heading' + key1 + '" data-parent="#accordionExample1">';
-                                        versionAuxDocDiv += '<div class="card-body">';
-                                        versionAuxDocDiv += '<table class="table table-striped documentTable">';
-                                        versionAuxDocDiv += '<thead class="documentTableth">';
-                                        versionAuxDocDiv += '<tr>';
-                                        versionAuxDocDiv += '<th scope="col">Version ID</th><th scope="col">Last Updated</th> <th scope="col">Action</th>';
-                                        versionAuxDocDiv += '</tr>';
-                                        versionAuxDocDiv += '</thead>';
-                                        versionAuxDocDiv += ' <tbody>';
-                                        var auxDocSize = docAuxDetailArray.length;
-                                        var showAuxDocAction = auxDocSize - 1;
-                                        console.log("showAuxDocAction " + showAuxDocAction);
-
-                                        for (j = docAuxDetailArray.length - 1; j >= 0; --j) {
-                                            var remarkData = (docAuxDetailArray[j].remark) ? docAuxDetailArray[j].remark : "";
-
-                                            var dateFormat = new Date(docAuxDetailArray[j].updated_at);
-                                            var lastUpdate = ("Date: " + dateFormat.getDate() +
-                                                "/" + (dateFormat.getMonth() + 1) +
-                                                "/" + dateFormat.getFullYear() +
-                                                " " + dateFormat.getHours() +
-                                                ":" + dateFormat.getMinutes() +
-                                                ":" + dateFormat.getSeconds());
-
-                                            var statusData = "";
-                                            if (docAuxDetailArray[j].status == 1) {
-                                                var statusData = "Waiting For Approval";
-                                            } else if (docAuxDetailArray[j].status == 2) {
-                                                var statusData = "Declined";
-                                            } else if (docAuxDetailArray[j].status == 3) {
-                                                var statusData = "change Request";
-                                            } else if (docAuxDetailArray[j].status == 4) {
-                                                var statusData = "Approved";
-                                            } else {
-                                                var statusData = "Waiting For Approval";
-                                            }
-
-                                            $(".mainlevelStatus" + j).html("");
-                                            $(".mainlevelStatus" + j).append("(" + statusData + ")");
-                                            versionAuxDocDiv += '<tr>';
-                                            versionAuxDocDiv += '<td>ver ' + docAuxDetailArray[j].version + '</td>';
-                                            // versionAuxDocDiv += '<td>' + remarkData + '</td>';
-                                            // versionAuxDocDiv += '<td>' + statusData + '</td>';
-                                            versionAuxDocDiv += '<td>' + lastUpdate + '</td>';
-                                            versionAuxDocDiv += '<td>';
-                                            //if (j == showAuxDocAction) {
-                                            // versionAuxDocDiv += '<a class="btn switchPrimaryBtn  btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docAuxDetailArray[j].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
-                                            versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
-                                            // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
-                                            versionAuxDocDiv += '</button>';
-                                            //}
-                                            versionAuxDocDiv += '</td>';
-                                            versionAuxDocDiv += '</tr>';
-                                        }
-                                        versionAuxDocDiv += '</tbody>';
-                                        versionAuxDocDiv += '</table>';
-                                        versionAuxDocDiv += '</div>';
-                                        versionAuxDocDiv += '</div>';
-                                        versionAuxDocDiv += '</div>';
-                                        versionAuxDocDiv += '</div>';
-                                        versionAuxDocDiv += '</div>';
-                                        $(".auxdoc_append" + level).append(versionAuxDocDiv);
+                                    var versionAuxDocDiv1 = '<div class="card-body">';
+                                    var versionAuxDocDiv1 = '<br>';
+                                    versionAuxDocDiv1 += '<table class="table table-striped documentTable">';
+                                    versionAuxDocDiv1 += '<thead class="documentTableth">';
+                                    versionAuxDocDiv1 += '<tr>';
+                                    versionAuxDocDiv1 += '<th scope="col">File Name</th><th scope="col">Action</th>';
+                                    versionAuxDocDiv1 += '</tr>';
+                                    versionAuxDocDiv1 += '</thead>';
+                                    versionAuxDocDiv1 += ' <tbody>';
+                                    versionAuxDocDiv1 += ' </tbody>';
+                                    $.each(data.aux_docs, function(key, val) {
+                                        versionAuxDocDiv1 += '<tr>';
+                                        versionAuxDocDiv1 += '<td>' + val.original_name + '</td>';
+                                        versionAuxDocDiv1 += '<td><a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + val.document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a></td>';
+                                        versionAuxDocDiv1 += '</tr>';
                                     });
+                                    versionAuxDocDiv1 += ' </table>';
+                                    versionAuxDocDiv1 += ' </br>';
+                                    $(".auxdoc_append" + level).append(versionAuxDocDiv1);
+
+                                    // $.each(data.aux_docs, function(key1, val) {
+                                    //     var docAuxDetailArray = val.doc_detail;
+                                    //     console.log(docAuxDetailArray);
+                                    //     var baseUrl = "{{ asset('/') }}";
+                                    //     if (val.status == 0) {
+                                    //         var status = "Waiting";
+                                    //     } else if (val.status == 1) {
+                                    //         var status = "Approved";
+                                    //     } else {
+                                    //         var status = "Pending";
+                                    //     }
+
+
+
+
+                                    //     // var versionAuxDocDiv = '<div class="row">';
+                                    //     // versionAuxDocDiv += '<div class="accordion" style="margin:auto;width:98%;" id="accordionExample1">';
+                                    //     // versionAuxDocDiv += '<div class="card">';
+                                    //     // versionAuxDocDiv += '<div class="border-0" id="heading' + key1 + '">';
+                                    //     // versionAuxDocDiv += ' <h5 class="mb-0 w-100"><button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse1' + key1 + '" aria-expanded="false" aria-controls="collapse' + key1 + '"><h3 style = "font-style:bold;padding-left:10px;">' + val.original_name + '</h3><p class="auxlevelStatus' + (key1 - 1) + '"></p><p class="btn btn-light-danger status-accordion" style="margin-right:40px;visibility:hidden;">asdas</p></button></h5>';
+                                    //     // versionAuxDocDiv += '</div>';
+                                    //     // versionAuxDocDiv += ' <div id="collapse1' + key1 + '" class="collapse fade" aria-labelledby="heading' + key1 + '" data-parent="#accordionExample1">';
+                                    //     var versionAuxDocDiv = '<div class="card-body">';
+                                    //     versionAuxDocDiv += '<table class="table table-striped documentTable">';
+                                    //     versionAuxDocDiv += '<thead class="documentTableth">';
+                                    //     versionAuxDocDiv += '<tr>';
+                                    //     versionAuxDocDiv += '<th scope="col">Version ID</th><th scope="col">Last Updated</th> <th scope="col">Action</th>';
+                                    //     versionAuxDocDiv += '</tr>';
+                                    //     versionAuxDocDiv += '</thead>';
+                                    //     versionAuxDocDiv += ' <tbody>';
+                                    //     var auxDocSize = docAuxDetailArray.length;
+                                    //     var showAuxDocAction = auxDocSize - 1;
+                                    //     console.log("showAuxDocAction " + showAuxDocAction);
+
+                                    //     for (j = docAuxDetailArray.length - 1; j >= 0; --j) {
+                                    //         var remarkData = (docAuxDetailArray[j].remark) ? docAuxDetailArray[j].remark : "";
+
+                                    //         var dateFormat = new Date(docAuxDetailArray[j].updated_at);
+                                    //         var lastUpdate = ("Date: " + dateFormat.getDate() +
+                                    //             "/" + (dateFormat.getMonth() + 1) +
+                                    //             "/" + dateFormat.getFullYear() +
+                                    //             " " + dateFormat.getHours() +
+                                    //             ":" + dateFormat.getMinutes() +
+                                    //             ":" + dateFormat.getSeconds());
+
+                                    //         var statusData = "";
+                                    //         if (docAuxDetailArray[j].status == 1) {
+                                    //             var statusData = "Waiting For Approval";
+                                    //         } else if (docAuxDetailArray[j].status == 2) {
+                                    //             var statusData = "Declined";
+                                    //         } else if (docAuxDetailArray[j].status == 3) {
+                                    //             var statusData = "change Request";
+                                    //         } else if (docAuxDetailArray[j].status == 4) {
+                                    //             var statusData = "Approved";
+                                    //         } else {
+                                    //             var statusData = "Waiting For Approval";
+                                    //         }
+
+                                    //         $(".mainlevelStatus" + j).html("");
+                                    //         $(".mainlevelStatus" + j).append("(" + statusData + ")");
+                                    //         versionAuxDocDiv += '<tr>';
+                                    //         versionAuxDocDiv += '<td>ver ' + docAuxDetailArray[j].version + '</td>';
+                                    //         // versionAuxDocDiv += '<td>' + remarkData + '</td>';
+                                    //         // versionAuxDocDiv += '<td>' + statusData + '</td>';
+                                    //         versionAuxDocDiv += '<td>' + lastUpdate + '</td>';
+                                    //         versionAuxDocDiv += '<td>';
+                                    //         //if (j == showAuxDocAction) {
+                                    //         // versionAuxDocDiv += '<a class="btn switchPrimaryBtn  btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docAuxDetailArray[j].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
+                                    //         versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+                                    //         // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
+                                    //         versionAuxDocDiv += '</button>';
+                                    //         //}
+                                    //         versionAuxDocDiv += '</td>';
+                                    //         versionAuxDocDiv += '</tr>';
+                                    //     }
+                                    //     versionAuxDocDiv += '</tbody>';
+                                    //     versionAuxDocDiv += '</table>';
+                                    //     versionAuxDocDiv += '</div>';
+                                    //     // versionAuxDocDiv += '</div>';
+                                    //     // versionAuxDocDiv += '</div>';
+                                    //     // versionAuxDocDiv += '</div>';
+                                    //     // versionAuxDocDiv += '</div>';
+                                    //     $(".auxdoc_append" + level).append(versionAuxDocDiv);
+                                    // });
                                 }
                             },
                             error: function(err) {
@@ -918,7 +976,7 @@
             formData.append('csrfmiddlewaretoken', '{{ csrf_token() }}');
 
             $.ajax({
-                url: "{{ url('docStatus') }}",
+                url: "{{ url('updatelevelwiseDocumentStatus') }}",
                 type: 'ajax',
                 method: 'post',
                 dataType: 'json',

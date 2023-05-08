@@ -13,4 +13,9 @@ class projectDocument extends Model
     {
         return $this->hasMany('App\Models\ProjectDocumentDetail', 'project_doc_id', 'id');
     }
+
+    public function docStatusWithLevel()
+    {
+        return $this->hasOne('App\Models\ProjectDocumentStatusByLevel', 'doc_id', 'id');
+    }
 }

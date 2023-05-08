@@ -238,7 +238,7 @@
                                                 <div data-repeater-item="" class="form-group d-flex flex-wrap align-items-center justify-content-center gap-5">
                                                     <!--begin::Select2-->
                                                     <div class="col-md-4">
-                                                        <select class="form-select product_option1" required name="levels[]" data-placeholder="Select a variation" data-kt-ecommerce-catalog-add-product="product_option">
+                                                        <select class="form-select product_option1"  name="levels[]" data-placeholder="Select a variation" data-kt-ecommerce-catalog-add-product="product_option">
                                                             <option value="" disabled selected>Select Level</option>
                                                             @for($i=1;$i<12;$i++) <option value="{{$i}}">Level {{$i}}</option>
                                                                 @endfor
@@ -416,10 +416,12 @@
         console.log($(this).val());
         if ($(this).val() == 0) {
             $(".fullWorkflow select").removeAttr("required");
-            $(".partialWorkflow select").attr("required");
+            $(".partialWorkflow select").attr("required", true);
+
+            console.log( $(".partialWorkflow select"));
         } else {
             $(".partialWorkflow select").removeAttr("required");
-            $(".fullWorkflow select").attr("required");
+            $(".fullWorkflow select").attr("required",true);
             
         }
         workFlowType($(this).val());
@@ -1085,8 +1087,10 @@ $(e).parent().parent().parent().parent().find('.designation').val('').trigger('c
 
     function RemoveFunctionc(e) {
         if ($(e).parent().parent().parent().parent().length > 0) {
-  var $designation = $(e).parent().parent().parent().parent().find('.designation');
+  var $designation = $(e).parent().parent().parent().parent().find('.designation').not(':disabled');
+
   if ($designation.length > 0) {
+    
     $designation.val('').trigger('change');
   }
 }

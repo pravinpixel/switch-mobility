@@ -385,7 +385,7 @@
                                             @if (auth()->user()->is_super_admin == 1 || auth()->user()->can('project-delete'))
                                             <!--end::Edit-->
                                             <!--begin::Delete-->
-                                            <a class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" href="javascript:void(0);" class="menu-link px-3" onclick="delete_item(<?php echo $d->project_id; ?>);">
+                                            <a class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" href="javascript:void(0);" class="menu-link px-3" onclick="delete_item(<?php echo $d->id; ?>);">
                                                 <!--begin::Svg Icon | path: icons/duotune/general/gen027.svg-->
                                                 <span class="svg-icon svg-icon-3">
                                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1258,25 +1258,31 @@
         }).then(isConfirmed => {
             if (isConfirmed.value) {
                 $.ajax({
-                    url: "{{ route('deleteDocument') }}",
-                    method: "post",
+                    url: "{{url('projects')}}" + "/" + id,
+                    method: "delete",
                     data: {
                         id: id,
                         "_token": "{{ csrf_token() }}",
                     },
                     success: function(result) {
-                        if (result) {
+                        return false;
+                        if (result.message == "Failed") {
+                            Swal.fire(
+                                'Deleted!',
+                                'Reference Datas Are Found,deleted Failed.',
+                                'error'
+                            );
+                        } else {
+                            Swal.fire(
+                                'Deleted!',
+                                'Project has been deleted.',
+                                'success'
+                            );
                             window.location.reload();
                         }
                     }
                 });
-                if (isConfirmed.value) {
-                    Swal.fire(
-                        'Deleted!',
-                        'Document has been deleted.',
-                        'success'
-                    );
-                }
+               
             }
         });
     }

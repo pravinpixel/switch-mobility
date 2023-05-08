@@ -10,6 +10,8 @@ use App\Models\Project;
 use App\Models\ProjectApprover;
 use App\Models\projectDocument;
 use App\Models\ProjectDocumentDetail;
+use App\Models\ProjectDocumentFirstStage;
+use App\Models\ProjectDocumentStatusByLevel;
 use App\Models\ProjectEmployee;
 use App\Models\ProjectMilestone;
 use App\Models\Workflow;
@@ -23,10 +25,11 @@ use Illuminate\Support\Facades\Session;
 
 class Doclistings extends Controller
 {
-    protected $basicController;
-    public function __construct(BasicController $basicController)
+    protected $basicController, $projectController;
+    public function __construct(BasicController $basicController, ProjectController $projectController)
     {
         $this->basicController = $basicController;
+        $this->projectController = $projectController;
     }
     public function filterindex($type = null)
     {
@@ -306,7 +309,8 @@ class Doclistings extends Controller
         $designation = Designation::where('is_active', 1)->get()->toArray();
         $document_type = DocumentType::where('is_active', 1)->get()->toArray();
         $workflow = Workflow::where('is_active', 1)->get()->toArray();
-        $levelCount = Workflow::leftjoin('projects', 'projects.workflow_id', '=', 'workflows.id')->where('projects.id', $id)->first()->total_levels;
+        $levelCount = Workflow::leftjoin('projects', 'projects.workflow_id', '=', 'workflows.id')
+        ->where('projects.id', $id)->first()->total_levels;
 
         $projectModel  = Project::where('id', $id)->first();
 
@@ -331,7 +335,7 @@ class Doclistings extends Controller
             $empId = Session::get('employeeId');
 
             if ($empId) {
-                $lastLimitLevel = ProjectEmployee::where('project_id', $id)->where('employee_id', $empId)->latest()->first();
+                $lastLimitLevel = ProjectEmployee::where('project_id', $id)->where('type', 2)->where('employee_id', $empId)->latest()->first();
             }
 
             $empModel = WorkflowLevelDetail::select('employees.*')->leftjoin('employees', 'employees.id', '=', 'workflow_level_details.employee_id')->where('workflow_level_id', $models[$i]->id)->get()->toArray();
@@ -350,7 +354,7 @@ class Doclistings extends Controller
 
         $milestoneDatas = ProjectMilestone::where('project_id', $id)->get();
 
-        return view('Docs/view', ['milestoneDatas' => $milestoneDatas, 'levelsArray' => $dataArray, 'levelCount' => $levelCount, 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
+        return view('Docs/editDocument', ['milestoneDatas' => $milestoneDatas, 'levelsArray' => $dataArray, 'levelCount' => $levelCount, 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
     }
 
     public function viewDocListing(Request $request)
@@ -402,14 +406,14 @@ class Doclistings extends Controller
 
         $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $projectModel->workflow_id)->get();
 
-        // dd($models);
+
         $dataArray = array();
         for ($i = 0; $i < count($models); $i++) {
 
             $empId = Session::get('employeeId');
 
             if ($empId) {
-                $lastLimitLevel = ProjectEmployee::where('employee_id', $empId)->latest()->first();
+                $lastLimitLevel = ProjectEmployee::where('project_id', $id)->where('employee_id', $empId)->latest()->first();
             }
 
             $empModel = WorkflowLevelDetail::select('employees.*')->leftjoin('employees', 'employees.id', '=', 'workflow_level_details.employee_id')->where('workflow_level_id', $models[$i]->id)->get()->toArray();
@@ -425,6 +429,7 @@ class Doclistings extends Controller
                 array_push($dataArray, $datas);
             }
         }
+
         $milestoneDatas = ProjectMilestone::where('project_id', $id)->get();
 
         return view('Docs/viewDocument', ['milestoneDatas' => $milestoneDatas, 'levelsArray' => $dataArray, 'levelCount' => count($dataArray), 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
@@ -440,5 +445,825 @@ class Doclistings extends Controller
             $employeeArray[] = $email;
         }
         return $employeeArray;
+    }
+
+    public function getlevelwiseDocument(Request $request)
+    {
+
+        $level = $request->level;
+        $projectId = $request->project_id;
+        $lastLevel = $this->getLastLevelProject($projectId);
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+        $approverLevels =[];
+        if($empId){
+            
+            $projectEmpModels = ProjectEmployee::where('project_id',$projectId)->where('employee_id',$empId)->where('type',2)->get();
+            foreach($projectEmpModels as $projectEmpModel){
+              array_push($approverLevels,$projectEmpModel->level);
+            }
+            
+        }
+
+        $mainAreaDocument = ProjectDocumentFirstStage::with(['GetDocDetail' => function ($q) use ($level) {
+            // Query the name field in status table
+            $q->where('upload_level', '<', $level)
+                ->orWhere('upload_level', '=', $level); // '=' is optional
+        }, 'GetDocDetail.employee'])
+            ->where('level_id', $level)
+            ->where('project_id', $projectId)->get();
+        if (count($mainAreaDocument) != 0) {
+            $auxdocument = projectDocument::select('*')
+                ->leftjoin('project_document_details', 'project_document_details.project_doc_id', '=', 'project_documents.id')
+                ->where("project_documents.project_id", '=', $projectId)
+                ->where("project_documents.type", '=', 2)
+                ->get();
+        } else {
+            $auxdocument = 0;
+        }
+
+        $ApproverExactLevel = false;
+        if (in_array($level, $approverLevels)) {
+            $ApproverExactLevel = true;
+        }
+        $response = ['ApproverExactLevel'=>$ApproverExactLevel,'main_docs' => $mainAreaDocument, 'aux_docs' => $auxdocument, 'lastLevel' => $lastLevel,'approverLevels'=>$approverLevels];
+        return response()->json($response);
+    }
+
+    public function updatelevelwiseDocumentStatus(Request $request)
+    {
+        Log::info("DocListings Started " . json_encode($request->all()));
+
+        $status = $request->status;
+        $documentId = $request->documentId;
+
+        $level = $request->levelId;
+        $statusdocumentId = $request->statusdocumentId;
+        $statuslevelId = $request->statuslevelId;
+        $remark = $request->statusremarks;
+        $empId = Auth::user()->emp_id;
+
+
+
+        $getParentModel = projectDocument::select('ticket_no', 'type', 'project_name', 'projects.id as projectId')
+            ->leftjoin('projects', 'projects.id', 'project_documents.project_id')
+            ->where('project_documents.id', $documentId)
+            ->first();
+        Log::info("DocListings get Parent Model " . json_encode($getParentModel));
+        if ($getParentModel) {
+            $projectId = $getParentModel->projectId;
+            $ticketNo = $getParentModel->ticket_no;
+            $lastLevel = $this->getLastLevelProject($projectId, $documentId);
+
+            Log::info("DocListings Project Id " . json_encode($projectId));
+
+            if ($status == 4) {
+
+                Log::info("DocListings Project Id " . json_encode($projectId));
+                $nextLevel = $this->getNextLevel($documentId, $level);
+
+                Log::info("DocListings nextLevel " . json_encode($nextLevel));
+                if ($nextLevel) {
+                    $updateOldDocDetail = $this->updateDocDetails($documentId, $level, $status, $remark);
+                    if ($updateOldDocDetail) {
+                        Log::info("DocListings updateOldDocDetail Id " . json_encode($projectId));
+
+                        $createNewLevelDocDetail = $this->upgradeNextLevelDocDetail($updateOldDocDetail->id, $nextLevel);
+                        Log::info("DocListings createNewLevelDocDetail Id" . json_encode($createNewLevelDocDetail));
+
+                        $updateDocFirstStage = $this->updateStage1Document($documentId, $level, $status);
+
+                        Log::info("DocListings updateDocFirstStage Id " . json_encode($updateDocFirstStage));
+                        if ($updateDocFirstStage) {
+
+                            $createDocFirstStage = $this->createFirstStageModel($updateDocFirstStage, $nextLevel);
+
+                            Log::info("DocListings createDocFirstStage Id " . json_encode($createDocFirstStage));
+
+                            $updateStatusLevelOld = $this->UpdateToStatusLevelModel($projectId, $level, $documentId, $status);
+                            Log::info("DocListings updateStatusLevelOld Id " . json_encode($updateStatusLevelOld));
+
+                            $updateStatusLevelOld1 = $this->UpdateToStatusLevelModel($projectId, $nextLevel, $documentId, 1);
+                            Log::info("DocListings updateStatusLevelOld1 Id " . json_encode($updateStatusLevelOld1));
+                        }
+                    }
+                } else {
+                    $updateOldDocDetail = $this->updateDocDetails($documentId, $level, $status, $remark, 1);
+                    $updateDocFirstStage = $this->updateStage1Document($documentId, $level, $status);
+                    $getMainDocs = projectDocument::where('id', $documentId)->first();
+                    if ($getMainDocs) {
+                        $getMainDocs->status = 4;
+
+                        $getMainDocs->save();
+                    }
+                }
+            } else {
+
+                if ($status == 2) {
+                    $previousLevel = $this->getPreviousLevel($documentId, $level);
+                    Log::info("DocListings previousLevel Id " . json_encode($previousLevel));
+                    if ($previousLevel) {
+                        $updateStatusCurrentLevel = $this->UpdateToStatusLevelModel($projectId, $level, $documentId, $status);
+                        Log::info("DocListings updateStatusCurrentLevel Id " . json_encode($updateStatusCurrentLevel));
+
+                        $updateStatusPreviousLevel = $this->UpdateToStatusLevelModel($projectId, $previousLevel, $documentId, 1);
+                        Log::info("DocListings updateStatusPreviousLevel Id " . json_encode($updateStatusPreviousLevel));
+
+                        $updateDocDetail = $this->updateDocDetails($documentId, $level, $status, $remark);
+                        Log::info("DocListings updateDocDetail Id " . json_encode($updateDocDetail));
+
+                        // $fileUpload = $this->fileUpload($request->all(), $projectId, $getParentModel->ticket_no, $documentId, $previousLevel, 1);
+                        // Log::info("DocListings updateStatusLevelOld1 Id " . json_encode($fileUpload));
+
+                        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+                        Log::info("fileupload empId" . json_encode($empId));
+
+                        if ($request->file('againestDocument')) {
+
+
+                            $typeOfDoc = 'main_document/';
+                            $typeOfDocFile = 'MainDocument-v';
+
+                            // $halfPath1 =  $parentModel->ticket_no . '/level-' . $request->levelId . "/" . $typeOfDoc;
+                            // Log::info('ProjectController->Store:-HalfPath' . json_encode($halfPath1));
+                            // $upload_path1 = public_path() . '/projectDocuments/' . $halfPath1;
+
+                            $path = public_path() . '/projectDocuments/' . $ticketNo . '/' . $typeOfDoc;
+                            Log::info("fileupload >path " . json_encode($path));
+
+                            $banner = $request->file('againestDocument')->getClientOriginalName();
+                            $expbanner = explode('.', $banner);
+                            $filePart1 = $expbanner[1];
+                            Log::info('fileUpload ->filePart1' . json_encode($filePart1));
+                            $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
+                            Log::info('fileUpload ->lastversion' . json_encode($lastversion));
+                            $ed = date('ymdhms');
+                            $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
+
+
+                            //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
+                            Log::info('fileupload ->:-fileName1' . json_encode($fileName1));
+                            $bannerpath = $path . $fileName1;
+                            if (move_uploaded_file($request->againestDocument->path(), $bannerpath)) {
+
+                                $model = new ProjectDocumentDetail;
+                                $model->version = $lastversion + 1;
+                                $model->remark = "";
+                                $model->project_doc_id = $request->documentId;
+                                $model->status = 1;
+                                $model->document_name = $ticketNo . '/' . $typeOfDoc . $fileName1;
+                                $model->updated_by = $empId;
+                                $model->project_id = $projectId;
+                                $model->is_latest = 1;
+                                $model->upload_level = $previousLevel;
+                                $model->save();
+                            }
+                            Log::info('fileUpload ->Previous Level' . json_encode($previousLevel));
+                            Log::info('fileUpload ->Current Level' . json_encode($level));
+
+                            $stage1Model = $this->findProjectDocumentFirstStage($projectId, $documentId, $previousLevel);
+                            Log::info('fileUpload ->stage1Model' . json_encode($stage1Model));
+                            if ($stage1Model) {
+                                $stage1Model->file_name = $fileName1;
+                                $stage1Model->status = 1;
+                                $stage1Model->save();
+                            }
+                            $stage2Model = $this->findProjectDocumentFirstStage($projectId, $documentId, $level);
+                            Log::info('fileUpload ->stage2Model' . json_encode($stage2Model));
+                            if ($stage2Model) {
+                                $stage2Model->delete();
+                            }
+                        }
+                        Log::info('fileUpload ->return');
+                    } else {
+
+                        if ($request->file('againestDocument')) {
+
+                            $updateOldData = $this->updateDocDetails($documentId, $level, $status, $remark);
+
+                            $typeOfDoc = 'main_document/';
+                            $typeOfDocFile = 'MainDocument-v';
+
+                            // $halfPath1 =  $parentModel->ticket_no . '/level-' . $request->levelId . "/" . $typeOfDoc;
+                            // Log::info('ProjectController->Store:-HalfPath' . json_encode($halfPath1));
+                            // $upload_path1 = public_path() . '/projectDocuments/' . $halfPath1;
+
+                            $path = public_path() . '/projectDocuments/' . $ticketNo . '/' . $typeOfDoc;
+                            Log::info("fileupload2 >path " . json_encode($path));
+
+                            $banner = $request->file('againestDocument')->getClientOriginalName();
+                            $expbanner = explode('.', $banner);
+                            $filePart1 = $expbanner[1];
+                            Log::info('fileUpload2 ->filePart1' . json_encode($filePart1));
+                            $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
+                            Log::info('fileUpload2 ->lastversion' . json_encode($lastversion));
+                            $ed = date('ymdhms');
+                            $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
+
+
+                            //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
+                            Log::info('fileupload2 ->:-fileName1' . json_encode($fileName1));
+                            $bannerpath = $path . $fileName1;
+                            if (move_uploaded_file($request->againestDocument->path(), $bannerpath)) {
+
+                                $model = new ProjectDocumentDetail;
+                                $model->version = $lastversion + 1;
+                                $model->remark = "";
+                                $model->project_doc_id = $request->documentId;
+                                $model->status = 1;
+                                $model->document_name = $ticketNo . '/' . $typeOfDoc . $fileName1;
+                                $model->updated_by = $empId;
+                                $model->project_id = $projectId;
+                                $model->is_latest = 1;
+                                $model->upload_level = $level;
+                                $model->save();
+                            }
+
+                            $stage1Model = $this->findProjectDocumentFirstStage($projectId, $documentId, $level);
+                            Log::info('fileUpload2 ->stage1Model' . json_encode($stage1Model));
+                            if ($stage1Model) {
+                                $stage1Model->file_name = $fileName1;
+                                $stage1Model->status = $status;
+                                $stage1Model->save();
+                            }
+                        }
+                        Log::info('fileUpload ->return 2');
+                    }
+                } else {
+
+                    $nextLevel = $this->getNextLevel($documentId, $level);
+                    $updateOldData = $this->updateDocDetails($documentId, $level, $status, $remark);
+                    if ($nextLevel) {
+                        $setLevel = $nextLevel;
+                    } else {
+                        $setLevel = $level;
+                    }
+                    $typeOfDoc = 'main_document/';
+                    $typeOfDocFile = 'MainDocument-v';
+
+                    // $halfPath1 =  $parentModel->ticket_no . '/level-' . $request->levelId . "/" . $typeOfDoc;
+                    // Log::info('ProjectController->Store:-HalfPath' . json_encode($halfPath1));
+                    // $upload_path1 = public_path() . '/projectDocuments/' . $halfPath1;
+
+                    $path = public_path() . '/projectDocuments/' . $ticketNo . '/' . $typeOfDoc;
+                    Log::info("fileupload2 >path " . json_encode($path));
+
+                    $banner = $request->file('againestDocument')->getClientOriginalName();
+                    $expbanner = explode('.', $banner);
+                    $filePart1 = $expbanner[1];
+                    Log::info('fileUpload2 ->filePart1' . json_encode($filePart1));
+                    $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
+                    Log::info('fileUpload2 ->lastversion' . json_encode($lastversion));
+                    $ed = date('ymdhms');
+                    $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
+
+
+                    //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
+                    Log::info('fileupload2 ->:-fileName1' . json_encode($fileName1));
+                    $bannerpath = $path . $fileName1;
+                    if (move_uploaded_file($request->againestDocument->path(), $bannerpath)) {
+
+                        $model = new ProjectDocumentDetail;
+                        $model->version = $lastversion + 1;
+                        $model->remark = "";
+                        $model->project_doc_id = $request->documentId;
+                        $model->status = 1;
+                        $model->document_name = $ticketNo . '/' . $typeOfDoc . $fileName1;
+                        $model->updated_by = $empId;
+                        $model->project_id = $projectId;
+                        $model->is_latest = 1;
+                        $model->upload_level = $setLevel;
+                        $model->save();
+                    }
+
+                    $stage1Model = $this->findProjectDocumentFirstStage($projectId, $documentId, $level);
+
+                    Log::info('fileUpload2 ->stage1Model' . json_encode($stage1Model));
+                    if ($stage1Model) {
+                        $stage1Model->status = $status;
+                        $stage1Model->save();
+                        $createDocFirstStage = $this->createFirstStageModel($stage1Model, $setLevel, $fileName1);
+                        if (!$nextLevel) {
+                            $stage1Model->delete();
+                        }
+                       
+                    }
+                }
+                Log::info('fileUpload ->return 2');
+            }
+        }
+
+        // if ($getParentModel) {
+        //     $projectId = $getParentModel->projectId;
+        //     //$updateDocDetail = $this->covertDocDetailModel(1, $projectId, $level, $empId, $documentId, $status, $remark);
+
+
+        //     if ($status == 4) {
+
+
+        //         $levelModel = $this->ConvertToStatusLevelModel($projectId, $level, $documentId, $status);
+
+        //         $updateDocs = $this->updateApproveStatusDocs($documentId, $level, $remark);
+        //         if ($updateDocs) {
+
+
+
+        //             $stage1Model = $this->findStage1Document($documentId, $level);
+
+        //             if ($stage1Model) {
+        //                 $stage1Model->status = $status;
+        //                 $stage1Model->save();
+        //                 //create New Stage
+        //                 $getNextRecord = ProjectDocumentStatusByLevel::where('project_id', $projectId)
+        //                     ->where('doc_id', $documentId)
+        //                     ->where('level_id', '>', $level)
+        //                     ->orderBy('id', 'asc')
+        //                     ->first();
+        //                 if ($getNextRecord) {
+        //                     $newStage = $this->projectController->convertToModelProjectDocumentStage1($projectId, $documentId, $stage1Model->file_name, $getNextRecord->level_id);
+        //                     $newDetail = $this->covertDocDetailModel($updateDocs->id, $getNextRecord->level_id);
+        //                 }
+        //             }
+        //         }
+        //     } else {
+
+        //         if ($status == 2) {
+
+        //             $checkCurrentLevelStatus = ProjectDocumentDetail::where('project_doc_id', $documentId)
+        //                 ->where('upload_level', $level)
+        //                 ->where('status', '!=', 1)
+        //                 ->where('is_latest',  1)
+        //                 ->get();
+        //             // dd(count($checkCurrentLevelStatus));
+        //             if (count($checkCurrentLevelStatus) == 0) {
+
+        //                 $getPreviousLevelRecord = ProjectDocumentStatusByLevel::where('project_id', $projectId)
+        //                     ->where('doc_id', $documentId)
+        //                     ->where('level_id', '<', $level)
+        //                     ->orderBy('id', 'asc')
+        //                     ->first();
+
+        //                 if ($getPreviousLevelRecord) {
+        //                     $removeWaitingApproval = ProjectDocumentDetail::where('project_doc_id', $documentId)
+        //                         ->where('upload_level', $level)
+        //                         ->where('status', '=', 1)
+        //                         ->first();
+        //                     if ($removeWaitingApproval) {
+        //                         $preLevel = $getPreviousLevelRecord->level_id;
+        //                         $updatecurrentLevelStatus = $this->ConvertToStatusLevelModel($projectId, $level, $documentId, 2);
+        //                         $updatePreviousLevelStatus = $this->ConvertToStatusLevelModel($projectId, $preLevel, $documentId, 1);
+        //                         //$removeWaitingApproval->delete();
+        //                         $stage2Model = $this->findStage1Document($documentId, $level);
+        //                         if ($stage2Model) {
+        //                             $stage2Model->delete();
+        //                         }
+        //                         if ($request->file('againestDocument')) {
+
+
+        //                             $typeOfDoc = 'main_document/';
+        //                             $typeOfDocFile = 'MainDocument-v';
+
+        //                             // $halfPath1 =  $parentModel->ticket_no . '/level-' . $request->levelId . "/" . $typeOfDoc;
+        //                             // Log::info('ProjectController->Store:-HalfPath' . json_encode($halfPath1));
+        //                             // $upload_path1 = public_path() . '/projectDocuments/' . $halfPath1;
+
+        //                             $path = public_path() . '/projectDocuments/' . $getParentModel->ticket_no . '/' . $typeOfDoc;
+
+
+        //                             $banner = $request->file('againestDocument')->getClientOriginalName();
+        //                             $expbanner = explode('.', $banner);
+        //                             $filePart1 = $expbanner[1];
+        //                             Log::info('ProjectController->Store:-filePart1' . json_encode($filePart1));
+        //                             $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
+        //                             $ed = date('ymdhms');
+        //                             $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
+
+
+        //                             //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
+        //                             Log::info('ProjectController->Store:-fileName1' . json_encode($fileName1));
+        //                             $bannerpath = $path . $fileName1;
+        //                             if (move_uploaded_file($request->againestDocument->path(), $bannerpath)) {
+
+        //                                 $model = new ProjectDocumentDetail;
+        //                                 $model->version = $lastversion + 1;
+        //                                 $model->remark = "";
+        //                                 $model->project_doc_id = $request->documentId;
+        //                                 $model->status = 1;
+        //                                 $model->document_name = $getParentModel->ticket_no . '/' . $typeOfDoc . $fileName1;
+        //                                 $model->updated_by = $empId;
+        //                                 $model->project_id = $projectId;
+        //                                 $model->is_latest = 1;
+        //                                 $model->upload_level = $preLevel;
+        //                                 $model->save();
+        //                             }
+
+        //                             $stage1Model = $this->findStage1Document($documentId, $preLevel);
+        //                             if ($stage1Model) {
+        //                                 $stage1Model->file_name = $fileName1;
+        //                                 $stage1Model->status = $status;
+        //                                 $stage1Model->save();
+        //                             }
+        //                         }
+        //                     }
+        //                 } else {
+        //                     $updateDocs = $this->updateUnApproveStatusDocs($documentId, $level, $remark, $empId, $status);
+        //                     if ($request->file('againestDocument')) {
+
+
+        //                         $typeOfDoc = 'main_document/';
+        //                         $typeOfDocFile = 'MainDocument-v';
+
+        //                         // $halfPath1 =  $parentModel->ticket_no . '/level-' . $request->levelId . "/" . $typeOfDoc;
+        //                         // Log::info('ProjectController->Store:-HalfPath' . json_encode($halfPath1));
+        //                         // $upload_path1 = public_path() . '/projectDocuments/' . $halfPath1;
+
+        //                         $path = public_path() . '/projectDocuments/' . $getParentModel->ticket_no . '/' . $typeOfDoc;
+
+
+        //                         $banner = $request->file('againestDocument')->getClientOriginalName();
+        //                         $expbanner = explode('.', $banner);
+        //                         $filePart1 = $expbanner[1];
+        //                         Log::info('ProjectController->Store:-filePart1' . json_encode($filePart1));
+        //                         $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
+        //                         $ed = date('ymdhms');
+        //                         $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
+
+
+        //                         //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
+        //                         Log::info('ProjectController->Store:-fileName1' . json_encode($fileName1));
+        //                         $bannerpath = $path . $fileName1;
+        //                         if (move_uploaded_file($request->againestDocument->path(), $bannerpath)) {
+
+        //                             $model = new ProjectDocumentDetail;
+        //                             $model->version = $lastversion + 1;
+        //                             $model->remark = "";
+        //                             $model->project_doc_id = $request->documentId;
+        //                             $model->status = 1;
+        //                             $model->document_name = $getParentModel->ticket_no . '/' . $typeOfDoc . $fileName1;
+        //                             $model->updated_by = $empId;
+        //                             $model->project_id = $projectId;
+        //                             $model->is_latest = 1;
+        //                             $model->upload_level = $level;
+        //                             $model->save();
+        //                         }
+
+        //                         $stage1Model = $this->findStage1Document($documentId, $level);
+        //                         if ($stage1Model) {
+        //                             $stage1Model->file_name = $fileName1;
+        //                             $stage1Model->status = $status;
+        //                             $stage1Model->save();
+        //                         }
+        //                     }
+        //                 }
+        //             } else {
+        //                 // $updateDocs = $this->updateUnApproveStatusDocs($documentId, $level, $remark, $empId, $status);
+        //                 if ($request->file('againestDocument')) {
+
+
+        //                     $typeOfDoc = 'main_document/';
+        //                     $typeOfDocFile = 'MainDocument-v';
+
+        //                     // $halfPath1 =  $parentModel->ticket_no . '/level-' . $request->levelId . "/" . $typeOfDoc;
+        //                     // Log::info('ProjectController->Store:-HalfPath' . json_encode($halfPath1));
+        //                     // $upload_path1 = public_path() . '/projectDocuments/' . $halfPath1;
+
+        //                     $path = public_path() . '/projectDocuments/' . $getParentModel->ticket_no . '/' . $typeOfDoc;
+
+
+        //                     $banner = $request->file('againestDocument')->getClientOriginalName();
+        //                     $expbanner = explode('.', $banner);
+        //                     $filePart1 = $expbanner[1];
+        //                     Log::info('ProjectController->Store:-filePart1' . json_encode($filePart1));
+        //                     $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
+        //                     $ed = date('ymdhms');
+        //                     $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
+
+
+        //                     //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
+        //                     Log::info('ProjectController->Store:-fileName1' . json_encode($fileName1));
+        //                     $bannerpath = $path . $fileName1;
+        //                     if (move_uploaded_file($request->againestDocument->path(), $bannerpath)) {
+
+        //                         $model = new ProjectDocumentDetail;
+        //                         $model->version = $lastversion + 1;
+        //                         $model->remark = "";
+        //                         $model->project_doc_id = $request->documentId;
+        //                         $model->status = 1;
+        //                         $model->document_name = $getParentModel->ticket_no . '/' . $typeOfDoc . $fileName1;
+        //                         $model->updated_by = $empId;
+        //                         $model->project_id = $projectId;
+        //                         $model->is_latest = 1;
+        //                         $model->upload_level = $level;
+        //                         $model->save();
+        //                     }
+
+        //                     $stage1Model = $this->findStage1Document($documentId, $level);
+        //                     if ($stage1Model) {
+        //                         $stage1Model->file_name = $fileName1;
+        //                         $stage1Model->status = $status;
+        //                         $stage1Model->save();
+        //                     }
+        //                 }
+        //             }
+        //         } else {
+        //             $levelModel = $this->ConvertToStatusLevelModel($projectId, $level, $documentId, $status);
+        //             $updateDocs = $this->updateUnApproveStatusDocs($documentId, $level, $remark, $empId, $status);
+
+        //             if ($request->file('againestDocument')) {
+
+
+        //                 $typeOfDoc = 'main_document/';
+        //                 $typeOfDocFile = 'MainDocument-v';
+
+        //                 // $halfPath1 =  $parentModel->ticket_no . '/level-' . $request->levelId . "/" . $typeOfDoc;
+        //                 // Log::info('ProjectController->Store:-HalfPath' . json_encode($halfPath1));
+        //                 // $upload_path1 = public_path() . '/projectDocuments/' . $halfPath1;
+
+        //                 $path = public_path() . '/projectDocuments/' . $getParentModel->ticket_no . '/' . $typeOfDoc;
+
+
+        //                 $banner = $request->file('againestDocument')->getClientOriginalName();
+        //                 $expbanner = explode('.', $banner);
+        //                 $filePart1 = $expbanner[1];
+        //                 Log::info('ProjectController->Store:-filePart1' . json_encode($filePart1));
+        //                 $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
+        //                 $ed = date('ymdhms');
+        //                 $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
+
+
+        //                 //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
+        //                 Log::info('ProjectController->Store:-fileName1' . json_encode($fileName1));
+        //                 $bannerpath = $path . $fileName1;
+        //                 if (move_uploaded_file($request->againestDocument->path(), $bannerpath)) {
+
+        //                     $model = new ProjectDocumentDetail;
+        //                     $model->version = $lastversion + 1;
+        //                     $model->remark = "";
+        //                     $model->project_doc_id = $request->documentId;
+        //                     $model->status = 1;
+        //                     $model->document_name = $getParentModel->ticket_no . '/' . $typeOfDoc . $fileName1;
+        //                     $model->updated_by = $empId;
+        //                     $model->project_id = $projectId;
+        //                     $model->is_latest = 1;
+        //                     $model->upload_level = $level;
+        //                     $model->save();
+        //                 }
+
+        //                 $stage1Model = $this->findStage1Document($documentId, $level);
+        //                 if ($stage1Model) {
+        //                     $stage1Model->file_name = $fileName1;
+        //                     $stage1Model->status = $status;
+        //                     $stage1Model->save();
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        return response()->json(['staus' => "Success"]);
+    }
+
+
+    public function updateDocDetails($documentId, $level, $status, $remark = null, $type = null)
+    {
+        Log::info("updateDocDetails >documentId " . json_encode($documentId));
+        Log::info("updateDocDetails >level " . json_encode($level));
+        Log::info("updateDocDetails >status " . json_encode($status));
+        Log::info("updateDocDetails >remark " . json_encode($remark));
+
+        $model = ProjectDocumentDetail::where('project_doc_id', $documentId)
+            ->where('upload_level', $level)
+            ->where('is_latest', 1)
+            ->first();
+        Log::info("updateDocDetails >model " . json_encode($model));
+        if ($model) {
+            if ($type) {
+                $model->is_latest = 1;
+            } else {
+                $model->is_latest = 0;
+            }
+            $model->status = $status;
+            $model->remark = $remark;
+            $model->save();
+        }
+        Log::info("updateDocDetails >model response " . json_encode($model));
+        return $model;
+    }
+    public function upgradeNextLevelDocDetail($oldRecordId, $nextLevel)
+    {
+        $oldModel  = ProjectDocumentDetail::where('id', $oldRecordId)->first();
+        if ($oldModel) {
+
+            $model = new ProjectDocumentDetail;
+            $model->version = $oldModel->version + 1;
+            $model->project_doc_id = $oldModel->project_doc_id;
+            $model->status = 1;
+            $model->document_name = $oldModel->document_name;
+            $model->project_id = $oldModel->project_id;
+            $model->is_latest = 1;
+            $model->upload_level = $nextLevel;
+            $model->save();
+        }
+
+        return $model;
+    }
+    public function getPreviousLevel($documentId, $level)
+    {
+        $model  = ProjectDocumentStatusByLevel::where('doc_id', $documentId)
+            ->where('level_id', '<', $level)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($model) {
+            $level = $model->level_id;
+        } else {
+            $level = false;
+        }
+        return $level;
+    }
+    public function getNextLevel($documentId, $level)
+    {
+
+
+        $model  = ProjectDocumentStatusByLevel::where('doc_id', $documentId)
+            ->where('level_id', '>', $level)
+            ->orderBy('id', 'asc')
+            ->first();
+
+        if ($model) {
+            $level = $model->level_id;
+        } else {
+            $level = false;
+        }
+        return $level;
+    }
+
+    public function findProjectDocumentFirstStage($projectId, $documentId, $level)
+    {
+        return ProjectDocumentFirstStage::where('project_id', $projectId)->where('doc_id', $documentId)->where('level_id', $level)->first();
+    }
+    public function createFirstStageModel($oldStageModel, $nextLevel, $fileName = null)
+    {
+
+        $model = new ProjectDocumentFirstStage();
+        $model->project_id = $oldStageModel->project_id;
+        $model->doc_id = $oldStageModel->doc_id;
+        $model->level_id = $nextLevel;
+        $model->file_name = ($fileName) ? $fileName : $oldStageModel->file_name;
+        $model->status = 1;
+        $model->save();
+
+        return $model;
+    }
+
+    public function UpdateToStatusLevelModel($projectId, $level, $documentId, $status)
+    {
+        $levelModel = ProjectDocumentStatusByLevel::where('project_id', $projectId)
+            ->where('level_id', $level)
+            ->where('doc_id', $documentId)
+            ->first();
+
+        if ($levelModel) {
+            $levelModel->status = $status;
+            $levelModel->save();
+            return $levelModel;
+        } else {
+            return false;
+        }
+    }
+
+    public function updateStage1Document($docId, $level, $status = null)
+    {
+        $model = ProjectDocumentFirstStage::where('doc_id', $docId)->where('level_id', $level)->first();
+        if ($model) {
+            $model->status = ($status) ? $status : 1;
+            $model->save();
+            return $model;
+        }
+        return false;
+    }
+
+    public function getLastLevelProject($projectId, $documentId = null)
+    {
+        if ($documentId) {
+            $models = ProjectDocumentStatusByLevel::where('project_id', $projectId)->where('doc_id', $documentId)->get();
+        } else {
+            $models = ProjectDocumentStatusByLevel::where('project_id', $projectId)->get();
+        }
+        $array = $models->toArray();
+        if (count($array)) {
+            $lastElement = array_slice($array, -1)[0];
+            $level = $lastElement['level_id'];
+        } else {
+            $level = false;
+        }
+        return $level;
+    }
+
+    public function fileUpload($request, $projectId, $ticketNo, $documentId, $level, $status)
+    {
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+        Log::info("fileupload empId" . json_encode($empId));
+
+        if ($request->file('againestDocument')) {
+
+
+            $typeOfDoc = 'main_document/';
+            $typeOfDocFile = 'MainDocument-v';
+
+            // $halfPath1 =  $parentModel->ticket_no . '/level-' . $request->levelId . "/" . $typeOfDoc;
+            // Log::info('ProjectController->Store:-HalfPath' . json_encode($halfPath1));
+            // $upload_path1 = public_path() . '/projectDocuments/' . $halfPath1;
+
+            $path = public_path() . '/projectDocuments/' . $ticketNo . '/' . $typeOfDoc;
+            Log::info("fileupload >path " . json_encode($path));
+
+            $banner = $request->file('againestDocument')->getClientOriginalName();
+            $expbanner = explode('.', $banner);
+            $filePart1 = $expbanner[1];
+            Log::info('fileUpload ->filePart1' . json_encode($filePart1));
+            $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
+            Log::info('fileUpload ->lastversion' . json_encode($lastversion));
+            $ed = date('ymdhms');
+            $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
+
+
+            //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
+            Log::info('fileupload ->:-fileName1' . json_encode($fileName1));
+            $bannerpath = $path . $fileName1;
+            if (move_uploaded_file($request->againestDocument->path(), $bannerpath)) {
+
+                $model = new ProjectDocumentDetail;
+                $model->version = $lastversion + 1;
+                $model->remark = "";
+                $model->project_doc_id = $request->documentId;
+                $model->status = 1;
+                $model->document_name = $ticketNo . '/' . $typeOfDoc . $fileName1;
+                $model->updated_by = $empId;
+                $model->project_id = $projectId;
+                $model->is_latest = 1;
+                $model->upload_level = $level;
+                $model->save();
+            }
+
+            $stage1Model = $this->findStage1Document($documentId, $level);
+            Log::info('fileUpload ->stage1Model' . json_encode($stage1Model));
+            if ($stage1Model) {
+                $stage1Model->file_name = $fileName1;
+                $stage1Model->status = $status;
+                $stage1Model->save();
+            }
+        }
+        Log::info('fileUpload ->return');
+        return true;
+    }
+
+    public function covertDocDetailModel($oldId, $nextLevel)
+    {
+
+        $oldModel  = ProjectDocumentDetail::where('id', $oldId)->first();
+        if ($oldModel) {
+
+            $model = new ProjectDocumentDetail;
+            $model->version = $oldModel->version + 1;
+            $model->project_doc_id = $oldModel->project_doc_id;
+            $model->status = 1;
+            $model->document_name = $oldModel->document_name;
+            $model->project_id = $oldModel->project_id;
+            $model->is_latest = 1;
+            $model->upload_level = $nextLevel;
+            $model->save();
+        }
+        return $model;
+    }
+
+
+    public function updateApproveStatusDocs($documentId, $level, $remark)
+    {
+        $model =  ProjectDocumentDetail::where('project_doc_id', $documentId)
+            ->where('upload_level', $level)
+            ->where('is_latest', 1)
+            ->first();
+        if ($model) {
+
+            $model->remark = $remark;
+            $model->status = 4;
+            $model->save();
+        }
+        return $model;
+    }
+    public function updateUnApproveStatusDocs($documentId, $level, $remark, $empId, $status)
+    {
+        $model =  ProjectDocumentDetail::where('project_doc_id', $documentId)
+            ->where('upload_level', $level)
+            ->where('is_latest', 1)
+            ->first();
+        //dd($model);
+        if ($model) {
+            $model->updated_by = $empId;
+            $model->remark = $remark;
+            $model->status = $status;
+            $model->is_latest = 0;
+            $model->save();
+        }
+        return $model;
     }
 }

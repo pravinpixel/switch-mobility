@@ -124,7 +124,9 @@ Route::post('projectwiseReportSearchFilter', [ProjectwiseController::class, 'fil
 //userwiseReport 
 Route::get('userWiseReportIndex', [UserwiseReportController::class, 'index'])->name('userWiseReportIndex');
 Route::post('userWiseReportSearchFilter', [UserwiseReportController::class, 'filterSearch'])->name('userWiseReportSearchFilter');
-
+//by dhana
+Route::post('getlevelwiseDocument', [Doclistings::class, 'getlevelwiseDocument'])->name('getlevelwiseDocument');
+Route::post('updatelevelwiseDocumentStatus', [Doclistings::class, 'updatelevelwiseDocumentStatus'])->name('updatelevelwiseDocumentStatus');
 });
 
 //Department

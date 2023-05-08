@@ -353,7 +353,7 @@
                 <h4>Department </h4>
                 <p>{{ $details->department }}</p>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <h4>Initiator </h4>
                 <p>{{ $details->first_name . ' ' . $details->last_name }}</p>
             </div>
@@ -388,7 +388,9 @@
                            
                             <tr>
                                 <td>{{$model->original_name}}</td>
-                                <td><a download="OriginalDocs" href="{{ asset('/projectDocuments/') }}<?php echo "/".$model->document_name; ?>" class="btn btn-warning btn-xs" title="Orginal Document Download" id="{{$model->id}}">Orginal Document<i class="las la-download" style="font-size: 20px;"></i></a>
+                                <td>
+                                <a target="_blank" class="btn switchPrimaryBtn  viewDocument btn-xs" title="View Document" id="{{$model->projectId}}"><i class="las la-eye"></i></a>
+                                <a download="OriginalDocs" href="{{ asset('/projectDocuments/') }}<?php echo "/".$model->document_name; ?>" class="btn btn-warning btn-xs" title="Orginal Document Download" id="{{$model->id}}">Orginal Document<i class="las la-download" style="font-size: 20px;"></i></a>
                                 <a target="_blank" class="btn btn-success btn-xs actionDocs" title="Conversion Document Download" id="{{$model->id}}"><i class="las la-download"></i></a></td>
                             </tr>
                             @endforeach
@@ -511,6 +513,19 @@
       
             var url = "{{ route('approvedDocsDownload') }}";
       
+        var form = $('<form action="' + url + '" method="post">' +
+            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
+            '</form>');
+        $('body').append(form);
+        form.submit();
+    });
+
+    $(document).on('click', '.viewDocument', function() {
+        console.log("well and good");
+
+        var id = $(this).attr('id');
+
+        var url = "{{ route('viewDocListing') }}";
         var form = $('<form action="' + url + '" method="post">' +
             ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
             '</form>');

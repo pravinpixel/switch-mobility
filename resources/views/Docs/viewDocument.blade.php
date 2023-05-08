@@ -319,8 +319,16 @@
 
     </div>
     <div class="text-center container">
-        <h3 class="breadcrumbs">View Documents > Ticket No. #{{ $details->ticket_no }}</h3>
-
+     
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="breadcrumbs">View Documents > Ticket No. #{{ $details->ticket_no }}</h3>
+            </div>
+            <div class="col-md-2">
+            <label> </label> <label> </label>
+                <a href="{{url('doclisting')}}" class="btn switchPrimaryBtn btn-sm" style="margin-right:-850px">Back</a>
+            </div>
+        </div>
 
 
 
@@ -353,7 +361,7 @@
                 <h4>Department </h4>
                 <p>{{ $details->department }}</p>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <h4>Initiator </h4>
                 <p>{{ $details->first_name . ' ' . $details->last_name }}</p>
             </div>
@@ -421,8 +429,9 @@
 
             </div>
             @endfor
-
+            <!-- <a href="{{url('doclisting')}}"> <button class="btn switchPrimaryBtn"style="margin-left:-1250px!important">Back</button></a> -->
         </div>
+        
 
 
     </div>
@@ -677,7 +686,7 @@
                         $(".image_append" + level).append('<figure><img src="' + baseUrl + '/' + profile + '" class="rounded"  width="50" height="50"><figcaption  style="white-space: nowrap;">[' + val.first_name + ' ,' + val.desName + ']&nbsp;</figcaption></figure>');
                     });
                     $.ajax({
-                        url: "{{ url('getProjectDocs') }}",
+                        url: "{{ url('getlevelwiseDocument') }}",
                         type: 'ajax',
                         method: 'post',
                         data: {
@@ -686,29 +695,32 @@
                             project_id: project_id
                         },
                         success: function(result) {
-                            var data = JSON.parse(result);
-
+                            var data = result;
+                            var baseUrl = "{{ asset('/') }}";
 
                             $(".maindoc_append" + level).empty();
                             $(".auxdoc_append" + level).empty();
                             var levelstageStatus = [];
                             if (data.main_docs) {
                                 $.each(data.main_docs, function(key, val) {
+                                    
                                     var currentStatusId = val.status;
-
+                                        var currentFileName = val.file_name;
+                                        var statusColour = "warning";
                                     if (currentStatusId == 2) {
                                         var currentStatusData = "Declined";
                                     } else if (currentStatusId == 3) {
                                         var currentStatusData = "Change Request";
                                     } else if (currentStatusId == 4) {
                                         var currentStatusData = "Approved";
+                                        var statusColour = "success";
                                     } else {
                                         var currentStatusData = "Waiting For Approval";
                                     }
 
-                                    var docMainDetailArray = val.doc_detail;
+                                    var docMainDetailArray = val.get_doc_detail;
 
-                                    var baseUrl = "{{ asset('/') }}";
+                                  console.log(docMainDetailArray);
 
                                     if (val.status == 1) {
                                         var status = "Pending";
@@ -721,14 +733,14 @@
                                     versionMainDocDiv += '<div class="accordion " style="margin:auto;width:98%;" id="accordionExample' + key + '">';
                                     versionMainDocDiv += '<div class="card p-0"> <div class=" border-0" id="heading' + key + '">';
                                     versionMainDocDiv += '<h5 class="mb-0 w-100">';
-                                    versionMainDocDiv += '<button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold;padding-left:10px;">' + val.original_name + '</h3> <p class="text-right mainlevelStatus-' + level + "-" + key + '"></p> <p class="btn btn-light-warning status-accordion" style="margin-right:40px;">' + currentStatusData + '</p></button>';
+                                    versionMainDocDiv += '<button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold;padding-left:10px;">' + currentFileName + '</h3> <p class="text-right mainlevelStatus-' + level + "-" + key + '"></p> <p class="btn btn-' + statusColour + ' status-accordion" style="margin-right:40px;">' + currentStatusData + '</p></button>';
                                     versionMainDocDiv += '</h5>';
                                     versionMainDocDiv += '</div>';
                                     versionMainDocDiv += '<div id="collapse' + key + '" class="collapse fade" aria-labelledby="heading' + key + '" data-parent="#accordionExample' + key + '">';
                                     versionMainDocDiv += '<div class="card-body">';
                                     versionMainDocDiv += ' <table class="table table-striped documentTable">';
                                     versionMainDocDiv += ' <thead class="documentTableth">';
-                                    versionMainDocDiv += ' <tr> <th scope="col">Version ID </th> <th scope="col">Remarks</th> <th scope="col">Status</th><th scope="col">Last Updated</th> <th scope="col">Action</th> </tr>';
+                                    versionMainDocDiv += ' <tr> <th scope="col">Version ID </th> <th scope="col">Remarks</th> <th scope="col">Status</th> <th scope="col">Last Updation</th> <th scope="col">Action</th> </tr>';
                                     versionMainDocDiv += '</thead>';
                                     versionMainDocDiv += '<tbody style="">';
                                     var mainDocSize = docMainDetailArray.length;
@@ -737,7 +749,12 @@
                                     for (var i = docMainDetailArray.length - 1; i >= 0; --i) {
 
                                         var remarkData = (docMainDetailArray[i].remark) ? docMainDetailArray[i].remark : "";
+                                        var updatedBy = docMainDetailArray[i].employee;
+                                            var updatedPerson = "";
 
+                                            if (updatedBy) {
+                                                updatedPerson = updatedBy.first_name + " " + updatedBy.middle_name + " " + updatedBy.last_name;
+                                            }
 
                                         var statusData = "";
                                         if (docMainDetailArray[i].status == 1) {
@@ -766,8 +783,9 @@
                                         versionMainDocDiv += '<tr>';
                                         versionMainDocDiv += '<td>ver ' + docMainDetailArray[i].version + '</td>';
                                         versionMainDocDiv += '<td>' + remarkData + '</td>';
-                                        versionMainDocDiv += '<td>' + statusData + '</td>';
-                                        versionMainDocDiv += '<td>' + lastUpdate + '</td>';
+                                        versionMainDocDiv += '<td>' + statusData + '</td>';                                    
+                                        versionMainDocDiv += '<td>' + updatedPerson + "(" + lastUpdate + ')</td>';
+                                          
                                         versionMainDocDiv += '<td>';
 
 
@@ -802,85 +820,104 @@
 
                             }
                             if (data.aux_docs) {
-                                $.each(data.aux_docs, function(key1, val) {
-                                    var docAuxDetailArray = val.doc_detail;
+                                var versionAuxDocDiv1 = '<div class="card-body">';
+                                    var versionAuxDocDiv1 = '<br>';
+                                    versionAuxDocDiv1 += '<table class="table table-striped documentTable">';
+                                    versionAuxDocDiv1 += '<thead class="documentTableth">';
+                                    versionAuxDocDiv1 += '<tr>';
+                                    versionAuxDocDiv1 += '<th scope="col">File Name</th><th scope="col">Action</th>';
+                                    versionAuxDocDiv1 += '</tr>';
+                                    versionAuxDocDiv1 += '</thead>';
+                                    versionAuxDocDiv1 += ' <tbody>';
+                                    versionAuxDocDiv1 += ' </tbody>';
+                                    $.each(data.aux_docs, function(key, val) {
+                                        versionAuxDocDiv1 += '<tr>';
+                                        versionAuxDocDiv1 += '<td>' + val.original_name + '</td>';
+                                        versionAuxDocDiv1 += '<td><a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + val.document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a></td>';
+                                        versionAuxDocDiv1 += '</tr>';
+                                    });
+                                    versionAuxDocDiv1 += ' </table>';
+                                    versionAuxDocDiv1 += ' </br>';
+                                    $(".auxdoc_append" + level).append(versionAuxDocDiv1);
+                                // $.each(data.aux_docs, function(key1, val) {
+                                //     var docAuxDetailArray = val.doc_detail;
 
-                                    var baseUrl = "{{ asset('/') }}";
-                                    if (val.status == 0) {
-                                        var status = "Waiting";
-                                    } else if (val.status == 1) {
-                                        var status = "Approved";
-                                    } else {
-                                        var status = "Pending";
-                                    }
-                                    var versionAuxDocDiv = '<div class="row">';
-                                    versionAuxDocDiv += '<div class="accordion" style="margin:auto;width:98%;" id="accordionExample1">';
-                                    versionAuxDocDiv += '<div class="card">';
-                                    versionAuxDocDiv += '<div class="border-0" id="heading' + key1 + '">';
-                                    versionAuxDocDiv += ' <h5 class="mb-0 w-100"><button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse1' + key1 + '" aria-expanded="false" aria-controls="collapse' + key1 + '"><h3 style = "font-style:bold;padding-left:10px;">' + val.original_name + '</h3><p class="auxlevelStatus' + (key1 - 1) + '"></p><p class="btn btn-light-danger status-accordion" style="margin-right:40px;visibility:hidden;">asdas</p></button></h5>';
-                                    versionAuxDocDiv += '</div>';
-                                    versionAuxDocDiv += ' <div id="collapse1' + key1 + '" class="collapse fade" aria-labelledby="heading' + key1 + '" data-parent="#accordionExample1">';
-                                    versionAuxDocDiv += '<div class="card-body">';
-                                    versionAuxDocDiv += '<table class="table table-striped documentTable">';
-                                    versionAuxDocDiv += '<thead class="documentTableth">';
-                                    versionAuxDocDiv += '<tr>';
-                                    versionAuxDocDiv += '<th scope="col">Version ID</th><th scope="col">Last Updated</th> <th scope="col">Action</th>';
-                                    versionAuxDocDiv += '</tr>';
-                                    versionAuxDocDiv += '</thead>';
-                                    versionAuxDocDiv += ' <tbody>';
-                                    var auxDocSize = docAuxDetailArray.length;
-                                    var showAuxDocAction = auxDocSize - 1;
+                                //     var baseUrl = "{{ asset('/') }}";
+                                //     if (val.status == 0) {
+                                //         var status = "Waiting";
+                                //     } else if (val.status == 1) {
+                                //         var status = "Approved";
+                                //     } else {
+                                //         var status = "Pending";
+                                //     }
+                                //     var versionAuxDocDiv = '<div class="row">';
+                                //     versionAuxDocDiv += '<div class="accordion" style="margin:auto;width:98%;" id="accordionExample1">';
+                                //     versionAuxDocDiv += '<div class="card">';
+                                //     versionAuxDocDiv += '<div class="border-0" id="heading' + key1 + '">';
+                                //     versionAuxDocDiv += ' <h5 class="mb-0 w-100"><button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse1' + key1 + '" aria-expanded="false" aria-controls="collapse' + key1 + '"><h3 style = "font-style:bold;padding-left:10px;">' + val.original_name + '</h3><p class="auxlevelStatus' + (key1 - 1) + '"></p><p class="btn btn-light-danger status-accordion" style="margin-right:40px;visibility:hidden;">asdas</p></button></h5>';
+                                //     versionAuxDocDiv += '</div>';
+                                //     versionAuxDocDiv += ' <div id="collapse1' + key1 + '" class="collapse fade" aria-labelledby="heading' + key1 + '" data-parent="#accordionExample1">';
+                                //     versionAuxDocDiv += '<div class="card-body">';
+                                //     versionAuxDocDiv += '<table class="table table-striped documentTable">';
+                                //     versionAuxDocDiv += '<thead class="documentTableth">';
+                                //     versionAuxDocDiv += '<tr>';
+                                //     versionAuxDocDiv += '<th scope="col">Version ID</th><th scope="col">Last Updated</th> <th scope="col">Action</th>';
+                                //     versionAuxDocDiv += '</tr>';
+                                //     versionAuxDocDiv += '</thead>';
+                                //     versionAuxDocDiv += ' <tbody>';
+                                //     var auxDocSize = docAuxDetailArray.length;
+                                //     var showAuxDocAction = auxDocSize - 1;
 
 
-                                    for (j = docAuxDetailArray.length - 1; j >= 0; --j) {
-                                        var remarkData = (docAuxDetailArray[j].remark) ? docAuxDetailArray[j].remark : "";
+                                //     for (j = docAuxDetailArray.length - 1; j >= 0; --j) {
+                                //         var remarkData = (docAuxDetailArray[j].remark) ? docAuxDetailArray[j].remark : "";
 
-                                        var dateFormat = new Date(docAuxDetailArray[j].updated_at);
-                                        var lastUpdate = ("Date: " + dateFormat.getDate() +
-                                            "/" + (dateFormat.getMonth() + 1) +
-                                            "/" + dateFormat.getFullYear() +
-                                            " " + dateFormat.getHours() +
-                                            ":" + dateFormat.getMinutes() +
-                                            ":" + dateFormat.getSeconds());
+                                //         var dateFormat = new Date(docAuxDetailArray[j].updated_at);
+                                //         var lastUpdate = ("Date: " + dateFormat.getDate() +
+                                //             "/" + (dateFormat.getMonth() + 1) +
+                                //             "/" + dateFormat.getFullYear() +
+                                //             " " + dateFormat.getHours() +
+                                //             ":" + dateFormat.getMinutes() +
+                                //             ":" + dateFormat.getSeconds());
 
-                                        var statusData = "";
-                                        if (docAuxDetailArray[j].status == 1) {
-                                            var statusData = "Waiting For Approval";
-                                        } else if (docAuxDetailArray[j].status == 2) {
-                                            var statusData = "Declined";
-                                        } else if (docAuxDetailArray[j].status == 3) {
-                                            var statusData = "change Request";
-                                        } else if (docAuxDetailArray[j].status == 4) {
-                                            var statusData = "Approved";
-                                        } else {
-                                            var statusData = "Waiting For Approval";
-                                        }
+                                //         var statusData = "";
+                                //         if (docAuxDetailArray[j].status == 1) {
+                                //             var statusData = "Waiting For Approval";
+                                //         } else if (docAuxDetailArray[j].status == 2) {
+                                //             var statusData = "Declined";
+                                //         } else if (docAuxDetailArray[j].status == 3) {
+                                //             var statusData = "change Request";
+                                //         } else if (docAuxDetailArray[j].status == 4) {
+                                //             var statusData = "Approved";
+                                //         } else {
+                                //             var statusData = "Waiting For Approval";
+                                //         }
 
-                                        $(".mainlevelStatus" + j).html("");
-                                        $(".mainlevelStatus" + j).append("(" + statusData + ")");
-                                        versionAuxDocDiv += '<tr>';
-                                        versionAuxDocDiv += '<td>ver ' + docAuxDetailArray[j].version + '</td>';
-                                        // versionAuxDocDiv += '<td>' + remarkData + '</td>';
-                                        // versionAuxDocDiv += '<td>' + statusData + '</td>';
-                                        versionAuxDocDiv += '<td>' + lastUpdate + '</td>';
-                                        versionAuxDocDiv += '<td>';
-                                        // if (j == showAuxDocAction) {
-                                        versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
-                                        // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
-                                        versionAuxDocDiv += '</button>';
-                                        // }
-                                        versionAuxDocDiv += '</td>';
-                                        versionAuxDocDiv += '</tr>';
-                                    }
-                                    versionAuxDocDiv += '</tbody>';
-                                    versionAuxDocDiv += '</table>';
-                                    versionAuxDocDiv += '</div>';
-                                    versionAuxDocDiv += '</div>';
-                                    versionAuxDocDiv += '</div>';
-                                    versionAuxDocDiv += '</div>';
-                                    versionAuxDocDiv += '</div>';
-                                    $(".auxdoc_append" + level).append(versionAuxDocDiv);
-                                });
+                                //         $(".mainlevelStatus" + j).html("");
+                                //         $(".mainlevelStatus" + j).append("(" + statusData + ")");
+                                //         versionAuxDocDiv += '<tr>';
+                                //         versionAuxDocDiv += '<td>ver ' + docAuxDetailArray[j].version + '</td>';
+                                //         // versionAuxDocDiv += '<td>' + remarkData + '</td>';
+                                //         // versionAuxDocDiv += '<td>' + statusData + '</td>';
+                                //         versionAuxDocDiv += '<td>' + lastUpdate + '</td>';
+                                //         versionAuxDocDiv += '<td>';
+                                //         // if (j == showAuxDocAction) {
+                                //         versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+                                //         // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
+                                //         versionAuxDocDiv += '</button>';
+                                //         // }
+                                //         versionAuxDocDiv += '</td>';
+                                //         versionAuxDocDiv += '</tr>';
+                                //     }
+                                //     versionAuxDocDiv += '</tbody>';
+                                //     versionAuxDocDiv += '</table>';
+                                //     versionAuxDocDiv += '</div>';
+                                //     versionAuxDocDiv += '</div>';
+                                //     versionAuxDocDiv += '</div>';
+                                //     versionAuxDocDiv += '</div>';
+                                //     versionAuxDocDiv += '</div>';
+                                //     $(".auxdoc_append" + level).append(versionAuxDocDiv);
+                                // });
                             }
                         },
                         error: function(err) {

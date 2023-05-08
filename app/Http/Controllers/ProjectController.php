@@ -11,6 +11,8 @@ use App\Models\Project;
 use App\Models\ProjectApprover;
 use App\Models\projectDocument;
 use App\Models\ProjectDocumentDetail;
+use App\Models\ProjectDocumentFirstStage;
+use App\Models\ProjectDocumentStatusByLevel;
 use App\Models\ProjectEmployee;
 use App\Models\ProjectLevels;
 use App\Models\ProjectMilestone;
@@ -156,13 +158,13 @@ class ProjectController extends Controller
 
 
         Log::info('ProjectController->Store:-Inside ' . json_encode($request->all()));
-        // $fileArray = $_FILES['main_document']['name'][0];
-        // dd($fileArray);
+
         $workflow_id = $request->workflow_id;
 
         $workflowLevelmodels = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $workflow_id)->get();
-        //    $f = $workflowLevelmodels[0]->workflowLevelDetail;
-        //   dd($f[0]->designation_id);
+
+        $firstWfLevel = $workflowLevelmodels[0]->levels;
+
         try {
             if (isset($request->project_id) != null) {
                 $project = Project::findOrFail($request->project_id);
@@ -214,10 +216,10 @@ class ProjectController extends Controller
                     $mail = $this->emailController->SendProjectInitiaterEmail(1, $request->initiator_id, $project->id, $request->project_name, $request->project_code);
                     Log::info('ProjectController->Store:-InitiaterMail Response ' . json_encode($mail));
                 }
-
+                $ed = date('ymdhms');
                 $MainDocumentCount = (isset($request->main_document)) ? count($request->main_document) : 0;
-               
-               Log::info('ProjectController->Store:-Main Document Count ' . $MainDocumentCount);
+
+                Log::info('ProjectController->Store:-Main Document Count ' . $MainDocumentCount);
                 if ($MainDocumentCount) {
                     $halfPath =  $project->ticket_no . '/main_document/';
                     $upload_path = public_path() . '/projectDocuments/' . $halfPath;
@@ -225,13 +227,13 @@ class ProjectController extends Controller
                     if (!File::exists($upload_path)) {
                         mkdir($upload_path . '/', 0777, true);
                     }
-                  
+
 
                     for ($d = 0; $d < $MainDocumentCount; $d++) {
                         $fileArray = $_FILES['main_document']['name'][$d];
                         $filePart = explode('.', $fileArray);
-                        Log::info('ProjectController->Store:-fileNameExtension With '.($d+1) ." ". $filePart[1]);
-                        $ed = date('ymdhms');
+                        Log::info('ProjectController->Store:-fileNameExtension With ' . ($d + 1) . " " . $filePart[1]);
+                    
                         $fileName = $filePart[0] . '_' . $ed . "." . $filePart[1];
                         //  $fileName = "MainDocument" . ($d + 1) . "." . $filePart[1];
                         Log::info('ProjectController->Store:-filename ' . $fileName);
@@ -258,7 +260,10 @@ class ProjectController extends Controller
                             $docdetail->document_name = $halfPath . $fileName;
                             $docdetail->status = 1;
                             $docdetail->is_latest = 1;
+                            $docdetail->upload_level = $firstWfLevel;
                             $docdetail->save();
+
+                            $docStatusAss = $this->storeProjectDocumentStatusByLevel($project->id, $workflowLevelmodels, $doc->id, $fileName);
                         }
                     }
                 }
@@ -274,11 +279,13 @@ class ProjectController extends Controller
                     for ($d = 0; $d < $AuxilaryDocumentCount; $d++) {
                         $fileArray = $_FILES['auxillary_document']['name'][$d];
                         $filePart1 = explode('.', $fileArray);
-                        log::info('fileNamePart ' . json_encode($filePart1));
+                        log::info('Aux fileNamePart ' . json_encode($filePart1));
                         //$fileName = "AuxilaryDocument" . ($d + 1) . "." . $filePart1[1];
                         $fileName = $filePart1[0] . '_' . $ed . "." . $filePart1[1];
                         $banner = $_FILES['auxillary_document']['name'][$d];
                         $bannerpath = $upload_path . $fileName;
+
+                        log::info('$bannerpath ' . json_encode($bannerpath));
 
                         if (move_uploaded_file($_FILES["auxillary_document"]["tmp_name"][$d], $bannerpath)) {
                             $doc = new projectDocument();
@@ -328,7 +335,7 @@ class ProjectController extends Controller
                     if ($projectLevelModel) {
                         // for ($b = 0; $b < count($workflowLevelmodels[$a]->workflowLevelDetail); $b++) {
                         $getname = "approver_" . $levelId;
-                        
+
                         if ($request->$getname) {
 
 
@@ -346,89 +353,6 @@ class ProjectController extends Controller
                                 $projectEmployee2 = $this->storeProjectEmployee($request->$getname[$c], $project->id, '2', $request->project_level[$a]);
                             }
                         }
-                        //}
-                        // $mainDocName = "main_document" . $levelId;
-                        // Log::info('ProjectController->Store:-Level Iteration ' . $a . "Level-Id " . ($levelId) . "DocName " . json_encode($mainDocName));
-                        // $MainDocCount = (isset($request->$mainDocName) ? count($request->$mainDocName) : 0);
-                        // Log::info('ProjectController->Store:-Level Iteration ' . $a . "Level-Id " . ($levelId) . "MainDocCount " . json_encode($MainDocCount));
-                        // if ($MainDocCount) {
-                        //     $halfPath =  $project->ticket_no . '/level-' . $levelId . '/main_document/';
-                        //     $upload_path = public_path() . '/projectDocuments/' . $halfPath;
-                        //     mkdir($upload_path . '/', 0777, true);
-                        // }
-                        // for ($d = 0; $d < $MainDocCount; $d++) {
-                        //     $fileArray = $_FILES['main_document' . $levelId]['name'][$d];
-                        //     $filePart = explode('.', $fileArray);
-                        //     $fileName = $project->ticket_no . "Main" . $levelId . "s" . ($d + 1) . "v1." . $filePart[1];
-                        //     $banner = $_FILES['main_document' . $levelId]['name'][$d];
-                        //     $bannerpath = $upload_path . $fileName;
-
-                        //     if (move_uploaded_file($_FILES["main_document" . $levelId]["tmp_name"][$d], $bannerpath)) {
-                        //         $doc = new projectDocument();
-                        //         $doc->type = 1;
-                        //         $doc->project_id = $project->id;
-                        //         $doc->project_level = $request->project_level[$a];
-                        //         $doc->document = $halfPath . $fileName;
-                        //         $doc->is_latest = 1;
-                        //         $doc->original_name = $fileName;
-                        //         $doc->save();
-
-                        //         $docdetail = new ProjectDocumentDetail();
-                        //         $docdetail->project_doc_id =  $doc->id;
-                        //         $docdetail->version = 1;
-                        //         $docdetail->document_name = $halfPath . $fileName;
-                        //         $docdetail->status = 1;
-                        //         $docdetail->save();
-                        //     }
-                        // }
-                        // $auxDocName = "auxillary_document" . $levelId;
-                        // Log::info('ProjectController->Store:-Level Iteration ' . $a . "Level-Id " . ($levelId) . "auxDocName " . json_encode($auxDocName));
-
-                        // $AuxDocCount = (isset($request->$auxDocName) ? count($request->$auxDocName) : 0);
-                        // Log::info('ProjectController->Store:-Level Iteration ' . $a . "Level-Id " . ($levelId) . "AuxDocCount " . json_encode($AuxDocCount));
-
-                        // if ($AuxDocCount) {
-                        //     $halfPath1 =  $project->ticket_no . '/level-' . $levelId . '/auxillary_document/';
-                        //     Log::info('ProjectController->Store:-HalfPath' . json_encode($halfPath1));
-                        //     $upload_path1 = public_path() . '/projectDocuments/' . $halfPath1;
-                        //     mkdir($upload_path1 . '/', 0777, true);
-                        // }
-                        // for ($d = 0; $d < $AuxDocCount; $d++) {
-
-
-
-                        //     $fileArray1 = $_FILES['auxillary_document' . $levelId]['name'][$d];
-                        //     Log::info('ProjectController->Store:-fileArray1' . json_encode($fileArray1));
-                        //     $filePart1 = explode('.', $fileArray1);
-                        //     Log::info('ProjectController->Store:-filePart1' . json_encode($filePart1));
-
-                        //     $fileName1 = $project->ticket_no . "Aux" . $levelId . "s" . ($d + 1) . "v1." . $filePart1[1];
-
-                        //     Log::info('ProjectController->Store:-fileName1' . json_encode($fileName1));
-                        //     $banner = $_FILES['auxillary_document' . $levelId]['name'][$d];
-                        //     $bannerpath = $upload_path1 . $fileName1;
-                        //     Log::info('ProjectController->Store:-bannerpath' . json_encode($bannerpath));
-
-                        //     if (move_uploaded_file($_FILES["auxillary_document" . $levelId]["tmp_name"][$d], $bannerpath)) {
-                        //         $doc = new projectDocument();
-                        //         $doc->type = 2;
-                        //         $doc->project_id = $project->id;
-                        //         $doc->project_level = $request->project_level[$a];
-                        //         $doc->document = $halfPath1 . $fileName1;
-                        //         $doc->is_latest = 1;
-                        //         $doc->original_name = $fileName1;
-                        //         $doc->save();
-
-                        //         $docdetail = new ProjectDocumentDetail();
-                        //         $docdetail->version = 1;
-                        //         $docdetail->project_doc_id =  $doc->id;
-                        //         $docdetail->document_name = $halfPath1 . $fileName1;
-                        //         $docdetail->status = 1;
-                        //         $docdetail->save();
-                        //     } else {
-                        //         Log::info('ProjectController->Store:-Not Stored' . $levelId);
-                        //     }
-                        // }
                     }
                 }
             }
@@ -441,6 +365,33 @@ class ProjectController extends Controller
                 'data' => $e
             ];
         }
+    }
+    public function storeProjectDocumentStatusByLevel($projectId, $wfLevels, $documentId, $fileName)
+    {
+
+        foreach ($wfLevels as $key => $wfLevel) {
+            if ($key == 0) {
+                $stage1 = $this->convertToModelProjectDocumentStage1($projectId, $documentId, $fileName, $wfLevel->levels);
+            }
+            $model = new ProjectDocumentStatusByLevel();
+            $model->project_id = $projectId;
+            $model->doc_id = $documentId;
+            $model->file_name = $fileName;
+            $model->level_id = $wfLevel->levels;
+            $model->save();
+        }
+        return true;
+    }
+    public function convertToModelProjectDocumentStage1($projectId, $documentId, $fileName, $levelId)
+    {
+        $model = new ProjectDocumentFirstStage();
+        $model->project_id = $projectId;
+        $model->level_id = $levelId;
+        $model->doc_id = $documentId;
+        $model->file_name = $fileName;
+        $model->save();
+
+        return true;
     }
     public function storeProjectEmployee($empId, $projectId, $type, $levelId = null)
     {
@@ -548,15 +499,37 @@ class ProjectController extends Controller
     {
         $id = $request->project_id;
         $level = $request->level;
+        // $getLevelRecords = ProjectDocumentStatusByLevel::where('level_id', $level)->where('project_id', $id)->get();
 
-        $maindocument = projectDocument::select('*')->with('docDetail', 'docDetail.employee')
-            ->where("project_id", '=', $request->project_id)
-            ->where("type", '=', 1)
+        //     foreach ($getLevelRecords as $getLevelRecord) {
+        //         $previousRecord = ProjectDocumentStatusByLevel::where('id', '<', $getLevelRecord->id)               
+        //         ->where('project_id', $id)
 
+        //         ->orderBy('id', 'desc')
+        //         ->first();
+        //         dd($previousRecord);
+        //        if($previousRecord){
+
+        //        }else{
+
+        //        }
+        //     }
+
+
+        // dd($getFrontRecord);
+
+        $maindocument = projectDocument::select('*')->with(['docDetail', 'docDetail.employee', 'docStatusWithLevel' => function ($q) use ($level) {
+            // Query the name field in status table
+            $q->where('level_id', '=', $level); // '=' is optional
+        }])
+            //  ->leftjoin('project_document_status_by_levels', 'project_document_status_by_levels.doc_id', '=', 'project_documents.id')
+            ->where("project_documents.project_id", '=', $request->project_id)
+            ->where("project_documents.type", '=', 1)
+            //    ->where("project_document_status_by_levels.level_id", '=', $level)
             ->get();
+        //dd($maindocument);
 
         $auxdocument = projectDocument::select('*')->with('docDetail', 'docDetail.employee')
-
             ->where("project_id", '=', $request->project_id)
             ->where("type", '=', 2)
             ->get();
@@ -614,6 +587,10 @@ class ProjectController extends Controller
     {
 
 
+
+
+
+        $level = $request->levelId;
         $empId = Auth::user()->emp_id;
 
         $parentModel = projectDocument::select('ticket_no', 'type', 'project_name', 'projects.id as projectId')
@@ -622,99 +599,143 @@ class ProjectController extends Controller
             ->first();
         if ($parentModel) {
             $projectId = $parentModel->projectId;
-            $getAllDocMentModel = projectDocument::where('project_id', $projectId)->where('type', '=', 1)->count();
-            $getAllunApprovedDocMentModel = projectDocument::where('project_id', $projectId)->where('type', '=', 1)->where('status', '!=', 4)->get();
-            if (count($getAllunApprovedDocMentModel) == 1) {
-                if ($getAllunApprovedDocMentModel[0]->id == $request->documentId && $request->status == 4) {
 
-                    $pModel = Project::where('id', $projectId)->first();
-                    $pModel->current_status = 4;
-                    $pModel->save();
 
-                    $mail = $this->emailController->SendApprovedStatusChangeEmail($parentModel->projectId, $empId, $request->levelId, $request->status);
+            $levelModel = ProjectDocumentStatusByLevel::where('project_id', $projectId)
+                ->where('level_id', $level)
+                ->where('doc_id', $request->documentId)
+                ->first();
+
+            if ($levelModel) {
+                $levelModel->status = $request->status;
+                $levelModel->save();
+            }
+
+            $modelData = ProjectDocumentDetail::where('id', $request->statusdocumentId)->first();
+            $modelData->status = $request->status;
+            $modelData->remark = $request->statusremarks;
+            $modelData->updated_by = $empId;
+            $modelData->project_id = $projectId;
+            $modelData->upload_level = $level;
+            if ($request->status != 4) {
+                $modelData->is_latest = 0;
+            }
+
+            $modelData->save();
+
+            if ($request->status == 4) {
+                $getNextRecord = ProjectDocumentStatusByLevel::where('project_id', $projectId)
+                    ->where('doc_id', $request->documentId)
+                    ->where('level_id', '>', $level)
+                    ->orderBy('id', 'asc')
+                    ->first();
+                if ($getNextRecord) {
+                    $getNextRecord->file_name = $levelModel->file_name;
+                    $getNextRecord->save();
+                }
+            }
+
+
+            if ($request->file('againestDocument')) {
+
+
+                $typeOfDoc = ($parentModel->type == 2) ? 'auxillary_document/' : 'main_document/';
+                $typeOfDocFile = ($parentModel->type == 2) ? 'AuxillaryDocument-v' : 'MainDocument-v';
+
+                // $halfPath1 =  $parentModel->ticket_no . '/level-' . $request->levelId . "/" . $typeOfDoc;
+                // Log::info('ProjectController->Store:-HalfPath' . json_encode($halfPath1));
+                // $upload_path1 = public_path() . '/projectDocuments/' . $halfPath1;
+
+                $path = public_path() . '/projectDocuments/' . $parentModel->ticket_no . '/' . $typeOfDoc;
+
+
+                $banner = $request->file('againestDocument')->getClientOriginalName();
+                $expbanner = explode('.', $banner);
+                $filePart1 = $expbanner[1];
+                Log::info('ProjectController->Store:-filePart1' . json_encode($filePart1));
+                $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
+                $ed = date('ymdhms');
+                $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
+
+
+                //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
+                Log::info('ProjectController->Store:-fileName1' . json_encode($fileName1));
+                $bannerpath = $path . $fileName1;
+                if (move_uploaded_file($request->againestDocument->path(), $bannerpath)) {
+
+                    $model = new ProjectDocumentDetail;
+                    $model->version = $lastversion + 1;
+                    $model->remark = "";
+                    $model->project_doc_id = $request->documentId;
+                    $model->status = 1;
+                    $model->document_name = $parentModel->ticket_no . '/' . $typeOfDoc . $fileName1;
+                    $model->updated_by = $empId;
+                    $model->project_id = $projectId;
+                    $model->is_latest = 1;
+                    $model->save();
+
+
+                    $levelModel->file_name  = $fileName1;
+                    $levelModel->save();
+                }
+            }
+
+            $getAllDocmentStatusModel = ProjectDocumentStatusByLevel::where('project_id', $projectId)->where('doc_id', $request->documentId)->count();
+            $getUnApprovedDocmentStatusModel = ProjectDocumentStatusByLevel::where('project_id', $projectId)
+                ->where('doc_id', $request->documentId)
+                ->where('status', '!=', 4)
+                ->get();
+            if (count($getUnApprovedDocmentStatusModel) == 1) {
+                if ($getUnApprovedDocmentStatusModel[0]->level_id == $level && $request->status == 4) {
+                    $modelMain = projectDocument::where('id', $request->documentId)->first();
+                    $modelMain->status = $request->status;
+                    $modelMain->save();
+
+                    $getAllProjectDocument = projectDocument::where('project_id', $projectId)->get();
+                    $getAllApprovedProjectDocument = projectDocument::where('project_id', $projectId)
+                        ->where('status', 4)
+                        ->get();
+                    if ($getAllProjectDocument == $getAllApprovedProjectDocument) {
+
+                        $pModel = Project::where('id', $projectId)->first();
+                        $pModel->current_status = 4;
+                        $pModel->save();
+
+                        $mail = $this->emailController->SendApprovedStatusChangeEmail($parentModel->projectId, $empId, $request->levelId, $request->status);
+                    }
                 }
             } else {
                 $mail = $this->emailController->SendStatusChangeEmail($parentModel->projectId, $empId, $request->levelId, $request->status);
             }
+
+
+
+            // if (count($getAllunApprovedDocMentModel) == 1) {
+            //     if ($getAllunApprovedDocMentModel[0]->id == $request->documentId && $request->status == 4) {
+
+            //         // $pModel = Project::where('id', $projectId)->first();
+            //         // $pModel->current_status = 4;
+            //         // $pModel->save();
+
+            //         $mail = $this->emailController->SendApprovedStatusChangeEmail($parentModel->projectId, $empId, $request->levelId, $request->status);
+            //     }
+            // } else {
+            //     $mail = $this->emailController->SendStatusChangeEmail($parentModel->projectId, $empId, $request->levelId, $request->status);
+            // }
         }
 
-
-
-        $modelMain = projectDocument::where('id', $request->documentId)->first();
-        $modelMain->status = $request->status;
-        $modelMain->save();
-
-        $projectId = $parentModel->projectId;
-        $level = $request->levelId;
-        $modelData = ProjectDocumentDetail::where('id', $request->statusdocumentId)->first();
-
-        $modelData->status = $request->status;
-        $modelData->remark = $request->statusremarks;
-        $modelData->updated_by = $empId;
-        $modelData->project_id = $projectId;
-        $modelData->upload_level = $level;
-        if ($request->status != 4) {
-            $modelData->is_latest = 0;
-        }
-
-        $modelData->save();
-
-        if ($request->file('againestDocument')) {
-
-
-            $typeOfDoc = ($parentModel->type == 2) ? 'auxillary_document/' : 'main_document/';
-            $typeOfDocFile = ($parentModel->type == 2) ? 'AuxillaryDocument-v' : 'MainDocument-v';
-
-            // $halfPath1 =  $parentModel->ticket_no . '/level-' . $request->levelId . "/" . $typeOfDoc;
-            // Log::info('ProjectController->Store:-HalfPath' . json_encode($halfPath1));
-            // $upload_path1 = public_path() . '/projectDocuments/' . $halfPath1;
-
-            $path = public_path() . '/projectDocuments/' . $parentModel->ticket_no . '/' . $typeOfDoc;
-
-
-            $banner = $request->file('againestDocument')->getClientOriginalName();
-            $expbanner = explode('.', $banner);
-            $filePart1 = $expbanner[1];
-            Log::info('ProjectController->Store:-filePart1' . json_encode($filePart1));
-            $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
-            $ed = date('ymdhms');
-            $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
-
-
-            //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
-            Log::info('ProjectController->Store:-fileName1' . json_encode($fileName1));
-            $bannerpath = $path . $fileName1;
-
-
-
-
-
-
-            if (move_uploaded_file($request->againestDocument->path(), $bannerpath)) {
-
-                $model = new ProjectDocumentDetail;
-                $model->version = $lastversion + 1;
-                $model->remark = "";
-                $model->project_doc_id = $request->documentId;
-                $model->status = 1;
-                $model->document_name = $parentModel->ticket_no . '/' . $typeOfDoc . $fileName1;
-                $model->updated_by = $empId;
-                $model->project_id = $projectId;
-                $model->is_latest = 1;
-                $model->save();
-
-                $ProjectDocumentModelVersion = projectDocument::findOrFail($request->documentId);
-                $ProjectDocumentModelVersion->original_name = $fileName1;
-                $ProjectDocumentModelVersion->save();
-            }
-        }
         return response()->json(['staus' => "Success"]);
     }
 
     public function destroy($id)
     {
-        $project_update = Project::where("id", $id)->update(["is_active" => 0]);
-        echo json_encode($project_update);
+       
+        $model = Project::where("id", $id)->delete();
+            $data = [
+                "message" => "Success",
+                "data" => "Project Deleted Successfully."
+            ];
+            return response()->json($data);
     }
     public function uploadDocumentVersion(Request $request)
     {

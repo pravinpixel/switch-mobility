@@ -14,6 +14,7 @@ class CreateProjectDocumentDetailsTable extends Migration
     public function up()
     {
         Schema::create('project_document_details', function (Blueprint $table) {
+            
             $table->increments('id')->unsigned(false);
             $table->integer('version')->nullable();
             $table->integer('project_id')->nullable(true);
@@ -26,6 +27,7 @@ class CreateProjectDocumentDetailsTable extends Migration
             $table->integer('is_latest')->nullable();
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
+
             $table->foreign('project_doc_id')->references('id')->on('project_documents')
             ->onUpdate('cascade')->onDelete('cascade');
         });

@@ -8,7 +8,7 @@
 
     /* Style the tab */
     .tab {
-
+        height: 400px;
         border-radius: 5px;
         overflow-y: auto;
         width: 180px;
@@ -18,6 +18,7 @@
     }
 
     .LevelTabContent {
+        height: 400px;
         border-radius: 5px;
         background: white;
         border: none !important;
@@ -29,14 +30,19 @@
 
     form:has(.level-container.current) {
         background: transparent;
+        padding-top: 0px;
+        margin-top: 0px;
+        overflow: hidden;
+
     }
 
     form:has(.level-container.current) .action-button {
         background: white;
         box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
         margin-top: 10px;
+        padding: 10px !important;
         border-radius: 5px;
-
+        
     }
 
     /* Style the buttons inside the tab */
@@ -75,10 +81,10 @@
     .tabcontent {
         float: left;
         padding: 0px 12px;
-        border: 1px solid #ccc;
+        /* border: 1px solid #ccc; */
         width: 100%;
         border-left: none;
-        height: 1100px;
+        /* height: 1100px; */
     }
 
     #critical {
@@ -174,13 +180,17 @@
     }
 
     .pdf-iframe {
-        width: 100px;
-        height: 100px;
+        width: 50px;
+        height: 50px;
 
     }
 
     .pdf_delete_btn {
-        width: 100px !important;
+        position: absolute !important;
+        top: -5px !important;
+        right: -5px !important;
+        border-radius: 50%;
+
     }
 
     .pdf-view {
@@ -189,8 +199,9 @@
     }
 
     .pdf {
+        position: relative;
         margin: 0 10px;
-        width: 100px;
+        width: 50px;
     }
 
     .pdf label {
@@ -198,7 +209,7 @@
     }
 
     .pdf-view .upload-text {
-        margin: 40px auto;
+        margin: 0px auto;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -244,10 +255,9 @@
     }
 
     div[data-kt-stepper-element="content"] {
-        min-height: 400px !important;
-        max-height: 400px !important;
+   
         overflow-x: hidden;
-        overflow-y: auto;
+        overflow-y: hidden;
     }
 
     .level-container {
@@ -288,7 +298,7 @@
         <!--end::Nav-->
         <!--begin::Form-->
 
-        <form id="designation_form kt_modal_create_campaign_stepper_form " class="form formStyle" method="post" enctype="multipart/form-data" action="{{ url('projects') }}">
+        <form id="designation_form kt_modal_create_campaign_stepper_form " class="form formStyle " method="post" enctype="multipart/form-data" action="{{ url('projects') }}">
             <!--begin::Step 1-->
             <div class="current" data-kt-stepper-element="content">
                 <!--begin::Wrapper-->
@@ -567,16 +577,16 @@
             </div>
             <!--end::Step 2-->
             <!--begin::Step 3-->
-            <div data-kt-stepper-element="content" class="level-container">
+            <div data-kt-stepper-element="content" class="level-container" >
                 <!--begin::Wrapper-->
                 <div class="row" style="width: 100%;">
                     <div class="col-md-6 fv-row">
-                        <label class="fs-6 fw-semibold mb-2">Main Document</label><br>
+                        <label class="fs-6 fw-semibold mb-2 required">Main Document </label><br>
                         <div class="col-md-12 p-3 pdf_container input-group">
                             <label class="row col-12 m-2 pdf-view row " for="pdf1">
                                 <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div>
                             </label> <input type="file" name="main_document[]" id="pdf1" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        </div>';
+                        </div>
                     </div>
                     <div class="col-md-6 fv-row">
                         <label class="fs-6 fw-semibold mb-2">Auxilary Document</label><br>
@@ -588,7 +598,7 @@
                     </div>
                 </div>
                 <!-- Levels Tab -->
-                <div class="tab">
+                <div class="tab " >
 
                 </div>
                 <div class="LevelTabContent"  style="width:calc(100% - 200px)">
@@ -1121,7 +1131,7 @@
                         var uniqueId = "SelectLevel" + wfl;   
                         var uniqueApproverName = "approver_" + WFLevelBtn[wfl].levelId; 
                         SelectId.push(uniqueId);               
-                        levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
+                        levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-100 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
                         levelTabContentData += '<option></option>';
                         for (var lvldesc = 0; lvldesc < levelDesignation.length; lvldesc++) {
                            var optionId = levelDesignation[lvldesc].id;
@@ -1294,7 +1304,7 @@
                             var uniqueApproverName = "approver_" + WFLevelBtn[wfl].levelId + "_" + lvldesc;
                             console.log("uniqueApproverName >" + uniqueApproverName);
                             SelectId.push(uniqueId);
-                            levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-50 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
+                            levelTabContentData += '<select name = "' + uniqueApproverName + '[]" class="form-select w-100 form-select-solid" id="' + uniqueId + '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
                             levelTabContentData += '<option></option>';
                             for (var lvlApvrs = 0; lvlApvrs < levelApprovers.length; lvlApvrs++) {
                                 var selectedStatus = (projectApprovers.includes(levelApprovers[lvlApvrs].id)) ? "selected" : "";
@@ -1631,13 +1641,13 @@
         if (pdfFile["name"].endsWith(".pdf")) {
             var objectURL = URL.createObjectURL(pdfFile);
             var FileParent = $(file).parent();
-            $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><iframe src="' + objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber + '" scrolling="no"></iframe><button class="btn btn-danger btn-sm pdf_delete_btn  " onclick="deletepdf(this)">Delete</button></div>');
+            $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><iframe src="' + objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber + '" scrolling="no"></iframe><button class="btn btn-icon w-30px h-30px btn-danger btn-sm pdf_delete_btn  " onclick="deletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button></div>');
             $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;">');
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
         } else {
             var objectURL = " https://download.logo.wine/logo/Microsoft_Excel/Microsoft_Excel-Logo.wine.png";
             var FileParent = $(file).parent();
-            $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><img src="' + objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber + '" scrolling="no"></img><button class="btn btn-danger btn-sm pdf_delete_btn  " onclick="deletepdf(this)">Delete</button></div>');
+            $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><img src="' + objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber + '" scrolling="no"></img><button class="btn btn-danger btn-icon w-30px h-30px btn-sm pdf_delete_btn  " onclick="deletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button></div>');
             $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;">');
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
         }

@@ -573,7 +573,7 @@
 
                 <div class="row" style="width: 100%;">
                     <div class="col-md-6 fv-row">
-                        <label class="fs-6 fw-semibold mb-2">Main Document</label><br>
+                        <label class="fs-6 fw-semibold mb-2 required">Main Document</label><br>
                         <div class="col-md-12 p-3 pdf_container input-group">
                             <label class="row col-12 m-2 pdf-view row " for="pdf1">
                                 <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div>

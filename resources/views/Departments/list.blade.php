@@ -99,23 +99,24 @@
                                 </span>-->
                                 <!--end::Svg Icon
                                 <input type="text" class="form-control form-control-solid w-250px ps-14 deptSearch" placeholder="Search" />
-                          -->  </div>
+                          -->
+                            </div>
                             <!--end::Search-->
                         </div>
                         <!--begin::Card title-->
                         <!--begin::Table-->
-                        <table class="table table-row-bordered table-row-gray-300 align-middle gs-0 gy-4" id="service_table">
+                        <table class="table" id="service_table">
                             <!--begin::Table head-->
                             <thead>
                                 <!--begin::Table row-->
-                                <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                <tr class="fw-bold fs-7 text-uppercase gs-0">
 
-                                    <th class="">S.no</th>
-                                    <th class="">Department Name</th>
-                                    <th class="">Description</th>
-                                    <th class="">Status</th>
+                                    <th class="text-center">S.no</th>
+                                    <th class="text-center">Department Name</th>
+                                    <th class="text-center">Description</th>
+                                    <th class="text-center" index="1">Status</th>
 
-                                    <th class="">Actions</th>
+                                    <th class="text-center">Actions</th>
                                 </tr>
                                 <!--end::Table row-->
                             </thead>
@@ -124,26 +125,26 @@
                             <tbody class="text-gray-600 fw-semibold" id="tableContent">
                                 <!--begin::Table row-->
                                 @foreach($departments as $key=>$d)
-                                <tr height="100px">
+                                <tr height="100px"  >
                                     <!--begin::Checkbox-->
 
                                     <!--end::Checkbox-->
                                     <!--begin::User=-->
-                                    <td class="">
+                                    <td class="text-center">
                                         {{$key+1}}
                                     </td>
 
-                                    <td>{{$d['name']}}</td>
-                                    <td>{{$d['description']}}</td>
-                                    <td>
+                                    <td class="text-center">{{$d['name']}}</td>
+                                    <td class="text-center">{{$d['description']}}</td>
+                                    <td class="text-center">
 
                                         <label class="switch">
                                             <input type="checkbox" data-id="{{ $d['id'] }}" value="" class="status" <?php echo $d['is_active'] == 1 ? 'checked' : ''; ?>>
                                             <span class="slider round"></span>
                                         </label>
                                     </td>
-                                    <td>
-                                        <div class="d-flex my-3 ms-9">
+                                    <td class="text-center">
+                                        <div class="">
                                             <!--begin::Edit-->
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('department-edit'))
@@ -274,6 +275,23 @@
         form.submit();
 
     })
+    $(document).on('click', '.toggleBtn', function() {
+        var toggleBtn = $('.toggleBtn');
+        var columnIndex =4;
+        var data = $(this).attr('index');
+    
+        console.log(data);
+
+
+        var table = $('#service_table').DataTable();
+      
+        if (data === 1) {
+            table.column(2).order('desc').draw();         
+          
+        } else {
+            table.column(2).order('asc').draw();     
+        }
+    });
 
     function delete_item(id) {
         Swal.fire({
@@ -369,12 +387,12 @@
                     );
 
                 }
-            } else {             
-                if (status ==1) {
+            } else {
+                if (status == 1) {
                     chk.prop('checked', false);
-                  
+
                 } else {
-                   
+
                     chk.prop('checked', true).attr('checked', 'checked');
                 }
             }

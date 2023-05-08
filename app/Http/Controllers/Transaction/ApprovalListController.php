@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Transaction;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Doclistings;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\DocumentType;
 use App\Models\Employee;
 use App\Models\Project;
+use App\Models\projectDocument;
 use App\Models\ProjectDocumentDetail;
 use App\Models\ProjectEmployee;
 use App\Models\ProjectMilestone;
@@ -39,10 +41,11 @@ use PhpOffice\PhpWord\Settings;
 
 class ApprovalListController extends Controller
 {
-    protected $tempController;
-    public function __construct(ApprovalListTempController $tempController)
+    protected $tempController,$docsController;
+    public function __construct(ApprovalListTempController $tempController,Doclistings $docsController)
     {
         $this->tempController = $tempController;
+        $this->docsController = $docsController;
     }
 
     public function index()
@@ -69,7 +72,8 @@ class ApprovalListController extends Controller
     {
 
         $id = $request->id;
-
+        $lastLevel = $this->docsController->getLastLevelProject($id);
+    
 
         $project_details = DB::table('projects as p')
             ->leftjoin('project_levels as pl', 'pl.project_id', '=', 'p.id')
@@ -83,11 +87,16 @@ class ApprovalListController extends Controller
         $details = $project_details->first();
 
 
-        $models = ProjectDocumentDetail::select('document_name','project_documents.original_name', 'project_documents.id')->leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
+        $models = ProjectDocumentDetail::select('document_name','project_documents.original_name', 'project_documents.id','project_documents.project_id as projectId')
+        ->leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
             ->where('project_document_details.project_id', $id)
             ->where('project_documents.type', 1)
+            ->where('project_document_details.is_latest', 1)
+            ->where('project_document_details.upload_level', $lastLevel)
             ->where('project_document_details.status', 4)
+            ->groupby('project_document_details.id')
             ->get();
+          
 
 
         $milestoneDatas = ProjectMilestone::where('project_id', $id)->get();
@@ -392,7 +401,7 @@ class ApprovalListController extends Controller
             }
         }
         Log::info("passedLine no 132 ter ");
-        return $pdf->Output('ApprovedDocs.pdf', 'I');
+        return $pdf->Output('ApprovedDocs.pdf', 'D');
     }
 
     public function projectApprovers($projectId)
