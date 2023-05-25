@@ -597,7 +597,7 @@
                         //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
                         //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
                         //     newDate = day + '-' + month + '-' + yr;
-                        $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<p class="due_date_' + level + '"></p></div><div class="col-md-2">Priority:<p class="priority_' + level + '"></p></div><hr><div style="text-align:left;font-weight:bold;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div style="text-align:left;font-weight:bold;">&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
+                        $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<p class="due_date_' + level + '"></p></div><div class="col-md-2">Priority:<p class="priority_' + level + '"></p></div><div class="docsPart"><hr><div style="text-align:left;font-weight:bold;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div style="text-align:left;font-weight:bold;">&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div><div class="emptyDocsPart" style="display:none"><hr><p>No Documents is assigned For appproval!</p></div></div></div>');
                         //if (data.length > 0) {
 
                         $(".image_append" + level).empty();
@@ -617,11 +617,11 @@
 
 
                             var dateAr = val.due_date.split('-');
-                            var cnewDate = dateAr[1] + '-' + dateAr[2] + '-' + dateAr[0].slice(-2);
+                            var cnewDate = dateAr[1] + '-' + dateAr[2] + '-' + dateAr[0].slice(-4);
                             var duDateAppend = cnewDate;
 
                             var badgeType = (dateSign == '-') ? "danger" : "success";
-                            duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate + ' Day</span></span>';
+                            duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate + ' Days</span></span>';
                             $(".due_date_" + level).empty();
 
 
@@ -680,8 +680,16 @@
                                 $(".maindoc_append" + level).empty();
                                 $(".auxdoc_append" + level).empty();
                                 var levelstageStatus = [];
+                                $('.docsPart').css('display', 'block');
+                                $('.emptyDocsPart').css('display', 'none');
                                 if (data.main_docs) {
+                                    var getMainDocArray = data.main_docs;                              
+                                if (getMainDocArray.length == 0) {
 
+
+                                    $('.docsPart').css('display', 'none');
+                                    $('.emptyDocsPart').css('display', 'block');
+                                }
                                     $.each(data.main_docs, function(key, val) {
 
                                         var currentStatusId = val.status;

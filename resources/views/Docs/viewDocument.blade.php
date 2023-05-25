@@ -319,13 +319,13 @@
 
     </div>
     <div class="text-center container">
-     
+
         <div class="row">
             <div class="col-md-6">
                 <h3 class="breadcrumbs">View Documents > Ticket No. #{{ $details->ticket_no }}</h3>
             </div>
             <div class="col-md-2">
-            <label> </label> <label> </label>
+                <label> </label> <label> </label>
                 <a href="{{url('doclisting')}}" class="btn switchPrimaryBtn btn-sm" style="margin-right:-850px">Back</a>
             </div>
         </div>
@@ -431,7 +431,7 @@
             @endfor
             <!-- <a href="{{url('doclisting')}}"> <button class="btn switchPrimaryBtn"style="margin-left:-1250px!important">Back</button></a> -->
         </div>
-        
+
 
 
     </div>
@@ -455,10 +455,15 @@
                     </thead>
                     <tbody>
                         @foreach($milestoneDatas as $milestoneData)
+                        <?php
+                        $pStartDate = date('d-m-Y', strtotime($milestoneData->mile_start_date));
+
+                        $pEndDate = date('d-m-Y', strtotime($milestoneData->mile_end_date));
+                        ?>
                         <tr>
                             <td>{{$milestoneData->milestone}}</td>
-                            <td>{{$milestoneData->mile_start_date}}</td>
-                            <td>{{$milestoneData->mile_end_date}}</td>
+                            <td>{{$pStartDate}}</td>
+                            <td>{{$pEndDate}}</td>
                             <td>{{$milestoneData->levels_to_be_crossed}}</td>
                         </tr>
                         @endforeach
@@ -638,7 +643,7 @@
                     //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
                     //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
                     //     newDate = day + '-' + month + '-' + yr;
-                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="" ><div class="row"> <div class="col-md-2">Approvers</div><div class="col-md-5 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<div class="due_date_' + level + '"></div></div><div class="col-md-1">Priority<p class="priority_' + level + '"></p></div></div><div class="p-0  w-100" style="border-top:1px solid lightgrey;text-align:left;padding:5px 0;font-weight:bold;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto;"></div><div style="text-align:left;padding:5px 0;font-weight:bold;" >&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div></div>');
+                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="s" ><div class="row"> <div class="col-md-2">Approvers</div><div class="col-md-5 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<div class="due_date_' + level + '"></div></div><div class="col-md-1">Priority<p class="priority_' + level + '"></p></div></div><div class="docsPart"><div class="p-0  w-100" style="border-top:1px solid lightgrey;text-align:left;padding:5px 0;font-weight:bold;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto;"></div><div style="text-align:left;padding:5px 0;font-weight:bold;" >&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div><div class="emptyDocsPart" style="display:none"><hr><p>No Documents is assigned For appproval!</p></div></div></div>');
                     //if (data.length > 0) {
 
                     $(".image_append" + level).empty();
@@ -658,10 +663,11 @@
 
 
                         var dateAr = val.due_date.split('-');
-                        var cnewDate = dateAr[1] + '-' + dateAr[2] + '-' + dateAr[0].slice(-2);
+                        var cnewDate = dateAr[1] + '-' + dateAr[2] + '-' + dateAr[0].slice(-4);
+
                         var duDateAppend = cnewDate;
                         var badgeType = (dateSign == '-') ? "danger" : "success";
-                        duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate + ' Day</span></span>';
+                        duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate + ' Days</span></span>';
                         $(".due_date_" + level).empty();
                         $(".due_date_" + level).append(duDateAppend);
                         var priority = "";
@@ -701,12 +707,22 @@
                             $(".maindoc_append" + level).empty();
                             $(".auxdoc_append" + level).empty();
                             var levelstageStatus = [];
+
+                            $('.docsPart').css('display', 'block');
+                            $('.emptyDocsPart').css('display', 'none');
                             if (data.main_docs) {
+                                var getMainDocArray = data.main_docs;                              
+                                if (getMainDocArray.length == 0) {
+
+
+                                    $('.docsPart').css('display', 'none');
+                                    $('.emptyDocsPart').css('display', 'block');
+                                }
                                 $.each(data.main_docs, function(key, val) {
-                                    
+
                                     var currentStatusId = val.status;
-                                        var currentFileName = val.file_name;
-                                        var statusColour = "warning";
+                                    var currentFileName = val.file_name;
+                                    var statusColour = "warning";
                                     if (currentStatusId == 2) {
                                         var currentStatusData = "Declined";
                                     } else if (currentStatusId == 3) {
@@ -720,7 +736,7 @@
 
                                     var docMainDetailArray = val.get_doc_detail;
 
-                                  console.log(docMainDetailArray);
+                                    console.log(docMainDetailArray);
 
                                     if (val.status == 1) {
                                         var status = "Pending";
@@ -750,11 +766,11 @@
 
                                         var remarkData = (docMainDetailArray[i].remark) ? docMainDetailArray[i].remark : "";
                                         var updatedBy = docMainDetailArray[i].employee;
-                                            var updatedPerson = "";
+                                        var updatedPerson = "";
 
-                                            if (updatedBy) {
-                                                updatedPerson = updatedBy.first_name + " " + updatedBy.middle_name + " " + updatedBy.last_name;
-                                            }
+                                        if (updatedBy) {
+                                            updatedPerson = updatedBy.first_name + " " + updatedBy.middle_name + " " + updatedBy.last_name;
+                                        }
 
                                         var statusData = "";
                                         if (docMainDetailArray[i].status == 1) {
@@ -783,9 +799,9 @@
                                         versionMainDocDiv += '<tr>';
                                         versionMainDocDiv += '<td>ver ' + docMainDetailArray[i].version + '</td>';
                                         versionMainDocDiv += '<td>' + remarkData + '</td>';
-                                        versionMainDocDiv += '<td>' + statusData + '</td>';                                    
+                                        versionMainDocDiv += '<td>' + statusData + '</td>';
                                         versionMainDocDiv += '<td>' + updatedPerson + "(" + lastUpdate + ')</td>';
-                                          
+
                                         versionMainDocDiv += '<td>';
 
 
@@ -818,27 +834,30 @@
                                     $(".maindoc_append" + level).append(versionMainDocDiv);
                                 });
 
+                            } else {
+                                $('.docsPart').css('display', 'none');
+                                $('.emptyDocsPart').css('display', 'block');
                             }
                             if (data.aux_docs) {
                                 var versionAuxDocDiv1 = '<div class="card-body">';
-                                    var versionAuxDocDiv1 = '<br>';
-                                    versionAuxDocDiv1 += '<table class="table table-striped documentTable">';
-                                    versionAuxDocDiv1 += '<thead class="documentTableth">';
+                                var versionAuxDocDiv1 = '<br>';
+                                versionAuxDocDiv1 += '<table class="table table-striped documentTable">';
+                                versionAuxDocDiv1 += '<thead class="documentTableth">';
+                                versionAuxDocDiv1 += '<tr>';
+                                versionAuxDocDiv1 += '<th scope="col">File Name</th><th scope="col">Action</th>';
+                                versionAuxDocDiv1 += '</tr>';
+                                versionAuxDocDiv1 += '</thead>';
+                                versionAuxDocDiv1 += ' <tbody>';
+                                versionAuxDocDiv1 += ' </tbody>';
+                                $.each(data.aux_docs, function(key, val) {
                                     versionAuxDocDiv1 += '<tr>';
-                                    versionAuxDocDiv1 += '<th scope="col">File Name</th><th scope="col">Action</th>';
+                                    versionAuxDocDiv1 += '<td>' + val.original_name + '</td>';
+                                    versionAuxDocDiv1 += '<td><a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + val.document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a></td>';
                                     versionAuxDocDiv1 += '</tr>';
-                                    versionAuxDocDiv1 += '</thead>';
-                                    versionAuxDocDiv1 += ' <tbody>';
-                                    versionAuxDocDiv1 += ' </tbody>';
-                                    $.each(data.aux_docs, function(key, val) {
-                                        versionAuxDocDiv1 += '<tr>';
-                                        versionAuxDocDiv1 += '<td>' + val.original_name + '</td>';
-                                        versionAuxDocDiv1 += '<td><a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + val.document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a></td>';
-                                        versionAuxDocDiv1 += '</tr>';
-                                    });
-                                    versionAuxDocDiv1 += ' </table>';
-                                    versionAuxDocDiv1 += ' </br>';
-                                    $(".auxdoc_append" + level).append(versionAuxDocDiv1);
+                                });
+                                versionAuxDocDiv1 += ' </table>';
+                                versionAuxDocDiv1 += ' </br>';
+                                $(".auxdoc_append" + level).append(versionAuxDocDiv1);
                                 // $.each(data.aux_docs, function(key1, val) {
                                 //     var docAuxDetailArray = val.doc_detail;
 

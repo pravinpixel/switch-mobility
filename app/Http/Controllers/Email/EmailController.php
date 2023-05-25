@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Email;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ProjectController;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -14,6 +15,19 @@ use App\Models\ProjectEmployee;
 
 class EmailController extends Controller
 {
+
+    protected $projectController;
+    public function __construct(ProjectController $projectController) {
+        $this->projectController = $projectController;
+    }
+    public function statusChange($projectId,$level)
+    {
+       dd($projectId);
+        $projectData = $this->projectController->getProjectDetailsByPrimaryId($projectId);
+
+        dd($projectData);
+        $defaultMailers = config('app.BCCmail');
+    }
     public function SendProjectInitiaterEmail($type,$initiaterId,$projectId, $projectName, $projectCode)
     {
 

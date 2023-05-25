@@ -874,4 +874,9 @@ class ProjectController extends Controller
 
         return $entities;
     }
+
+    public function getProjectDetailsByPrimaryId($id)
+    {
+       return Project::where('id', $id)->first();
+    }
 }

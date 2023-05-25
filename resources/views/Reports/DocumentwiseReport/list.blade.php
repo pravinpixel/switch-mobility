@@ -105,7 +105,7 @@
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                 <div class="col-md-1">
                                     <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <button class="btn btn-success" onclick="exportData()">ExportExcel</button>
+                                    <button class="btn btn-success" onclick="exportData()">Export to Excel</button>
                                 </div>
                             </div>
 

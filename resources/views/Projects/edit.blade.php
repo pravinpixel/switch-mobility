@@ -577,7 +577,7 @@
                         <div class="col-md-12 p-3 pdf_container input-group">
                             <label class="row col-12 m-2 pdf-view row " for="pdf1">
                                 <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div>
-                            </label> <input type="file" name="main_document[]" id="pdf1" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                            </label> <input type="file" name="main_document[]" id="pdf1" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".docx,.pdf">
                         </div>';
                     </div>
                     <div class="col-md-6 fv-row">
@@ -1695,7 +1695,7 @@
             var objectURL = URL.createObjectURL(pdfFile);
             var FileParent = $(file).parent();
             $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><iframe src="' + objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber + '" scrolling="no"></iframe><button class="btn btn-danger btn-sm pdf_delete_btn  " onclick="deletepdf(this)">Delete</button></div>');
-            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;">');
+            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".docx,.pdf" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;">');
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
         } else {
             var objectURL = " https://download.logo.wine/logo/Microsoft_Excel/Microsoft_Excel-Logo.wine.png";
