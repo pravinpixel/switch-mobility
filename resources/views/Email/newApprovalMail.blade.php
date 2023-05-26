@@ -16,7 +16,7 @@ $url = route('tempOpen', ['id' =>$projectId]);
 
         <br> Greetings from <b>Switch Mobility</b>,
 
-        <p>This email is to notify you that you have been assigned as an initiator to the project<b> {{$projectName}} </b>-<b> {{$projectCode}}</b>.
+        <p>This email is to notify you that you have received a new document for your approval for the project<b> {{$projectName}} </b>-<b> {{$projectCode}}</b>.
             Please do login with your credentials in our portal <b><a href="{{ $url }}">Click Link</a></b> to kick start your project activities</p>
 
         <br>

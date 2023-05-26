@@ -155,6 +155,7 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
+        
 
 
         Log::info('ProjectController->Store:-Inside ' . json_encode($request->all()));
@@ -164,7 +165,7 @@ class ProjectController extends Controller
         $workflowLevelmodels = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $workflow_id)->get();
 
         $firstWfLevel = $workflowLevelmodels[0]->levels;
-
+      
         try {
             if (isset($request->project_id) != null) {
                 $project = Project::findOrFail($request->project_id);
@@ -213,9 +214,12 @@ class ProjectController extends Controller
                         // File::deleteDirectory($path);
                     }
                 } else {
-                    $mail = $this->emailController->SendProjectInitiaterEmail(1, $request->initiator_id, $project->id, $request->project_name, $request->project_code);
+                    $mail = $this->emailController->SendProjectInitiaterEmail(1, $request->initiator_id,1, $request->project_name, $request->project_code);
+                                
                     Log::info('ProjectController->Store:-InitiaterMail Response ' . json_encode($mail));
+                   
                 }
+             
                 $ed = date('ymdhms');
                 $MainDocumentCount = (isset($request->main_document)) ? count($request->main_document) : 0;
 
@@ -233,7 +237,7 @@ class ProjectController extends Controller
                         $fileArray = $_FILES['main_document']['name'][$d];
                         $filePart = explode('.', $fileArray);
                         Log::info('ProjectController->Store:-fileNameExtension With ' . ($d + 1) . " " . $filePart[1]);
-                    
+
                         $fileName = $filePart[0] . '_' . $ed . "." . $filePart[1];
                         //  $fileName = "MainDocument" . ($d + 1) . "." . $filePart[1];
                         Log::info('ProjectController->Store:-filename ' . $fileName);
@@ -355,6 +359,10 @@ class ProjectController extends Controller
                         }
                     }
                 }
+            }
+            if(isset($request->project_id) == null){
+                $levelApprovermail = $this->emailController->NewApprovalToApprover($project->id, $firstWfLevel);  
+                Log::info('ProjectController->Store:-Approver Mail Response ' . json_encode($levelApprovermail));    
             }
             return redirect('projects')->with('success', "Projects " . $msg . " successfully.");
         } catch (Exception $e) {
@@ -729,13 +737,13 @@ class ProjectController extends Controller
 
     public function destroy($id)
     {
-       
+
         $model = Project::where("id", $id)->delete();
-            $data = [
-                "message" => "Success",
-                "data" => "Project Deleted Successfully."
-            ];
-            return response()->json($data);
+        $data = [
+            "message" => "Success",
+            "data" => "Project Deleted Successfully."
+        ];
+        return response()->json($data);
     }
     public function uploadDocumentVersion(Request $request)
     {
@@ -877,6 +885,6 @@ class ProjectController extends Controller
 
     public function getProjectDetailsByPrimaryId($id)
     {
-       return Project::where('id', $id)->first();
+        return Project::where('id', $id)->first();
     }
 }

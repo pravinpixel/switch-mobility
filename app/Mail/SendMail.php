@@ -53,19 +53,26 @@ class SendMail extends Mailable
         $approverData = $this->approverData;
         $difDate = $this->difDate;
 
-        Log::info('Send Email type'.$type);
+        Log::info('Send Email type '.$type);
 
         if ($type == 1) {
             return $this->subject($this->title)
                 ->view('Email.initiatorMail', compact('projectId','empName', 'projectName', 'projectCode'));
-        } elseif($type == 2) {
+        }
+         elseif($type == "newApprovalMail") {
+            
+            return $this->subject($this->title)
+                ->view('Email.newApprovalMail', compact('projectId','empName', 'projectName', 'projectCode','status','level','approverData'));
+        }
+        
+        elseif($type == "statusChange") {
             
             return $this->subject($this->title)
                 ->view('Email.changeDocsStatus', compact('projectId','empName', 'projectName', 'projectCode','status','level','approverData'));
-        }elseif($type == 3) {
+        }elseif($type == "finalApprovalMail") {
             
             return $this->subject($this->title)
-            ->view('Email.changeApprovedDocsStatus', compact('projectId','empName', 'projectName', 'projectCode','status','level','approverData'));
+            ->view('Email.finalApprovalMail', compact('projectId','empName', 'projectName', 'projectCode'));
         }
         else{
          

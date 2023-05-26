@@ -570,6 +570,7 @@ class Doclistings extends Controller
 
     public function updatelevelwiseDocumentStatus(Request $request)
     {
+
         Log::info("DocListings Started " . json_encode($request->all()));
 
         $status = $request->status;
@@ -591,12 +592,12 @@ class Doclistings extends Controller
         if ($getParentModel) {
             $projectId = $getParentModel->projectId;
             $ticketNo = $getParentModel->ticket_no;
+            $finalApprovement = $this->finalApproveProject($projectId);
 
-           
-            $sendMail = $this->emailController->statusChange($projectId, $level);
+            $sendToInitiaterMail = $this->emailController->statusChange($projectId, $level, $status);
 
-            dd($sendMail);
-            $lastLevel = $this->getLastLevelProject($projectId, $documentId);
+
+
 
             Log::info("DocListings Project Id " . json_encode($projectId));
 
@@ -607,6 +608,9 @@ class Doclistings extends Controller
 
                 Log::info("DocListings nextLevel " . json_encode($nextLevel));
                 if ($nextLevel) {
+                    $levelApprovermail = $this->emailController->NewApprovalToApprover($projectId, $nextLevel);
+
+                    Log::info('ProjectController->Store:-Approver Mail Response ' . json_encode($levelApprovermail));
                     $updateOldDocDetail = $this->updateDocDetails($documentId, $level, $status, $remark);
                     if ($updateOldDocDetail) {
                         Log::info("DocListings updateOldDocDetail Id " . json_encode($projectId));
@@ -634,11 +638,12 @@ class Doclistings extends Controller
                     $updateOldDocDetail = $this->updateDocDetails($documentId, $level, $status, $remark, 1);
                     $updateDocFirstStage = $this->updateStage1Document($documentId, $level, $status);
                     $getMainDocs = projectDocument::where('id', $documentId)->first();
-                    if ($getMainDocs) {
+                    if ($getMainDocs)
+                    {
                         $getMainDocs->status = 4;
-
-                        $getMainDocs->save();
+                        $getMainDocs->save();                    
                     }
+                    $sendMailfinalApproveProject = $this->finalApproveProject($projectId);
                 }
             } else {
 
@@ -646,6 +651,7 @@ class Doclistings extends Controller
                     $previousLevel = $this->getPreviousLevel($documentId, $level);
                     Log::info("DocListings previousLevel Id " . json_encode($previousLevel));
                     if ($previousLevel) {
+                        $levelApprovermail = $this->emailController->NewApprovalToApprover($projectId, $previousLevel);
                         $updateStatusCurrentLevel = $this->UpdateToStatusLevelModel($projectId, $level, $documentId, $status);
                         Log::info("DocListings updateStatusCurrentLevel Id " . json_encode($updateStatusCurrentLevel));
 
@@ -719,7 +725,7 @@ class Doclistings extends Controller
                         }
                         Log::info('fileUpload ->return');
                     } else {
-
+                        $levelApprovermail = $this->emailController->NewApprovalToApprover($projectId, $level);
                         if ($request->file('againestDocument')) {
 
                             $updateOldData = $this->updateDocDetails($documentId, $level, $status, $remark);
@@ -783,7 +789,7 @@ class Doclistings extends Controller
                     }
                     $typeOfDoc = 'main_document/';
                     $typeOfDocFile = 'MainDocument-v';
-
+                    $levelApprovermail = $this->emailController->NewApprovalToApprover($projectId, $setLevel);
                     // $halfPath1 =  $parentModel->ticket_no . '/level-' . $request->levelId . "/" . $typeOfDoc;
                     // Log::info('ProjectController->Store:-HalfPath' . json_encode($halfPath1));
                     // $upload_path1 = public_path() . '/projectDocuments/' . $halfPath1;
@@ -1103,7 +1109,25 @@ class Doclistings extends Controller
         // }
         return response()->json(['staus' => "Success"]);
     }
+    public function finalApproveProject($projectId)
+    {
+        $totCompletedDocs = 0;
+        $projectDocumentModels = projectDocument::where('project_id', $projectId)->get();
+        $totalDocs = count($projectDocumentModels);
+        foreach ($projectDocumentModels as $projectDocumentModel) {
+            $documentId = $projectDocumentModel->id;
+            $lastDocLeveId = $this->getLastLevelProject($projectId);
+            $subDocLevelModel = $this->findProjectDocumentFirstStage($projectId, $documentId, $lastDocLeveId);
 
+            if ($subDocLevelModel) {
+                $totCompletedDocs += ($subDocLevelModel->status == 4) ? 1 : 0;
+            }
+        }
+        if ($totalDocs == $totCompletedDocs) {
+            $finalApproveMail = $this->emailController->finalApprovementProject($projectId);
+        }
+        return true;
+    }
 
     public function updateDocDetails($documentId, $level, $status, $remark = null, $type = null)
     {
