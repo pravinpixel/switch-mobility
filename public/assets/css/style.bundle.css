@@ -38001,6 +38001,7 @@ code:not([class*="language-"]) {
     color: inherit;
     height: inherit;
     min-height: inherit;
+    text-align: center !important;
 }
 .table tr{
     font-size: 1rem!important;

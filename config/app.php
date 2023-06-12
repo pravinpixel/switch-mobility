@@ -13,6 +13,7 @@ return [
     |
     */
 
+    "BCCEMail"  => env('BCCEMail'),
     'name' => env('APP_NAME', 'Laravel'),
 
     /*

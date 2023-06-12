@@ -50,6 +50,7 @@ class ApprovalListController extends Controller
 
     public function index()
     {
+   
         $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
 
         $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
@@ -63,9 +64,16 @@ class ApprovalListController extends Controller
 
         $models->whereNull('deleted_at');
         $datas = $models->get();
+       $projects= $datas;
+     
+        $employees = Employee::where(['is_active' => 1])->get();
+        $departments = Department::where(['is_active' => 1])->get();
+        $designation = Designation::where(['is_active' => 1])->get();
+        $document_type = DocumentType::where(['is_active' => 1])->get();
+        $workflow = Workflow::where(['is_active' => 1])->get();
 
 
-        return view('Transaction/approvalList/index', compact('datas'));
+        return view('Transaction/approvalList/index', compact('employees','departments','designation','document_type','workflow','projects'));
     }
 
     public function approvedDocsView(Request $request)
