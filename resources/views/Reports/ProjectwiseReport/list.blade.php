@@ -121,12 +121,12 @@
                                     </div>
                                     <div class="col-md-1">
                                         <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                        <button class="btn btn-warning resetBtn">Reset</button>
+                                        <button class="btn btn-warning resetBtn badge badge-secondary">Reset</button>
                                     </div>
                                     &nbsp; &nbsp; &nbsp; &nbsp;
                                     <div class="col-md-1">
                                         <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                        <button class="btn btn-success" onclick="exportData()">Export to Excel</button>
+                                        <button class="btn btn-success badge badge-secondary" onclick="exportData()">Export to Excel</button>
                                     </div>
                                 </div> <br>
 
@@ -196,7 +196,7 @@
                                             <td>{{ $entity['noOfDays'] }}</td>
                                             <td></td>
                                             <td>
-                                        <div id="{{$entity['projectId']}}" class="btn btn-success viewDocs">View</div>
+                                        <div id="{{$entity['projectId']}}" class="btn btn-primary viewDocs">View</div>
                                             </td>
 
                                         </tr>
@@ -255,7 +255,7 @@
             $('.resetBtn').on('click', function() {
                 $('#department').val("").trigger('change');
                 location.reload();
-                // $("#service_table").load(location.href + " #service_table"); 
+                // $("#service_table").load(location.href + " #service_table");
             });
 
             function filterData() {

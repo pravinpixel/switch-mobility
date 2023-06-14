@@ -33,6 +33,7 @@ class DashboardController extends Controller
   public function index()
   {
     $empId = Auth::user()->emp_id;
+  
     $countArray = $this->getCount();
    
     $this->basicController->BasicFunction();
@@ -124,8 +125,11 @@ class DashboardController extends Controller
     if ($empId) {
 
       $initiaterProjectModels = Project::with('workflow', 'employee', 'employee.department')->where('initiator_id', $empId)->get();
+    
       foreach ($initiaterProjectModels as $initiaterProjectModel) {
         $projectId = $initiaterProjectModel->id;
+       // 
+       // dd($projectId);
         $DocsModel = ProjectDocumentDetail::where('project_id', $projectId)->count();
         if (!$DocsModel) {
           array_push($initiatingProjects, $initiaterProjectModel);

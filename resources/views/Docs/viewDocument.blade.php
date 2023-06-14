@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+use Carbon\Carbon;
+@endphp
 <style>
     body {
         background: #7cbac1;
@@ -389,9 +392,9 @@
                                 @foreach($milestoneDatas as $milestoneData)
                                 <tr>
                                     <td>{{$milestoneData->milestone}}</td>
-                                    <td>{{$milestoneData->mile_start_date}}</td>
-                                    <td>{{$milestoneData->mile_end_date}}</td>
-                                    <td>{{$milestoneData->levels_to_be_crossed}}</td>
+                                    <td>{{Carbon::parse($milestoneData->mile_start_date)->format('d-m-Y')}}</td>
+                                    <td>{{Carbon::parse($milestoneData->mile_end_date)->format('d-m-Y')}}</td>
+                                    <td>Level-{{$milestoneData->levels_to_be_crossed}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -711,7 +714,7 @@
                             $('.docsPart').css('display', 'block');
                             $('.emptyDocsPart').css('display', 'none');
                             if (data.main_docs) {
-                                var getMainDocArray = data.main_docs;                              
+                                var getMainDocArray = data.main_docs;
                                 if (getMainDocArray.length == 0) {
 
 

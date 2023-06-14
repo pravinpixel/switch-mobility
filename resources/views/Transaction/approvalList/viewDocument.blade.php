@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+use Carbon\Carbon;
+@endphp
+
 <style>
     body {
         background: #7cbac1;
@@ -222,7 +226,9 @@
 </style>
 <title>VERTICAL TABS</title>
 </head>
-
+@php
+use Carbon\Carbon;
+@endphp
 <body>
     <div id="myModal" class="modal">
 
@@ -361,7 +367,7 @@
             <div class="m-0 d-flex justify-content-end pe-3">
                 <a href="#" class="btn btn-sm btn-flex bg-body btn-color-gray-700 btn-active-color-primary fw-bold " data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
 
-                    Milestone
+                    Milestone1
                 </a>
 
                 <!--  Drop Down Container -->
@@ -381,9 +387,9 @@
                                 @foreach($milestoneDatas as $milestoneData)
                                 <tr>
                                     <td>{{$milestoneData->milestone}}</td>
-                                    <td>{{$milestoneData->mile_start_date}}</td>
-                                    <td>{{$milestoneData->mile_end_date}}</td>
-                                    <td>{{$milestoneData->levels_to_be_crossed}}</td>
+                                    <td>{{Carbon::parse($milestoneData->mile_start_date)->format('d-m-Y')}}</td>
+                                    <td>{{Carbon::parse($milestoneData->mile_end_date)->format('d-m-Y')}}</td>
+                                    <td>Level-{{$milestoneData->levels_to_be_crossed}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -556,15 +562,15 @@
                         var completionDate = Math.round(Math.abs(getdays));
                         var dateSign = "";
                         if (completionDate) {
-                            dateSign = (dueDate.getTime() <= todayDate.getTime())?"-":"+";
-                                              }
+                            dateSign = (dueDate.getTime() <= todayDate.getTime()) ? "-" : "+";
+                        }
 
 
 
-                    
+
                         var duDateAppend = val.due_date;
-                        var badgeType = (dateSign == '-')?"danger":"success";
-                        duDateAppend+=' <span class="menu-badge"><span class="badge badge-'+badgeType+'">'+dateSign+completionDate+'</span></span>';
+                        var badgeType = (dateSign == '-') ? "danger" : "success";
+                        duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate + '</span></span>';
                         $(".due_date_" + level).empty();
                         $(".due_date_" + level).append(duDateAppend);
                         var priority = "";
@@ -666,21 +672,21 @@
                                         versionMainDocDiv += '<td>';
 
 
-                                       // if (i == showMainDocAction) {
-                                            var classData = "mainlevelStatus-" + level + "-" + key;
-                                            var stateData = statusData;
-                                            var state = [{
-                                                "class": classData
-                                            }, {
-                                                "res": stateData
-                                            }];
-                                            levelstageStatus.push(state);
-                                            // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
+                                        // if (i == showMainDocAction) {
+                                        var classData = "mainlevelStatus-" + level + "-" + key;
+                                        var stateData = statusData;
+                                        var state = [{
+                                            "class": classData
+                                        }, {
+                                            "res": stateData
+                                        }];
+                                        levelstageStatus.push(state);
+                                        // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
 
-                                            versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
-                                            // versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm switchPrimaryBtn " onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
-                                            versionMainDocDiv += '</button>';
-                                       // }
+                                        versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+                                        // versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm switchPrimaryBtn " onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
+                                        versionMainDocDiv += '</button>';
+                                        // }
                                         versionMainDocDiv += '</td>';
                                         versionMainDocDiv += '</tr>';
                                     }
@@ -759,11 +765,11 @@
                                         versionAuxDocDiv += '<td>' + statusData + '</td>';
                                         versionAuxDocDiv += '<td>' + lastUpdate + '</td>';
                                         versionAuxDocDiv += '<td>';
-                                       // if (j == showAuxDocAction) {
-                                             versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
-                                            // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm switchPrimaryBtn " onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
-                                            versionAuxDocDiv += '</button>';
-                                       // }
+                                        // if (j == showAuxDocAction) {
+                                        versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+                                        // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm switchPrimaryBtn " onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
+                                        versionAuxDocDiv += '</button>';
+                                        // }
                                         versionAuxDocDiv += '</td>';
                                         versionAuxDocDiv += '</tr>';
                                     }

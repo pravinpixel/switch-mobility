@@ -91,11 +91,11 @@
                                     </div>
                                     <div class="col-md-1">
                                         <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                        <button class="btn btn-warning resetBtn">Reset</button>
+                                        <button class="btn btn-warning resetBtn badge badge-secondary">Reset</button>
                                     </div>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <div class="col-md-1">
                                         <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                        <button class="btn btn-success" onclick="exportData()">Export to Excel</button>
+                                        <button class="btn btn-success badge badge-secondary" onclick="exportData()">Export to Excel</button>
                                     </div>
                                 </div>
                             </div>
@@ -158,14 +158,14 @@
                                                 <td>{{ $entity['projectName'] }}</td>
                                                 <td>{{ $entity['workflowCode'] }}</td>
                                                 <td>{{ $entity['workflowName'] }}</td>
-                                             
+
                                                 <td>{{ $entity['initiater'] }}</td>
                                                 <td>{{ $entity['department'] }}</td>
                                                 <td>{{ $entity['workflowLevel'] }}</td>
                                                 <td>{{ $entity['dueDate'] }}</td>
                                                 <td>{{ $entity['noOfDays'] }}</td>
                                                 <td></td>
-                                                <td><div id="{{$entity['projectId']}}" class="btn btn-success viewDocs">View</div></td>
+                                                <td><div id="{{$entity['projectId']}}" class="btn btn-primary viewDocs">View</div></td>
 
                                             </tr>
                                         @endforeach
@@ -193,7 +193,7 @@
             $(document).ready(
                 function() {
 
-                   
+
                     $("#initiatorName").select2({
                         dropdownParent: $("#initiatorNameField")
                     });
@@ -203,7 +203,7 @@
 
 
                     $('#initiatorName,#workflowCode').on('change', function() {
-                        filterData();   
+                        filterData();
                     });
 
                     function filterData() {
@@ -276,7 +276,7 @@
             $(document).on('click', '.viewDocs', function () {
     console.log("well and good");
     var id = $(this).attr('id');
-   
+
 
     var url = "{{route('viewDocListing')}}";
     var form = $('<form action="' + url + '" method="post">' +
@@ -285,7 +285,7 @@
     $('body').append(form);
     form.submit();
 });
-       
+
             function exportData() {
                 /* Get the HTML data using Element by Id */
                 var table = document.getElementById("service_table");
@@ -326,7 +326,7 @@
 
                 }
                 csvContent = "data:text/csv;charset=utf-8,";
-              
+
                 /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
                 rows.forEach(function(rowArray) {
                     row = rowArray.join(",");

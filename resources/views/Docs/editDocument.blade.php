@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+use Carbon\Carbon;
+@endphp
+
 <style>
     body {
         background: #7cbac1;
@@ -379,7 +383,11 @@
             <ul class="nav nav-tabs" role="tablist">
                 <h4>Approval Status</h4>
                 @for ($i = 0; $i < count($levelsArray); $i++) <li class="nav-item">
-                    <a class="nav-link <?php if ($i == 0) {
+                    <a class="nav-link <?php
+
+
+
+                                        if ($i == 0) {
                                             echo 'active';
                                         } ?>" data-toggle="tab" href="#pag<?php echo $levelsArray[$i]['levelId']; ?>" role="tab" aria-controls="home" onclick="get_level_data(<?php echo $levelsArray[$i]['levelId']; ?>,<?php echo $details->id; ?>);">Level <?php echo $levelsArray[$i]['levelId']; ?></a>
                     </li>
@@ -418,9 +426,9 @@
                     @foreach($milestoneDatas as $milestoneData)
                     <tr>
                         <td>{{$milestoneData->milestone}}</td>
-                        <td>{{$milestoneData->mile_start_date}}</td>
-                        <td>{{$milestoneData->mile_end_date}}</td>
-                        <td>{{$milestoneData->levels_to_be_crossed}}</td>
+                        <td>{{Carbon::parse($milestoneData->mile_start_date)->format('d-m-Y')}}</td>
+                        <td>{{Carbon::parse($milestoneData->mile_end_date)->format('d-m-Y')}}</td>
+                        <td>Level-{{$milestoneData->levels_to_be_crossed}}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -522,7 +530,8 @@
         $(document).ready(function() {
             var ProjectId = "{{ $details->id }}";
             var firstLevel = "{{$levelsArray[0]['levelId']}}";
-
+            var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
+            console.log("isSuperAdmin " + isSuperAdmin);
             get_level_data(firstLevel, ProjectId);
             // Get the modal
             var modal = document.getElementById("myModal");
@@ -663,8 +672,8 @@
                                 var lastLevelProject = data.lastLevel;
                                 var approverLevels = data.approverLevels;
                                 var ApproverExactLevel = data.ApproverExactLevel;
-                                console.log("approverLevels " + approverLevels);  
-                                console.log("level " + level);                               
+                                console.log("approverLevels " + approverLevels);
+                                console.log("level " + level);
                                 console.log("ApproverExactLevel " + ApproverExactLevel);
 
                                 var showLastLevelBtn = false;
@@ -683,13 +692,13 @@
                                 $('.docsPart').css('display', 'block');
                                 $('.emptyDocsPart').css('display', 'none');
                                 if (data.main_docs) {
-                                    var getMainDocArray = data.main_docs;                              
-                                if (getMainDocArray.length == 0) {
+                                    var getMainDocArray = data.main_docs;
+                                    if (getMainDocArray.length == 0) {
 
 
-                                    $('.docsPart').css('display', 'none');
-                                    $('.emptyDocsPart').css('display', 'block');
-                                }
+                                        $('.docsPart').css('display', 'none');
+                                        $('.emptyDocsPart').css('display', 'block');
+                                    }
                                     $.each(data.main_docs, function(key, val) {
 
                                         var currentStatusId = val.status;
@@ -748,7 +757,10 @@
                                             var updatedPerson = "";
 
                                             if (updatedBy) {
-                                                updatedPerson = updatedBy.first_name + " " + updatedBy.middle_name + " " + updatedBy.last_name;
+                                                var FirstName = (updatedBy.first_name) ? updatedBy.first_name : '';
+                                                var MidName = (updatedBy.middle_name) ? updatedBy.middle_name : '';
+                                                var LastName = (updatedBy.last_name) ? updatedBy.last_name : '';
+                                                updatedPerson = FirstName + "" + MidName + " " + LastName;
                                             }
 
                                             var statusData = "";
@@ -790,9 +802,10 @@
                                                     "res": stateData
                                                 }];
                                                 levelstageStatus.push(state);
+                                                var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
                                                 // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
-                                                if (docMainDetailArray[i].status == 1 || showLastLevelBtn) {
-                                                    if (ApproverExactLevel) {
+                                                if (docMainDetailArray[i].status != 4 || showLastLevelBtn) {
+                                                    if (ApproverExactLevel || isSuperAdmin) {
                                                         versionMainDocDiv += '<a class="btn switchPrimaryBtn btn-sm" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.doc_id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
                                                     }
                                                 }

@@ -82,6 +82,17 @@ class ProjectController extends Controller
         // dd($levelModels);
         return view('Projects/edit', compact('employee', 'document_type', 'workflow', 'project', 'levelModels'));
     }
+    public function show($id)
+    {
+        $employee = Employee::whereNull('deleted_at')->get();
+        $document_type = DocumentType::whereNull('deleted_at')->get();
+        $workflow = Workflow::whereNull('deleted_at')->get();
+        $project = Project::with('employee', 'employee.department', 'employee.designation', 'docType', 'workflow', 'milestone')->where('id', $id)->first();
+
+        $levelModels = $this->getProjectLevelLooping($id);
+        // dd($levelModels);
+        return view('Projects/edit', compact('employee', 'document_type', 'workflow', 'project', 'levelModels'));
+    }
     public function projectEdit(Request $request)
     {
 
@@ -96,6 +107,7 @@ class ProjectController extends Controller
         // dd($levelModels);
         return view('Projects/edit', compact('employee', 'document_type', 'workflow', 'project', 'levelModels'));
     }
+    
 
     public function get_all_projects()
     {
@@ -156,7 +168,6 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         
-
 
         Log::info('ProjectController->Store:-Inside ' . json_encode($request->all()));
 

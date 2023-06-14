@@ -82,7 +82,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <button class="btn btn-success" onclick="exportData()">Export to Excel</button>
+                                    <button class="btn btn-success badge badge-secondary h1" onclick="exportData()">Export to Excel</button>
                                 </div>
                             </div>
                         </div>

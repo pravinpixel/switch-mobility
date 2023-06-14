@@ -22,6 +22,7 @@ class EmailController extends Controller
 
     public function statusChange($projectId, $level, $status)
     {
+        Log::info('Email Controller> statusChange inside Function requests ' .  " projectId = " . $projectId . " level = " . $level . " status = " . $status);
         if ($status == 4) {
             $type = "Approved";
         } elseif ($status == 3) {
@@ -31,14 +32,24 @@ class EmailController extends Controller
         }
         $projectData = $this->projectDetailByProjectId($projectId);
 
+        Log::info('Email Controller> statusChange projectData ' . json_encode($projectData));
+
         $employeeModel = $projectData->employee;
         $toMail = $employeeModel->email;
+        Log::info('Email Controller> toMail ' . json_encode($toMail));
+
         $name = $employeeModel->first_name . " " . $employeeModel->last_name;
+        Log::info('Email Controller> toname ' . json_encode($name));
         $bccMailIds = $this->BccMailLooping();
+        Log::info('Email Controller> bccMailIds  ' . json_encode($bccMailIds));
+
         $subject = $type . " Notification | " . $projectData->project_name . " - " . $projectData->project_code;
+        Log::info('Email Controller> subject ' . json_encode($subject));
+
         $projectName = $projectData->project_name;
         $projectCode = $projectData->project_code;
         $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+        Log::info('Email Controller> empId ' . json_encode($empId));
         $approverData = "admin";
         if ($empId) {
             $ApproverEmployee = Employee::with('designation')->where('id', $empId)->first();
@@ -48,36 +59,44 @@ class EmailController extends Controller
             $designationName = $designation->name;
             $approverData = $approvername . "(" . $approverCode . ")" . "(" . $designationName . ")";
         }
-
+        Log::info('Email Controller> approverData ' . json_encode($approverData));
         try {
             $mail = Mail::to($toMail)->bcc($bccMailIds)->send(new SendMail("statusChange", $subject, $name, $projectId, $projectName, $projectCode, $level, $type, $approverData, ''));
+            Log::info('Email Controller> Email Sended  ' . json_encode($mail));
+
             return true;
             // $mail = Mail::to($toMail)->cc($ccMail)->send(new SendMail($type,$title, $name,$projectId,$projectName, $projectCode,'','','',''));
         } catch (Exception $e) {
 
-            Log::info('email response New Project' . json_encode($e));
+          Log::info('Email Controller> mail mot sended catch ' . json_encode($e));
             return false;
         }
     }
     public function SendProjectInitiaterEmail($type, $initiaterId, $projectId, $projectName, $projectCode)
     {
+        Log::info('Email Controller> SendProjectInitiaterEmail inside Function requests ' . "Type = " . $type . " initiaterId = " . $initiaterId . " projectId = " . $projectId . " projectName = " . $projectName . " projectCode = " . $projectCode);
 
         $employee = Employee::where('id', $initiaterId)->first();
         $toMail = $employee->email;
         $name = $employee->first_name . " " . $employee->middle_name . " " . $employee->last_name;
 
+        Log::info('Email Controller> SendProjectInitiaterEmail toMail ' . json_encode($toMail));
+        Log::info('Email Controller> SendProjectInitiaterEmail Initiater Name ' . json_encode($name));
 
         $bccMailIds = $this->BccMailLooping();
         $title = "New Project assigned to Initiator";
 
+        Log::info('Email Controller> SendProjectInitiaterEmail bccMailIds ' . json_encode($bccMailIds));
+        Log::info('Email Controller> SendProjectInitiaterEmail title' . json_encode($title));
 
         try {
             $mail = Mail::to($toMail)->bcc($bccMailIds)->send(new SendMail($type, $title, $name, $projectId, $projectName, $projectCode, '', '', '', ''));
+            Log::info('Email Controller> SendProjectInitiaterEmail Mail Sended Success fully' . json_encode($mail));
             return true;
             // $mail = Mail::to($toMail)->cc($ccMail)->send(new SendMail($type,$title, $name,$projectId,$projectName, $projectCode,'','','',''));
         } catch (Exception $e) {
 
-            Log::info('email response New Project' . json_encode($e));
+            Log::info('Email Controller> SendProjectInitiaterEmail response Failed' . json_encode($e));
             return false;
         }
     }
@@ -103,12 +122,15 @@ class EmailController extends Controller
             $response = ['name' => $name, 'email' => $employeeModel->email];
             Log::info('Emailconroller > NewApprovalToApprover reponse' . json_encode($response));
             try {
+                
                 $mail = Mail::to($employeeModel->email)->bcc($bccMailIds)->send(new SendMail("newApprovalMail", $subject, $name, $projectId, $projectName, $projectCode, '', '', '', ''));
-                return true;
+              
+                Log::info('Emailconroller > NewApprovalToApproverEmail Sended successfullty reponse ' . json_encode($mail));
+                  return true;
                 // $mail = Mail::to($toMail)->cc($ccMail)->send(new SendMail($type,$title, $name,$projectId,$projectName, $projectCode,'','','',''));
             } catch (Exception $e) {
 
-                Log::info('email response New Project' . json_encode($e));
+                Log::info('Emailconroller > NewApprovalToApproverEmail Sended failed '. $e);
                 return false;
             }
         }
@@ -132,16 +154,16 @@ class EmailController extends Controller
         $name = $employeeModel->first_name . " " . $employeeModel->last_name;
 
         $envbccMailIds = $this->BccMailLooping();
-        $approverMails = $this->getEmployeeemail($projectId);        
-       
-        $BccMailIds =array_unique(array_merge($envbccMailIds,$approverMails), SORT_REGULAR);
-     
+        $approverMails = $this->getEmployeeemail($projectId);
+
+        $BccMailIds = array_unique(array_merge($envbccMailIds, $approverMails), SORT_REGULAR);
+
         $projectName = $projectData->project_name;
         $projectCode = $projectData->project_code;
         $projectNameAndCode = $projectData->project_name . " - " . $projectData->project_code;
         $subject = "Final Approved document generated notification | " . $projectNameAndCode;
 
-      
+
         try {
             $mail = Mail::to($employeeModel->email)->bcc($BccMailIds)->send(new SendMail("finalApprovalMail", $subject, $name, $projectId, $projectName, $projectCode, '', '', '', ''));
             return true;
@@ -232,7 +254,7 @@ class EmailController extends Controller
     }
     public function getEmployeeemail($projectId)
     {
-        $models = ProjectEmployee::with('employee')->where('project_id', $projectId)->where('type',2)->groupBy('employee_id')->get();
+        $models = ProjectEmployee::with('employee')->where('project_id', $projectId)->where('type', 2)->groupBy('employee_id')->get();
         $emailArray = [];
         foreach ($models as $model) {
             $employee = $model['employee'];

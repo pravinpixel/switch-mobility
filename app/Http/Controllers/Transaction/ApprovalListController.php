@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Transaction;
 
+use App\Http\Controllers\BasicController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Doclistings;
 use App\Models\Department;
@@ -39,18 +40,23 @@ use PhpOffice\PhpSpreadsheet\Writer\Pdf\Dompdf as PdfWriter;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Settings;
 
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use Intervention\Image\ImageManagerStatic as Image;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+
 class ApprovalListController extends Controller
 {
-    protected $tempController,$docsController;
-    public function __construct(ApprovalListTempController $tempController,Doclistings $docsController)
+    protected $tempController, $docsController, $basic;
+    public function __construct(ApprovalListTempController $tempController, Doclistings $docsController, BasicController $basic)
     {
         $this->tempController = $tempController;
         $this->docsController = $docsController;
+        $this->basic = $basic;
     }
 
     public function index()
     {
-   
+
         $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
 
         $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
@@ -64,8 +70,8 @@ class ApprovalListController extends Controller
 
         $models->whereNull('deleted_at');
         $datas = $models->get();
-       $projects= $datas;
-     
+        $projects = $datas;
+
         $employees = Employee::where(['is_active' => 1])->get();
         $departments = Department::where(['is_active' => 1])->get();
         $designation = Designation::where(['is_active' => 1])->get();
@@ -73,7 +79,7 @@ class ApprovalListController extends Controller
         $workflow = Workflow::where(['is_active' => 1])->get();
 
 
-        return view('Transaction/approvalList/index', compact('employees','departments','designation','document_type','workflow','projects'));
+        return view('Transaction/approvalList/index', compact('employees', 'departments', 'designation', 'document_type', 'workflow', 'projects'));
     }
 
     public function approvedDocsView(Request $request)
@@ -81,7 +87,7 @@ class ApprovalListController extends Controller
 
         $id = $request->id;
         $lastLevel = $this->docsController->getLastLevelProject($id);
-    
+
 
         $project_details = DB::table('projects as p')
             ->leftjoin('project_levels as pl', 'pl.project_id', '=', 'p.id')
@@ -95,8 +101,8 @@ class ApprovalListController extends Controller
         $details = $project_details->first();
 
 
-        $models = ProjectDocumentDetail::select('document_name','project_documents.original_name', 'project_documents.id','project_documents.project_id as projectId')
-        ->leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
+        $models = ProjectDocumentDetail::select('document_name', 'project_documents.original_name', 'project_documents.id', 'project_documents.project_id as projectId')
+            ->leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
             ->where('project_document_details.project_id', $id)
             ->where('project_documents.type', 1)
             ->where('project_document_details.is_latest', 1)
@@ -104,7 +110,7 @@ class ApprovalListController extends Controller
             ->where('project_document_details.status', 4)
             ->groupby('project_document_details.id')
             ->get();
-          
+
 
 
         $milestoneDatas = ProjectMilestone::where('project_id', $id)->get();
@@ -247,7 +253,7 @@ class ApprovalListController extends Controller
 
         // // Save the PDF file
         // $writer->save(public_path('temp/file1.pdf'));
-
+        $uploadFolder = public_path('uploads');
         $id = $request->id;
         $model = ProjectDocumentDetail::with('documentName')->where('project_doc_id', $id)
             ->where('is_latest', 1)
@@ -276,7 +282,111 @@ class ApprovalListController extends Controller
         $extension = \File::extension($model->document_name);
         $filePath = public_path('projectDocuments/' . $model->document_name);
         if ($extension == "xlsx") {
-            $new  = $this->tempController->excelltopdf($filePath);
+
+            //         $fConversion = $this->basic->savePDF($filePath);
+            //        // $new  = $this->tempController->excelltopdf($filePath);
+            //        // $xltoPdf = public_path('/xlToPdf' . '/' . $request->id);
+            //         $spreadsheet = IOFactory::load($filePath);
+
+            //         $sheetNames = $spreadsheet->getSheetNames();
+            //         $html = '<div>';
+
+            //         foreach ($sheetNames as $sheetName) {
+            //             $worksheet = $spreadsheet->getSheetByName($sheetName);
+
+            //             $highestRow = $worksheet->getHighestRow();
+            //             $highestColumn = $worksheet->getHighestColumn();
+            //             $highestColumnIndex = Coordinate::columnIndexFromString($highestColumn);
+
+            //             $html .= '<h2>' . $sheetName . '</h2>';
+
+            //             $html .= '<table class="table" id="Excel">';
+
+            //             // Get the drawing collection
+            //             $drawingCollection = $worksheet->getDrawingCollection();
+
+            //             // Create a 2D array to store images based on their coordinates
+            //             $images = [];
+
+            //             // Iterate over the drawing collection
+            //             foreach ($drawingCollection as $drawing) {
+            //                 // Check if the drawing is an image
+            //                 if ($drawing instanceof Drawing && $drawing->getCoordinates() !== null) {
+            //                     // Save the image
+            //                     $imagePath = $this->saveImageFromDrawing($drawing, $uploadFolder);
+
+            //                     // Determine the position of the image
+            //                     $imageCoordinates = $drawing->getCoordinates();
+            //                     [$imageColumn, $imageRow] = Coordinate::coordinateFromString($imageCoordinates);
+            //                     $imageColumnIndex = Coordinate::columnIndexFromString($imageColumn) - 1;
+
+            //                     // Store the image in the corresponding cell of the images array
+            //                     $images[$imageRow][$imageColumnIndex] = '<img src="uploads/' . $imagePath . '">';
+            //                 }
+            //             }
+
+            //             // Iterate over the cells and construct the HTML table
+            //             for ($row = 1; $row <= $highestRow; $row++) {
+            //                 $html .= '<tr>';
+
+            //                 $emptyColumnCount = 0;
+
+            //                 for ($column = 1; $column <= $highestColumnIndex; $column++) {
+            //                     $cell = $worksheet->getCellByColumnAndRow($column, $row);
+            //                     $cellValue = $cell->getFormattedValue();
+
+            //                     $adjustedColumn = $column - $emptyColumnCount;
+
+            //                     $cellStyles = $worksheet->getStyleByColumnAndRow($adjustedColumn, $row);
+            //                     $cellAlignment = $cellStyles->getAlignment();
+            //                     $cellFont = $cellStyles->getFont();
+            //                     $cellFill = $cellStyles->getFill();
+            //                     $cellBorders = $cellStyles->getBorders();
+
+            //                     $html .= '<td style="';
+            //                     $html .= 'text-align:' . $cellAlignment->getHorizontal() . ';';
+            //                     $html .= 'font-weight:' . ($cellFont->getBold() ? 'bold' : 'normal') . ';';
+            //                     $html .= 'color:#' . $cellFont->getColor()->getRGB() . ';';
+            //                     $html .= 'background-color:#' . $cellFill->getStartColor()->getRGB() . ';';
+            //                     $html .= 'border-top: ' . $cellBorders->getTop()->getBorderStyle() . ' ' . $cellBorders->getTop()->getColor()->getRGB() . ';';
+            //                     $html .= 'border-right: ' . $cellBorders->getRight()->getBorderStyle() . ' ' . $cellBorders->getRight()->getColor()->getRGB() . ';';
+            //                     $html .= 'border-bottom: ' . $cellBorders->getBottom()->getBorderStyle() . ' ' . $cellBorders->getBottom()->getColor()->getRGB() . ';';
+            //                     $html .= 'border-left: ' . $cellBorders->getLeft()->getBorderStyle() . ' ' . $cellBorders->getLeft()->getColor()->getRGB() . ';';
+            //                     $html .= '">';
+
+            //                     // Check if an image exists at the current cell coordinates
+            //                     if (isset($images[$row][$column - 1])) {
+            //                         $html .= $images[$row][$column - 1];
+            //                     } else {
+            //                         $html .= $cellValue;
+            //                     }
+
+            //                     $html .= '</td>';
+            //                 }
+
+            //                 $html .= '</tr>';
+            //             }
+
+            //             $html .= '</table>';
+            //         }
+
+            //         $html .= '</div>';
+
+            //         $s1 = $uploadFolder.'/orgFiles/sample.pdf';
+            //         //$pdf = PDF::loadView('Excel.convert',['html'=> $html]);
+            //      $mainpdf = $this->basic->savePDF($html);
+
+            //    dd("well");
+
+
+
+            //         dd($pdf);
+            //         $fname = "valla.pdf";
+            //         Storage::put('finalPdf/' . $fname, $pdf->output());
+            //         dd($fname);
+            //         return view('Excel.convert')->with('html', $html);
+            //         dd($html);
+
             $xltoPdf = public_path('/xlToPdf' . '/' . $request->id);
             $newPdfName = "temp.pdf";
             $pdfPath = $xltoPdf . '/' . $newPdfName;
@@ -441,5 +551,19 @@ class ApprovalListController extends Controller
     public function excelToPdf($path)
     {
         $pdfPath = public_path('dhana/rest1.pdf');
+    }
+    private function saveImageFromDrawing(Drawing $drawing, $uploadFolder)
+    {
+        $exactImagePath = uniqid('image_') . '.' . $drawing->getExtension();
+        $imagePath = $uploadFolder . '/' . $exactImagePath;
+
+        $ExPath = $drawing->getPath();
+        file_put_contents($imagePath, file_get_contents($ExPath));
+        // Process the image using Intervention Image
+        $image = Image::make($imagePath);
+        // Perform any desired image manipulation or processing
+        $image->save($imagePath);
+
+        return $exactImagePath;
     }
 }

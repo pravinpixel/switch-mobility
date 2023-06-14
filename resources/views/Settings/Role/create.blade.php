@@ -2,7 +2,7 @@
 
 @section('content')
 <style>
- 
+
     input.permission {
         width: 25px;
         height: 25px;
@@ -332,7 +332,7 @@
                                                     <td>Userwise Report</td>
                                                     <td><input type="checkbox" name="permission[]" value="userwise-report" class='permission permisionCreate'></td>
                                                     <td></td>
-                                                    <td>></td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -397,7 +397,7 @@
     $(document).on('click', '.permission', function() {
         $(this).attr('checked', false);
         var a = document.forms["department_form"];
-        var x = a.querySelectorAll('input[name="permission[]"]:checked');       
+        var x = a.querySelectorAll('input[name="permission[]"]:checked');
         if (x.length == 48) {
             $('.checkAll').prop('checked', true);
         }else{
@@ -413,7 +413,7 @@
     });
     $(document).on('input', '.roleName', function() {
         console.log($(this).attr('fieldData'));
-        
+
 
         $.ajax({
             url: "{{ route('roleNameValidation') }}",
@@ -436,7 +436,7 @@
                     document.getElementById(alertName).style.display = "block";
                     document.getElementById(alertName).style.color = "red";
                     document.getElementById(alertName).innerHTML = 'Role Is Exists*';
-                    
+
                     document.getElementById('roleNameAddAlert').style.display = "block";
                     document.getElementById('roleNameAddAlert').style.color = "red";
                     document.getElementById('roleNameAddAlert').innerHTML = 'Role Is Exists*';

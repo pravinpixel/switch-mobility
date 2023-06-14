@@ -908,16 +908,19 @@
         });
         let nextL = $(".tablinks.active").next(".tablinks").attr("l");
         if ($Blocktab.length) {
+            var validtion=true;
             $Blocktab.find("input[required]").each(function() {
                 if ($(this).val().trim() === "") {
                     $(".error-msg").remove();
                     let name = $(this).prev().text();
                     $(this).after("<span class='error-msg'>" + name + " field is required.</span>");
-
+validation=false;
                 } else if (nextL != level && nextL < level && $("#London" + nextL).find("input[required]").val() == "") {
                     alert("sorry ! Click a next level");
-                } else {
-                    for (i = 0; i < tabcontent.length; i++) {
+                } 
+            });
+            if (validtion) {
+                for (i = 0; i < tabcontent.length; i++) {
                         tabcontent[i].style.display = "none";
                     }
                     tablinks = document.getElementsByClassName("tablinks");
@@ -1010,8 +1013,7 @@
                         $(".nextlevel").attr("onclick", "$(this).attr('type','submit')");
                         $(".nextlevel").html('<span class="indicator-label  "> Submit <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg--> <!--end::Svg Icon--> </span>')
                     }
-                }
-            });
+            }
         }
 
 
@@ -1109,8 +1111,8 @@
                             levelTabContentData += '<input type="hidden" class="project_level' + WFLevelBtn[wfl].levelId + '" name="project_level[]" value="' + WFLevelBtn[wfl].levelId + '">';
 
                             levelTabContentData += '<div class="col-md-12 fv-row">';
-                            levelTabContentData += '<label class="required fs-6 fw-semibold mb-2">Due Date</label>';
-                            levelTabContentData += '<input type="date" required class="form-control w-50 duedate due_date' + WFLevelBtn[wfl].levelId + '" name="due_date[]" onclick="set_min_max_value_due_date();" />';
+                            levelTabContentData += '<label class="{{ auth()->user()->is_super_admin != 1 ? 'required' : '' }}  fs-6 fw-semibold mb-2">Due Date</label>';
+                            levelTabContentData += '<input type="date" {{ auth()->user()->is_super_admin != 1 ? 'required' : '' }}  class="form-control w-50 duedate due_date' + WFLevelBtn[wfl].levelId + '" name="due_date[]" onclick="set_min_max_value_due_date();" />';
                             levelTabContentData += '</div><br><br>';
                             levelTabContentData += '<div class="col-md-12 fv-row"><label class="required fs-6 fw-semibold mb-2">Priority</label><br>';
 
@@ -1285,8 +1287,8 @@
                         levelTabContentData += '<input type="hidden" class="project_level' + WFLevelBtn[wfl].levelId + '" name="project_level[]" value="' + WFLevelBtn[wfl].levelId + '">';
 
                         levelTabContentData += '<div class="col-md-12 fv-row">';
-                        levelTabContentData += '<label class="required fs-6 fw-semibold mb-2">Due Date</label>';
-                        levelTabContentData += '<input type="date" required class="form-control w-50 duedate due_date' + WFLevelBtn[wfl].levelId + '" name="due_date[]" onclick="set_min_max_value_due_date();" value="' + due_date + '"/>';
+                        levelTabContentData += '<label class="{{ auth()->user()->is_super_admin != 1 ? 'required' : '' }}  fs-6 fw-semibold mb-2">Due Date</label>';
+                        levelTabContentData += '<input type="date" {{ auth()->user()->is_super_admin != 1 ? 'required' : '' }}  class="form-control w-50 duedate due_date' + WFLevelBtn[wfl].levelId + '" name="due_date[]" onclick="set_min_max_value_due_date();" value="' + due_date + '"/>';
                         levelTabContentData += '</div><br><br>';
                         levelTabContentData += '<div class="col-md-12 fv-row"><label class="required fs-6 fw-semibold mb-2">Priority</label><br>';
                         var check1 = (priority == 1) ? "checked" : "";

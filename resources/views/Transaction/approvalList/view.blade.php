@@ -319,7 +319,15 @@
 
     </div>
     <div class="text-center container">
+        <div class="row">
+            <div class="col-md-6">
         <h3 class="breadcrumbs">Approved Documents> Ticket No. #{{ $details->ticket_no }}</h3>
+    </div>
+    <div class="col-md-2">
+        <label> </label> <label> </label>
+        <a href="{{url('approvalListIndex')}}" class="btn switchPrimaryBtn btn-sm" style="margin-right:-850px">Back</a>
+    </div>
+</div>
 
 
 
@@ -385,7 +393,7 @@
                         </thead>
                         <tbody style="">
                             @foreach($models as $model)
-                           
+
                             <tr>
                                 <td>{{$model->original_name}}</td>
                                 <td>
@@ -509,10 +517,10 @@
     $(document).on('click', '.actionDocs', function() {
 
         var id = $(this).attr('id');
-       
-      
+
+
             var url = "{{ route('approvedDocsDownload') }}";
-      
+
         var form = $('<form action="' + url + '" method="post">' +
             ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
             '</form>');

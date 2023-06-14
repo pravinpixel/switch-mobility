@@ -100,12 +100,12 @@
                                 </div>
                                 <div class="col-md-1">
                                     <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <button class="btn btn-warning" onclick="reset()">Reset</button>
+                                    <button class="btn btn-warning badge badge-secondary" onclick="reset()">Reset</button>
                                 </div>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                 <div class="col-md-1">
                                     <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <button class="btn btn-success" onclick="exportData()">Export to Excel</button>
+                                    <button class="btn btn-success badge badge-secondary" onclick="exportData()">Export to Excel</button>
                                 </div>
                             </div>
 
@@ -221,7 +221,7 @@
             });
 
             function filterData() {
-               
+
                 var workflow = $('#workflowCode').val();
                 var docuName = $('#documentName').val();
                 var projectName = $('#projectName').val();
@@ -270,7 +270,7 @@
                                     var department = val.department;
                                     var projectId = val.projectId;
                                     var activeStatus = "";
-                                
+
                                     var viewBtn = '<div id=' + projectId +
                                         ' class="btn switchPrimaryBtn  viewDocs">View</div>';
                                     var projectNameOptionItems = "<option value=" + projectId +
@@ -281,7 +281,7 @@
                                         department, workflowLevel, dueDate, noOfDays,
                                         activeStatus, viewBtn
                                     ]).draw();
-                             
+
                                 });
                             }
                         },
@@ -299,8 +299,8 @@
         $('#documentName,#projectName,#workflowCode').val("").trigger('change');
         location.reload();
         // $("#service_table").load(location.href + " #service_table").abort();
-       
-       
+
+
 
     }
 

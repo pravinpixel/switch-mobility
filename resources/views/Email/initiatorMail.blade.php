@@ -9,7 +9,7 @@
     
 </head>
 @php
-$url = route('tempOpen', ['id' =>$projectId]);
+$url = route('projects/', ['id' =>$projectId]);
 @endphp
 <body>
     <div>Hello <b> {{$empName}}</b>,

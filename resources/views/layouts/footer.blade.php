@@ -3,10 +3,10 @@
 							<!--begin::Footer container-->
 							<div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
 								<!--begin::Copyright-->
-								
+
 								<!--end::Copyright-->
 								<!--begin::Menu-->
-								
+
 								<!--end::Menu-->
 							</div>
 							<!--end::Footer container-->
@@ -19,10 +19,10 @@
 			</div>
 			<!--end::Page-->
 		</div>
-		
-		
-		
-		
+
+
+
+
 
 		<!--begin::Javascript-->
 		<!--begin::Global Javascript Bundle(mandatory for all pages)-->
@@ -48,16 +48,18 @@
 		<!-- <script src="{{ asset('assets/js/select2.min.js')}}"></script> -->
 		<!--end::Custom Javascript-->
 		<!--end::Javascript-->
-		
 
-	
+
+<script>
+	$("button").click(function(){
+    // alert($(this).children().hasClass("indicator-label"));
+    if($(this).children().hasClass("indicator-label")){
+    $(this).attr("data-kt-indicator","on").prop("disabled",true);
+}
+});
+</script>
 
 	</body>
 	<!--end::Body-->
 </html>
 
-<script>
-$(document).ready(function() {
-    // $(".select2").select2("val", "");
-});
-</script>
