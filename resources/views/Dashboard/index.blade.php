@@ -282,7 +282,7 @@
                                                 <td>{{ $WorkFlow->workflow_name . ' & ' . $WorkFlow->workflow_code }}</td>
 
                                                 <td>{{ $department->name }}</td>
-                                                <td><button class="btn btn-sm btn-success editDocument" style="color:white" id="{{ $d->id }}">View</button></td>
+                                                <td><button class="btn btn-sm btn-success editProject" style="color:white" id="{{ $d->id }}">View</button></td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -537,7 +537,16 @@
         $('body').append(form);
         form.submit();
     });
+    $(document).on('click', '.editProject', function() {
+        var id = $(this).attr('id');
+        var url = "{{route('projectEdit')}}";
+        var form = $('<form action="' + url + '" method="post">' +
+            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
+            '</form>');
+        $('body').append(form);
+        form.submit();
 
+    });
     function search() {
         console.log("well done");
 

@@ -287,14 +287,16 @@ use Carbon\Carbon;
                     </select>
 
                 </div>
+                <div style="color:red;display:none" id="statusnotification">Please Select Status</div>
                 <div class="col-md-12 fv-row documentUploadDiv" style="display:none">
                     <!--begin::Label-->
                     <label class="required fs-6 fw-semibold mb-2">Documents</label><br>
                     <!--end::Label-->
                     <!--begin::Input-->
-                    <input style="border: 3px solid #ccc;" type="file" name="againestDocument" required class="form-control againestDocument" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                    <input style="border: 3px solid #ccc;" type="file" name="againestDocument" required id="againestDocument" class="form-control againestDocument" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                     <input type="hidden" value="" class="documentId" name="documentId">
                     <input type="hidden" value="" class="levelId" name="levelId">
+                    <div style="color:red;display:none" id="filenotification">Please Upload a File</div>
                 </div>
                 <div class="col-md-12 fv-row">
                     <!--begin::Label-->
@@ -306,13 +308,13 @@ use Carbon\Carbon;
                     <label class="required fs-6 fw-semibold mb-2">Remarks</label><br>
                     <!--end::Label-->
                     <!--begin::Input-->
-                    <textarea required class="form-control form-control-solid statusremarks" style="border: 3px solid #ccc;" name="statusremarks" rows="4" cols="50"></textarea>
-
+                    <textarea required class="form-control form-control-solid statusremarks" style="border: 3px solid #ccc;" name="statusremarks" id="statusremarks" rows="4" cols="50"></textarea>
+                    <div style="color:red;display:none" id="remarknotification">Please Enter Remark</div>
                 </div>
 
                 <div class="text-center pt-15">
                     <button type="button" class="btn btn-danger me-3" onclick="closeStatusModel()">Cancel</button>
-                    <button type="button" class="btn switchPrimaryBtn store" onclick="submitStatusForm()">
+                    <button type="button" class="btn switchPrimaryBtn store" onclick="submitStatusForm(event)">
                         <span class="indicator-label">Update and Exit</span>
                         <span class="indicator-progress">Please wait...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -987,14 +989,44 @@ use Carbon\Carbon;
                 }
             });
         }
-
-        function submitStatusForm() {
+      
+		$("button").click(function() {
+			// alert($(this).children().hasClass("indicator-label"));
+            console.log("well")
+			if ($(this).children().hasClass("indicator-label")) {
+				$(this).attr("data-kt-indicator", "on");
+			}
+		});
+	
+        function submitStatusForm(event) {
             console.log("well done");
+          
+            var stype = document.getElementById('status');
+            var remark = document.getElementById('statusremarks');
+            var fileInput = document.getElementById("againestDocument");
+            $('#remarknotification').hide();
+            $('#statusnotification').hide();
+            $('#filenotification').hide();
 
-
-
+            if (stype.value.trim() === '') {
+                $('#statusnotification').show();
+                return;
+            }
+            if (fileInput.files.length === 0) {
+                if (stype.value != 4) {
+                    $('#filenotification').show();
+                    return;
+                }
+                
+            }
+            // Check if the name field is empty
+            if (remark.value.trim() === '') {
+                $('#remarknotification').show();
+                return;
+            }
             var formData = new FormData($('#statusModelForm')[0]);
             formData.append('csrfmiddlewaretoken', '{{ csrf_token() }}');
+            $('.store').attr("data-kt-indicator", "on");
 
             $.ajax({
                 url: "{{ url('updatelevelwiseDocumentStatus') }}",
@@ -1009,11 +1041,13 @@ use Carbon\Carbon;
                     console.log(result.status);
                     var ProjectId1 = "{{ $details->id }}";
                     if (result.status == 'success') {
+                        $('.store').attr("data-kt-indicator", "off");
                         var levelId = $('.statuslevelId').val();
                         closeStatusModel();
                         get_level_data(levelId, ProjectId1);
                     } else {
-                        console.log(result);
+                       
+                        $('.store').attr("data-kt-indicator", "off");
                         window.location.reload();
                     }
                 }
