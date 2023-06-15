@@ -309,7 +309,7 @@ use Carbon\Carbon;
                     <!--end::Label-->
                     <!--begin::Input-->
                     <textarea required class="form-control form-control-solid statusremarks" style="border: 3px solid #ccc;" name="statusremarks" id="statusremarks" rows="4" cols="50"></textarea>
-                    <div style="color:red;display:none" id="remarknotification">Please Enter Remark</div>
+                    <div style="color:red;display:none" id="remarknotification">''Please Enter Remarks''</div>
                 </div>
 
                 <div class="text-center pt-15">

@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+use Carbon\Carbon;
+@endphp
 <style>
     body {
         background: #7cbac1;
@@ -398,7 +401,7 @@
                                 <td>{{$model->original_name}}</td>
                                 <td>
                                 <a target="_blank" class="btn switchPrimaryBtn  viewDocument btn-xs" title="View Document" id="{{$model->projectId}}"><i class="las la-eye"></i></a>
-                                <a download="OriginalDocs" href="{{ asset('/projectDocuments/') }}<?php echo "/".$model->document_name; ?>" class="btn btn-warning btn-xs" title="Orginal Document Download" id="{{$model->id}}">Orginal Document<i class="las la-download" style="font-size: 20px;"></i></a>
+                                <a download="OriginalDocs" href="{{ asset('/projectDocuments/') }}<?php echo "/".$model->document_name; ?>" class="btn btn-warning btn-xs" title="Orginal Document Download" id="{{$model->id}}"><i class="las la-download" style="">Orginal Document</i></a>
                                 <a target="_blank" class="btn btn-success btn-xs actionDocs" title="Conversion Document Download" id="{{$model->id}}"><i class="las la-download"></i></a></td>
                             </tr>
                             @endforeach
@@ -432,8 +435,8 @@
                     @foreach($milestoneDatas as $milestoneData)
                     <tr>
                         <td>{{$milestoneData->milestone}}</td>
-                        <td>{{$milestoneData->mile_start_date}}</td>
-                        <td>{{$milestoneData->mile_end_date}}</td>
+                        <td>{{Carbon::parse($milestoneData->mile_start_date)->format('d-m-Y')}}</td>
+                        <td>{{Carbon::parse($milestoneData->mile_end_date)->format('d-m-Y')}}</td>
                         <td>{{$milestoneData->levels_to_be_crossed}}</td>
                     </tr>
                     @endforeach

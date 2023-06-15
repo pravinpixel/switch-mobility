@@ -55,6 +55,7 @@
 
 						<!--end:Menu item-->
 						<!--begin:Menu item-->
+						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('department-view')||auth()->user()->can('designation-view')||auth()->user()->can('document-type-view')||auth()->user()->can('employee-view')||auth()->user()->can('workflow-view'))
 						<div class="menu-item pt-5">
 							<!--begin:Menu content-->
 							<div class="menu-content">
@@ -63,7 +64,7 @@
 							<!--end:Menu content-->
 						</div>
 						<!--end:Menu item-->
-
+						@endif
 
 						<!--begin:Menu item-->
 						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('department-view'))
@@ -157,6 +158,7 @@
 						<!--end:Menu item-->
 
 						<!--begin:Menu item-->
+						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('project-view'))
 						<div class="menu-item pt-5">
 							<!--begin:Menu content-->
 							<div class="menu-content">
@@ -165,8 +167,8 @@
 							<!--end:Menu content-->
 						</div>
 						<!--end:Menu item-->
-
-						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('project-view'))
+						@endif
+						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('project-view')||auth()->user()->can('document-listing-view')||auth()->user()->can('approval-listing-view'))
 						<!--begin:Menu item-->
 						<div class="menu-item">
 							<!--begin:Menu link-->
@@ -202,7 +204,7 @@
 						<!--end:Menu item-->
 						@endif
 
-						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('document-listing-view'))
+						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('approval-listing-view'))
 						<!--begin:Menu item-->
 						<div class="menu-item">
 							<!--begin:Menu link-->
@@ -220,7 +222,7 @@
 						@endif
 						<!--end:Menu item-->
 
-
+						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('role-view'))
 						<!--begin:Menu item-->
 						<div class="menu-item pt-5">
 							<!--begin:Menu content-->
@@ -230,8 +232,9 @@
 							<!--end:Menu content-->
 						</div>
 						<!--end:Menu item-->
+						@endif
 
-						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('role-view'))
+						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('role-view')||auth()->user()->can('user-view'))
 						<div class="menu-item">
 							<!--begin:Menu link-->
 							<a class="menu-link {{request()->is('roles')?'active' :''}}" href="{{url('roles')}}">
@@ -264,6 +267,7 @@
 						<!--end:Menu item-->
 						@endif
 						<!--begin:Menu item-->
+						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('userwise-report')||auth()->user()->can('documentwise-report')||auth()->user()->can('datewise-report')||auth()->user()->can('projectwise-report'))
 						<div class="menu-item pt-5">
 							<!--begin:Menu content-->
 							<div class="menu-content">
@@ -272,7 +276,7 @@
 							<!--end:Menu content-->
 						</div>
 						<!--end:Menu item-->
-
+						@endif
 						@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('datewise-report'))
 						<div class="menu-item">
 							<!--begin:Menu link-->

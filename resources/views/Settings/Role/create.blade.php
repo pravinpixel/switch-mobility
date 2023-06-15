@@ -301,6 +301,16 @@
                                                 </tr>
                                                 <tr>
                                                     <td>11</td>
+                                                    <td>Approval Listing</td>
+                                                    <td><input type="checkbox" name="permission[]" value="approval-listing-view" class='permission permisionCreate'></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>12</td>
                                                     <td>Datewise Report</td>
                                                     <td><input type="checkbox" name="permission[]" value="datewise-report" class='permission permisionCreate'></td>
                                                     <td></td>
@@ -310,7 +320,7 @@
                                                     <td></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>12</td>
+                                                    <td>13</td>
                                                     <td>Projectwise Report</td>
                                                     <td><input type="checkbox" name="permission[]" value="projectwise-report" class='permission permisionCreate'></td>
                                                     <td></td>
@@ -319,7 +329,7 @@
                                                     <td></td>
                                                     <td></td>
                                                 </tr> <tr>
-                                                    <td>13</td>
+                                                    <td>14</td>
                                                     <td>Documentwise Report</td>
                                                     <td><input type="checkbox" name="permission[]" value="documentwise-report" class='permission permisionCreate'></td>
                                                     <td></td>
@@ -328,7 +338,7 @@
                                                     <td></td>
                                                     <td></td>
                                                 </tr> <tr>
-                                                    <td>14</td>
+                                                    <td>15</td>
                                                     <td>Userwise Report</td>
                                                     <td><input type="checkbox" name="permission[]" value="userwise-report" class='permission permisionCreate'></td>
                                                     <td></td>

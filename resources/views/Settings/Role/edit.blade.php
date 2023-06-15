@@ -319,6 +319,16 @@
                                                 </tr>
                                                 <tr>
                                                     <td>11</td>
+                                                    <td>Approval Listing</td>
+                                                    <td><input type="checkbox" name="permission[]" value="approval-listing-view" class='permission permissionEdit' <?php echo (in_array("approval-listing-view", $allroles) ? "checked" : ''); ?>></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>12</td>
                                                     <td>Datewise Report</td>
                                                     <td><input type="checkbox" name="permission[]" value="datewise-report" class='permission permissionEdit' <?php echo (in_array("datewise-report", $allroles) ? "checked" : ''); ?>></td>
                                                     <td></td>
@@ -328,7 +338,7 @@
                                                     <td></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>12</td>
+                                                    <td>13</td>
                                                     <td>Projectwise Report</td>
                                                     <td><input type="checkbox" name="permission[]" value="projectwise-report" class='permission permissionEdit' <?php echo (in_array("projectwise-report", $allroles) ? "checked" : ''); ?>></td>
                                                     <td></td>
@@ -338,7 +348,7 @@
                                                     <td></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>13</td>
+                                                    <td>14</td>
                                                     <td>Documentwise Report</td>
                                                     <td><input type="checkbox" name="permission[]" value="documentwise-report" class='permission permissionEdit' <?php echo (in_array("documentwise-report", $allroles) ? "checked" : ''); ?>></td>
                                                     <td></td>
@@ -348,7 +358,7 @@
                                                     <td></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>14</td>
+                                                    <td>15</td>
                                                     <td>Userwise Report</td>
                                                     <td><input type="checkbox" name="permission[]" value="userwise-report" class='permission permissionEdit' <?php echo (in_array("userwise-report", $allroles) ? "checked" : ''); ?>></td>
                                                     <td></td>
