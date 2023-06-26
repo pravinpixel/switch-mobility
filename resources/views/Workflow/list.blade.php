@@ -57,7 +57,7 @@
                         {{ session('error') }}
                     </div>
                     @endif
-                    <div class="card-header border-0 pt-6">
+                    <div class="card-header border-0 pt-6 add-button-datatable">
 
                         <div class="card-title">
 
@@ -149,7 +149,7 @@
                             <thead>
                                 <!--begin::Table row-->
                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                                    <th class="min-w-125px">S.no</th>
+                                 
                                     <th class="min-w-125px">Work Flow Name </th>
                                     <th class="min-w-125px">Work Flow Code </th>
                                     <th class="min-w-125px">Levels</th>
@@ -166,7 +166,7 @@
                                 <!--begin::Table row-->
                                 @foreach($workflow as $key=>$d)
                                 <tr>
-                                    <td>{{$key+1}}</td>
+                                 
                                     <td>{{$d['workflow_name']}}</td>
                                     <td>{{$d['workflow_code']}}</td>
                                     <td>{{$d['total_levels']}}</td>

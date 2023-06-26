@@ -99,7 +99,7 @@
                                     <label class="required fs-6 fw-semibold mb-2">Workflow Name</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="text" class="form-control form-control-solid" name="workflow_name" autocomplete="off" placeholder="Enter Workflow Name" value="{{$modelWorkflow->workflow_name}}">
+                                    <input type="text" class="form-control form-control-solid" readonly name="workflow_name" autocomplete="off" placeholder="Enter Workflow Name" value="{{$modelWorkflow->workflow_name}}">
 
                                     <!--end::Input-->
                                 </div>

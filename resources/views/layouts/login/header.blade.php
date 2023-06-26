@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Login</title>
+    <title>Online Approval System</title>
     <meta charset="utf-8" />
     <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
     <link rel="shortcut icon" href="assets/media/logos/limage.png" />

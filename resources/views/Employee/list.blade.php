@@ -117,11 +117,11 @@
                                 <!--begin::Table row-->
                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
 
-                                    <th class="min-w-125px">Name</th>
-                                    <th class="min-w-125px">SAP-ID</th>
-                                    <th class="min-w-125px">Mobile</th>
-                                    <th class="min-w-125px">Department</th>
-                                    <th class="min-w-125px">Designation</th>
+                                    <th class="min-w-50px">Name</th>
+                                    <th class="min-w-50px">SAP-ID</th>
+                                    <th class="min-w-50px">Mobile</th>
+                                    <th class="min-w-50px">Department</th>
+                                    <th class="min-w-50-px">Designation</th>
                                     <th class="min-w-50px">Status</th>
 
                                     <th class="text-center min-w-125px">Actions</th>
@@ -146,21 +146,22 @@
                                     } ?>
 
                                     <td class="">
-                                        <!--begin:: Avatar -->
-                                        <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                            <a href="javascript:void(0);">
-                                                <div class="symbol-label">
-                                                    <img src="{{ asset('images/Employee/' . $pImage) }}" alt="" width="50" height="50" class="w-100" />
-                                                </div>
-                                            </a>
+                                        <div class="d-flex align-items-center flex-grow-1">
+                                            <!--begin::Avatar-->
+                                            <div class="symbol symbol-45px me-5">
+                                                <img src="{{ asset('images/Employee/' . $pImage) }}" alt="">     
+                                            </div>
+                                            <!--end::Avatar-->
+                            
+                                            <!--begin::Info-->
+                                            <div class="d-flex flex-column">
+                                                <a href="javascript:void(0);" class="text-gray-900 text-hover-primary fs-6 fw-bold"><?php echo $d->first_name . ' ' . $d->last_name; ?></a>
+                            
+                                                <span class="text-gray-400 fw-bold">Email:{{ $d->email }}</span>
+                                            </div>
+                                            <!--end::Info-->
                                         </div>
-                                        <!--end::Avatar-->
-                                        <!--begin::User details-->
-                                        <div class="d-flex flex-column">
-                                            <a href="javascript:void(0);" class="text-gray-800 text-hover-primary mb-1"><?php echo $d->first_name . ' ' . $d->last_name; ?></a>
-                                            <span>Email:{{ $d->email }}</span>
-                                        </div>
-                                        <!--begin::User details-->
+
                                     </td>
                                     <td>{{ $d->sap_id }}</td>
                                     <td>{{ $d->mobile }}</td>

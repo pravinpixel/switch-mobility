@@ -331,7 +331,7 @@ use Carbon\Carbon;
             </div>
             <div class="col-md-2">
                 <label> </label> <label> </label>
-                <a href="{{url('doclisting')}}" class="btn switchPrimaryBtn btn-sm" style="margin-right:-850px">Back</a>
+                <a href="{{url('doclisting')}}" class="btn switchPrimaryBtn btn-sm mt-4" style="margin-right:-850px">Back</a>
             </div>
         </div>
         <div class="row top-tap">
@@ -411,7 +411,8 @@ use Carbon\Carbon;
     </div>
     </div>
     <button class="btn switchPrimaryBtn float-right-btn float-open-btn">
-        MileStone
+        <span class="r-90"> MileStone</span>
+       
     </button>
     <div class="card shadow-sm right-card right-card-close p-0 overflow-hidden">
         <div class="card-body milstoneBody p-0">
@@ -440,19 +441,28 @@ use Carbon\Carbon;
     <style>
         .float-right-btn {
             position: fixed;
-
+            right:20px;
             top: 50%;
             transform: translateY(-50%);
-            height: 40px;
-            rotate: -90deg;
+            width: 40px;
+            height: 100px;
+            display: flex;
+    justify-content: center;
+    align-items: center;
+          
         }
+.r-90{
+    position: relative;
 
+    display: block;
+    rotate: -90deg;
+}
         .float-open-btn {
-            right: -40px;
+            right: 10px;
         }
 
         .float-close-btn {
-            right: 364px;
+            right: 424px;
         }
 
         .right-card {
@@ -608,7 +618,7 @@ use Carbon\Carbon;
                         //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
                         //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
                         //     newDate = day + '-' + month + '-' + yr;
-                        $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<p class="due_date_' + level + '"></p></div><div class="col-md-2">Priority:<p class="priority_' + level + '"></p></div><div class="docsPart"><hr><div style="text-align:left;font-weight:bold;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div style="text-align:left;font-weight:bold;">&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div><div class="emptyDocsPart" style="display:none"><hr><p>No Documents is assigned For appproval!</p></div></div></div>');
+                        $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<p class="due_date_' + level + '"></p></div><div class="col-md-2">Priority:<p class="priority_' + level + '"></p></div><div class="docsPart"><hr><div style="text-align:left;font-weight:bold;margin-left:10px;margin-bottom:10px;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div style="text-align:left;font-weight:bold;margin-left:10px;margin-top:20px;">&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div><div class="emptyDocsPart" style="display:none"><hr><p>No Documents is assigned For appproval!</p></div></div></div>');
                         //if (data.length > 0) {
 
                         $(".image_append" + level).empty();
@@ -715,13 +725,15 @@ use Carbon\Carbon;
                                         var statusColour = "warning";
                                         if (currentStatusId == 2) {
                                             currentStatusData = "Declined";
+                                            statusColour = "danger";
                                         } else if (currentStatusId == 3) {
                                             currentStatusData = "Change Request";
+                                            statusColour = "danger";
                                         } else if (currentStatusId == 4) {
                                             currentStatusData = "Approved";
                                             statusColour = "success";
                                         }
-
+console.log("statusColour"+statusColour);
                                         var docMainDetailArray = val.get_doc_detail;
 
 
@@ -737,7 +749,7 @@ use Carbon\Carbon;
                                         versionMainDocDiv += '<div class="accordion " style="margin:auto;width:98%;" id="accordionExample' + key + '">';
                                         versionMainDocDiv += '<div class="card p-0"> <div class=" border-0" id="heading' + key + '">';
                                         versionMainDocDiv += '<h5 class="mb-0 w-100">';
-                                        versionMainDocDiv += '<button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold;padding-left:10px;">' + currentFileName + '</h3> <p class="text-right mainlevelStatus-' + level + "-" + key + '"></p> <p class="btn btn-' + statusColour + ' status-accordion" style="margin-right:40px;">' + currentStatusData + '</p></button>';
+                                        versionMainDocDiv += '<button class="btn  btn-link  p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;width:99%;" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold;padding-left:10px;">' + currentFileName + '</h3> <p class="text-right mainlevelStatus-' + level + "-" + key + '"></p> <p class="btn btn-' + statusColour + ' status-accordion" style="margin-right:40px;">' + currentStatusData + '</p></button>';
                                         versionMainDocDiv += '</h5>';
                                         versionMainDocDiv += '</div>';
                                         versionMainDocDiv += '<div id="collapse' + key + '" class="collapse fade" aria-labelledby="heading' + key + '" data-parent="#accordionExample' + key + '">';
@@ -808,11 +820,11 @@ use Carbon\Carbon;
                                                 // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
                                                 if (docMainDetailArray[i].status != 4 || showLastLevelBtn) {
                                                     if (ApproverExactLevel || isSuperAdmin) {
-                                                        versionMainDocDiv += '<a class="btn switchPrimaryBtn btn-sm" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.doc_id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
+                                                        versionMainDocDiv += '<a class="btn switchPrimaryBtn btn-sm" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.doc_id + ')" title="Change Status"> <i class="las la-toggle-on"></i> Change Status</a> &nbsp;';
                                                     }
                                                 }
                                             }
-                                            versionMainDocDiv += '<a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+                                            versionMainDocDiv += '<a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i> Download</a>';
                                             // versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionMainDocDiv += '</button>';
                                             versionMainDocDiv += '</td>';
@@ -844,7 +856,7 @@ use Carbon\Carbon;
                                     $.each(data.aux_docs, function(key, val) {
                                         versionAuxDocDiv1 += '<tr>';
                                         versionAuxDocDiv1 += '<td>' + val.original_name + '</td>';
-                                        versionAuxDocDiv1 += '<td><a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + val.document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a></td>';
+                                        versionAuxDocDiv1 += '<td><a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + val.document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a> Download</td>';
                                         versionAuxDocDiv1 += '</tr>';
                                     });
                                     versionAuxDocDiv1 += ' </table>';
@@ -1038,9 +1050,10 @@ use Carbon\Carbon;
 
                 data: formData,
                 success: function(result) {
-                    console.log(result.status);
+                    console.log(result);
+                   
                     var ProjectId1 = "{{ $details->id }}";
-                    if (result.status == 'success') {
+                    if (result.staus == 'Success') {
                         $('.store').attr("data-kt-indicator", "off");
                         var levelId = $('.statuslevelId').val();
                         closeStatusModel();
@@ -1083,6 +1096,7 @@ use Carbon\Carbon;
                 data: formData,
                 success: function(result) {
                     console.log(result.status);
+                    return false;
                     var ProjectId1 = "{{ $details->id }}";
                     if (result.status == 'success') {
                         var levelId = $('.levelId').val();

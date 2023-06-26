@@ -50,14 +50,16 @@
 	<!--end::Javascript-->
 
 
-	<!-- <script>
-		$("button").click(function() {
+	 <script>
+		/* $("button").click(function() {
 			// alert($(this).children().hasClass("indicator-label"));
 			if ($(this).children().hasClass("indicator-label")) {
 				$(this).attr("data-kt-indicator", "on");
 			}
-		});
-	</script> -->
+		}); */
+		var title = $('a.active .menu-title').text();
+		$("title").html(title +" | Switch Mobility | Online Approval System");
+	</script> 
 
 	</body>
 	<!--end::Body-->

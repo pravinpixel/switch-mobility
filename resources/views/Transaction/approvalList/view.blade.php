@@ -328,7 +328,7 @@ use Carbon\Carbon;
     </div>
     <div class="col-md-2">
         <label> </label> <label> </label>
-        <a href="{{url('approvalListIndex')}}" class="btn switchPrimaryBtn btn-sm" style="margin-right:-850px">Back</a>
+        <a href="{{url('approvalListIndex')}}" class="btn switchPrimaryBtn btn-sm mt-3" style="margin-right:-850px">Back</a>
     </div>
 </div>
 

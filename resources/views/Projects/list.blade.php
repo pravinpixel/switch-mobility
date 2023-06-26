@@ -245,13 +245,63 @@
                         {{ session('error') }}
                     </div>
                     @endif
-                    <div class="card-header border-0 pt-6">
+                    <div class="card-header border-0 pt-6 ">
 
-                        <div class="card-title">
+                        <form method="post">
+                            @csrf
+                            <!--begin::Row-->
+                            <div class="row">
+                                <!--begin::Col-->
+                                <div class="col-md-3">
+                                    <label class="fs-6 form-label fw-bold text-dark ">Project Code / Name </label>
+                                    <select class="form-select form-select-solid mainFilters projectId" name="project_code_name" data-kt-select2="true" data-placeholder="Project Code / Name" data-allow-clear="true" id="projectCode">
+                                        <option></option>
+                                        @foreach ($projects_all as $project)
+                                        <option value="{{ $project['id'] }}">
+                                            {{ $project['project_name'] }}( {{ $project['project_code'] }})
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <!--begin::Col-->
+                                <div class="col-md-2">
+                                    <label class="fs-6 form-label fw-bold text-dark "> Initiator </label>
+                                    <select class="form-select form-select-solid mainFilters initiatorId " name="initiater" data-kt-select2="true" data-placeholder="Select Initiator" data-allow-clear="true" id="initiator">
+                                        <option></option>
+                                        @foreach ($initiaters as $employee)
+                                        <?php
 
-                        </div>
+                                        $initiater = $employee['first_name'] . " " . $employee['middle_name'] . " " . $employee['last_name'];
 
-                        <div class="card-toolbar">
+                                        ?>
+                                        <option value="{{ $employee['id']}}">
+                                            {{ $initiater }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <label class="fs-6 form-label fw-bold text-dark">Start Date</label>
+                                    <input type="date" class="form-control dateWiseFilter startDate" id="startDate" name="start_date" placeholder="Enter Start Date">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label class="fs-6 form-label fw-bold text-dark">End Date</label>
+                                    <input type="date" class="form-control dateWiseFilter endDate" id="endDate" name="end_date" placeholder="Enter End Date">
+                                </div>
+                                <div class="col-md-1 SearchFilter">
+                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                    <span class="btn btn-success">Search</span>
+                                </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div class="col-md-1">
+                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                    <span class="btn btn-warning " onclick="reset()">Reset</span>
+                                </div>
+                            </div>
+                        </form>
+
+
+                        <div class="card-toolbar add-button-datatable">
                             <!--begin::Toolbar-->
                             <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
                                 <!--begin::Filter-->
@@ -331,12 +381,12 @@
                             <thead>
                                 <!--begin::Table row-->
                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                                    <th class="min-w-125px">S.no</th>
-                                    <th class="min-w-125px">Project Code</th>
-                                    <th class="min-w-125px">Project Name</th>
-                                    <th class="min-w-125px">Start Date</th>
-                                    <th class="min-w-125px">End Date</th>
-                                    <th class="min-w-125px">Project Initiator</th>
+
+                                    <th class="min-w-50px">Project Code</th>
+                                    <th class="min-w-50px">Project Name</th>
+                                    <th class="min-w-50px">Start Date</th>
+                                    <th class="min-w-50px">End Date</th>
+                                    <th class="min-w-50px">Project Initiator</th>
                                     <!-- <th class="min-w-125px">Current Milestone</th>
                                     <th class="min-w-125px">Milestone Start Date</th>
                                     <th class="min-w-125px">Milestone End Date</th> -->
@@ -349,15 +399,15 @@
                             <tbody class="text-gray-600 fw-semibold">
                                 <!--begin::Table row-->
                                 @foreach ($projects_all as $key => $d)
-                                <?php 
+                                <?php
                                 $employee = $d['employee'];
                                 $initiater = "";
-                                if($employee){
-                                    $initiater = $employee->first_name." ".$employee->middle_name." ".$employee->last_name;
+                                if ($employee) {
+                                    $initiater = $employee->first_name . " " . $employee->middle_name . " " . $employee->last_name;
                                 }
                                 ?>
                                 <tr>
-                                    <td>{{ $key + 1 }}</td>
+
                                     <td>{{ $d->project_code }}</td>
                                     <td>{{ $d->project_name }}</td>
                                     <td>{{ date('d-m-Y', strtotime($d->start_date)) }}</td>
@@ -370,13 +420,13 @@
                                             <!--begin::Edit-->
                                             @if (auth()->user()->is_super_admin == 1 ||auth()->user()->can('project-edit'))
 
-                                            <a  class="editProject"  style="display:inline;cursor: pointer;" id="{{ $d->id }}" title="Edit Project"><i class="fa-solid fa-pen" style="color:orange"></i></a>         
-                                            
+                                            <a class="editProject" style="display:inline;cursor: pointer;" id="{{ $d->id }}" title="Edit Project"><i class="fa-solid fa-pen" style="color:orange"></i></a>
+
                                             @endif
                                             @if (auth()->user()->is_super_admin == 1 || auth()->user()->can('project-delete'))
-                                            <div  onclick="delete_item(<?php echo $d->id; ?>);" style="display:inline;cursor: pointer; margin-left: 10px;" id="{{ $d->id }}" class="" title="Delete Project"><i class="fa-solid fa-trash" style="color:red"></i></div>                        
-                                           
-                                          
+                                            <div onclick="delete_item(<?php echo $d->id; ?>);" style="display:inline;cursor: pointer; margin-left: 10px;" id="{{ $d->id }}" class="" title="Delete Project"><i class="fa-solid fa-trash" style="color:red"></i></div>
+
+
                                             @endif
 
                                             <!--end::More-->
@@ -399,47 +449,154 @@
 
 
 <script>
-    $(document).on('blur', '.project_code', function() {
-        console.log("$(this).val()");
+    $(document).ready(function() {
+        var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
+        var isAuthorityEdit = "{{ auth()->user()->can('project-edit') }}";
+        var isAuthorityDelete = "{{ auth()->user()->can('project-delete') }}";
+
+    });
+    $(document).on('change click', '.mainFilters', function() {
+
+        $('.mainFilters').not($(this)).val('').trigger('change');
+        $('.dateWiseFilter').val('');
+    });
+    $(document).on('change click', '.dateWiseFilter', function() {
+
+        $('.mainFilters').not($(this)).val('').trigger('change');
+        var startDateInput = document.getElementById('startDate');
+        var endDateInput = document.getElementById('endDate');
+        // Get the selected dates from the input fields
+        var startDate = new Date(startDateInput.value);
+        var endDate = new Date(endDateInput.value);
+
+        // Check if the end date is before the start date
+        if (endDate < startDate) {
+            $('.endDate').val('');
+        }
+
+    });
+
+    function reset() {
+
+       
+        location.reload();
+        // $("#service_table").load(location.href + " #service_table").abort();
 
 
-        $.ajax({
-            url: "{{ route('projectCodeValidation') }}",
-            type: 'ajax',
-            method: 'post',
-            data: {
-                "_token": "{{ csrf_token() }}",
-                code: $('.project_code').val(),
-                id: $('.project_id').val(),
-            },
-            success: function(data) {
-                console.log(data);
+
+    
+    }
+    $(document).on('click', '.SearchFilter', function() {
+        var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
+        var isAuthorityEdit = "{{ auth()->user()->can('project-edit') }}";
+        var isAuthorityDelete = "{{ auth()->user()->can('project-delete') }}";
+        
+        console.log("well");
+        var table = $('#service_table').DataTable();
+        var projectId = $('.projectId').val();
+        var initiatorId = $('.initiatorId').val();
+        var startDate = $('.startDate').val();
+        var endDate = $('.endDate').val();
+        var nextpart = false;
+        var paramName = "";
+        var paramData = "";
+        if (projectId) {
+            paramName = "projectId";
+            nextpart = true;
+        } else if (initiatorId) {
+
+            paramName = "initiatorId";
+            nextpart = true;
+        } else if (startDate && endDate) {
+
+            paramName = "dates";
+            nextpart = true;
+
+        } else {
+
+            return false;
+        }
+
+        if (nextpart == true) {
+            $.ajax({
+                url: "{{ route('projectListFilters') }}",
+                type: 'ajax',
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    projectId: projectId,
+                    initiatorId: initiatorId,
+                    startDate: startDate,
+                    endDate: endDate,
+                    paramName: paramName
+                },
+                success: function(data) {
+                    console.log(data);
+                    table.clear().draw();
 
 
-                var alertName = 'projectCodeAlert';
-                console.log(data.response);
-                console.log(alertName);
+                    $.each(data.datas, function(key, val) {
 
-                if (data.response == false) {
-                    $('#submitBtn').attr('disabled', true);
+                        var id = val.id;
+                        var projectCode = val.project_code;
+                        var projectName = val.project_name;
 
-                    document.getElementById(alertName).style.display = "block";
-                    document.getElementById(alertName).style.color = "red";
-                    document.getElementById(alertName).innerHTML = 'Code Is Exists*';
-                    return false;
+                        var start_date = val.start_date;
+                        var end_date = val.end_date;
+                        var employeeModel = val.employee;
+                        var initiatorName = "";
+                        if (employeeModel) {
+
+                            var FirstName = (employeeModel.first_name) ? employeeModel.first_name : '';
+                            var MidName = (employeeModel.middle_name) ? employeeModel.middle_name : '';
+                            var LastName = (employeeModel.last_name) ? employeeModel.last_name : '';
+                            initiatorName = FirstName + "" + MidName + " " + LastName;
+
+                        }
+                        var editUrl = "";
+                        var deleteBtn = "";
+
+                        if (isSuperAdmin || isAuthorityEdit || isAuthorityDelete) {
+                            var editUrl = '<a class="editProject" style="display:inline;cursor: pointer;" id="' + id + '" title="Edit Project"><i class="fa-solid fa-pen" style="color:orange"></i></a>';
+                        }
+                        if (isSuperAdmin || isAuthorityEdit || isAuthorityDelete) {
+                            var deleteBtn = '<div onclick="delete_item(' + id + ');" style="display:inline;cursor: pointer; margin-left: 10px;" id="' + id + '" class="" title="Delete Project"><i class="fa-solid fa-trash" style="color:red"></i></div>';
+
+                        }
+
+                        // var editurl = '{{ route("employees.edit", ":id") }}';
+                        // editurl = editurl.replace(':id', id);
+                        // var editBtn = (
+                        //     '<a href="' + editurl + '" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i></a>'
+                        // );
+                        // var deleteBtn = (
+                        //     '<div  onclick="delete_item(' + id + ');" style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i></div>'
+                        // );
+
+
+                        var Action = (editUrl +
+                            deleteBtn
+                        );
+                        // var status = val.is_active;
+                        // var person = pic + "<br>" + firstName + " " + lastName +
+                        //     "<br>" + "Email:" + email;
+                        // var result = (
+                        //     '<label class="switch"><input type="checkbox" data-id="' +
+                        //     id + '" class="status" ' + activeStatus +
+                        //     '>  <span class="slider round"></span></label>');
+
+                        table.row.add([projectCode, projectName, start_date, end_date, initiatorName, Action]).draw();
+
+                    });
+
+
+                },
+                error: function() {
+                    $("#otp_error").text("Update Error");
                 }
-                document.getElementById(alertName).style.display = "none";
-                $('#submitBtn').attr('disabled', false);
-                return true;
 
-
-            },
-            error: function() {
-                $("#otp_error").text("Update Error");
-            }
-
-        });
-
+            });
+        }
     });
     $(document).on('blur', '.project_name', function() {
         console.log("$(this).val()");
@@ -520,7 +677,6 @@
             });
         });
     });
- 
 </script>
 
 
@@ -570,6 +726,7 @@
         form.submit();
 
     });
+
     function set_min(start_date) {
         $('.end_date').attr('min', start_date);
     }
@@ -1261,7 +1418,7 @@
                         }
                     }
                 });
-               
+
             }
         });
     }

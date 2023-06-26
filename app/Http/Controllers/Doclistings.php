@@ -172,6 +172,7 @@ class Doclistings extends Controller
     }
     public function docListingSearch(Request $request)
     {
+
         $startDate = $request->start_date;
         $endDate = $request->end_date;
         $model = Project::select('projects.id', 'projects.id as projectId', 'projects.ticket_no', 'projects.project_code', 'projects.project_name', 'workflows.workflow_code', 'workflows.workflow_name', 'employees.first_name', 'departments.name as deptName');
@@ -210,6 +211,7 @@ class Doclistings extends Controller
 
         return response()->json($models);
     }
+
     public function search(Request $request)
     {
 
@@ -638,10 +640,9 @@ class Doclistings extends Controller
                     $updateOldDocDetail = $this->updateDocDetails($documentId, $level, $status, $remark, 1);
                     $updateDocFirstStage = $this->updateStage1Document($documentId, $level, $status);
                     $getMainDocs = projectDocument::where('id', $documentId)->first();
-                    if ($getMainDocs)
-                    {
+                    if ($getMainDocs) {
                         $getMainDocs->status = 4;
-                        $getMainDocs->save();                    
+                        $getMainDocs->save();
                     }
                     $sendMailfinalApproveProject = $this->finalApproveProject($projectId);
                 }
@@ -1373,4 +1374,81 @@ class Doclistings extends Controller
         }
         return $model;
     }
+    public function getProjectByWorkflow(Request $request)
+    {
+        $wfId = $request->workflow;
+
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+
+
+        $models = Project::with('employee', 'employee.department', 'projectEmployees', 'workflow');
+        if ($empId) {
+            $models->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
+        }
+        $models->whereHas('workflow', function ($q1) use ($wfId) {
+
+            $q1->where('workflow_id', '=', $wfId);
+        });
+        $models->whereNull('deleted_at');
+        $models1 = $models->get();
+
+        $entities = collect($models1)->map(function ($model) {
+
+            $ticket_no = $model->ticket_no;
+            $projectName = $model->project_name . ' & ' . $model->project_code;
+            $workflowModel = $model->workflow;
+            $workflowName = $workflowModel->workflow_name . ' & ' . $workflowModel->workflow_code;
+            $employeeModel = $model->employee;
+            $initiaterName = $employeeModel->first_name . ' ' . $employeeModel->middle_name . ' ' . $employeeModel->last_name;
+            $departmentModel = $model->department;
+            $department = $departmentModel->name;
+
+            $response = ['projectId'=>$model->id,'department'=>$department,'ticketNo' => $ticket_no, 'projectName' => $projectName, 'workflowName' => $workflowName, 'initiaterName' => $initiaterName];
+            return $response;
+        });
+        return response()->json(['datas' => $entities]);
+    }
+
+    public function getProjectById(Request $request)
+    {
+        $projectId = $request->projectId;
+
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+
+
+        $models = Project::with('employee', 'employee.department', 'projectEmployees', 'workflow');
+        if ($empId) {
+            $models->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
+        }
+        $models->where('id', '=', $projectId);
+        $models->whereNull('deleted_at');
+        $models1 = $models->get();
+
+        $entities = collect($models1)->map(function ($model) {
+
+            $ticket_no = $model->ticket_no;
+            $projectName = $model->project_name . ' & ' . $model->project_code;
+            $workflowModel = $model->workflow;
+            $workflowName = $workflowModel->workflow_name . ' & ' . $workflowModel->workflow_code;
+            $employeeModel = $model->employee;
+            $initiaterName = $employeeModel->first_name . ' ' . $employeeModel->middle_name . ' ' . $employeeModel->last_name;
+            $departmentModel = $model->department;
+            $department = $departmentModel->name;
+
+            $response = ['projectId'=>$model->id,'department'=>$department,'ticketNo' => $ticket_no, 'projectName' => $projectName, 'workflowName' => $workflowName, 'initiaterName' => $initiaterName];
+            return $response;
+        });
+        
+        return response()->json(['datas' => $entities]);
+    }
+
+
 }

@@ -114,7 +114,7 @@
                         {{ session('error') }}
                     </div>
                     @endif
-                    <div class="card-header border-0 pt-6">
+                    <div class="card-header border-0 pt-6 add-button-datatable">
 
                         <div class="card-title">
 
@@ -127,15 +127,18 @@
 
                                 <!--begin::Add user-->
                                 @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('role-create'))
-                                <a href="{{url('roles/create')}}" class="btn switchPrimaryBtn ">
-                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
-                                    <span class="svg-icon svg-icon-2">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor" />
-                                            <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->Add</a>@endif
+                                <a href="{{url('roles/create')}}" >
+                                 <button type="button" class="btn switchPrimaryBtn ">
+  <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
+  <span class="svg-icon svg-icon-2">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor" />
+        <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
+    </svg>
+</span>
+<!--end::Svg Icon-->Add
+                                 </button>
+                                  </a>@endif
                                 <!--end::Add user-->
                             </div>
 
@@ -157,7 +160,7 @@
                             <thead>
                                 <!--begin::Table row-->
                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                                    <th class="min-w-125px">S.no</th>
+                                
                                     <th class="min-w-125px">Name</th>
                                     <th class="min-w-125px">Auth Type</th>
                                     <th class="min-w-125px">Actions</th>
@@ -174,9 +177,7 @@
 
                                     <!--end::Checkbox-->
                                     <!--begin::User=-->
-                                    <td class="">
-                                        {{$key+1}}
-                                    </td>
+                                
 
                                     <td>{{$d['name']}}</td>
                                     @if($d['authority_type'] == 1)

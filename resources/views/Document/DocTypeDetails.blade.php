@@ -135,22 +135,7 @@
                                 <!--end::Col-->
                             </div>
                             <br>
-                            <div style="display:none">
-                            <table class="table custom_table table-info"  id="custom_table">
-                                <thead>
-                                    <tr>
-                                        <th>A</th>
-                                        <th>B</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>2</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            </div>
+                          
                             <div class="row g-9 mb-7 work_levels">
                                 <table class="table custom_table" id="custom_table">
                                     <thead style="width:100%!important">
@@ -211,18 +196,49 @@
         $('.reset').css('display', 'none');
     }
     $(document).on('input', '.name', function() {
+        var id = $('.id').val();
         if ($(this).val()) {
-            $('.submitBtn').removeAttr('disabled');
-        } else {
-            $('.submitBtn').attr('disabled', 'true');
+
+            sampleValidation();
         }
     });
     $(document).on('change', '.workflow_id', function() {
+        sampleValidation();
         if ($(this).val()) {
             $('.submitBtn').removeAttr('disabled');
             document.getElementById('workflowAlert').style.display = "none";
         }
     });
+
+    function sampleValidation() {
+        
+        console.log('well');
+        $.ajax({
+            url: "{{url('documentTypeValidation')}}",
+            type: 'ajax',
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                name: $('.name').val(),
+                id: $('.id').val(),
+            },
+            success: function(result) {
+
+                var alertName = 'nameAlert';
+                if (result.response == false) {
+
+                    document.getElementById(alertName).style.display = "block";
+                    document.getElementById(alertName).style.color = "red";
+                    document.getElementById(alertName).innerHTML = 'Document Type is Exists*';
+                    $('.submitBtn').attr('disabled', 'true');
+                    return false;
+                }
+                $('.submitBtn').removeAttr('disabled');
+                document.getElementById(alertName).style.display = "none";
+
+            }
+        });
+    }
 
     function get_work_flow_levels(workflow_id) {
         $.ajax({

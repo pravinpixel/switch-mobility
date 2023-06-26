@@ -115,8 +115,8 @@
                                     <label class="required fs-6 fw-semibold mb-2">Workflow Code</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="text" class="form-control form-control-solid wfCode"  placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" disabled />
-                                    <input type="hidden" class="form-control form-control-solid wfCode"  placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" /> <!--end::Input-->
+                                    <input type="text" class="form-control form-control-solid wfCode" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" disabled />
+                                    <input type="hidden" class="form-control form-control-solid wfCode" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" /> <!--end::Input-->
                                     <p id="wfCodeAlert" class="notifyAlert"></p>
                                 </div>
                                 <!--end::Col-->
@@ -127,7 +127,7 @@
                                     <!--end::Label-->
                                     <!--begin::Input-->
                                     <input type="text" class="form-control form-control-solid workflow_name" name="workflow_name" autocomplete="off" placeholder="Enter Workflow Name" required>
-
+                                    <p id="wfNameAlert" class="notifyAlert"></p>
                                     <!--end::Input-->
                                 </div>
                                 <div class="col-md-3 fv-row">
@@ -187,7 +187,7 @@
                                                                 <div class="col-md-6 fv-row">
                                                                     <select class="form-select mb-2 designation" levelCheck="{{$a + 1}}" required data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="fapprover_designation{{$a+1}}[]">
                                                                         @foreach($employeeDatas as $employeeData)
-                                                                      
+
                                                                         <option value="{{$employeeData['id']}}">{{$employeeData['data']}}</option>
                                                                         @endforeach
                                                                     </select>
@@ -238,7 +238,7 @@
                                                 <div data-repeater-item="" class="form-group d-flex flex-wrap align-items-center justify-content-center gap-5">
                                                     <!--begin::Select2-->
                                                     <div class="col-md-4">
-                                                        <select class="form-select product_option1"  name="levels[]" data-placeholder="Select a variation" data-kt-ecommerce-catalog-add-product="product_option">
+                                                        <select class="form-select product_option1" name="levels[]" data-placeholder="Select a variation" data-kt-ecommerce-catalog-add-product="product_option">
                                                             <option value="" disabled selected>Select Level</option>
                                                             @for($i=1;$i<12;$i++) <option value="{{$i}}">Level {{$i}}</option>
                                                                 @endfor
@@ -340,35 +340,35 @@
 </script>
 <script>
     function resetForm() {
-        
+
         console.log("wrt");
         console.log($(".product_option1 option:disabled"));
         // $("#department_form")[0].reset();
         $('.wfCode').val('');
         $('.workflow_name').val('');
-     
+
         let remo = $('.partial-input-container').not(':first');
         $.each(remo, function(indexInArray, reo) {
             $(reo).remove();
             console.log($(reo));
         });
-        
+
         $(".partialWorkflow select option").removeAttr('selected');
 
         $(".partialWorkflow select option:first-child").attr('selected', 'true');
         $(".partialWorkflow select option").show();
         $(".removeBtn").last().after(`<button type="button" data-repeater-create="" class="btn btn-sm btn-light-primary addLevel" > <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg--> <span class="svg-icon svg-icon-2"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11" y="18" width="12" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" /> <rect x="6" y="11" width="12" height="2" rx="1" fill="currentColor" /> </svg> </span> <!--end::Svg Icon-->Add Level</button>`);
         $(".removeBtn").last().remove();
-        $('.designation').attr("disabled",true);
+        $('.designation').attr("disabled", false);
         $('.designation').select2();
         $('.designation').val('').trigger('change');
-      
-        
+
+
 
     }
     $(document).ready(function() {
         // on form submit
-       
+
         $("#department_form1").on('submit', function() {
             // to each unchecked checkbox
             $(this).find('input[type=checkbox]:not(:checked)').prop('checked', true).val(0);
@@ -418,11 +418,11 @@
             $(".fullWorkflow select").removeAttr("required");
             $(".partialWorkflow select").attr("required", true);
 
-            console.log( $(".partialWorkflow select"));
+            console.log($(".partialWorkflow select"));
         } else {
             $(".partialWorkflow select").removeAttr("required");
-            $(".fullWorkflow select").attr("required",true);
-            
+            $(".fullWorkflow select").attr("required", true);
+
         }
         workFlowType($(this).val());
 
@@ -831,7 +831,7 @@
     }
 
     function RemoveFunction(e) {
-$(e).parent().parent().parent().parent().find('.designation').val('').trigger('change');
+        $(e).parent().parent().parent().parent().find('.designation').val('').trigger('change');
         $(e).parent().parent().parent().parent().remove();
 
         $(".Partial-input-container").first().find(".removeBtnsm").css("visibility", "hidden").css("pointer-events", "none");
@@ -954,11 +954,11 @@ $(e).parent().parent().parent().parent().find('.designation').val('').trigger('c
 
     function RemoveFunctionb(e) {
         if ($(e).parent().parent().parent().parent().length > 0) {
-  var $designation = $(e).parent().parent().parent().parent().find('.designation');
-  if ($designation.length > 0) {
-    $designation.val('').trigger('change');
-  }
-}
+            var $designation = $(e).parent().parent().parent().parent().find('.designation');
+            if ($designation.length > 0) {
+                $designation.val('').trigger('change');
+            }
+        }
         $(".removeBtn").last().after(`<button type="button" data-repeater-create="" class="btn btn-sm btn-light-primary addLevel" > <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg--> <span class="svg-icon svg-icon-2"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11" y="18" width="12" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" /> <rect x="6" y="11" width="12" height="2" rx="1" fill="currentColor" /> </svg> </span> <!--end::Svg Icon-->Add Level</button>`);
         $(".removeBtn").last().remove();
         $(e).parent().parent().parent().parent().remove();
@@ -1081,19 +1081,19 @@ $(e).parent().parent().parent().parent().find('.designation').val('').trigger('c
             }
         }
 
-      
+
     }
 
 
     function RemoveFunctionc(e) {
         if ($(e).parent().parent().parent().parent().length > 0) {
-  var $designation = $(e).parent().parent().parent().parent().find('.designation').not(':disabled');
+            var $designation = $(e).parent().parent().parent().parent().find('.designation').not(':disabled');
 
-  if ($designation.length > 0) {
-    
-    $designation.val('').trigger('change');
-  }
-}
+            if ($designation.length > 0) {
+
+                $designation.val('').trigger('change');
+            }
+        }
         $(".removeBtn").last().after(`<button type="button" data-repeater-create="" class="btn btn-sm btn-light-primary addLevel" > <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg--> <span class="svg-icon svg-icon-2"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect opacity="0.5" x="11" y="18" width="12" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" /> <rect x="6" y="11" width="12" height="2" rx="1" fill="currentColor" /> </svg> </span> <!--end::Svg Icon-->Add Level</button>`);
         $(".removeBtn").last().prev(".removeBtnsm").css("visibility", "visible").prop("disabled", false);
         $(".removeBtn").last().remove();
@@ -1225,19 +1225,35 @@ $(e).parent().parent().parent().parent().find('.designation').val('').trigger('c
             }
         }
     }
-    $(document).on('keyup', '.workflow_name', function() {
+    $(document).on('blur', '.workflow_name', function() {
         var wfname = $('.workflow_name').val();
-console.log("well");
-   $.ajax({
+        console.log("well");
+        $.ajax({
             url: "{{url('getWorkflowCodeFormat')}}",
             type: 'ajax',
             method: 'post',
             data: {
-                    "_token": "{{ csrf_token() }}",
-                    wfname: wfname,
-                    },
+                "_token": "{{ csrf_token() }}",
+                wfname: wfname,
+            },
             success: function(result) {
                 $('.wfCode').val("");
+                var alertName = "wfNameAlert";
+                if (result.status == "success") {
+
+                    $('.wfCode').val(result.data);
+                    document.getElementById(alertName).style.display = "none";
+                    $('#submitBtn').attr('disabled', false);
+                    return true;
+                } else {
+                    $('#submitBtn').attr('disabled', true);
+
+                    document.getElementById(alertName).style.display = "block";
+                    document.getElementById(alertName).style.color = "red";
+                    document.getElementById(alertName).innerHTML = 'Name Is Exists*';
+                    return false;
+                }
+
                 $('.wfCode').val(result);
             }
         });

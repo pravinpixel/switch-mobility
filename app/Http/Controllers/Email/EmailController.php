@@ -22,6 +22,8 @@ class EmailController extends Controller
 
     public function statusChange($projectId, $level, $status)
     {
+        $ccMailIds = $this->getPreviousLevelEmployees($projectId, $level);
+    
         Log::info('Email Controller> statusChange inside Function requests ' .  " projectId = " . $projectId . " level = " . $level . " status = " . $status);
         if ($status == 4) {
             $type = "Approved";
@@ -61,14 +63,14 @@ class EmailController extends Controller
         }
         Log::info('Email Controller> approverData ' . json_encode($approverData));
         try {
-            $mail = Mail::to($toMail)->bcc($bccMailIds)->send(new SendMail("statusChange", $subject, $name, $projectId, $projectName, $projectCode, $level, $type, $approverData, ''));
+            $mail = Mail::to($toMail)->bcc($bccMailIds)->cc($ccMailIds)->send(new SendMail("statusChange", $subject, $name, $projectId, $projectName, $projectCode, $level, $type, $approverData, ''));
             Log::info('Email Controller> Email Sended  ' . json_encode($mail));
 
             return true;
             // $mail = Mail::to($toMail)->cc($ccMail)->send(new SendMail($type,$title, $name,$projectId,$projectName, $projectCode,'','','',''));
         } catch (Exception $e) {
 
-          Log::info('Email Controller> mail mot sended catch ' . json_encode($e));
+            Log::info('Email Controller> mail mot sended catch ' . json_encode($e));
             return false;
         }
     }
@@ -100,8 +102,11 @@ class EmailController extends Controller
             return false;
         }
     }
+
     public function NewApprovalToApprover($projectId, $level)
     {
+
+
         Log::info('Emailconroller > NewApprovalToApprover projectId ' . $projectId);
         Log::info('Emailconroller > NewApprovalToApprover level ' . $level);
         $approverDatas = $this->getApproverMailByProjectIdAndLevel($projectId, $level);
@@ -122,20 +127,39 @@ class EmailController extends Controller
             $response = ['name' => $name, 'email' => $employeeModel->email];
             Log::info('Emailconroller > NewApprovalToApprover reponse' . json_encode($response));
             try {
-                
+
                 $mail = Mail::to($employeeModel->email)->bcc($bccMailIds)->send(new SendMail("newApprovalMail", $subject, $name, $projectId, $projectName, $projectCode, '', '', '', ''));
-              
+
                 Log::info('Emailconroller > NewApprovalToApproverEmail Sended successfullty reponse ' . json_encode($mail));
-                  return true;
+                return true;
                 // $mail = Mail::to($toMail)->cc($ccMail)->send(new SendMail($type,$title, $name,$projectId,$projectName, $projectCode,'','','',''));
             } catch (Exception $e) {
 
-                Log::info('Emailconroller > NewApprovalToApproverEmail Sended failed '. $e);
+                Log::info('Emailconroller > NewApprovalToApproverEmail Sended failed ' . $e);
                 return false;
             }
         }
     }
-
+    public function getPreviousLevelEmployees($projectId, $level)
+    {
+        Log::info('email getPreviousLevelEmployees projectId ' . $projectId);
+        Log::info('email getPreviousLevelEmployees level ' . $level);
+        $models =  ProjectEmployee::with('employee')
+            ->where('project_id', $projectId)
+            ->where('level', '<', $level)
+            ->where('type', 2)
+            ->get();
+        $mailIds = array();
+        foreach ($models as $model) {
+          $empModel = $model->employee;
+          $email = $empModel->email;
+         array_push($mailIds,$email);
+        }
+       
+        Log::info('    public function getPreviousLevelEmployees($projectId, $level)
+        return' . json_encode($mailIds));
+        return $mailIds;
+    }
     public function getApproverMailByProjectIdAndLevel($projectId, $level)
     {
         Log::info('email getApproverMailByProjectIdAndLevel projectId ' . $projectId);

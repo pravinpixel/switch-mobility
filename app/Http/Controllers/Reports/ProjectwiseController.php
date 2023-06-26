@@ -14,48 +14,48 @@ class ProjectwiseController extends Controller
 {
     public function index()
     {
-       // $models = Project::with('workflow', 'employee', 'employee.department')->whereNull('deleted_at')->get();
-       $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
-       $modeldatas = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+        // $models = Project::with('workflow', 'employee', 'employee.department')->whereNull('deleted_at')->get();
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+        $modeldatas = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
 
-      
-       if ($empId) {
-           $modeldatas->whereHas('projectEmployees', function ($q) use ($empId) {
-               if ($empId != "") {
-                   $q->where('employee_id', '=', $empId);
-               }
-           });
-       }
-       $modeldatas->whereNull('deleted_at');
-       $models= $modeldatas->get();
+
+        if ($empId) {
+            $modeldatas->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
+        }
+        $modeldatas->whereNull('deleted_at');
+        $models = $modeldatas->get();
 
         $departmentDatas = Department::whereNull('deleted_at')->get();
         $workflowDatas = Workflow::whereNull('deleted_at')->get();
         $entities = $this->ReportDataLooping($models);
         //dd($entities);
         $projectDatas = $models;
-        return view('Reports/ProjectwiseReport/list', compact(['entities','projectDatas', 'departmentDatas', 'workflowDatas']));
+        return view('Reports/ProjectwiseReport/list', compact(['entities', 'projectDatas', 'departmentDatas', 'workflowDatas']));
     }
     public function filterSearch(Request $request)
     {
-        $deptId = $request->department;
+        $deptId = ($request->department) ? $request->department : "";
         $workflowId = $request->workflowId;
         $projectId = $request->projectId;
         $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
 
-        $workflowDatas =$this->getWorkflowDatasByDepartmentId($deptId);
-       
+        $workflowDatas = $this->getWorkflowDatasByDepartmentId($deptId);
 
-        $models = $this->getModelDatas($deptId, $workflowId, $projectId,$empId);
+
+        $models = $this->getModelDatas($deptId, $workflowId, $projectId, $empId);
 
 
 
         $entities = $this->ReportDataLooping($models);
-        return response()->json(['entities' => $entities,'workflowDatas'=>$workflowDatas]);
+        return response()->json(['entities' => $entities, 'workflowDatas' => $workflowDatas]);
     }
     public function getWorkflowDatasByDepartmentId($deptId)
     {
-        return Workflow::select('workflows.workflow_code','workflows.workflow_name', 'workflows.id')
+        return Workflow::select('workflows.workflow_code', 'workflows.workflow_name', 'workflows.id')
 
             ->leftjoin('projects', 'projects.workflow_id', '=', 'workflows.id')
             ->leftjoin('employees', 'employees.id', '=', 'projects.initiator_id')
@@ -64,9 +64,9 @@ class ProjectwiseController extends Controller
             ->groupBy('projects.workflow_id')
             ->get();
     }
-    public function getModelDatas($deptId, $workflowId = null, $projectId = null, $empId=null)
+    public function getModelDatas($deptId, $workflowId = null, $projectId = null, $empId = null)
     {
-        $modelDatas = Project::with('workflow', 'employee', 'employee.department','projectEmployees');
+        $modelDatas = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
         if ($empId) {
             $modelDatas->whereHas('projectEmployees', function ($q) use ($empId) {
                 if ($empId != "") {
@@ -122,7 +122,7 @@ class ProjectwiseController extends Controller
             $workflowLevel = $workflowModel->total_levels;
             $initiater = $employeeModel->first_name . " " . $employeeModel->last_name;
             $department = ($departmentModel) ? $departmentModel->name : "";
-            $data = ['ticketNo'=>$ticketNo,'workflowId' => $workflowId, 'noOfDays' => $noOfDays, 'dueDate' => $model->end_date, 'workflowLevel' => $workflowLevel, 'projectId' => $projectId, 'workflowName' => $workflowName, 'projectCode' => $projectCode, 'projectName' => $projectName, 'workflowCode' => $workflowCode, 'initiater' => $initiater, 'department' => $department];
+            $data = ['ticketNo' => $ticketNo, 'workflowId' => $workflowId, 'noOfDays' => $noOfDays, 'dueDate' => $model->end_date, 'workflowLevel' => $workflowLevel, 'projectId' => $projectId, 'workflowName' => $workflowName, 'projectCode' => $projectCode, 'projectName' => $projectName, 'workflowCode' => $workflowCode, 'initiater' => $initiater, 'department' => $department];
 
             return $data;
         });

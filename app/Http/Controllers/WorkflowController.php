@@ -19,10 +19,19 @@ class WorkflowController extends Controller
 
     public function getWorkflowCodeFormat(Request $request)
     {
-       $wfname = $request->wfname;   
-       $wfcode =$this->genarateWFCode($wfname);
-       return response()->json($wfcode);
+        $wfname = $request->wfname;
 
+        $model = Workflow::where('workflow_name', $wfname)->get();
+        if (count($model)) {
+            $status = "failed";
+            $wfcode = "";
+        } else {
+            $wfcode = $this->genarateWFCode($wfname);
+            $status = "success";
+        }
+
+       
+        return response()->json(['status'=>$status,'data'=>$wfcode]);
     }
     public function genarateWFCode($wfname)
     {
@@ -37,10 +46,10 @@ class WorkflowController extends Controller
             $genNo = "00" . $runningNo;
         } else {
             $genNo = "0" . $runningNo;
-        } 
-     
-     
-        $wfCode = "SWF".date('Y').substr($wfname, 0, 3).$genNo;
+        }
+
+
+        $wfCode = "SWF" . date('Y') . substr($wfname, 0, 3) . $genNo;
         return $wfCode;
     }
     public function changeWorkflowActiveStatus(Request $request)
@@ -87,12 +96,11 @@ class WorkflowController extends Controller
             $designationData = ($employeeData['designation']);
 
             $designationName = $designationData->name;
-            $name = $employeeData->first_name." ".$employeeData->middle_name." ".$employeeData->last_name.'('.$employeeData->sap_id.')'.'-('.$designationName.')';
-         
-           return ['id'=>$employeeData->id,'data'=>$name];
-           
+            $name = $employeeData->first_name . " " . $employeeData->middle_name . " " . $employeeData->last_name . '(' . $employeeData->sap_id . ')' . '-(' . $designationName . ')';
+
+            return ['id' => $employeeData->id, 'data' => $name];
         });
-        
+
         // dd($employeeDatas[0]['designation']->name);
 
         return view('Workflow/addPage', compact('designationDatas', 'wfCode', 'employeeDatas'));
@@ -125,10 +133,9 @@ class WorkflowController extends Controller
             $designationData = ($employeeData['designation']);
 
             $designationName = $designationData->name;
-            $name = $employeeData->first_name." ".$employeeData->last_name.'('.$employeeData->sap_id.')'.'-('.$designationName.')';
-         
-           return ['id'=>$employeeData->id,'data'=>$name];
-           
+            $name = $employeeData->first_name . " " . $employeeData->last_name . '(' . $employeeData->sap_id . ')' . '-(' . $designationName . ')';
+
+            return ['id' => $employeeData->id, 'data' => $name];
         });
         return view('Workflow/editPage', compact('designationDatas', 'entities', 'modelWorkflow', 'employeeDatas'));
     }
@@ -256,7 +263,7 @@ class WorkflowController extends Controller
         $models = Workflowlevels::with('workflowLevelDetail', 'workflowLevelDetail.employeeData')->where('workflow_id', $workflow_id)->get();
 
         $entities = collect($models)->map(function ($model) {
-            $empModel = WorkflowLevelDetail::select('employees.*','designations.name as designation_name')->leftjoin('employees', 'employees.id', '=', 'workflow_level_details.employee_id')->leftjoin('designations', 'designations.id', '=', 'employees.designation_id')->where('workflow_level_id', $model->id)->get()->toArray();
+            $empModel = WorkflowLevelDetail::select('employees.*', 'designations.name as designation_name')->leftjoin('employees', 'employees.id', '=', 'workflow_level_details.employee_id')->leftjoin('designations', 'designations.id', '=', 'employees.designation_id')->where('workflow_level_id', $model->id)->get()->toArray();
 
 
             // $e = collect($levelDetails)->map(function ($levelDetail) use($empModel) {
@@ -321,7 +328,7 @@ class WorkflowController extends Controller
                 // $designationName = Designation::where('id', $designationId)->first()->name;
                 $employeeId = $levelDetail->employee_id;
                 $designationDetail = Employee::with('designation')->where('id', $employeeId)->first();
-              
+
                 $designationData = $designationDetail->first_name . " " . $designationDetail->last_name . "(" . $designationDetail->sap_id . ")" . "-(" . $designationDetail['designation']['name'] . ")";
 
                 return $designationData;

@@ -9,7 +9,7 @@
     
 </head>
 @php
-$url = route('projects/', ['id' =>$projectId]);
+$url = url('AssignedProject', ['id' =>$projectId]);
 @endphp
 <body>
     <div>Hello <b> {{$empName}}</b>,

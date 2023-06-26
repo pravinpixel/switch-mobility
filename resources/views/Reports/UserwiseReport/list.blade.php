@@ -99,7 +99,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                        </div>
                             <!--end::Card header-->
                             <!--begin::Card body-->
                             <div class="card-body py-4">
@@ -133,18 +133,18 @@
                                         <!--begin::Table row-->
                                         <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
 
-                                            <th>S.no</th>
-                                            <th>Project Code</th>
-                                            <th>Project Name</th>
-                                            <th>Workflow Code</th>
-                                            <th>Workflow Name</th>
-                                            <th>Initiator</th>
-                                            <th>Department</th>
-                                            <th>Level</th>
-                                            <th>Due Date</th>
-                                            <th>No of Days</th>
-                                            <th>status</th>
-                                            <th>Actions</th>
+                                         
+                                            <th class="min-w-100px text-nowrap">Project Code</th>
+                                            <th class="min-w-100px text-nowrap">Project Name</th>
+                                            <th class="min-w-100px text-nowrap">Workflow Code</th>
+                                            <th class="min-w-100px text-nowrap">Workflow Name</th>
+                                            <th class="min-w-100px text-nowrap">Initiator</th>
+                                            <th class="min-w-100px text-nowrap">Department</th>
+                                            <th class="min-w-100px text-nowrap">Level</th>
+                                            <th class="min-w-100px text-nowrap">Due Date</th>
+                                            <th class="min-w-100px text-nowrap">No of Days</th>
+                                            <th class="min-w-100px text-nowrap"> status</th>
+                                            <th class="min-w-100px text-nowrap">Actions</th>
                                         </tr>
                                         <!--end::Table row-->
                                     </thead>
@@ -153,7 +153,7 @@
                                     <tbody class="text-gray-600 fw-semibold" id="tableContent">
                                         @foreach ($entities as $entity)
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
+                                            
                                                 <td>{{ $entity['projectCode'] }}</td>
                                                 <td>{{ $entity['projectName'] }}</td>
                                                 <td>{{ $entity['workflowCode'] }}</td>
@@ -165,7 +165,7 @@
                                                 <td>{{ $entity['dueDate'] }}</td>
                                                 <td>{{ $entity['noOfDays'] }}</td>
                                                 <td></td>
-                                                <td><div id="{{$entity['projectId']}}" class="btn btn-primary viewDocs">View</div></td>
+                                                <td><div id="{{$entity['projectId']}}" class="btn btn-primary btn-sm viewDocs">View</div></td>
 
                                             </tr>
                                         @endforeach
@@ -181,7 +181,7 @@
 
         </div>
 
-
+    </div>
 
         <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
         </script>
@@ -251,7 +251,7 @@
                                     editurl = editurl.replace(':id', projectId);
                                     var viewBtn = '<div id=' + projectId +
                                     ' class="btn btn-success viewDocs">View</div>';
-                                    table.row.add([sNo, projectCode, projectName, workflowCode,
+                                    table.row.add([projectCode, projectName, workflowCode,
                                         workflowName, initiater, department, workflowLevel,
                                         dueDate, noOfDays, activeStatus, viewBtn
                                     ]).draw();
@@ -311,7 +311,6 @@
                     /* add a new records in the array */
                     rows.push(
                         [
-                            column1,
                             column2,
                             column3,
                             column4,

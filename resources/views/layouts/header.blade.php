@@ -137,9 +137,15 @@
                                     $pic = App\Models\Employee::where(['id' => Session('employeeId')])->pluck('profile_image')->first();
                                     ?>
                                     @if (!$pic)
-                                    <img src="{{ asset('images') . '/' . 'admin-icon-3.jpg' }}" alt="user" width="48px" height="54px">
+                                    <div class="symbol symbol-35px ">
+                                        <span class="symbol-label" style="background-image:url({{ asset('images') . '/' . 'admin-icon-3.jpg' }})"></span>
+                                    </div>
+                                    {{-- <img src="{{ asset('images') . '/' . 'admin-icon-3.jpg' }}" alt="user" width="48px" height="54px"> --}}
                                     @else
-                                    <img src="{{ asset('images') . '/Employee/' . $pic }}" alt="user" width="48px" height="54px">
+                                    <div class="symbol symbol-35px ">
+                                        <span class="symbol-label" style="background-image:url({{ asset('images') . '/Employee/' . $pic }})"></span>
+                                    </div>
+                                    {{-- <img src="{{ asset('images') . '/Employee/' . $pic }}" alt="user" width="48px" height="54px"> --}}
                                     @endif
 
 
@@ -163,14 +169,16 @@
                         </div>
                         <div class="app-navbar-item ms-1 ms-md-3" id="kt_header_user_menu_toggle">
                             <!--begin::Menu wrapper-->
-                            <div class="cursor-pointer symbol symbol-30px symbol-md-60px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                    <img src="{{ asset('images/logout.jpg') }}" alt="user" width="40px" title="logout" /></a>
+                          
+                            <button type="button" onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();" class="btn btn-sm btn-icon btn-light btn-active-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Logout">
+                                <i class="fas fa-sign-out-alt"></i>
+
+                            </button>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>
-                            </div>
+                           
 
                             <!--end::Menu wrapper-->
                         </div>

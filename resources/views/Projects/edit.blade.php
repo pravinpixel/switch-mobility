@@ -577,7 +577,7 @@
                         <div class="col-md-12 p-3 pdf_container input-group">
                             <label class="row col-12 m-2 pdf-view row " for="pdf1">
                                 <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div>
-                            </label> <input type="file" name="main_document[]" id="pdf1" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".docx,.pdf">
+                            </label> <input type="file" name="main_document[]" id="pdf1" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx">
                         </div>';
                     </div>
                     <div class="col-md-6 fv-row">
@@ -585,7 +585,7 @@
                         <div class="col-md-12 p-3 pdf_container input-group">
                             <label class="row col-12 m-2 pdf-view row " for="pdf2">
                                 <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div>
-                            </label> <input type="file" name="auxillary_document[]" id="pdf2" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                            </label> <input type="file" name="auxillary_document[]" id="pdf2" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx">
                         </div>
                     </div>
                 </div>
@@ -1153,12 +1153,12 @@ validation=false;
 
                             // levelTabContentData += '<div class="col-md-12 fv-row">';
                             // levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Documents</label><br>';
-                            // levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                            // levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx"> </div>';
                             // levelTabContentData += '</div';
 
                             // levelTabContentData += '<br><br><div class="col-md-12 fv-row">';
                             // levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Auxillary Documents</label><br>';
-                            // levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                            // levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx"> </div>';
                             // levelTabContentData += '</div';
 
                             levelTabContentData += '</div>';
@@ -1335,13 +1335,13 @@ validation=false;
                         // if (!levelMaindocumentCount) {
                         //     levelTabContentData += '<div class="col-md-12 fv-row">';
                         //     levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Main Documents</label><br>';
-                        //     levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                        //     levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx"> </div>';
                         //     levelTabContentData += '</div';
                         // }
                         // if (!levelAuxdocumentCount) {
                         //     levelTabContentData += '<br><br><div class="col-md-12 fv-row">';
                         //     levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Auxillary Documents</label><br>';
-                        //     levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> </div>';
+                        //     levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx"> </div>';
                         //     levelTabContentData += '</div';
                         // }
                         levelTabContentData += '</div>';
@@ -1697,13 +1697,20 @@ validation=false;
             var objectURL = URL.createObjectURL(pdfFile);
             var FileParent = $(file).parent();
             $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><iframe src="' + objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber + '" scrolling="no"></iframe><button class="btn btn-danger btn-sm pdf_delete_btn  " onclick="deletepdf(this)">Delete</button></div>');
-            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".docx,.pdf" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;">');
+            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;">');
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
-        } else {
+        }   else if(pdfFile["name"].endsWith(".doc") ||pdfFile["name"].endsWith(".docx") ){
+            var objectURL = " https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Microsoft_Office_Word_%282019%E2%80%93present%29.svg/1101px-Microsoft_Office_Word_%282019%E2%80%93present%29.svg.png";
+            var FileParent = $(file).parent();
+            $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><img src="' + objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber + '" scrolling="no"></img><button class="btn btn-danger btn-icon w-30px h-30px btn-sm pdf_delete_btn  " onclick="deletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button></div>');
+            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;">');
+            $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
+        }
+        else if(pdfFile["name"].endsWith(".csv") ||pdfFile["name"].endsWith(".xlsx") || pdfFile["name"].endsWith(".xls")) {
             var objectURL = " https://download.logo.wine/logo/Microsoft_Excel/Microsoft_Excel-Logo.wine.png";
             var FileParent = $(file).parent();
             $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><img src="' + objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber + '" scrolling="no"></img><button class="btn btn-danger btn-sm pdf_delete_btn  " onclick="deletepdf(this)">Delete</button></div>');
-            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;">');
+            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;">');
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
         }
 

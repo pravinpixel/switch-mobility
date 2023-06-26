@@ -129,7 +129,7 @@
                                 <!--begin::Table row-->
                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
 
-                                    <th>S.no</th>
+                                    
                                     <th>Workflow Code</th>
                                     <th>Workflow Name</th>
                                     <th>Initiator</th>
@@ -147,7 +147,7 @@
                             <tbody class="text-gray-600 fw-semibold" id="tableContent">
                                 @foreach($entities as $entity )
                                 <tr>
-                                    <td>{{$loop->iteration}}</td>
+                                   
                                     <td>{{$entity['workflowCode']}}</td>
                                     <td>{{$entity['workflowName']}}</td>
                                     <td>{{$entity['initiater']}}</td>
@@ -200,8 +200,8 @@
                 var wfOptiondata = '<option value=""> Select Workflow Name</option>';
                 $("#documentName").append(wfOptiondata);
                 $("#projectName").empty();
-                var wfOptiondata = '<option value=""> Select Project Name</option>';
-                $("#projectName").append(wfOptiondata);
+                var projectOptiondata = '<option value=""> Select Project Name</option>';
+                $("#projectName").append(projectOptiondata);
 
             });
             $('#documentName,#projectName,#workflowCode').on('change', function() {
@@ -239,6 +239,7 @@
                         success: function(data) {
                             var table = $('#service_table').DataTable();
                             var entities = data.entities;
+                            console.log(entities);
                             var documents = data.document;
                             if (workflow && docuName == '') {
                                 $("#documentName").empty();
@@ -256,8 +257,9 @@
                                 $("#projectName").empty();
                                 var projectOption = '<option value=""> Select Project Name</option>';
                                 $("#projectName").append(projectOption);
-
+                            }
                                 $.each(entities, function(key, val) {
+                                    console.log(entities);
                                     var sNo = key + 1;
                                     var projectCode = val.projectCode;
                                     var projectName = val.projectName;
@@ -277,13 +279,13 @@
                                         ">" +
                                         projectName + "(" + projectCode + ")</option>";
                                     $("#projectName").append(projectNameOptionItems);
-                                    table.row.add([sNo, workflowCode, workflowName, initiater,
+                                    table.row.add([workflowCode, workflowName, initiater,
                                         department, workflowLevel, dueDate, noOfDays,
                                         activeStatus, viewBtn
                                     ]).draw();
 
                                 });
-                            }
+                            
                         },
                         error: function() {
                             $("#otp_error").text("Update Error");
@@ -329,7 +331,7 @@
             /* add a new records in the array */
             rows.push(
                 [
-                    column1,
+                    
                     column2,
                     column3,
                     column4,

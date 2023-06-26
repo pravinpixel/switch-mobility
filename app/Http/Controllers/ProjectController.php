@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use PDO;
 
 class ProjectController extends Controller
 {
@@ -52,6 +53,7 @@ class ProjectController extends Controller
         $models->whereNull('deleted_at');
         $models1 = $models->get();
 
+        // dd($models1[0]['employee']);
 
 
         $employees = Employee::where('is_active', 1)->get()->toArray();
@@ -60,7 +62,18 @@ class ProjectController extends Controller
         $designation = Designation::where('is_active', 1)->get()->toArray();
         $document_type = DocumentType::where('is_active', 1)->get()->toArray();
         $workflow = Workflow::where('is_active', 1)->get()->toArray();
-        return view('Projects/list', ['document_type' => $document_type, 'workflow' => $workflow, 'projects_all' => $models1, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
+
+        $initiaterModels = $models1;
+        $initiaterDatas = array();
+        $initiaterEntities = collect($models1)->map(function ($initiaterModel) {
+            return  $initiaterModel['employee']->id;
+        });
+        $initiaterIds = ($initiaterEntities->unique())->toArray();
+        $initiaters = Employee::whereIn('id', $initiaterIds)->where('is_active', 1)->whereNull('deleted_at')->get()->toArray();
+
+
+
+        return view('Projects/list', ['initiaters' => $initiaters, 'document_type' => $document_type, 'workflow' => $workflow, 'projects_all' => $models1, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
         //return view('Projects/listPageOrg', ['document_type' => $document_type, 'workflow' => $workflow, 'projects_all' => $projects_all, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
     }
     public function create()
@@ -84,6 +97,7 @@ class ProjectController extends Controller
     }
     public function show($id)
     {
+        
         $employee = Employee::whereNull('deleted_at')->get();
         $document_type = DocumentType::whereNull('deleted_at')->get();
         $workflow = Workflow::whereNull('deleted_at')->get();
@@ -107,7 +121,7 @@ class ProjectController extends Controller
         // dd($levelModels);
         return view('Projects/edit', compact('employee', 'document_type', 'workflow', 'project', 'levelModels'));
     }
-    
+
 
     public function get_all_projects()
     {
@@ -167,7 +181,7 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
-        
+
 
         Log::info('ProjectController->Store:-Inside ' . json_encode($request->all()));
 
@@ -176,7 +190,7 @@ class ProjectController extends Controller
         $workflowLevelmodels = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $workflow_id)->get();
 
         $firstWfLevel = $workflowLevelmodels[0]->levels;
-      
+
         try {
             if (isset($request->project_id) != null) {
                 $project = Project::findOrFail($request->project_id);
@@ -197,13 +211,18 @@ class ProjectController extends Controller
             $project->is_active = $request->is_active ? 1 : 0;
             $project->save();
 
+           
+            
 
             Log::info('ProjectController->Store:-ProjectData ' . json_encode($project));
             if ($project) {
+              
                 if (!$request->project_id) {
                     $ticket = substr($project->project_name, 0, 3) . date('YmdHis');
                     $project->ticket_no = $ticket;
                     $project->save();
+                    $mail = $this->emailController->SendProjectInitiaterEmail(1, $request->initiator_id, $project->id, $request->project_name, $request->project_code);
+                    Log::info('ProjectController->Store:-InitiaterMail Response ' . json_encode($mail));
                 }
 
                 if (isset($request->project_id) != null) {
@@ -225,12 +244,11 @@ class ProjectController extends Controller
                         // File::deleteDirectory($path);
                     }
                 } else {
-                    $mail = $this->emailController->SendProjectInitiaterEmail(1, $request->initiator_id,1, $request->project_name, $request->project_code);
-                                
-                    Log::info('ProjectController->Store:-InitiaterMail Response ' . json_encode($mail));
-                   
+                  //  $mail = $this->emailController->SendProjectInitiaterEmail(1, $request->initiator_id, 1, $request->project_name, $request->project_code);
+
+                   // Log::info('ProjectController->Store:-InitiaterMail Response ' . json_encode($mail));
                 }
-             
+
                 $ed = date('ymdhms');
                 $MainDocumentCount = (isset($request->main_document)) ? count($request->main_document) : 0;
 
@@ -371,9 +389,10 @@ class ProjectController extends Controller
                     }
                 }
             }
-            if(isset($request->project_id) == null){
-                $levelApprovermail = $this->emailController->NewApprovalToApprover($project->id, $firstWfLevel);  
-                Log::info('ProjectController->Store:-Approver Mail Response ' . json_encode($levelApprovermail));    
+            if (isset($request->project_id) == null) {
+             
+                $levelApprovermail = $this->emailController->NewApprovalToApprover($project->id, $firstWfLevel);
+                Log::info('ProjectController->Store:-Approver Mail Response ' . json_encode($levelApprovermail));
             }
             return redirect('projects')->with('success', "Projects " . $msg . " successfully.");
         } catch (Exception $e) {
@@ -897,5 +916,70 @@ class ProjectController extends Controller
     public function getProjectDetailsByPrimaryId($id)
     {
         return Project::where('id', $id)->first();
+    }
+
+    function projectListFilters(Request $request)
+    {
+        $projectId = null;
+        $initiatorId = null;
+        $dateFilter = null;
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+        if ($request->paramName == "projectId") {
+            $projectId = $request->projectId;
+        } elseif ($request->paramName == "initiatorId") {
+            $initiatorId = $request->initiatorId;
+        } else {
+            $dateFilter = $request->paramName;
+            $startDate = $request->startDate;
+            $endDate = $request->endDate;
+        }
+        //$models = Project::where('id',$projectId)->get();
+        $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+        if ($projectId) {
+            $models->where('id', $projectId);
+        }
+        if ($initiatorId) {
+            $models->where('initiator_id', $initiatorId);
+        }
+        if ($dateFilter) {
+            if ($empId) {
+                $projects = $this->getProjectIdByEmployee()($empId);
+                $models->whereIn('id', $projects);
+            }
+       
+            if ($startDate || $endDate) {
+                $models->where(function ($query) use ($startDate, $endDate) {
+                    $query->whereBetween('start_date', [$startDate, $endDate])
+                        ->orWhereBetween('end_date', [$startDate, $endDate]);
+                });
+            }
+        }
+        $models->whereNull('deleted_at');
+        $searchingModels = $models->get();
+
+
+        return response()->json(['datas' => $searchingModels]);
+    }
+    public function getProjectIdByEmployee()
+    {
+
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+
+        $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+        if ($empId) {
+            $models->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
+        }
+
+        $models->whereNull('deleted_at');
+        $models1 = $models->get();
+        $ids = collect($models1)->map(function ($model) {
+            return  $model->id;
+        });
+        $initiaterIds = ($ids->unique())->toArray();
+        return $initiaterIds;
     }
 }

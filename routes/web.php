@@ -45,6 +45,9 @@ Route::group([
     Route::post('docListingSearch', [Doclistings::class, 'docListingSearch'])->name('docListingSearch');
     Route::post('Search', [Doclistings::class, 'Search'])->name('Search')->middleware('is_admin');
     Route::resource('department', DepartmentController::class);
+
+    Route::post('getProjectByWorkflow', [Doclistings::class, 'getProjectByWorkflow'])->name('getProjectByWorkflow');
+    Route::post('getProjectById', [Doclistings::class, 'getProjectById'])->name('getProjectById');
   
 
     Route::post('designationSearch', [DesignationController::class, 'designationSearch'])->name('designationSearch');
@@ -66,6 +69,8 @@ Route::group([
     Route::get('bulkUploadCreate', [EmployeeController::class, 'bulkUploadCreate'])->name('bulkUploadCreate');
     Route::post('bulkUploadStore', [EmployeeController::class, 'bulkUploadStore'])->name('bulkUploadStore');
 
+    Route::post('employeeValidation', [EmployeeController::class, 'employeeValidation'])->name('employeeValidation');
+
     Route::post('changeEmployeeActiveStatus', [EmployeeController::class, 'changeActiveStatus'])->name('changeActiveStatus');
     Route::post('employeeDetailById', [EmployeeController::class, 'employeeDetailById'])->name('employeeDetailById');
     Route::post('employeeDetailByDesDept', [EmployeeController::class, 'employeeDetailByDesDept'])->name('employeeDetailByDesDept');
@@ -77,7 +82,7 @@ Route::group([
 
     Route::post('projectCodeValidation', [ProjectController::class, 'projectCodeValidation'])->name('projectCodeValidation');
     Route::post('projectNameValidation', [ProjectController::class, 'projectNameValidation'])->name('projectNameValidation');
-    
+    Route::post('projectListFilters', [ProjectController::class, 'projectListFilters'])->name('projectListFilters');
     Route::post('getWorkflowByDocumentType', [ProjectController::class, 'getWorkflowByDocumentType'])->name('getWorkflowByDocumentType')->middleware('is_admin');
     Route::post('getEmployeeByWorkFlow', [ProjectController::class, 'getEmployeeByWorkFlow'])->name('getEmployeeByWorkFlow')->middleware('is_admin');
     Route::get('viewProject/{id}', [ProjectController::class, 'viewProject'])->name('viewProject')->middleware('is_admin');
@@ -127,6 +132,8 @@ Route::post('userWiseReportSearchFilter', [UserwiseReportController::class, 'fil
 //by dhana
 Route::post('getlevelwiseDocument', [Doclistings::class, 'getlevelwiseDocument'])->name('getlevelwiseDocument');
 Route::post('updatelevelwiseDocumentStatus', [Doclistings::class, 'updatelevelwiseDocumentStatus'])->name('updatelevelwiseDocumentStatus');
+
+Route::get('AssignedProject/{id}', [ProjectController::class, 'show'])->name('AssignedProject');
 });
 
 //Department
@@ -136,7 +143,7 @@ Route::post('projectEdit', [ProjectController::class, 'projectEdit'])->name('pro
 
 
 //Approval List
-Route::get('approvalListIndex', [ApprovalListController::class, 'index'])->name('project');
+Route::get('approvalListIndex', [ApprovalListController::class, 'index'])->name('approvalListIndex');
  Route::post('approvedDocsView', [ApprovalListController::class, 'approvedDocsView'])->name('approvedDocsView');
  Route::post('approvedDocsDownload', [ApprovalListController::class, 'approvedDocsDownload'])->name('approvedDocsDownload');
 

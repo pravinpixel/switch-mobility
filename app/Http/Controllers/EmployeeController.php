@@ -20,8 +20,8 @@ class EmployeeController extends Controller
 
     public function create()
     {
-        $departments = Department::where('is_active',1)->get();        
-        $designation = Designation::where('is_active',1)->get();
+        $departments = Department::where('is_active', 1)->get();
+        $designation = Designation::where('is_active', 1)->get();
 
         $model = array();
         return view('Employee/EmployeeDetails', ['model' => $model, 'departments' => $departments, 'designation' => $designation]);
@@ -30,63 +30,88 @@ class EmployeeController extends Controller
     {
         $departments = Department::get();
         $designation = Designation::get();
-        
+
         $model = Employee::findOrFail($id);
         return view('Employee/EmployeeDetails', ['model' => $model, 'departments' => $departments, 'designation' => $designation]);
     }
-
+    function employeeValidation(Request $request)
+    {
+        dd($request->all());
+    }
     public function store(Request $request)
     {
+        $row = $request->all();
 
-        // try {
-        //     Excel::import(new EmployeesImport, "bulk1.xlsx");  
+        $errors = array();
+        $mobileCheck = $this->mobileCheckFunction($row['mobile'], $row['id']);
 
-
-        // } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-        //      $failures = $e->failures();
-
-        //      dd($failures);
-        // }
-
-        if ($request->id) {
-            $model = Employee::findOrFail($request->id);
-            $msg = "Updated";
+        if ($mobileCheck) {
+            $error = ["alertField" => "mobileAlert", "name" => "Mobile", "type" => "Exists"];
+            array_push($errors, $error);
+        }
+        $emailCheck = $this->emailCheckFunction($row['email'], $row['id']);
+        if ($emailCheck) {
+            $error = ["alertField" => "emailAlert", "name" => "Email", "type" => "Exists"];
+            array_push($errors, $error);
+        }
+        $sapIdCheck = $this->sapIdCheckFunction($row['sap_id'], $row['id']);
+        if ($sapIdCheck) {
+            $error = ["alertField" => "sapIdAlert", "name" => "SapID", "type" => "Exists"];
+            array_push($errors, $error);
+        }
+        if (count($errors)) {
+            return response()->json(['status'=>"failed",'errors'=>$errors]);
         } else {
-            $model = new Employee();
-            $msg = "stored";
-        }
-        $model->first_name = $request->first_name;
-        $model->last_name = $request->last_name;
-        $model->email = $request->email;
-        $model->mobile = $request->mobile;
-        $model->department_id = $request->department_id;
-        $model->designation_id = $request->designation_id;
-        $model->sap_id = $request->sap_id;
-        $model->save();
+            // try {
+            //     Excel::import(new EmployeesImport, "bulk1.xlsx");  
 
-        if ($request->hasFile('profile_image')) {
 
-            $image = $request->file('profile_image');
-            $profile_image = "p" . time() . '.' . $image->getClientOriginalExtension();
-            $destinationPath = public_path('/images/Employee');
-            $image->move($destinationPath, $profile_image);
+            // } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            //      $failures = $e->failures();
 
-            $model->profile_image =  $profile_image;
+            //      dd($failures);
+            // }
+
+            if ($request->id) {
+                $model = Employee::findOrFail($request->id);
+                $msg = "Updated";
+            } else {
+                $model = new Employee();
+                $msg = "stored";
+            }
+            $model->first_name = $request->first_name;
+            $model->last_name = $request->last_name;
+            $model->email = $request->email;
+            $model->mobile = $request->mobile;
+            $model->department_id = $request->department_id;
+            $model->designation_id = $request->designation_id;
+            $model->sap_id = $request->sap_id;
             $model->save();
+
+            if ($request->hasFile('profile_image')) {
+
+                $image = $request->file('profile_image');
+                $profile_image = "p" . time() . '.' . $image->getClientOriginalExtension();
+                $destinationPath = public_path('/images/Employee');
+                $image->move($destinationPath, $profile_image);
+
+                $model->profile_image =  $profile_image;
+                $model->save();
+            }
+
+            if ($request->hasFile('sign_image')) {
+                $image = $request->file('sign_image');
+                $sign_image = "s" . time() . '.' . $image->getClientOriginalExtension();
+                $destinationPath = public_path('/images/Employee');
+                $image->move($destinationPath, $sign_image);
+                $model->sign_image =  $sign_image;
+                $model->save();
+            }
+
+            return response()->json(['status'=>"success"]);
+
+           // return redirect('employees')->with('success', "Employee " . $msg . " Successfully!.");
         }
-
-        if ($request->hasFile('sign_image')) {
-            $image = $request->file('sign_image');
-            $sign_image = "s" . time() . '.' . $image->getClientOriginalExtension();
-            $destinationPath = public_path('/images/Employee');
-            $image->move($destinationPath, $sign_image);
-            $model->sign_image =  $sign_image;
-            $model->save();
-        }
-
-
-
-        return redirect('employees')->with('success', "Employee " . $msg . " Successfully!.");
     }
     public function employeeSearch(Request $request)
     {
@@ -290,7 +315,7 @@ class EmployeeController extends Controller
                 "data" => "Employee Deleted Successfully."
             ];
         }
-     
+
         return response()->json($data);
 
 
@@ -400,6 +425,10 @@ class EmployeeController extends Controller
     public function emailCheckFunction($email, $id = null)
     {
         return Employee::where('email', $email)->where('id', '!=', $id)->first();
+    }
+    public function sapIdCheckFunction($sapId, $id = null)
+    {
+        return Employee::where('sap_id', $sapId)->where('id', '!=', $id)->first();
     }
     public function departemntCheckFunction($name)
     {

@@ -4,9 +4,9 @@
 <div class="d-flex flex-column flex-root" id="kt_app_root">
     <!--begin::Page bg image-->
     <style>
-        body {
+        /* body {
             background-image: url('assets/media/auth/bg4.jpg');
-        }
+        } */
 
         [data-theme="dark"] body {
             background-image: url('assets/media/auth/bg4-dark.jpg');
@@ -32,7 +32,7 @@
         </div>
         <!--begin::Aside-->
         <!--begin::Body-->
-        <div class="d-flex flex-center w-lg-50 p-10">
+        <div class="d-flex flex-center w-lg-50 p-10 "  style="background: #3270e3;">
             <!--begin::Card-->
             <div class="card rounded-3 w-md-550px">
                 <!--begin::Card body-->
@@ -43,14 +43,14 @@
                         <!--begin::Heading-->
                         <div class="text-center mb-11">
                             <!--begin::Title-->
-                            <h1 class="text-dark fw-bolder mb-3">Log In</h1>
+                            <h1 class="text-dark fw-bolder mb-3">Login Control Panel</h1>
                             <!--end::Title-->
 
                         </div>
                         <!--begin::Input group=-->
                         <div class="fv-row mb-8">
                             <!--begin::Email-->
-                            <input type="text" placeholder="SAP Id/ Email" name="username" value="{{ old('username') }}" required autofocus class="form-control bg-transparent @error('username') is-invalid @enderror" />
+                            <input type="text" placeholder="SAP-ID" name="username" value="{{ old('username') }}" required autofocus class="form-control bg-transparent @error('username') is-invalid @enderror" />
                             @error('username')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

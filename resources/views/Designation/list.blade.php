@@ -57,7 +57,7 @@
                         {{ session('error') }}
                     </div>
                     @endif
-                    <div class="card-header border-0 pt-6">
+                    <div class="card-header border-0 pt-6 add-button-datatable">
 
                         <div class="card-title">
 
@@ -114,7 +114,7 @@
                                 <!--begin::Table row-->
                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
 
-                                    <th class="min-w-125px">S.no</th>
+                                 
                                     <th class="min-w-125px">Designation</th>
                                     <th class="min-w-125px">Description</th>
                                     <th class="min-w-125px">Status</th>
@@ -132,9 +132,7 @@
 
                                     <!--end::Checkbox-->
                                     <!--begin::User=-->
-                                    <td class="">
-                                        {{$key+1}}
-                                    </td>
+                                 
 
                                     <td>{{$d['name']}}</td>
                                     <td>{{$d['description']}}</td>

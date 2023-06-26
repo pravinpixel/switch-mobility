@@ -117,7 +117,7 @@
                                 <!--begin::Table row-->
                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
 
-                                    <th>S.no</th>
+                                 
                                     <th>Project Code</th>
                                     <th>Project Name</th>
                                     <th>Workflow Name</th>
@@ -225,7 +225,7 @@
                                 var viewBtn = '<div id=' + projectId + ' class="btn switchPrimaryBtn  viewDocs">View</div>';
 
 
-                                table.row.add([sNo, projectCode, projectName, workflowName, workflowCode, initiater, department, activeStatus, viewBtn]).draw();
+                                table.row.add([projectCode, projectName, workflowName, workflowCode, initiater, department, activeStatus, viewBtn]).draw();
                             });
                         },
                         error: function() {

@@ -7,6 +7,10 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
+
+    protected $commands = [
+        Commands\DemoCron::class
+    ];
     /**
      * Define the application's command schedule.
      *
@@ -14,8 +18,9 @@ class Kernel extends ConsoleKernel
      * @return void
      */
     protected function schedule(Schedule $schedule)
-    {
-        $schedule->command('auto:raminMail')->daily();
+    {        
+        $schedule->command('demo:cron')
+                 ->daily();
     }
 
     /**
