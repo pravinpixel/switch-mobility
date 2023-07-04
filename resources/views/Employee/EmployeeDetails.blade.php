@@ -196,28 +196,30 @@
                                 </div>
                                 <!--end::Col-->
 
+                                <input type="hidden" name="IsProfileImage" class="IsProfileImage" value="1">
+                                <input type="hidden" name="IsSignImage" class="IsSignImage" value="1">
                                 <!--begin::Col-->
                                 <div class="col-md-3 fv-row">
                                     <!--begin::Label-->
                                     <label class="fs-6 fw-semibold mb-2">Profile Photo</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="file" class="form-control form-control-solid" name="profile_image" id="imageShow" onchange="document.getElementById('blahnew').src = window.URL.createObjectURL(this.files[0])" />
+                                    <input type="file" class="form-control form-control-solid" name="profile_image" id="profileImageInputField" onchange="document.getElementById('blahnew').src = window.URL.createObjectURL(this.files[0])" accept="image/png, image/gif, image/jpeg" />
                                     <img id="blahnew" class="profilePic" style="display:none;" width="100" height="100" />
-                                    <span class="removebtn"></span>
+                                    <span class="profileRemoveBtnDiv"></span>
                                     <?php
                                     if ($model) {
                                         $noPic = 'noimage.png';
                                         $profilePic = isset($model['profile_image']) ? $model['profile_image'] : $noPic;
 
-                                        $updatePic = '<img src="/images/Employee/' . $profilePic . '" class="editPic1" width="50" height="50" class="w-50" />';
+                                        $updatePic = '<img src="/images/Employee/' . $profilePic . '" class="profileImageSrcDiv" width="50" height="50" class="w-50" />';
                                     } else {
-                                        $profilePic = "";
-                                        $updatePic = '<img src="" style="display:none;" class="editPic1" width="50" height="50" class="w-50" />';
+                                        $profilePic = "noimage.png";
+                                        $updatePic = '<img src="" style="display:none;" class="profileImageSrcDiv" width="50" height="50" class="w-50" />';
                                     }
 
                                     ?>
-                                    <img src="{{ asset('images') . '/Employee/' . $profilePic }}" class="editPic1" width="50" height="50" class="w-50">
+                                    <img src="{{ asset('images') . '/Employee/' . $profilePic }}" class="profileImageSrcDiv" width="50" height="50" class="w-50">
                                     <!--end::Input-->
                                 </div>
                                 <!--end::Col-->
@@ -227,20 +229,20 @@
                                     <label class="fs-6 fw-semibold mb-2">Signature Photo</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="file" class="form-control form-control-solid" name="sign_image" id="imgShow" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" />
-                                    <img id="blah" class="picture" style="display:none;" width="100" height="100" />
-                                    <span class="btnAdded"></span>
+                                    <input type="file" class="form-control form-control-solid" name="sign_image" id="signImageInputField" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept="image/png, image/gif, image/jpeg" />
+                                    <img id="blah" class="signImageShowDiv" style="display:none;" width="100" height="100" />
+                                    <span class="signImageRemoveBtnDiv"></span>
                                     <?php
                                     if ($model) {
                                         $noImage = 'noimage.png';
                                         $image = isset($model['sign_image']) ? $model['sign_image'] : $noImage;
                                         $pic = $image;
                                     } else {
-                                        $pic = '';
+                                        $pic = 'noimage.png';
                                     }
 
                                     ?>
-                                    <img src="{{ asset('images') . '/Employee/' . $pic }}" class="editPic" width="50" height="50" class="w-50">
+                                    <img src="{{ asset('images') . '/Employee/' . $pic }}" class="signImageSrcDiv" width="50" height="50" class="w-50">
                                     <!--end::Input-->
                                 </div>
                                 <!--end::Col-->
@@ -288,131 +290,156 @@
 <script>
     $(document).ready(function() {
         $('.form').submit(function(e) {
-            e.preventDefault(); // Prevent normal form submission
+            e.preventDefault();
+            var formData = new FormData(this); 
+            var namevalidation = nameValidation();
+            var deptAndDescvalidation = deptAndDescValidation();
+            var mobilevalidation = mobileValidation();
+            var sapIdvalidation = sapidValidation();
+            var emailvalidation = emailValidation();
+            setTimeout(function() {
+                console.log("Executing code after function every 2 seconds");
+                console.log("Second Check");
+                var notifyAlert = $(".notifyAlert").is(":visible");
+                console.log('notifyAlert ' + notifyAlert);
+                if (notifyAlert == false) {
 
-            // Serialize form data
-            var formData = $(this).serialize();
-            var formresult = finalValidation();
-            console.log(formresult);
 
-            // Send Ajax request
-            if (formresult == true) {
-                $.ajax({
-                    url: '{{ route("employees.store") }}', // Replace with your Laravel route URL
-                    method: 'POST',
-                    data: formData,
-                    success: function(response) {
-                       
-                        if (response.status == "success") {
-                            let url = "{{ url('employees') }}";
-                            document.location.href = url;
-                        } else {
-                            var datas = response.errors;
-                            // Handle the response from the server
-                            console.log(datas);
-                            for (var i = 0; i < datas.length; i++) {
-                                console.log("resDatas " + datas[i].alertField);
-                                raiseAlert(datas[i].alertField, datas[i].name, datas[i].type);
+                   // Prevent normal form submission
+                    console.log(formData);
+                   
+                    // Serialize form data
+                    // var formData = $(this).serialize();
+
+
+                    // Send Ajax request
+
+                    $.ajax({
+                        url: '{{ route("employees.store") }}', // Replace with your Laravel route URL
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+
+                            if (response.status == "success") {
+                                let url = "{{ url('employees') }}";
+                                document.location.href = url;
+                            } else {
+                                var datas = response.errors;
+                                // Handle the response from the server
+
+                                for (var i = 0; i < datas.length; i++) {
+
+                                    raiseAlert(datas[i].alertField, datas[i].name, datas[i].type);
+                                }
                             }
+                        },
+                        error: function(error) {
+                            // Handle any errors that occur during the Ajax request
+
                         }
-                    },
-                    error: function(error) {
-                        // Handle any errors that occur during the Ajax request
-                        console.log(error);
-                    }
-                });
-            }
+                    });
+                }
+            }, 500);
         });
     });
 
-    function formValidation() {
-        var firstName = $('.first_name').val();
-        var lastName = $('.last_name').val();
-        var email = $('.email').val();
-        var mobile = $('.mobile').val();
-        var department = $('.department').val();
-        var designation = $('.designation_id').val();
-        var sapId = $('.sapId').val();
-
-console.log("formvalidation");
-        if (!firstName) {
-
-            raiseAlert('firstNameAlert', 'First Name', 'Mandate');
-
-        } else {
-            document.getElementById('firstNameAlert').style.display = "none";
-        }
-
-        if (!lastName) {
-
-            raiseAlert('lastNameAlert', 'Last Name', 'Mandate');
-
-        } else {
-            document.getElementById('lastNameAlert').style.display = "none";
-        }
-
-        document.getElementById('emailAlert').style.display = "none";
-        var regex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-        var res = regex.test(email);
-        if (!email) {
-
-            raiseAlert('emailAlert', 'Email', 'Mandate');
-
-        } else if (!res) {
-            raiseAlert('emailAlert', 'Email', 'Incorrect');
-        } else {
-            document.getElementById('emailAlert').style.display = "none";
-        }
-
-        if (!mobile) {
-
-            raiseAlert('mobileAlert', 'Mobile Name', 'Mandate');
-
-        } else if (mobile.length < 10) {
-            document.getElementById('mobileAlert').style.display = "block";
-            document.getElementById('mobileAlert').style.color = "red";
-            document.getElementById('mobileAlert').innerHTML = 'Mobile No Is Minimum 10 Digit*';
-        } else {
-            document.getElementById('mobileAlert').style.display = "none";
-        }
-
-        if (!department) {
-
-            raiseAlert('departmentAlert', 'Department', 'Mandate');
-
-        } else {
-            document.getElementById('departmentAlert').style.display = "none";
-        }
-        if (!designation) {
+    // function formValidation() {
+    //     var firstName = $('.first_name').val();
+    //     var lastName = $('.last_name').val();
+    //     var email = $('.email').val();
+    //     var mobile = $('.mobile').val();
+    //     var department = $('.department').val();
+    //     var designation = $('.designation_id').val();
+    //     var sapId = $('.sapId').val();
 
 
-            raiseAlert('designationAlert', 'Designation', 'Mandate');
+    //     if (!firstName) {
 
-        } else {
-            document.getElementById('designationAlert').style.display = "none";
-        }
-        if (!sapId) {
+    //         raiseAlert('firstNameAlert', 'First Name', 'Mandate');
 
-            raiseAlert('sapIdAlert', 'SapId', 'Mandate');
+    //     } else {
+    //         document.getElementById('firstNameAlert').style.display = "none";
+    //     }
 
-        } else {
-            document.getElementById('sapIdAlert').style.display = "none";
-        }
+    //     if (!lastName) {
+
+    //         raiseAlert('lastNameAlert', 'Last Name', 'Mandate');
+
+    //     } else {
+    //         document.getElementById('lastNameAlert').style.display = "none";
+    //     }
+
+    //     document.getElementById('emailAlert').style.display = "none";
+    //     var regex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    //     var res = regex.test(email);
+    //     if (!email) {
+
+    //         raiseAlert('emailAlert', 'Email', 'Mandate');
+
+    //     } else if (!res) {
+    //         raiseAlert('emailAlert', 'Email', 'Incorrect');
+    //     } else {
+    //         document.getElementById('emailAlert').style.display = "none";
+    //     }
+
+    //     if (!mobile) {
+
+    //         raiseAlert('mobileAlert', 'Mobile Name', 'Mandate');
+
+    //     } else if (mobile.length < 10) {
+    //         document.getElementById('mobileAlert').style.display = "block";
+    //         document.getElementById('mobileAlert').style.color = "red";
+    //         document.getElementById('mobileAlert').innerHTML = 'Mobile No Is Minimum 10 Digit*';
+    //     } else {
+    //         document.getElementById('mobileAlert').style.display = "none";
+    //     }
+
+    //     if (!department) {
+
+    //         raiseAlert('departmentAlert', 'Department', 'Mandate');
+
+    //     } else {
+    //         document.getElementById('departmentAlert').style.display = "none";
+    //     }
+    //     if (!designation) {
 
 
-        if (firstName && lastName && email && mobile && department && designation && sapId) {
-            console.log("true");
-            return true;
-        } else {
-            console.log("false");
-            return false;
-        }
+    //         raiseAlert('designationAlert', 'Designation', 'Mandate');
+
+    //     } else {
+    //         document.getElementById('designationAlert').style.display = "none";
+    //     }
+    //     if (!sapId) {
+
+    //         raiseAlert('sapIdAlert', 'SapId', 'Mandate');
+
+    //     } else {
+    //         document.getElementById('sapIdAlert').style.display = "none";
+    //     }
 
 
-    }
+    //     if (firstName && lastName && email && mobile && department && designation && sapId) {
+    //         console.log("true");
+    //         return true;
+    //     } else {
+    //         console.log("false");
+    //         return false;
+    //     }
+
+
+    // }
     $(document).ready(function() {
-
-
+        var profileImageField = "<?php echo (isset($model['profile_image'])) ? '1' : '0'; ?>";
+        var signImageField = "<?php echo (isset($model['sign_image'])) ? '1' : '0'; ?>";
+        console.log(profileImageField);
+        if (profileImageField == 1) {
+            $(".profileRemoveBtnDiv").append("<button type='button' id='profileRemoveBtn'>Remove</button>");
+        }
+        if (signImageField == 1) {
+            $(".signImageRemoveBtnDiv").append("<button type='button' id='signImageRemoveBtn'>Remove</button>");
+        }
         $(".designation_id").select2({
             dropdownParent: $("#form")
         });
@@ -422,11 +449,13 @@ console.log("formvalidation");
         $('.reset').on('click', function() {
             $('.deptAndDesg').val("").trigger('change');
             document.getElementById("form").reset();
-
-            $('.profilePic').hide();
-            $('#imageShow').val('');
-            $('#closeBtn').remove();
-            $('.picture').hide();
+        $('.notifyAlert').hide();
+            $("#signImageRemoveBtn").click();
+            $("#profileRemoveBtn").click();
+            // $('.profilePic').hide();
+            // $('profileImageInputField').val('');
+            // $('#profileRemoveBtn').remove();
+            // $('.signImageShowDiv').hide();
 
         });
 
@@ -434,36 +463,56 @@ console.log("formvalidation");
 
             $('.reset').css('display', 'none');
         }
-        $("#imgShow").change(function() {
-            $('.picture').empty();
-            $('#field').remove();
-            $('#imgShow').empty();
-            $('.picture').removeAttr('style');
-            $('.editPic').remove();
-            $(".btnAdded").append("<button type='button' id='field'>Remove</button>");
-            $("#field").click(function() {
-                $('.picture').hide();
-                $('#imgShow').val('');
-                $('#field').remove();
+        //sign image
+        $("#signImageInputField").change(function() {
+            $('.signImageShowDiv').empty();
+            $('#signImageRemoveBtn').remove();
+            $('#signImageInputField').empty();
+            $('.signImageShowDiv').removeAttr('style');
+            $('.signImageSrcDiv').remove();
+            $(".signImageRemoveBtnDiv").append("<button type='button' id='signImageRemoveBtn'>Remove</button>");
+            $("#signImageRemoveBtn").click(function() {
+                $('.signImageShowDiv').hide();
+                $('#signImageInputField').val('');
+                $('#signImageRemoveBtn').remove();
+
             });
         });
+        $("#signImageRemoveBtn").click(function() {
+            console.log("signImageRemoveBtn");
+            $('.signImageSrcDiv').remove();
+            $('.signImageShowDiv').hide();
+            $('#signImageInputField').val('');
+            $('#signImageRemoveBtn').remove();
+            $('.IsSignImage').val("");
 
-        $("#imageShow").change(function() {
+        });
+        //profile image
+        $("#profileImageInputField").change(function() {
 
             $('.profilePic').empty();
-            $('#closeBtn').remove();
-            $('#imageShow').empty();
+            $('#profileRemoveBtn').remove();
+            $('#profileImageInputField').empty();
             $('.profilePic').removeAttr('style');
-            $('.editPic1').remove();
-            $(".removebtn").append("<button type='button' id='closeBtn'>Remove</button>");
-            $("#closeBtn").click(function() {
+            $('.profileImageSrcDiv').remove();
+            $(".profileRemoveBtnDiv").html("");
+            $(".profileRemoveBtnDiv").append("<button type='button' id='profileRemoveBtn'>Remove</button>");
+            $("#profileRemoveBtn").click(function() {
 
                 $('.profilePic').hide();
-                $('#imageShow').val('');
-                $('#closeBtn').remove();
+                $('#profileImageInputField').val('');
+                $('#profileRemoveBtn').remove();
             });
-
         });
+        $("#profileRemoveBtn").click(function() {
+            console.log("well");
+            $('.profilePic').hide();
+            $('#profileImageInputField').val('');
+            $('#profileRemoveBtn').remove();
+            $('.profileImageSrcDiv').remove();
+            $('.IsProfileImage').val("");
+        });
+
         // $('.submitBtn').attr('disabled', 'true');
         // if ($('.id').val()) {
         //     $('.submitBtn').removeAttr('disabled');
@@ -506,12 +555,7 @@ console.log("formvalidation");
         }
     }
 
-    function finalValidation1() {
-        // to each unchecked checkbox          
-        return validateFormCreate();
-        console.log("damn");
-        $(this).find('input[type=checkbox]:not(:checked)').prop('checked', true).val(0);
-    }
+
 
     function getValidationResult(fieldname, fieldData) {
         var pkey = $('.id').val();
@@ -527,7 +571,7 @@ console.log("formvalidation");
             },
             success: function(result) {
                 var data = JSON.parse(result);
-                console.log(data);
+
 
                 if (data) {
 
@@ -561,6 +605,33 @@ console.log("formvalidation");
     });
 
 
+    function finalValidation() {
+
+
+        var namevalidation = nameValidation();
+        var deptAndDescvalidation = deptAndDescValidation();
+        var mobilevalidation = mobileValidation();
+        var sapIdvalidation = sapidValidation();
+        var emailvalidation = emailValidation();
+        setTimeout(function() {
+            console.log("Executing code after function every 2 seconds");
+            console.log("Second Check");
+            var notifyAlert = $(".notifyAlert").is(":visible");
+            console.log('notifyAlert ' + notifyAlert);
+            if (notifyAlert == false) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }, 500);
+
+
+        return false;
+
+
+
+    }
 
     function nameValidation() {
         var firstName = $('.first_name').val();
@@ -629,11 +700,11 @@ console.log("formvalidation");
 
 
         if (firstName && lastName && email && mobile && department && designation && sapId) {
-            console.log("true");
-            return true;
+
+            return 1;
         } else {
-            console.log("false");
-            return false;
+
+            return 0;
         }
 
 
@@ -669,13 +740,13 @@ console.log("formvalidation");
 
     function sapidValidation() {
         var sapId = $('.sapId').val();
-console.log("well");
-        document.getElementById('sapIdAlert').style.display = "none";
+
+        console.log("test case");
         if (!sapId) {
 
             raiseAlert('sapIdAlert', 'SapId', 'Mandate');
         } else {
-            console.log('Correct Format');
+
 
             $.ajax({
                 url: "{{ route('getEmployeeDetailByParams') }}",
@@ -689,11 +760,12 @@ console.log("well");
                 },
                 success: function(result) {
                     var data = JSON.parse(result);
-                    console.log(data);
 
+                    console.log("first check sapid");
                     if (data) {
                         raiseAlert('sapIdAlert', 'SapId', '');
                     } else {
+
                         document.getElementById('sapIdAlert').style.display = "none";
                     }
                 }
@@ -702,43 +774,30 @@ console.log("well");
 
         }
 
-        // Get the element with the desired class
-        var element = document.querySelector('.sapIdAlert');
-        console.log("element" + element);
 
-        // Get the computed style of the element
-        var computedStyle = window.getComputedStyle(element);
+        return 1;
 
-        // Check the display status
-        var displayStatus = computedStyle.getPropertyValue('display');
-        console.log("displayStatus" + displayStatus);
-        // Check if the element is visible or hidden
-        if (displayStatus == 'none') {
-            console.log('The element is hidden.');
-            return 1;
-        } else {
-            console.log('The element is visible.');
-            return 0;
-        }
     }
 
     function emailValidation() {
         var email = $('.email').val();
-        console.log(email);
+
         document.getElementById('emailAlert').style.display = "none";
         var regex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
         var res = regex.test(email);
 
         if (!email) {
-            console.log('Email Empty');
+
             raiseAlert('emailAlert', 'Email', 'Mandate');
             $('#emailAlert').attr('dataAdded', "error");
+            return 0;
         } else if (!res) {
             raiseAlert('emailAlert', 'Email', 'Incorrect');
             $('#emailAlert').attr('dataAdded', "error");
-            console.log('In-Correct Format');
+            return 0;
+
         } else {
-            console.log('Correct Format');
+
 
             $.ajax({
                 url: "{{ route('getEmployeeDetailByParams') }}",
@@ -752,7 +811,7 @@ console.log("well");
                 },
                 success: function(result) {
                     var data = JSON.parse(result);
-                    console.log(data);
+
 
                     if (data) {
                         raiseAlert('emailAlert', 'Email', '');
@@ -761,42 +820,16 @@ console.log("well");
                         document.getElementById('emailAlert').style.display = "none";
                         $('#emailAlert').attr('dataAdded', "");
                     }
-                    // var des = checkresult();
+
                 }
             });
 
 
         }
-        console.log($('#emailAlert').attr('dataAdded'));
-        // // Get the element with the desired class
-        // var element = document.querySelector('.emailAlert');
-        // console.log("element" + element);
 
-        // // Get the computed style of the element
-        // var computedStyle = window.getComputedStyle(element);
 
-        // // Check the display status
-        // var displayStatus = computedStyle.getPropertyValue('display');
-        // console.log("displayStatus" + displayStatus);
-        // // Check if the element is visible or hidden
-        // if (displayStatus == 'none') {
-        //     console.log('The element is hidden.');
-        //     return 1;
-        // } else {
-        //     console.log('The element is visible.');
-        //     return 0;
-        // }
-        if ($('#emailAlert').is(':visible')) {
-            console.log('The element with class "your-class" is currently visible.');
-        } else {
-            console.log('The element with class "your-class" is currently hidden.');
-        }
-        // var des = checkresult();
     }
 
-    function checkresult() {
-        console.log("emailAlert " + $('#emailAlert').attr('dataAdded'));
-    }
 
     function mobileValidation() {
         var mobile = $('.mobile').val();
@@ -820,8 +853,6 @@ console.log("well");
                 },
                 success: function(result) {
                     var data = JSON.parse(result);
-                    console.log(data);
-
                     if (data) {
                         raiseAlert('mobileAlert', 'Mobile', '');
                     } else {
@@ -832,24 +863,23 @@ console.log("well");
 
         }
 
-        // Get the element with the desired class
-        var element = document.querySelector('.mobileAlert');
-        console.log("element" + element);
+        return 1;
+    }
 
-        // Get the computed style of the element
-        var computedStyle = window.getComputedStyle(element);
 
-        // Check the display status
-        var displayStatus = computedStyle.getPropertyValue('display');
-        console.log("displayStatus" + displayStatus);
-        // Check if the element is visible or hidden
-        if (displayStatus == 'none') {
-            console.log('The element is hidden.');
-            return 1;
+
+    function raiseAlert(alertfieldIdName, alertField, alertType) {
+        document.getElementById(alertfieldIdName).style.display = "block";
+        document.getElementById(alertfieldIdName).style.color = "red";
+        if (alertType == "Mandate") {
+            document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Mandatory*';
+        } else if (alertType == "Incorrect") {
+            document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Incorrect Format*';
         } else {
-            console.log('The element is visible.');
-            return 0;
+            document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Exist*';
         }
+
+
     }
 
     function getValidationResult(fieldname, fieldData) {
@@ -867,12 +897,12 @@ console.log("well");
             },
             success: function(result) {
                 var data = JSON.parse(result);
-                console.log(data);
+
 
                 if (data) {
 
                     result = 1;
-                    console.log("if check");
+
                     // if (data) {
                     //     Swal.fire({
                     //         icon: 'error',
@@ -888,97 +918,57 @@ console.log("well");
                 } else {
                     // $('.submit').prop('disabled', false);
                     result = 0;
-                    console.log("else check");
+
                 }
             }
         });
-        console.log("final res check");
-        console.log(result);
+
         return result;
     }
 
-    function raiseAlert(alertfieldIdName, alertField, alertType) {
-        document.getElementById(alertfieldIdName).style.display = "block";
-        document.getElementById(alertfieldIdName).style.color = "red";
-        if (alertType == "Mandate") {
-            document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Mandatory*';
-        } else if (alertType == "Incorrect") {
-            document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Incorrect Format*';
-        } else {
-            document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Exist*';
-        }
+    // function finalValidation1() {
+
+    //     var firstname = document.createForm.first_name;
+    //     var lastname = document.createForm.last_name;
+    //     var email = document.createForm.email;
+    //     var mobile = document.createForm.mobile;
+    //     var department_id = document.createForm.department_id;
+    //     var designation_id = document.createForm.designation_id;
+    //     var sap_id = document.createForm.sap_id;
+    //     sapIdChecking(sap_id);
+    //     var firstNameError = validateField('firstNameAlert', 'First Name', firstname.value);
+    //     var lastNameError = validateField('lastNameAlert', 'Last Name', lastname.value);
+    //     var emailError = validateField('emailAlert', 'Email', email.value);
+    //     var mobileError = validateField('mobileAlert', 'Mobile', mobile.value);
+    //     var departmentError = validateField('departmentAlert', 'Department', department_id.value);
+    //     var designationError = validateField('designationAlert', 'Designation', designation_id.value);
+
+    //     var sapidError = validateField('sapIdAlert', 'Sap Id', sap_id.value);
 
 
-    }
-
-    function finalValidation() {
-
-        console.log("well");
-        var namevalidation = nameValidation();
-        var emailvalidation = emailValidation();
-        var mobilevalidation = mobileValidation();
-        var deptAndDescvalidation = deptAndDescValidation();
-        var sapIdvalidation = sapidValidation();
-        // console.log("checkresult");
-        // console.log(checkresult());
-        if (namevalidation && emailvalidation && mobilevalidation && deptAndDescvalidation && sapIdvalidation) {
-
-            $(".form").submit();
-            $('.submit').prop('disabled', true);
-
-            return true;
-        }
-
-        console.log(namevalidation);
-        console.log(emailvalidation);
-        console.log(mobilevalidation);
-        console.log(deptAndDescvalidation);
-        console.log(sapIdvalidation);
-    }
-
-    function finalValidation1() {
-
-        var firstname = document.createForm.first_name;
-        var lastname = document.createForm.last_name;
-        var email = document.createForm.email;
-        var mobile = document.createForm.mobile;
-        var department_id = document.createForm.department_id;
-        var designation_id = document.createForm.designation_id;
-        var sap_id = document.createForm.sap_id;
-        sapIdChecking(sap_id);
-        var firstNameError = validateField('firstNameAlert', 'First Name', firstname.value);
-        var lastNameError = validateField('lastNameAlert', 'Last Name', lastname.value);
-        var emailError = validateField('emailAlert', 'Email', email.value);
-        var mobileError = validateField('mobileAlert', 'Mobile', mobile.value);
-        var departmentError = validateField('departmentAlert', 'Department', department_id.value);
-        var designationError = validateField('designationAlert', 'Designation', designation_id.value);
-
-        var sapidError = validateField('sapIdAlert', 'Sap Id', sap_id.value);
-
-
-        console.log(firstNameError);
-        console.log(lastNameError);
-        console.log(emailError);
-        console.log(mobileError);
-        console.log(departmentError);
-        console.log(designationError);
-        console.log(sapidError);
+    //     console.log(firstNameError);
+    //     console.log(lastNameError);
+    //     console.log(emailError);
+    //     console.log(mobileError);
+    //     console.log(departmentError);
+    //     console.log(designationError);
+    //     console.log(sapidError);
 
 
 
-        if (firstNameError && lastNameError && emailError && mobileError && departmentError && designationError &&
-            sapidError) {
+    //     if (firstNameError && lastNameError && emailError && mobileError && departmentError && designationError &&
+    //         sapidError) {
 
-            $(".form").submit();
-            $('.submit').prop('disabled', true);
+    //         $(".form").submit();
+    //         $('.submit').prop('disabled', true);
 
-            return true;
-        } else {
-            console.log("Not well");
-            return false;
-        }
-        return false;
-    }
+    //         return true;
+    //     } else {
+
+    //         return false;
+    //     }
+    //     return false;
+    // }
 
     function validateField(alertName, fieldname, fieldValue) {
 

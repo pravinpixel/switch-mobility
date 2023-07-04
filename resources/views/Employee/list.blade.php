@@ -149,14 +149,14 @@
                                         <div class="d-flex align-items-center flex-grow-1">
                                             <!--begin::Avatar-->
                                             <div class="symbol symbol-45px me-5">
-                                                <img src="{{ asset('images/Employee/' . $pImage) }}" alt="">     
+                                                <img src="{{ asset('images/Employee/' . $pImage) }}" alt="">
                                             </div>
                                             <!--end::Avatar-->
-                            
+
                                             <!--begin::Info-->
                                             <div class="d-flex flex-column">
                                                 <a href="javascript:void(0);" class="text-gray-900 text-hover-primary fs-6 fw-bold"><?php echo $d->first_name . ' ' . $d->last_name; ?></a>
-                            
+
                                                 <span class="text-gray-400 fw-bold">Email:{{ $d->email }}</span>
                                             </div>
                                             <!--end::Info-->
@@ -657,7 +657,7 @@
                                 result.data,
                                 'success'
                             );
-                            window.location.reload();
+                          getListData();
                         }
                     }
                 });
@@ -666,6 +666,11 @@
         });
     }
     $(document).on('change', '.status', function() {
+        var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
+        var isAuthorityEdit = "{{ auth()->user()->can('employee-edit') }}";
+        var isAuthorityDelete = "{{ auth()->user()->can('employee-delete') }}";
+        var table = $('#service_table').DataTable();
+
         var chk = $(this);
         var id = $(this).attr('data-id');
         var status = $(this).prop('checked') == true ? 1 : 0;
@@ -697,19 +702,33 @@
                         status: status,
                     },
                     success: function(result) {
-                        if (result) {
-                            window.location.reload();
+                        var resDatas = result.data;
+                        console.log(resDatas);
+
+                        if (resDatas.message == "Failed") {
+                            if (status == 1) {
+                                chk.prop('checked', false);
+
+                            } else {
+
+                                chk.prop('checked', true).attr('checked', 'checked');
+                            }
+                            Swal.fire(
+                                'Status!',
+                                resDatas.data,
+                                'error'
+                            );
+                        } else {
+                            Swal.fire(
+                                'Status!',
+                                resDatas.data,
+                                'success'
+                            );
+                            getListData();
                         }
                     }
                 });
-                if (isConfirmed.value) {
-                    Swal.fire(
-                        'Status!',
-                        'Employee Status has been Changed.',
-                        'success'
-                    );
 
-                }
             } else {
                 if (status == 1) {
                     chk.prop('checked', false);
@@ -721,4 +740,84 @@
             }
         });
     });
+
+    function getListData() {
+        var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
+        var isAuthorityEdit = "{{ auth()->user()->can('employee-edit') }}";
+        var isAuthorityDelete = "{{ auth()->user()->can('employee-delete') }}";
+
+        var table = $('#service_table').DataTable();
+
+        $.ajax({
+            url: "{{ url('getEmployeeListData') }}",
+            type: 'ajax',
+            method: 'get',
+            data: {
+                "_token": "{{ csrf_token() }}"
+            },
+            success: function(result) {
+                table.clear().draw();
+
+                $.each(result, function(key, val) {
+                    console.log(val);
+                    var firstName = val.first_name;
+                    var middleName = (val.middle_name) ? val.middle_name : "";
+                    var lastName = val.last_name;
+
+                    var name = firstName + " " + middleName + " " + lastName;
+                    var description = val.description;
+                    var id = val.id;
+                    var sapId = val.sap_id;
+                    var mobile = val.mobile;
+                    var dept = val.department;
+                    var desg = val.designation;
+                    var email = val.email;
+                    var pic = (val.profile_image) ? val.profile_image : 'noimage.png';
+                    var folder = "images/Employee/";
+                    folder += pic;
+
+                    var firsttd =
+                        '<div class="symbol symbol-circle symbol-50px overflow-hidden me-3">';
+                    firsttd += '<a href="javascript:void(0);">';
+                    firsttd += '<div class="symbol-label">';
+                    firsttd +=
+                        '<img src=' + folder + ' alt="' + firstName + '" width="50" height="50" class="w-100" />';
+                    firsttd += ' </div>';
+                    firsttd += '</a>';
+                    firsttd += '</div>';
+                    firsttd += '<div class="d-flex flex-column">';
+                    firsttd += '<a href="javascript:void(0);"class="text-gray-800 text-hover-primary mb-1" style="position:relative;left:59px;bottom:43px;">' + firstName + ' ' + lastName + '</a>';
+                    firsttd += ' <span style="position:relative;left:59px;bottom:43px;">Email:' + email + '</span>';
+                    firsttd += ' </div>';
+
+
+                    var statusRes = (val.is_active == 1) ? "checked" : "";
+                    var statusBtn = '<label class="switch">';
+                    statusBtn += '<input type="checkbox" data-id="' + id + '" value="" class="status" ' + statusRes + '>';
+                    statusBtn += '<span class="slider round"></span></label>';
+                    var editurl = '{{ route("employees.edit", ":id") }}';
+                    editurl = editurl.replace(':id', id);
+
+                    if (isSuperAdmin || isAuthorityEdit) {
+                        var editBtn = (
+                            '<a href="' + editurl + '" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i></a>'
+                        );
+                    }
+
+                    if (isSuperAdmin || isAuthorityDelete) {
+                        var deleteBtn = (
+                            '<div  onclick="delete_item(' + id + ');" style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i></div>'
+                        );
+                    }
+
+
+                    var actionBtn = (editBtn +
+                        deleteBtn
+                    );
+
+                    table.row.add([firsttd, sapId, mobile, dept.name, desg.name, statusBtn, actionBtn]).draw();
+                });
+            }
+        });
+    }
 </script>

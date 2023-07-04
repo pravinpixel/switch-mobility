@@ -40,6 +40,7 @@ class EmployeeController extends Controller
     }
     public function store(Request $request)
     {
+
         $row = $request->all();
 
         $errors = array();
@@ -60,7 +61,7 @@ class EmployeeController extends Controller
             array_push($errors, $error);
         }
         if (count($errors)) {
-            return response()->json(['status'=>"failed",'errors'=>$errors]);
+            return response()->json(['status' => "failed", 'errors' => $errors]);
         } else {
             // try {
             //     Excel::import(new EmployeesImport, "bulk1.xlsx");  
@@ -87,6 +88,24 @@ class EmployeeController extends Controller
             $model->designation_id = $request->designation_id;
             $model->sap_id = $request->sap_id;
             $model->save();
+            if ($request->id != null && $request->IsProfileImage == null) {
+                $removeProfileImagePath = public_path('/images/Employee/') . $model->profile_image;
+
+                if (file_exists($removeProfileImagePath)) {
+                    unlink($removeProfileImagePath);
+                    $model->profile_image = null;
+                    $model->save();
+                }
+            }
+            if ($request->id != null && $request->IsSignImage == null) {
+                $removeSignImagePath = public_path('/images/Employee/') . $model->sign_image;
+                if (file_exists($removeSignImagePath)) {
+                    unlink($removeSignImagePath);
+
+                    $model->sign_image =  null;
+                    $model->save();
+                }
+            }
 
             if ($request->hasFile('profile_image')) {
 
@@ -108,9 +127,9 @@ class EmployeeController extends Controller
                 $model->save();
             }
 
-            return response()->json(['status'=>"success"]);
+            return response()->json(['status' => "success"]);
 
-           // return redirect('employees')->with('success', "Employee " . $msg . " Successfully!.");
+            // return redirect('employees')->with('success', "Employee " . $msg . " Successfully!.");
         }
     }
     public function employeeSearch(Request $request)
@@ -170,7 +189,11 @@ class EmployeeController extends Controller
         $designation = Designation::where('is_active', 1)->whereNull('deleted_at')->get()->toArray();
         return view('Employee/list', ['employee_all' => $employee_all, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
     }
-
+    public function getEmployeeListData()
+    {
+        $model = Employee::with('department','designation')->whereNull('deleted_at')->get()->toArray();
+        return response()->json($model);
+     }
     public function get_all_employee()
     {
         $employees = DB::table('employees as e')
@@ -325,9 +348,25 @@ class EmployeeController extends Controller
 
     public function changeActiveStatus(Request $request)
     {
+        $id =  $request->id;
+        $checkChildData = ProjectEmployee::where('employee_id', $id)->first();
+        $checkChildData1 = WorkflowLevelDetail::where('employee_id', $id)->first();
+        $checkChildData2 = User::where('emp_id', $id)->first();
+        if ($checkChildData || $checkChildData1 || $checkChildData2) {
+            $data = [
+                "message" => "Failed",
+                "data" => "Reference Data exists, Can’t delete."
+            ];
+        } else {
 
-        $employee_update = Employee::where("id", $request->id)->update(["is_active" => $request->status]);
-        echo json_encode($employee_update);
+            $employee_update = Employee::where("id", $request->id)->update(["is_active" => $request->status]);
+            //$models  = Employee::with('department','designation')->whereNull('deleted_at')->get()->toArray();
+            $data = [
+                "message" => "Success",
+                "data" => "Employee Status Changed Successfully."
+            ];
+        }
+       return response()->json(['data'=>$data]);
     }
 
     public function bulkUploadCreate()

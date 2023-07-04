@@ -17,20 +17,30 @@ class DesignationController extends Controller
      */
     public function index()
     {
-        $designation = Designation::orderBy('id', 'desc')->get()->toArray();
+        $designation = $this->findAll();
         return view('Designation/list', ['designation' => $designation]);
+    }
+    public function getDesignationListData()
+    {
+        $models = $this->findAll();
+
+        return response()->json(['data' => $models]);
+    }
+    public function findAll()
+    {
+        return  Designation::orderBy('id', 'desc')->get()->toArray();
     }
     public function create()
     {
         $model = array();
-        return view('Designation/DesignationDetail',compact('model'));
+        return view('Designation/DesignationDetail', compact('model'));
     }
     public function edit($id)
     {
-     
+
         $model = Designation::findOrFail($id);
-    
-        return view('Designation/DesignationDetail',compact('model'));
+
+        return view('Designation/DesignationDetail', compact('model'));
     }
 
     /**
@@ -44,11 +54,11 @@ class DesignationController extends Controller
         $model = Designation::where('name', $request->name)->where('id', '!=', $request->id)->whereNull('deleted_at')->first();
 
         $response = ($model) ? false : true;
-       
+
         return response()->json(['response' => $response]);
     }
 
-  
+
     /**
      * Store a newly created resource in storage.
      *
@@ -89,7 +99,7 @@ class DesignationController extends Controller
     {
         $checkChildData = Employee::where('designation_id', $id)->first();
         $checkChildData2 = WorkflowLevelDetail::where('designation_id', $id)->first();
-        if ($checkChildData||$checkChildData2) {
+        if ($checkChildData || $checkChildData2) {
             $data = [
                 "message" => "Failed",
                 "data" => "Designation already exist.cannot delete."
@@ -105,21 +115,33 @@ class DesignationController extends Controller
     }
     public function changeDesignationActiveStatus(Request $request)
     {
-        $employee_update = Designation::where("id", $request->id)->update(["is_active" => $request->status]);
-      
-        echo json_encode($employee_update);
+       
+        $checkChildData = Employee::where('designation_id', $request->id)->first();
+        $checkChildData2 = WorkflowLevelDetail::where('designation_id',  $request->id)->first();
+        if ($checkChildData || $checkChildData2) {
+            $data = [
+                "message" => "Failed",
+                "data" => "Designation Reference Are Found! Cannot Change Status."
+            ];
+        } else {
+            $employee_update = Designation::where("id", $request->id)->update(["is_active" => $request->status]);
+            $data = [
+                "message" => "Success",
+                "data" => "Designation Status Changed Successfully."
+            ];
+        }
+        return response()->json(["data"=>$data]);
     }
-     public function designationSearch(Request $request)
-     {
+    public function designationSearch(Request $request)
+    {
         $searchData = $request->data;
         $model = Designation::select('*')
-        ->where(function ($query) use ($searchData) {
-            $query->where('name', 'LIKE', '%' . $searchData . '%')
-                ->orWhere('description', 'LIKE', '%' . $searchData . '%');
-               
-        })
-        ->whereNull('deleted_at')
-        ->get();
+            ->where(function ($query) use ($searchData) {
+                $query->where('name', 'LIKE', '%' . $searchData . '%')
+                    ->orWhere('description', 'LIKE', '%' . $searchData . '%');
+            })
+            ->whereNull('deleted_at')
+            ->get();
         return response()->json($model);
-     }
+    }
 }

@@ -1407,7 +1407,7 @@ class Doclistings extends Controller
             $departmentModel = $model->department;
             $department = $departmentModel->name;
 
-            $response = ['projectId'=>$model->id,'department'=>$department,'ticketNo' => $ticket_no, 'projectName' => $projectName, 'workflowName' => $workflowName, 'initiaterName' => $initiaterName];
+            $response = ['projectId' => $model->id, 'department' => $department, 'ticketNo' => $ticket_no, 'projectName' => $projectName, 'workflowName' => $workflowName, 'initiaterName' => $initiaterName];
             return $response;
         });
         return response()->json(['datas' => $entities]);
@@ -1443,12 +1443,22 @@ class Doclistings extends Controller
             $departmentModel = $model->department;
             $department = $departmentModel->name;
 
-            $response = ['projectId'=>$model->id,'department'=>$department,'ticketNo' => $ticket_no, 'projectName' => $projectName, 'workflowName' => $workflowName, 'initiaterName' => $initiaterName];
+            $response = ['projectId' => $model->id, 'department' => $department, 'ticketNo' => $ticket_no, 'projectName' => $projectName, 'workflowName' => $workflowName, 'initiaterName' => $initiaterName];
             return $response;
         });
-        
+
         return response()->json(['datas' => $entities]);
     }
 
+    public function approverDownloadDocs(Request $request)
+    {
 
+        $model = ProjectDocumentDetail::where('id', $request->documentId)->where('is_downloaded', 0)->first();
+        if ($model) {
+            $model->is_downloaded = 1;
+            $model->is_downloaded_time = date('Y-m-d H:i:s');
+            $model->save();
+        }
+        return response()->json(['status' => "success"]);
+    }
 }

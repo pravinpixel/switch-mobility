@@ -656,7 +656,7 @@ use Carbon\Carbon;
                     //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
                     //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
                     //     newDate = day + '-' + month + '-' + yr;
-                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="s" ><div class="row"> <div class="col-md-2">Approvers</div><div class="col-md-5 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<div class="due_date_' + level + '"></div></div><div class="col-md-1">Priority<p class="priority_' + level + '"></p></div></div><div class="docsPart"><div class="p-0  w-100" style="border-top:1px solid lightgrey;text-align:left;padding:5px 0;font-weight:bold;margin-left:10px;margin-bottom:10px;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto;"></div><div style="text-align:left;padding:5px 0;font-weight:bold;margin-left:10px;margin-bottom:10px;margin-top:20px;" >&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div><div class="emptyDocsPart" style="display:none"><hr><p>No Documents is assigned For appproval!</p></div></div></div>');
+                    $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="s" ><div class="row"> <div class="col-md-2">Approvers</div><div class="col-md-5 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<div class="due_date_' + level + '"></div></div><div class="col-md-1">Priority<p class="priority_' + level + '"></p></div></div><div class="docsPart border-top"><div class="p-0  w-100" style="text-align:left;padding:5px 0;font-weight:bold;margin-left:10px;margin-bottom:10px;margin-top:10px;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto;"></div><div style="text-align:left;padding:5px 0;font-weight:bold;margin-left:10px;margin-bottom:10px;margin-top:10px;" >&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + ' mx-3" style=" max-height:400px; overflow-y:auto"></div></div><div class="emptyDocsPart" style="display:none"><hr><p>No Documents is assigned For appproval!</p></div></div></div>');
                     //if (data.length > 0) {
 
                     $(".image_append" + level).empty();
@@ -853,7 +853,7 @@ use Carbon\Carbon;
                             }
                             if (data.aux_docs) {
                                 var versionAuxDocDiv1 = '<div class="card-body">';
-                                var versionAuxDocDiv1 = '<br>';
+                                // var versionAuxDocDiv1 = '<br>';
                                 versionAuxDocDiv1 += '<table class="table table-striped documentTable">';
                                 versionAuxDocDiv1 += '<thead class="documentTableth">';
                                 versionAuxDocDiv1 += '<tr>';

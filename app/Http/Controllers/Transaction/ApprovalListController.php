@@ -24,13 +24,14 @@ use PhpOffice\PhpWord\TemplateProcessor;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Log;
 use setasign\Fpdi\Fpdi;
-
+use Illuminate\Support\Str;
 
 use Illuminate\Support\Facades\Redirect;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Writer\Pdf\Dompdf;
+//use PhpOffice\PhpSpreadsheet\Writer\Pdf\Dompdf;
 use Dompdf\Dompdf as BaseDompdf;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -43,6 +44,9 @@ use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use Intervention\Image\ImageManagerStatic as Image;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use PhpOffice\PhpSpreadsheet\Style\Alignment as Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border as Border;
+use Dompdf\Dompdf;
 
 class ApprovalListController extends Controller
 {
@@ -280,131 +284,145 @@ class ApprovalListController extends Controller
         $department  = ($departmentModel) ? $departmentModel->name : "";
         $employeeName = ($employeeModel) ? $employeeModel->first_name . " " . $employeeModel->last_name : "";
         $extension = \File::extension($model->document_name);
+
         $filePath = public_path('projectDocuments/' . $model->document_name);
-        if ($extension == "xlsx") {
+        if ($extension == "Abcd") {
 
-            //         $fConversion = $this->basic->savePDF($filePath);
-            //        // $new  = $this->tempController->excelltopdf($filePath);
-            //        // $xltoPdf = public_path('/xlToPdf' . '/' . $request->id);
-            //         $spreadsheet = IOFactory::load($filePath);
+            // Get the path to the Excel file in the public folder
+            $excelFilePath = $filePath;
 
-            //         $sheetNames = $spreadsheet->getSheetNames();
-            //         $html = '<div>';
+            // Check if the file exists
+            if (file_exists($excelFilePath)) {
+                // Generate a unique file name for the PDF
+                $timestamp = time();
+                $randomNumber = mt_rand(1000, 9999);
+                $pdfFileName = 'result_' . $timestamp . '_' . $randomNumber . '.pdf';
+                // Get the path to save the PDF file in the same "uploads" folder
+                $pdfFilePath = public_path('uploads/' . $pdfFileName);
+                // Create the instructions JSON
+                $instructions = '{
+                        "parts": [
+                            {
+                                "file": "document"
+                            }
+                        ]
+                    }';
+                // Initialize cURL
+                $curl = curl_init();
+                // Set cURL options
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://api.pspdfkit.com/build',
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_POSTFIELDS => array(
+                        'instructions' => $instructions,
+                        'document' => new \CURLFile($excelFilePath)
+                    ),
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Bearer pdf_live_prG44gX9vAAjcR6y1xyMyczrWtMpgBVHh5hSqA4DIWc'
+                    ),
+                    CURLOPT_FILE => fopen($pdfFilePath, 'w+'),
+                ));
+                // Execute the cURL request
+                $response = curl_exec($curl);
+                // Close the cURL session
+                curl_close($curl);
+                // Check if the conversion was successful
 
-            //         foreach ($sheetNames as $sheetName) {
-            //             $worksheet = $spreadsheet->getSheetByName($sheetName);
-
-            //             $highestRow = $worksheet->getHighestRow();
-            //             $highestColumn = $worksheet->getHighestColumn();
-            //             $highestColumnIndex = Coordinate::columnIndexFromString($highestColumn);
-
-            //             $html .= '<h2>' . $sheetName . '</h2>';
-
-            //             $html .= '<table class="table" id="Excel">';
-
-            //             // Get the drawing collection
-            //             $drawingCollection = $worksheet->getDrawingCollection();
-
-            //             // Create a 2D array to store images based on their coordinates
-            //             $images = [];
-
-            //             // Iterate over the drawing collection
-            //             foreach ($drawingCollection as $drawing) {
-            //                 // Check if the drawing is an image
-            //                 if ($drawing instanceof Drawing && $drawing->getCoordinates() !== null) {
-            //                     // Save the image
-            //                     $imagePath = $this->saveImageFromDrawing($drawing, $uploadFolder);
-
-            //                     // Determine the position of the image
-            //                     $imageCoordinates = $drawing->getCoordinates();
-            //                     [$imageColumn, $imageRow] = Coordinate::coordinateFromString($imageCoordinates);
-            //                     $imageColumnIndex = Coordinate::columnIndexFromString($imageColumn) - 1;
-
-            //                     // Store the image in the corresponding cell of the images array
-            //                     $images[$imageRow][$imageColumnIndex] = '<img src="uploads/' . $imagePath . '">';
-            //                 }
-            //             }
-
-            //             // Iterate over the cells and construct the HTML table
-            //             for ($row = 1; $row <= $highestRow; $row++) {
-            //                 $html .= '<tr>';
-
-            //                 $emptyColumnCount = 0;
-
-            //                 for ($column = 1; $column <= $highestColumnIndex; $column++) {
-            //                     $cell = $worksheet->getCellByColumnAndRow($column, $row);
-            //                     $cellValue = $cell->getFormattedValue();
-
-            //                     $adjustedColumn = $column - $emptyColumnCount;
-
-            //                     $cellStyles = $worksheet->getStyleByColumnAndRow($adjustedColumn, $row);
-            //                     $cellAlignment = $cellStyles->getAlignment();
-            //                     $cellFont = $cellStyles->getFont();
-            //                     $cellFill = $cellStyles->getFill();
-            //                     $cellBorders = $cellStyles->getBorders();
-
-            //                     $html .= '<td style="';
-            //                     $html .= 'text-align:' . $cellAlignment->getHorizontal() . ';';
-            //                     $html .= 'font-weight:' . ($cellFont->getBold() ? 'bold' : 'normal') . ';';
-            //                     $html .= 'color:#' . $cellFont->getColor()->getRGB() . ';';
-            //                     $html .= 'background-color:#' . $cellFill->getStartColor()->getRGB() . ';';
-            //                     $html .= 'border-top: ' . $cellBorders->getTop()->getBorderStyle() . ' ' . $cellBorders->getTop()->getColor()->getRGB() . ';';
-            //                     $html .= 'border-right: ' . $cellBorders->getRight()->getBorderStyle() . ' ' . $cellBorders->getRight()->getColor()->getRGB() . ';';
-            //                     $html .= 'border-bottom: ' . $cellBorders->getBottom()->getBorderStyle() . ' ' . $cellBorders->getBottom()->getColor()->getRGB() . ';';
-            //                     $html .= 'border-left: ' . $cellBorders->getLeft()->getBorderStyle() . ' ' . $cellBorders->getLeft()->getColor()->getRGB() . ';';
-            //                     $html .= '">';
-
-            //                     // Check if an image exists at the current cell coordinates
-            //                     if (isset($images[$row][$column - 1])) {
-            //                         $html .= $images[$row][$column - 1];
-            //                     } else {
-            //                         $html .= $cellValue;
-            //                     }
-
-            //                     $html .= '</td>';
-            //                 }
-
-            //                 $html .= '</tr>';
-            //             }
-
-            //             $html .= '</table>';
-            //         }
-
-            //         $html .= '</div>';
-
-            //         $s1 = $uploadFolder.'/orgFiles/sample.pdf';
-            //         //$pdf = PDF::loadView('Excel.convert',['html'=> $html]);
-            //      $mainpdf = $this->basic->savePDF($html);
-
-            //    dd("well");
-
-
-
-            //         dd($pdf);
-            //         $fname = "valla.pdf";
-            //         Storage::put('finalPdf/' . $fname, $pdf->output());
-            //         dd($fname);
-            //         return view('Excel.convert')->with('html', $html);
-            //         dd($html);
-
-            $xltoPdf = public_path('/xlToPdf' . '/' . $request->id);
-            $newPdfName = "temp.pdf";
-            $pdfPath = $xltoPdf . '/' . $newPdfName;
-
-            if (File::exists($xltoPdf)) {
-
-                File::deleteDirectory($xltoPdf);
+                if ($response) {
+                    $pdfPath = public_path('uploads/' . $pdfFileName);
+                } else {
+                    dd("Conversion failed. Please try again.");
+                }
+            } else {
+                dd("Excel file not found.");
             }
-            File::makeDirectory($xltoPdf, $mode = 0777, true, true);
-            $xlPath = public_path('projectDocuments/' . $model->document_name);
+        } else if ($extension == "xlsx") {
+            //  dd("wll");
+            $spreadsheet = IOFactory::load($filePath);
+            $sheetNames = $spreadsheet->getSheetNames();
+            $html = '<div>';
+            foreach ($sheetNames as $sheetName) {
+                $worksheet = $spreadsheet->getSheetByName($sheetName);
+                $highestRow = $worksheet->getHighestRow();
+                $highestColumn = $worksheet->getHighestColumn();
+                $highestColumnIndex = Coordinate::columnIndexFromString($highestColumn);
+                $html .= '<h2>' . $sheetName . '</h2>';
+                $html .= '<table class="table" id="Excel">';
+                // Get the drawing collection
+                $drawingCollection = $worksheet->getDrawingCollection();
+                // Create a 2D array to store images based on their coordinates
+                $images = [];
+                // Iterate over the drawing collection
+                foreach ($drawingCollection as $drawing) {
+                    // Check if the drawing is an image
+                    if ($drawing instanceof Drawing && $drawing->getCoordinates() !== null) {
+                        // Save the image
+                        $imagePath = $this->saveImageFromDrawing($drawing, $uploadFolder);
+                        // Determine the position of the image
+                        $imageCoordinates = $drawing->getCoordinates();
+                        [$imageColumn, $imageRow] = Coordinate::coordinateFromString($imageCoordinates);
+                        $imageColumnIndex = Coordinate::columnIndexFromString($imageColumn) - 1;
+                        // Store the image in the corresponding cell of the images array
+                        // Read the image file content
+                        if ($imagePath) {
+                            // dd($imagePath);
+                            $imageContent = file_get_contents($uploadFolder . "/" . $imagePath);
+                            // Encode the image content to base64
+                            $base64Image = base64_encode($imageContent);
+                            // Create the img tag with the base64 source
+                            $imgTag = '<img src="data:image/jpeg;base64,' . $base64Image . '">';
+                            // Assign the img tag to the array element
+                            $images[$imageRow][$imageColumnIndex] = $imgTag;
+                        }
+                    }
+                }
+                // Iterate over the cells and construct the HTML table
+                for ($row = 1; $row <= $highestRow; $row++) {
+                    $html .= '<tr>';
+                    $emptyColumnCount = 0;
+                    for ($column = 1; $column <= $highestColumnIndex; $column++) {
+                        $cell = $worksheet->getCellByColumnAndRow($column, $row);
+                        $cellValue = $cell->getFormattedValue();
+                        $adjustedColumn = $column - $emptyColumnCount;
+                        $cellStyles = $worksheet->getStyleByColumnAndRow($adjustedColumn, $row);
+                        $cellAlignment = $cellStyles->getAlignment();
+                        $cellFont = $cellStyles->getFont();
+                        $cellFill = $cellStyles->getFill();
+                        $cellBorders = $cellStyles->getBorders();
+                        $html .= '<td style="';
+                        $html .= 'text-align:' . $this->getHorizontalAlign($cellAlignment->getHorizontal()) . ';';
+                        $html .= 'font-weight:' . ($cellFont->getBold() ? 'bold' : 'normal') . ';';
+                        $html .= 'color:#' . $cellFont->getColor()->getRGB() . ';';
+                        $html .= 'background-color:#' . $cellFill->getStartColor()->getRGB() . ';';
+                        $html .= 'border-top: ' . $this->getBorderStyle($cellBorders->getTop()->getBorderStyle()) . ' ' . $cellBorders->getTop()->getColor()->getRGB() . ';';
+                        $html .= 'border-right: ' . $this->getBorderStyle($cellBorders->getRight()->getBorderStyle()) . ' ' . $cellBorders->getRight()->getColor()->getRGB() . ';';
+                        $html .= 'border-bottom: ' . $this->getBorderStyle($cellBorders->getBottom()->getBorderStyle()) . ' ' . $cellBorders->getBottom()->getColor()->getRGB() . ';';
+                        $html .= 'border-left: ' . $this->getBorderStyle($cellBorders->getLeft()->getBorderStyle()) . ' ' . $cellBorders->getLeft()->getColor()->getRGB() . ';';
+                        $html .= '">';
+                        // Check if an image exists at the current cell coordinates
+                        if (isset($images[$row][$column - 1])) {
+                            $html .= $images[$row][$column - 1];
+                        } else {
+                            $html .= $cellValue;
+                        }
+                        $html .= '</td>';
+                    }
+                    $html .= '</tr>';
+                }
+                $html .= '</table>';         }
+            $html .= '</div>';
+            $dompdf = new Dompdf();
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+            // Save the PDF to the upload folder
+            $randomNumber = Str::random(6);
+            $filename =  $randomNumber . '.pdf';
 
-            $spreadsheet = IOFactory::load($xlPath);
-
-            // Create a PDF Writer
-            $writer = new PdfWriter($spreadsheet);
-
-            // Save the PDF file
-            $writer->save($pdfPath);
+$pdfPath = $uploadFolder . '/' . $filename;
+            file_put_contents($pdfPath, $dompdf->output());
         } else if ($extension == "pdf") {
             $pdfPath = public_path('projectDocuments/' . $model->document_name);
         } else {
@@ -442,7 +460,6 @@ class ApprovalListController extends Controller
         $imagick = new Imagick();
         $imagick->readImage($pdfPath);
         $imagick->setImageFormat('png');
-
 
         foreach ($imagick as $pageNumber => $page) {
             // Set the image quality (0-100, where 100 is the best quality)
@@ -521,7 +538,75 @@ class ApprovalListController extends Controller
         Log::info("passedLine no 132 ter ");
         return $pdf->Output('ApprovedDocs.pdf', 'D');
     }
-
+    private function saveImageFromDrawing(Drawing $drawing, $uploadFolder)
+    {
+        $uploadFolder = public_path('uploads');
+        if (!file_exists($uploadFolder)) {
+            mkdir($uploadFolder, 0777, true);
+        }
+        $exactImagePath = uniqid('image_') . '.' . $drawing->getExtension();
+        $imagePath = $uploadFolder . '/' . $exactImagePath;
+        $ExPath = $drawing->getPath();
+        // Check if the image format is supported
+        $supportedFormats = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'webp'];
+        $imageFormat = strtolower($drawing->getExtension());
+        if (!in_array($imageFormat, $supportedFormats)) {
+            // Handle unsupported format here (e.g., skip the image)
+            return null;
+        }
+        file_put_contents($imagePath, file_get_contents($ExPath));
+        // Process the image using Intervention Image
+        $image = Image::make($imagePath);
+        // Resize the image to fit within the original dimensions
+        $originalWidth = $drawing->getWidth();
+        $originalHeight = $drawing->getHeight();
+        if ($originalWidth <= 0 || $originalHeight <= 0) {
+            // Handle invalid dimensions here (e.g., skip the image)
+            return null;
+        }
+        $image->fit($originalWidth, $originalHeight);
+        // Perform any desired image manipulation or processing
+        $image->save($imagePath);
+        return $exactImagePath;
+    }
+    /**
+     * Convert horizontal alignment from Excel to CSS
+     * @param string $horizontalAlign
+     * @return string
+     */
+    private function getHorizontalAlign($horizontalAlign)
+    {
+        switch ($horizontalAlign) {
+            case Alignment::HORIZONTAL_LEFT:
+                return 'left';
+            case Alignment::HORIZONTAL_RIGHT:
+                return 'right';
+            case Alignment::HORIZONTAL_CENTER:
+                return 'center';
+            default:
+                return 'left'; // Default to left alignment if not specified
+        }
+    }
+    /**
+     * Convert border style from Excel to CSS
+     * @param string $borderStyle
+     * @return string
+     */
+    private function getBorderStyle($borderStyle)
+    {
+        switch ($borderStyle) {
+            case Border::BORDER_NONE:
+                return 'none';
+            case Border::BORDER_THIN:
+                return 'solid';
+            case Border::BORDER_DASHED:
+                return 'dashed';
+            case Border::BORDER_DOTTED:
+                return 'dotted';
+            default:
+                return 'none'; // Default to no border if not specified
+        }
+    }
     public function projectApprovers($projectId)
     {
 
@@ -540,7 +625,7 @@ class ApprovalListController extends Controller
                 }
             }
             $signImage = ($empModel->sign_image) ? $empModel->sign_image : "noimage.png";
-            $signImageWithPath = public_path('images/employee/' . $signImage);
+            $signImageWithPath = public_path('images/Employee/' . $signImage);
             $updateDate =  \Carbon\Carbon::createFromFormat('Y-m-d H:i:s',  $model->updated_at)->format('d-m-Y');
 
             $resData = ['appproverName' => $appproverName, 'designation' => $designation, 'level' => $model->level, 'updatedate' => $updateDate, 'signImageWithPath' => $signImageWithPath];
@@ -552,7 +637,7 @@ class ApprovalListController extends Controller
     {
         $pdfPath = public_path('dhana/rest1.pdf');
     }
-    private function saveImageFromDrawing(Drawing $drawing, $uploadFolder)
+    private function saveImageFromDrawing1(Drawing $drawing, $uploadFolder)
     {
         $exactImagePath = uniqid('image_') . '.' . $drawing->getExtension();
         $imagePath = $uploadFolder . '/' . $exactImagePath;

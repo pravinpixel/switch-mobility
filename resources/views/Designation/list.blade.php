@@ -114,11 +114,11 @@
                                 <!--begin::Table row-->
                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
 
-                                 
                                     <th class="min-w-125px">Designation</th>
                                     <th class="min-w-125px">Description</th>
                                     <th class="min-w-125px">Status</th>
                                     <th class="min-w-120px">Actions</th>
+
                                 </tr>
                                 <!--end::Table row-->
                             </thead>
@@ -132,7 +132,7 @@
 
                                     <!--end::Checkbox-->
                                     <!--begin::User=-->
-                                 
+
 
                                     <td>{{$d['name']}}</td>
                                     <td>{{$d['description']}}</td>
@@ -147,12 +147,12 @@
                                             <!--begin::Edit-->
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('designation-edit'))
-                                            <a  href="{{route('designation.edit',$d['id'])}}" style="display:inline;cursor: pointer;" id="{{ $d['id'] }}" title="Edit Designation"><i class="fa-solid fa-pen" style="color:orange"></i></a>         
-                                                                                     
+                                            <a href="{{route('designation.edit',$d['id'])}}" style="display:inline;cursor: pointer;" id="{{ $d['id'] }}" title="Edit Designation"><i class="fa-solid fa-pen" style="color:orange"></i></a>
+
                                             @endif
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('designation-delete'))
-                                            <div  onclick="delete_item(<?php echo $d['id']; ?>);" style="display:inline;cursor: pointer; margin-left: 10px;" id="{{ $d['id'] }}" class="" title="Delete Designation"><i class="fa-solid fa-trash" style="color:red"></i></div>                        
+                                            <div onclick="delete_item(<?php echo $d['id']; ?>);" style="display:inline;cursor: pointer; margin-left: 10px;" id="{{ $d['id'] }}" class="" title="Delete Designation"><i class="fa-solid fa-trash" style="color:red"></i></div>
                                             @endif
 
                                             <!--end::More-->
@@ -268,7 +268,7 @@
                                 'Designation has been deleted.',
                                 'success'
                             );
-                            window.location.reload();
+                            getListData();
                         }
                     }
                 });
@@ -277,6 +277,12 @@
         });
     }
     $(document).on('change', '.status', function() {
+
+        var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
+        var isAuthorityEdit = "{{ auth()->user()->can('designation-edit') }}";
+        var isAuthorityDelete = "{{ auth()->user()->can('designation-delete') }}";
+        var table = $('#service_table').DataTable();
+
         var chk = $(this);
         var id = $(this).attr('data-id');
         var status = $(this).prop('checked') == true ? 1 : 0;
@@ -308,28 +314,88 @@
                         status: status,
                     },
                     success: function(result) {
-                        if (result) {
-                            window.location.reload();
+                        var resData = result.data;
+                        console.log(resData);
+                        if (resData.message == "Success") {
+                            Swal.fire(
+                                'Status!',
+                                resData.data,
+                                'success'
+                            );
+                            getListData();
+                        } else {
+                            if (status == 1) {
+                                chk.prop('checked', false);
+
+                            } else {
+
+                                chk.prop('checked', true).attr('checked', 'checked');
+                            }
+                            Swal.fire(
+                                'Status!',
+                                resData.data,
+                                'error'
+                            );
                         }
                     }
                 });
-                if (isConfirmed.value) {
-                    Swal.fire(
-                        'Status!',
-                        'Designation Status has been Changed.',
-                        'success'
-                    );
-
-                }
-            } else {             
-                if (status ==1) {
+                
+            } else {
+                if (status == 1) {
                     chk.prop('checked', false);
-                  
+
                 } else {
-                   
+
                     chk.prop('checked', true).attr('checked', 'checked');
                 }
             }
         });
     });
+
+    function getListData() {
+        var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
+        var isAuthorityEdit = "{{ auth()->user()->can('designation-edit') }}";
+        var isAuthorityDelete = "{{ auth()->user()->can('designation-delete') }}";
+
+        var table = $('#service_table').DataTable();
+
+        $.ajax({
+            url: "{{ url('getDesignationListData') }}",
+            type: 'ajax',
+            method: 'get',
+            data: {
+                "_token": "{{ csrf_token() }}"
+            },
+            success: function(result) {
+                table.clear().draw();
+                $.each(result.data, function(key, val) {
+
+
+                    var name = val.name;
+                    var description = val.description;
+                    var id = val.id;
+                    var statusRes = (val.is_active == 1) ? "checked" : "";
+                    var statusBtn = '<label class="switch">';
+                    statusBtn += '<input type="checkbox" data-id="' + id + '" value="" class="status" ' + statusRes + '>';
+                    statusBtn += '<span class="slider round"></span></label>';
+                    var editBtn = "";
+                    var deleteBtn = "";
+                    var editurl = '{{ route("designation.edit", ":id") }}';
+                    editurl = editurl.replace(':id', id);
+                    if (isSuperAdmin || isAuthorityEdit) {
+                        var editBtn = (
+                            '<a href="' + editurl + '" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3"><i class="fa-solid fa-pen" style="color:orange"></i></a>'
+                        );
+                    }
+
+                    if (isSuperAdmin || isAuthorityDelete) {
+                        var deleteBtn = '<div onclick="delete_item(' + id + ');" style="display:inline;cursor: pointer; margin-left: 10px;" id="' + id + '" class="" title="Delete Department"><i class="fa-solid fa-trash" style="color:red"></i></div>';
+
+                    }
+                    var actionBtn = editBtn + deleteBtn;
+                    table.row.add([name, description, statusBtn, actionBtn]).draw();
+                });
+            }
+        });
+    }
 </script>

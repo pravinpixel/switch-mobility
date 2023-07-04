@@ -25,8 +25,12 @@ class DepartmentController extends Controller
     }
     public function index()
     {
-        $departments = Department::orderBy('id', 'desc')->get()->toArray();
+        $departments = $this->findAllDepartmentData();
         return view('Departments/list', ['departments' => $departments]);
+    }
+    public function findAllDepartmentData()
+    {
+        return  Department::orderBy('id', 'desc')->get()->toArray();
     }
     public function create()
     {
@@ -67,7 +71,7 @@ class DepartmentController extends Controller
 
         // dd("well");
 
-       
+
         $input = $request->all();
         if ($request->id) {
             $model = Department::findOrFail($request->id);
@@ -111,10 +115,29 @@ class DepartmentController extends Controller
     }
     public function changedepartmentActiveStatus(Request $request)
     {
-        $employee_update = Department::where("id", $request->id)->update(["is_active" => $request->status]);
-        echo json_encode($employee_update);
-    }
 
+         $checkChildData = Employee::where('department_id', $request->id)->first();
+        if ($checkChildData) {
+            $data = [
+                "message" => "Failed",
+                "data" => "Reference Data Are Found!cannot change Status."
+            ];
+        } else {
+            $employee_update = Department::where("id", $request->id)->update(["is_active" => $request->status]);
+            $data = [
+                "message" => "Success",
+                "data" => "Department Deleted Successfully."
+            ];
+        }   
+
+        return response()->json(['data' => $data]);
+    }
+    public function getDepartmentListData()
+    {
+        $model = $this->findAllDepartmentData();
+
+        return response()->json(['data' => $model]);
+    }
     public function deptSearch(Request $request)
     {
 

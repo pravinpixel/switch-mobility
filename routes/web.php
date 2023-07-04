@@ -19,6 +19,7 @@ use App\Http\Controllers\settings\RolesController;
 use App\Http\Controllers\settings\UserController;
 use App\Http\Controllers\Transaction\ApprovalListController;
 use App\Http\Controllers\WorkflowController;
+use App\Models\DocumentType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 /*
@@ -45,6 +46,13 @@ Route::group([
     Route::post('docListingSearch', [Doclistings::class, 'docListingSearch'])->name('docListingSearch');
     Route::post('Search', [Doclistings::class, 'Search'])->name('Search')->middleware('is_admin');
     Route::resource('department', DepartmentController::class);
+    
+    Route::get('getDepartmentListData', [DepartmentController::class, 'getDepartmentListData'])->name('getDepartmentListData');
+    Route::get('getDesignationListData', [DesignationController::class, 'getDesignationListData']);
+    Route::get('getEmployeeListData', [EmployeeController::class, 'getEmployeeListData']);
+    Route::get('getWorkflowListData', [WorkflowController::class, 'getWorkflowListData']);
+    Route::get('getDocumentTypeListData', [DocumentTypeController::class, 'getDocumentTypeListData']);
+
 
     Route::post('getProjectByWorkflow', [Doclistings::class, 'getProjectByWorkflow'])->name('getProjectByWorkflow');
     Route::post('getProjectById', [Doclistings::class, 'getProjectById'])->name('getProjectById');
@@ -134,6 +142,8 @@ Route::post('getlevelwiseDocument', [Doclistings::class, 'getlevelwiseDocument']
 Route::post('updatelevelwiseDocumentStatus', [Doclistings::class, 'updatelevelwiseDocumentStatus'])->name('updatelevelwiseDocumentStatus');
 
 Route::get('AssignedProject/{id}', [ProjectController::class, 'show'])->name('AssignedProject');
+
+Route::post('approverDownloadDocs', [Doclistings::class, 'approverDownloadDocs'])->name('approverDownloadDocs');
 });
 
 //Department

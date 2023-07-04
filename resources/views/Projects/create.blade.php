@@ -341,7 +341,7 @@
                             <!--begin::Input-->
                             <input type="text" class="form-control form-control-solid project_code" placeholder="Enter Project Code" name="project_code" required />
                             <!--end::Input-->
-                            <p id="projectCodeAlert" class="notifyAlert1"></p>
+                            <p id="projectCodeAlert" class="notifyAlert1" style="display: none;"></p>
                         </div>
                         <!--begin::Col-->
                         <div class="col-md-6 fv-row">
@@ -367,7 +367,7 @@
                             <!--begin::Input-->
                             <input type="text" class="form-control form-control-solid project_name" placeholder="Enter Project Name" name="project_name" required />
                             <!--end::Input-->
-                            <p id="projectNameAlert" class="notifyAlert1"></p>
+                            <p id="projectNameAlert" class="notifyAlert1" style="display: none;"></p>
                         </div>
                         <div class="col-md-6 fv-row">
                             <!--begin::Label-->
@@ -718,11 +718,10 @@
 
     $(document).on('blur', '.project_code', function() {
         console.log("$(this).val()");
-
-
         $.ajax({
             url: "{{ route('projectCodeValidation') }}",
             type: 'ajax',
+            async: false,
             method: 'post',
             data: {
                 "_token": "{{ csrf_token() }}",
@@ -731,40 +730,34 @@
             },
             success: function(data) {
                 console.log(data);
-
-
                 var alertName = 'projectCodeAlert';
                 console.log(data.response);
                 console.log(alertName);
-
                 if (data.response == false) {
-                    $('#submitBtn').attr('disabled', true);
-
                     document.getElementById(alertName).style.display = "block";
                     document.getElementById(alertName).style.color = "red";
                     document.getElementById(alertName).innerHTML = 'Code Is Exists*';
-                    return false;
+                   
                 }
-                document.getElementById(alertName).style.display = "none";
-                $('#submitBtn').attr('disabled', false);
-                return true;
+                else{
+                    document.getElementById(alertName).style.display = "none";
+                }
+            
 
 
             },
-            error: function() {
-                $("#otp_error").text("Update Error");
-            }
+           
 
         });
 
     });
+    
     $(document).on('blur', '.project_name', function() {
         console.log("$(this).val()");
-
-
         $.ajax({
             url: "{{ route('projectNameValidation') }}",
             type: 'ajax',
+            async: false,
             method: 'post',
             data: {
                 "_token": "{{ csrf_token() }}",
@@ -780,16 +773,15 @@
                 console.log(alertName);
 
                 if (data.response == false) {
-                    $('#submitBtn').attr('disabled', true);
+                  
 
                     document.getElementById(alertName).style.display = "block";
                     document.getElementById(alertName).style.color = "red";
                     document.getElementById(alertName).innerHTML = 'Name Is Exists*';
-                    return false;
+                   
                 }
                 document.getElementById(alertName).style.display = "none";
-                $('#submitBtn').attr('disabled', false);
-                return true;
+              
 
 
             },

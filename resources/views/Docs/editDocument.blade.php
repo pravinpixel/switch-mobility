@@ -412,7 +412,7 @@ use Carbon\Carbon;
     </div>
     <button class="btn switchPrimaryBtn float-right-btn float-open-btn">
         <span class="r-90"> MileStone</span>
-       
+
     </button>
     <div class="card shadow-sm right-card right-card-close p-0 overflow-hidden">
         <div class="card-body milstoneBody p-0">
@@ -441,22 +441,24 @@ use Carbon\Carbon;
     <style>
         .float-right-btn {
             position: fixed;
-            right:20px;
+            right: 20px;
             top: 50%;
             transform: translateY(-50%);
             width: 40px;
             height: 100px;
             display: flex;
-    justify-content: center;
-    align-items: center;
-          
-        }
-.r-90{
-    position: relative;
+            justify-content: center;
+            align-items: center;
 
-    display: block;
-    rotate: -90deg;
-}
+        }
+
+        .r-90 {
+            position: relative;
+
+            display: block;
+            rotate: -90deg;
+        }
+
         .float-open-btn {
             right: 10px;
         }
@@ -634,15 +636,19 @@ use Carbon\Carbon;
                             if (completionDate) {
                                 dateSign = (dueDate.getTime() <= todayDate.getTime()) ? "-" : "+";
                             }
+                            var daylebel = " days";
 
-
+                            if (completionDate<=1) {
+                                daylebel = " day";
+                            }
 
                             var dateAr = val.due_date.split('-');
-                            var cnewDate = dateAr[1] + '-' + dateAr[2] + '-' + dateAr[0].slice(-4);
+                            var cnewDate = dateAr[2] + '-' + dateAr[1] + '-' + dateAr[0].slice(-4);
                             var duDateAppend = cnewDate;
+                            console.log("new date Format"+duDateAppend);
 
                             var badgeType = (dateSign == '-') ? "danger" : "success";
-                            duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate + ' Days</span></span>';
+                            duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate +daylebel+ '</span></span>';
                             $(".due_date_" + level).empty();
 
 
@@ -733,7 +739,7 @@ use Carbon\Carbon;
                                             currentStatusData = "Approved";
                                             statusColour = "success";
                                         }
-console.log("statusColour"+statusColour);
+                                        console.log("statusColour" + statusColour);
                                         var docMainDetailArray = val.get_doc_detail;
 
 
@@ -765,7 +771,7 @@ console.log("statusColour"+statusColour);
 
 
                                         for (var i = docMainDetailArray.length - 1; i >= 0; --i) {
-                                            console.log('Current Docs Level ' + docMainDetailArray[i].status);
+                                            console.log('Current Docs Level ' + docMainDetailArray[i].is_downloaded);
                                             var remarkData = (docMainDetailArray[i].remark) ? docMainDetailArray[i].remark : "";
                                             var updatedBy = docMainDetailArray[i].employee;
                                             var updatedPerson = "";
@@ -817,14 +823,19 @@ console.log("statusColour"+statusColour);
                                                 }];
                                                 levelstageStatus.push(state);
                                                 var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
+                                                var isDownlodedDocs = docMainDetailArray[i].is_downloaded;
+                                                console.log('isDownlodedDocs' + isDownlodedDocs);
+
                                                 // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
                                                 if (docMainDetailArray[i].status != 4 || showLastLevelBtn) {
-                                                    if (ApproverExactLevel || isSuperAdmin) {
-                                                        versionMainDocDiv += '<a class="btn switchPrimaryBtn btn-sm" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.doc_id + ')" title="Change Status"> <i class="las la-toggle-on"></i> Change Status</a> &nbsp;';
+                                                    if (isSuperAdmin || isDownlodedDocs == 1) {
+                                                        if (ApproverExactLevel || isSuperAdmin) {
+                                                            versionMainDocDiv += '<a class="btn switchPrimaryBtn btn-sm" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.doc_id + ')" title="Change Status" readonly > <i class="las la-toggle-on"></i> </a>Change Status &nbsp;';
+                                                        }
                                                     }
                                                 }
                                             }
-                                            versionMainDocDiv += '<a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i> Download</a>';
+                                            versionMainDocDiv += '<a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"  onclick="isDownloadDocs(' + ApproverExactLevel + ',' + docMainDetailArray[i].id + ',' + level + ',)"><i class="las la-download"></i> </a>Download';
                                             // versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionMainDocDiv += '</button>';
                                             versionMainDocDiv += '</td>';
@@ -856,7 +867,7 @@ console.log("statusColour"+statusColour);
                                     $.each(data.aux_docs, function(key, val) {
                                         versionAuxDocDiv1 += '<tr>';
                                         versionAuxDocDiv1 += '<td>' + val.original_name + '</td>';
-                                        versionAuxDocDiv1 += '<td><a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + val.document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a> Download</td>';
+                                        versionAuxDocDiv1 += '<td><a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + val.document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a> Download1</td>';
                                         versionAuxDocDiv1 += '</tr>';
                                     });
                                     versionAuxDocDiv1 += ' </table>';
@@ -1001,18 +1012,18 @@ console.log("statusColour"+statusColour);
                 }
             });
         }
-      
-		$("button").click(function() {
-			// alert($(this).children().hasClass("indicator-label"));
+
+        $("button").click(function() {
+            // alert($(this).children().hasClass("indicator-label"));
             console.log("well")
-			if ($(this).children().hasClass("indicator-label")) {
-				$(this).attr("data-kt-indicator", "on");
-			}
-		});
-	
+            if ($(this).children().hasClass("indicator-label")) {
+                $(this).attr("data-kt-indicator", "on");
+            }
+        });
+
         function submitStatusForm(event) {
             console.log("well done");
-          
+
             var stype = document.getElementById('status');
             var remark = document.getElementById('statusremarks');
             var fileInput = document.getElementById("againestDocument");
@@ -1029,7 +1040,7 @@ console.log("statusColour"+statusColour);
                     $('#filenotification').show();
                     return;
                 }
-                
+
             }
             // Check if the name field is empty
             if (remark.value.trim() === '') {
@@ -1051,7 +1062,7 @@ console.log("statusColour"+statusColour);
                 data: formData,
                 success: function(result) {
                     console.log(result);
-                   
+
                     var ProjectId1 = "{{ $details->id }}";
                     if (result.staus == 'Success') {
                         $('.store').attr("data-kt-indicator", "off");
@@ -1059,7 +1070,7 @@ console.log("statusColour"+statusColour);
                         closeStatusModel();
                         get_level_data(levelId, ProjectId1);
                     } else {
-                       
+
                         $('.store').attr("data-kt-indicator", "off");
                         window.location.reload();
                     }
@@ -1074,6 +1085,33 @@ console.log("statusColour"+statusColour);
                 $('.documentUploadDiv').css('display', 'none');
             }
         });
+
+        function isDownloadDocs(isApproverLevel, documentId,levelId) {
+            console.log("well dhana");
+            console.log(isApproverLevel);
+
+            if (isApproverLevel) {
+                $.ajax({
+                    url: "{{ url('approverDownloadDocs') }}",
+                    type: 'ajax',
+                    method: 'post',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        documentId:documentId,
+                        staus: 1,
+                    },
+                    success: function(result) {
+                       
+
+                        var ProjectId1 = "{{ $details->id }}";
+                        if (result.status == 'success') {                  
+                                          
+                            get_level_data(levelId, ProjectId1);
+                        } 
+                    }
+                });
+            }
+        }
 
         function submitForm() {
             console.log("well done");

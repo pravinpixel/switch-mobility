@@ -156,7 +156,7 @@
                             <center>
                                 <div class="col-md-12 fv-row fullWorkflow">
                                     <!--begin::Variations-->
-                                    <div class="card card-flush py-4">
+                                    <div class="card card-flush ">
                                         <!--begin::Card header-->
                                         <div class="card-header d-inline-block m-auto">
                                             <div class="card-title">
@@ -218,7 +218,7 @@
                     </center>
                     <div class="col-md-12 fv-row partialWorkflow" style="display:none;">
                         <!--begin::Variations-->
-                        <div class="card card-flush py-4">
+                        <div class="card card-flush ">
                             <!--begin::Card header-->
                             <div class="card-header d-inline-block m-auto">
                                 <div class="card-title">
@@ -297,7 +297,7 @@
                 </div>
 
                 {{-- FORM --}}
-                <div class="text-center mb-5">
+                <div class="text-center my-5">
                     <button type="button" class="btn btn-light me-3" onclick="resetForm()">Reset</button>
                     <a href="{{route('workflow.index')}}">
                         <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>

@@ -111,9 +111,9 @@
                                 <!--begin::Table row-->
                                 <tr class="fw-bold fs-7 text-uppercase gs-0">
 
-                               
-                                    <th class="text-left">Department Name</th>
-                                    <th class="text-center">Description</th>
+
+                                    <th class="text-left ">Department Name</th>
+                                    <th class="text-center" >Description</th>
                                     <th class="text-center" index="1">Status</th>
 
                                     <th class="text-center">Actions</th>
@@ -130,10 +130,10 @@
 
                                     <!--end::Checkbox-->
                                     <!--begin::User=-->
-                                 
+
 
                                     <td style="text-align: left!important">{{$d['name']}}</td>
-                                    <td class="text-left">{{$d['description']}}</td>
+                                    <td class="text-left" style="max-width:300px !important;">{{$d['description']}}</td>
                                     <td class="text-center">
 
                                         <label class="switch">
@@ -146,11 +146,11 @@
                                             <!--begin::Edit-->
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('department-edit'))
-                                            <div style="display:inline;cursor: pointer;" id="{{ $d['id'] }}" class="editDept" title="Edit Department"><i class="fa-solid fa-pen" style="color:orange"></i></div>             
+                                            <div style="display:inline;cursor: pointer;" id="{{ $d['id'] }}" class="editDept" title="Edit Department"><i class="fa-solid fa-pen" style="color:orange"></i></div>
                                             @endif
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('department-delete'))
-                                            <div  onclick="delete_item(<?php echo $d['id']; ?>);" style="display:inline;cursor: pointer; margin-left: 10px;" id="{{ $d['id'] }}" class="" title="Delete Department"><i class="fa-solid fa-trash" style="color:red"></i></div>                        
+                                            <div onclick="delete_item(<?php echo $d['id']; ?>);" style="display:inline;cursor: pointer; margin-left: 10px;" id="{{ $d['id'] }}" class="" title="Delete Department"><i class="fa-solid fa-trash" style="color:red"></i></div>
                                             @endif
 
                                             <!--end::More-->
@@ -176,7 +176,9 @@
 
 <script>
     $(document).ready(function() {
-
+        var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
+        var isAuthorityEdit = "{{ auth()->user()->can('department-edit') }}";
+        var isAuthorityDelete = "{{ auth()->user()->can('department-delete') }}";
         // $('.deptSearch').on('input', function() {
         //     var searchData = $('.deptSearch').val();
         //     $.ajax({
@@ -296,7 +298,7 @@
                                 'Department has been deleted.',
                                 'success'
                             );
-                            window.location.reload();
+                            getListData();
                         }
 
                     }
@@ -313,6 +315,11 @@
         });
     }
     $(document).on('change', '.status', function() {
+        var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
+        var isAuthorityEdit = "{{ auth()->user()->can('department-edit') }}";
+        var isAuthorityDelete = "{{ auth()->user()->can('department-delete') }}";
+        var table = $('#service_table').DataTable();
+
         var chk = $(this);
         var id = $(this).attr('data-id');
         var status = $(this).prop('checked') == true ? 1 : 0;
@@ -344,19 +351,54 @@
                         status: status,
                     },
                     success: function(result) {
-                        if (result) {
-                            window.location.reload();
+                        var resData = result.data;
+                        console.log(resData);
+                        if (resData.message == "Success") {
+                            Swal.fire(
+                                'Status!',
+                                'Department Status has been Changed.',
+                                'success'
+                            );
+                            getListData();
+                            // table.clear().draw();
+                            // $.each(result.data, function(key, val) {
+                            //     console.log(val);
+                            //     var name = val.name;
+                            //     var description = val.description;
+                            //     var id = val.id;
+                            //     var statusRes = (val.is_active == 1) ? "checked" : "";
+                            //     var statusBtn = '<label class="switch">';
+                            //     statusBtn += '<input type="checkbox" data-id="' + id + '" value="" class="status" ' + statusRes + '>';
+                            //     statusBtn += '<span class="slider round"></span></label>';
+                            //     if (isSuperAdmin || isAuthorityEdit) {
+                            //         var EditBtn = '<div style="display:inline;cursor: pointer;" id="' + id + '" class="editDept" title="Edit Department"><i class="fa-solid fa-pen" style="color:orange"></i></div>';
+
+                            //     }
+
+                            //     if (isSuperAdmin || isAuthorityDelete) {
+                            //         var deleteBtn = '<div onclick="delete_item(' + id + ');" style="display:inline;cursor: pointer; margin-left: 10px;" id="' + id + '" class="" title="Delete Department"><i class="fa-solid fa-trash" style="color:red"></i></div>';
+
+                            //     }
+                            //     var actionBtn = EditBtn + deleteBtn;
+                            //     table.row.add([name, description, statusBtn, actionBtn]).draw();
+                            // });
+                        } else {
+                            if (status == 1) {
+                                chk.prop('checked', false);
+
+                            } else {
+
+                                chk.prop('checked', true).attr('checked', 'checked');
+                            }
+                            Swal.fire(
+                                'Status!',
+                                resData.data,
+                                'error'
+                            );
                         }
                     }
                 });
-                if (isConfirmed.value) {
-                    Swal.fire(
-                        'Status!',
-                        'Department Status has been Changed.',
-                        'success'
-                    );
 
-                }
             } else {
                 if (status == 1) {
                     chk.prop('checked', false);
@@ -368,5 +410,44 @@
             }
         });
     });
- 
+
+    function getListData() {
+        var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
+        var isAuthorityEdit = "{{ auth()->user()->can('department-edit') }}";
+        var isAuthorityDelete = "{{ auth()->user()->can('department-delete') }}";
+        var table = $('#service_table').DataTable();
+
+        $.ajax({
+            url: "{{ url('getDepartmentListData') }}",
+            type: 'ajax',
+            method: 'get',
+            data: {
+                "_token": "{{ csrf_token() }}"
+            },
+            success: function(result) {
+                table.clear().draw();
+                $.each(result.data, function(key, val) {
+                    console.log(val);
+                    var name = val.name;
+                    var description = val.description;
+                    var id = val.id;
+                    var statusRes = (val.is_active == 1) ? "checked" : "";
+                    var statusBtn = '<label class="switch">';
+                    statusBtn += '<input type="checkbox" data-id="' + id + '" value="" class="status" ' + statusRes + '>';
+                    statusBtn += '<span class="slider round"></span></label>';
+                    if (isSuperAdmin || isAuthorityEdit) {
+                        var EditBtn = '<div style="display:inline;cursor: pointer;" id="' + id + '" class="editDept" title="Edit Department"><i class="fa-solid fa-pen" style="color:orange"></i></div>';
+
+                    }
+
+                    if (isSuperAdmin || isAuthorityDelete) {
+                        var deleteBtn = '<div onclick="delete_item(' + id + ');" style="display:inline;cursor: pointer; margin-left: 10px;" id="' + id + '" class="" title="Delete Department"><i class="fa-solid fa-trash" style="color:red"></i></div>';
+
+                    }
+                    var actionBtn = EditBtn + deleteBtn;
+                    table.row.add([name, description, statusBtn, actionBtn]).draw();
+                });
+            }
+        });
+    }
 </script>

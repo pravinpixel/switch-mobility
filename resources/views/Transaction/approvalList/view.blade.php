@@ -400,9 +400,9 @@ use Carbon\Carbon;
                             <tr>
                                 <td>{{$model->original_name}}</td>
                                 <td>
-                                <a target="_blank" class="btn switchPrimaryBtn  viewDocument btn-xs" title="View Document" id="{{$model->projectId}}"><i class="las la-eye"></i></a>
-                                <a download="OriginalDocs" href="{{ asset('/projectDocuments/') }}<?php echo "/".$model->document_name; ?>" class="btn btn-warning btn-xs" title="Orginal Document Download" id="{{$model->id}}"><i class="las la-download" style="">Orginal Document</i></a>
-                                <a target="_blank" class="btn btn-success btn-xs actionDocs" title="Conversion Document Download" id="{{$model->id}}"><i class="las la-download"></i></a></td>
+                                <a target="_blank" class="btn switchPrimaryBtn  viewDocument btn-xs" title="View Document" id="{{$model->projectId}}"><i class="fas fa-eye text-white"></i> </a> View Document
+                                <a download="OriginalDocs" href="{{ asset('/projectDocuments/') }}<?php echo "/".$model->document_name; ?>" class="btn btn-warning btn-xs" title="Orginal Document Download" id="{{$model->id}}"><i class="las la-download" style=""></i></a> Download Orginal Document
+                                <a target="_blank" class="btn btn-success btn-xs actionDocs" title="Conversion Document Download" id="{{$model->id}}"><i class="las la-download"></i> </a> Download</td>
                             </tr>
                             @endforeach
 
@@ -418,7 +418,7 @@ use Carbon\Carbon;
     </div>
     </div>
     <button class="btn switchPrimaryBtn float-right-btn float-open-btn">
-        MileStone
+        <span class="r-90"> MileStone</span>
     </button>
     <div class="card shadow-sm right-card right-card-close p-0 overflow-hidden">
         <div class="card-body milstoneBody p-0">
@@ -445,21 +445,30 @@ use Carbon\Carbon;
         </div>
     </div>
     <style>
-        .float-right-btn {
+       .float-right-btn {
             position: fixed;
-
+            right:20px;
             top: 50%;
             transform: translateY(-50%);
-            height: 40px;
-            rotate: -90deg;
+            width: 40px;
+            height: 100px;
+            display: flex;
+    justify-content: center;
+    align-items: center;
+          
         }
+.r-90{
+    position: relative;
 
+    display: block;
+    rotate: -90deg;
+}
         .float-open-btn {
-            right: -40px;
+            right: 10px;
         }
 
         .float-close-btn {
-            right: 364px;
+            right: 424px;
         }
 
         .right-card {

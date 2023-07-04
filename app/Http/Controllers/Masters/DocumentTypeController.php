@@ -74,10 +74,30 @@ class DocumentTypeController extends Controller
             return redirect()->back()->withErrors(['error' => ['Insert Error']]);
         }
     }
+    public function getDocumentTypeListData(){
+        $models = DocumentType::select('document_types.*', 'workflows.workflow_code', 'workflows.workflow_name', 'workflows.total_levels')
+        ->leftjoin('workflows', 'workflows.id', '=', 'document_types.workflow_id')
+        ->whereNull('document_types.deleted_at')
+        ->get();
+        return response()->json($models);
+    }
     public function changedDocumentTypeActiveStatus(Request $request)
     {
-        $status_update = DocumentType::where("id", $request->id)->update(["is_active" => $request->status]);
-        echo json_encode($status_update);
+        $checkChildData = Project::where('document_type_id', $request->id)->first();
+        if ($checkChildData) {
+            $data = [
+                "message" => "Failed",
+                "data" => "Document Type already exist.cannot Change Status."
+            ];
+        } else {
+            $status_update = DocumentType::where("id", $request->id)->update(["is_active" => $request->status]);
+            $data = [
+                "message" => "Success",
+                "data" => "Document Type Deleted Successfully."
+            ];
+        }
+        return response()->json(['data'=>$data]);       
+       
     }
 
 

@@ -61,7 +61,7 @@
 
                         <div class="card-title">
                             <div class="row">
-                                <div class="col-md-5" style="display:inline;">
+                                <div class="col-md-4" style="display:inline;">
                                     <!--begin::Label-->
                                     <label class="required fs-6 fw-semibold mb-2">Start Date</label>
                                     <!--end::Label-->
@@ -71,7 +71,7 @@
 
                                 </div>
 
-                                <div class="col-md-5" style="display:inline;">
+                                <div class="col-md-4" style="display:inline;">
                                     <!--begin::Label-->
                                     <label class="required fs-6 fw-semibold mb-2">End Date</label>
                                     <!--end::Label-->
@@ -80,9 +80,13 @@
 
 
                                 </div>
+                                <div class="col-md-2" onclick="filterData()">
+                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                    <span class="btn btn-success" >Search</span>
+                                </div>
                                 <div class="col-md-2">
                                     <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <button class="btn btn-success badge badge-secondary h1" onclick="exportData()">Export to Excel</button>
+                                    <span class="btn btn-warning" style=" padding: 5px 10px;font-size: 13px;" onclick="exportData()">Export to Excel</span>
                                 </div>
                             </div>
                         </div>
@@ -118,10 +122,11 @@
                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
 
                                  
-                                    <th>Project Code</th>
-                                    <th>Project Name</th>
+                                   
                                     <th>Workflow Name</th>
                                     <th>Workflow Code</th>
+                                    <th>Project Code</th>
+                                    <th>Project Name</th>
                                     <th>Initiator</th>
                                     <th>Department</th>
                                     <th>Status</th>
@@ -165,9 +170,9 @@
             $('.endDate').val(today);
             filterData();
 
-            $('.startDate').on('change', function() {
-                filterData();
-            });
+            // $('.startDate').on('change', function() {
+            //     filterData();
+            // });
 
             $(".endDate").change(function() {
                 var startDate = $('.startDate').val();
@@ -182,13 +187,11 @@
                     );
 
                     $('.endDate').val('');
-                } else {
-                    filterData();
                 }
             });
 
 
-
+        });
 
             function filterData() {
                 console.log("well");
@@ -225,7 +228,7 @@
                                 var viewBtn = '<div id=' + projectId + ' class="btn switchPrimaryBtn  viewDocs">View</div>';
 
 
-                                table.row.add([projectCode, projectName, workflowName, workflowCode, initiater, department, activeStatus, viewBtn]).draw();
+                                table.row.add([ workflowName, workflowCode,projectCode, projectName, initiater, department, activeStatus, viewBtn]).draw();
                             });
                         },
                         error: function() {
@@ -235,7 +238,7 @@
                     });
                 }
             }
-        });
+        
     $(document).on('click', '.viewDocs', function() {
         console.log("well and good");
         var id = $(this).attr('id');

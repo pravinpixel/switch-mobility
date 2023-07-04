@@ -30,8 +30,8 @@ class WorkflowController extends Controller
             $status = "success";
         }
 
-       
-        return response()->json(['status'=>$status,'data'=>$wfcode]);
+
+        return response()->json(['status' => $status, 'data' => $wfcode]);
     }
     public function genarateWFCode($wfname)
     {
@@ -54,8 +54,26 @@ class WorkflowController extends Controller
     }
     public function changeWorkflowActiveStatus(Request $request)
     {
-        $model = Workflow::where("id", $request->id)->update(["is_active" => $request->status]);
-        echo json_encode($model);
+        $model = DocumentType::where('workflow_id', $request->id)->where('is_active', 1)->first();
+        if ($model) {
+            $data = [
+                "message" => "Failed",
+                "data" => "Reference Data exists, Can’t delete."
+            ];
+        } else {
+            $model = Workflow::where("id", $request->id)->update(["is_active" => $request->status]);
+            
+            $workflow = Workflow::whereNull('deleted_at')->get()->toArray();
+            $data = [
+                "message" => "Success",
+                "data" => $workflow
+            ];
+        }
+        return response()->json($data);
+    }
+    public function getWorkflowListData(){
+        $models = Workflow::whereNull('deleted_at')->get()->toArray();
+        return response()->json($models);
     }
     public function index()
     {

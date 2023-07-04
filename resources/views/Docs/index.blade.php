@@ -299,7 +299,7 @@
                                     <td>{{ $WorkFlow->workflow_name . ' & ' . $WorkFlow->workflow_code }}</td>
                                     <td>{{ $d->project_name . '&' . $d->project_code }}</td>
 
-                                    <td>{{ $initiator->first_name . ' ' . $initiator->last_name }}</td>
+                                    <td>{{ $initiator->first_name .' ' . $initiator->middle_name .' ' . $initiator->last_name }}</td>
                                     <td>{{ $department->name }}</td>
                                     <td>
                                         <span>
@@ -403,7 +403,7 @@
                                 '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:blue"></i></div>';
                         }
                         act += '</span>';
-                        table.row.add([ticketNo, projectCodeandName, wfCodeandwfName, initiator, deptName, act]).draw();
+                        table.row.add([ticketNo,wfCodeandwfName, projectCodeandName,  initiator, deptName, act]).draw();
 
 
                         projectFilter.append('<option value="' + projectId + '">' + projectCodeandName + '</option>');
@@ -453,7 +453,7 @@
                                 '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:blue"></i></div>';
                         }
                         act += '</span>';
-                        table.row.add([ticketNo, projectCodeandName, wfCodeandwfName, initiator, deptName, act]).draw();
+                        table.row.add([ticketNo,wfCodeandwfName, projectCodeandName,  initiator, deptName, act]).draw();
 
 
 
@@ -544,7 +544,7 @@
                                 '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:blue"></i></div>';
                         }
                         act += '</span>';
-                        table.row.add([ticketNo, projectCode + projectName, wfCode + wfName,
+                        table.row.add([ticketNo,wfCode + wfName, projectCode + projectName, 
                             initiator, deptName, act
                         ]).draw();
                     });

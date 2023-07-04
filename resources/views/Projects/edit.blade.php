@@ -75,10 +75,11 @@
     .tabcontent {
         float: left;
         padding: 0px 12px;
+        padding-bottom: 10px;
         border: 1px solid #ccc;
         width: 100%;
         border-left: none;
-        height: 1100px;
+       
     }
 
     #critical {
@@ -144,7 +145,6 @@
     #high:checked {
         background-color: black;
     }
-
     .pdf_upload {
         cursor: pointer;
         border: 1px solid lightgrey;
@@ -174,13 +174,17 @@
     }
 
     .pdf-iframe {
-        width: 100px;
-        height: 100px;
+        width: 50px;
+        height: 50px;
 
     }
 
     .pdf_delete_btn {
-        width: 100px !important;
+        position: absolute !important;
+        top: -5px !important;
+        right: -5px !important;
+        border-radius: 50%;
+
     }
 
     .pdf-view {
@@ -189,8 +193,9 @@
     }
 
     .pdf {
+        position: relative;
         margin: 0 10px;
-        width: 100px;
+        width: 50px;
     }
 
     .pdf label {
@@ -198,7 +203,7 @@
     }
 
     .pdf-view .upload-text {
-        margin: 40px auto;
+        margin: 0px auto;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -244,10 +249,9 @@
     }
 
     div[data-kt-stepper-element="content"] {
-        min-height: 400px !important;
-        max-height: 400px !important;
+   
         overflow-x: hidden;
-        overflow-y: auto;
+        overflow-y: hidden;
     }
 
     .level-container {
@@ -331,7 +335,7 @@
                             <!--begin::Input-->
                             <input type="text" class="form-control form-control-solid project_code" placeholder="Enter Project Code" name="project_code" required />
                             <!--end::Input-->
-                            <p id="projectCodeAlert" class="notifyAlert1"></p>
+                            <p id="projectCodeAlert" class="notifyAlert1" style="display: none;"></p>
                         </div>
                         <!--begin::Col-->
                         <div class="col-md-6 fv-row">
@@ -357,7 +361,7 @@
                             <!--begin::Input-->
                             <input type="text" class="form-control form-control-solid project_name" placeholder="Enter Project Name" name="project_name" required />
                             <!--end::Input-->
-                            <p id="projectNameAlert" class="notifyAlert1"></p>
+                            <p id="projectNameAlert" class="notifyAlert1" style="display: none;"></p>
                         </div>
                         <div class="col-md-6 fv-row">
                             <!--begin::Label-->
@@ -578,7 +582,7 @@
                             <label class="row col-12 m-2 pdf-view row " for="pdf1">
                                 <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div>
                             </label> <input type="file" name="main_document[]" id="pdf1" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx">
-                        </div>';
+                        </div>
                     </div>
                     <div class="col-md-6 fv-row">
                         <label class="fs-6 fw-semibold mb-2">Auxilary Document</label><br>
@@ -715,6 +719,7 @@
         $.ajax({
             url: "{{ route('projectCodeValidation') }}",
             type: 'ajax',
+            async:false,
             method: 'post',
             data: {
                 "_token": "{{ csrf_token() }}",
@@ -730,16 +735,15 @@
                 console.log(alertName);
 
                 if (data.response == false) {
-                    $('#submitBtn').attr('disabled', true);
+                  
 
                     document.getElementById(alertName).style.display = "block";
                     document.getElementById(alertName).style.color = "red";
                     document.getElementById(alertName).innerHTML = 'Code Is Exists*';
-                    return false;
+                   
                 }
                 document.getElementById(alertName).style.display = "none";
-                $('#submitBtn').attr('disabled', false);
-                return true;
+               
 
 
             },
@@ -757,6 +761,7 @@
         $.ajax({
             url: "{{ route('projectNameValidation') }}",
             type: 'ajax',
+            async:false,
             method: 'post',
             data: {
                 "_token": "{{ csrf_token() }}",
@@ -772,16 +777,16 @@
                 console.log(alertName);
 
                 if (data.response == false) {
-                    $('#submitBtn').attr('disabled', true);
+                   
 
                     document.getElementById(alertName).style.display = "block";
                     document.getElementById(alertName).style.color = "red";
                     document.getElementById(alertName).innerHTML = 'Name Is Exists*';
-                    return false;
+                   
                 }
                 document.getElementById(alertName).style.display = "none";
-                $('#submitBtn').attr('disabled', false);
-                return true;
+              
+           
 
 
             },

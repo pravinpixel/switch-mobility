@@ -335,10 +335,10 @@
 
 
                             {{-- FORM --}}
-                            <div class="text-center pt-15">
-                            <a href="{{route('workflow.index')}}">
-                                    <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
-                                <button type="submit" class="btn switchPrimaryBtn " data-kt-users-modal-action="submit">
+                            <div class="text-center">
+                            <a href="{{route('workflow.index')}}" class=" ">
+                                    <button type="button" class="btn btn-light-danger me-3  mt-5">Cancel</button></a>
+                                <button type="submit" class="btn switchPrimaryBtn mt-5 " data-kt-users-modal-action="submit">
                                     <span class="indicator-label">Save and Exit</span>
                                     <span class="indicator-progress">Please wait...
                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>

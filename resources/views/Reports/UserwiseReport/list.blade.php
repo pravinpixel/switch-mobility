@@ -133,11 +133,11 @@
                                         <!--begin::Table row-->
                                         <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
 
-                                         
+                                          <th class="min-w-100px text-nowrap">Workflow Code</th>
+                                            <th class="min-w-100px text-nowrap">Workflow Name</th>
                                             <th class="min-w-100px text-nowrap">Project Code</th>
                                             <th class="min-w-100px text-nowrap">Project Name</th>
-                                            <th class="min-w-100px text-nowrap">Workflow Code</th>
-                                            <th class="min-w-100px text-nowrap">Workflow Name</th>
+                                           
                                             <th class="min-w-100px text-nowrap">Initiator</th>
                                             <th class="min-w-100px text-nowrap">Department</th>
                                             <th class="min-w-100px text-nowrap">Level</th>
@@ -153,11 +153,11 @@
                                     <tbody class="text-gray-600 fw-semibold" id="tableContent">
                                         @foreach ($entities as $entity)
                                             <tr>
-                                            
+                                            <td>{{ $entity['workflowCode'] }}</td>
+                                                <td>{{ $entity['workflowName'] }}</td>
                                                 <td>{{ $entity['projectCode'] }}</td>
                                                 <td>{{ $entity['projectName'] }}</td>
-                                                <td>{{ $entity['workflowCode'] }}</td>
-                                                <td>{{ $entity['workflowName'] }}</td>
+                                            
 
                                                 <td>{{ $entity['initiater'] }}</td>
                                                 <td>{{ $entity['department'] }}</td>
@@ -251,8 +251,8 @@
                                     editurl = editurl.replace(':id', projectId);
                                     var viewBtn = '<div id=' + projectId +
                                     ' class="btn btn-success viewDocs">View</div>';
-                                    table.row.add([projectCode, projectName, workflowCode,
-                                        workflowName, initiater, department, workflowLevel,
+                                    table.row.add([ workflowCode,
+                                        workflowName, projectCode, projectName,initiater, department, workflowLevel,
                                         dueDate, noOfDays, activeStatus, viewBtn
                                     ]).draw();
                                 });
