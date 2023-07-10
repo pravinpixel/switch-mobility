@@ -35,10 +35,7 @@ var KTCreateCampaign = (function () {
                     if ($(".btn-tab-switch").attr("validate") == "need") {
                     $(".notifyAlert").remove();
                         var inputSelect=$('.current[data-kt-stepper-element="content"] input[required] , .current[data-kt-stepper-element="content"] select[required]');
-
                         let identity;
-                        
-                        
                         $.each(inputSelect, function(index, inputBox) {
                             var inputValue = inputBox.value;
                             // Do something with the input value in each iteration, such as calling a function
@@ -46,9 +43,10 @@ var KTCreateCampaign = (function () {
                              identity = $(inputBox).prev().html();
                             $(inputBox).parent().append(`<p class="notifyAlert" style="display: block; color: red;">`+identity+` Is Mandatory*</p> `);
                            }
-                          
                           });
-                          if ($(".notifyAlert").length == 0) {
+                       
+                        console.log("Validation Next" + $(".notifyAlert1").is(":visible"));
+                          if ($(".notifyAlert").length == 0 && $(".notifyAlert1").is(":visible") == false) {
                             e.goNext(), KTUtil.scrollTop()
                           }
                         

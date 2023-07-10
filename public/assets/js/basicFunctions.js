@@ -17,6 +17,20 @@ $(document).ready(
         datatTableDescription();
         datatTableDescription1();
         datatTableDescription2();
+        if ($('.add-button-datatable').length) {
+            
+            // $('.add-button-datatable').find('[data-kt-user-table-toolbar]').find("a").addClass("");
+            const toolbarHtml ="<div class='d-flex align-items-center justify-content-end col-sm-4'>"+ $('.add-button-datatable').find('[data-kt-user-table-toolbar]').html()+"</div>";
+            if (toolbarHtml) {
+                $('.dataTables_wrapper .header-row').children().addClass("col-sm-4");
+                $('.dataTables_wrapper .header-row').children().removeClass("col-sm-6");
+               
+              $('.dataTables_wrapper .header-row').append(toolbarHtml);
+            }
+           
+          }
+          
+          
 
     });
 function datatTableDescription() {
@@ -25,7 +39,7 @@ function datatTableDescription() {
         "language": {
             "lengthMenu": "Show _MENU_",
         },
-        "dom": "<'row'" +
+        "dom": "<'row header-row'" +
             "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
             "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
             ">" +
@@ -38,6 +52,8 @@ function datatTableDescription() {
             ">"
     });
     return Servicetable1;
+    
+
 }
 function datatTableDescription1() {
 
@@ -45,7 +61,7 @@ function datatTableDescription1() {
         "language": {
             "lengthMenu": "Show _MENU_",
         },
-        "dom": "<'row'" +
+        "dom": "<'row header-row'" +
             "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
             "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
             ">" +
@@ -65,7 +81,7 @@ function datatTableDescription2() {
         "language": {
             "lengthMenu": "Show _MENU_",
         },
-        "dom": "<'row'" +
+        "dom": "<'row header-row'" +
             "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
             "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
             ">" +
