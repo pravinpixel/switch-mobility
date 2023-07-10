@@ -186,7 +186,7 @@
                                     <select class="form-select form-select-solid projectFilter" name="project_code_name" data-kt-select2="true" data-placeholder="Project Code / Name" data-allow-clear="true" id="projectCode">
                                         <option></option>
                                         @foreach ($projects as $project)
-                                        <option value="{{ $project['project_code'] }}">
+                                        <option value="{{ $project['id'] }}">
                                             {{ $project['project_name'] }}( {{ $project['project_code'] }})
                                         </option>
                                         @endforeach

@@ -161,7 +161,10 @@ class RolesController extends Controller
 
         $role = Role::find($id);
 
-        if ($role->hasPermissionTo($role->id)) {
+        $users = $role->users;
+    
+
+        if (count($users)) {
             return response()->json([
                 "status" => "failed",
                 'message' => 'You cannot delete a role that has permissions assigned!'

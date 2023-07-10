@@ -115,8 +115,8 @@
                                     <label class="required fs-6 fw-semibold mb-2">Workflow Code</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="text" class="form-control form-control-solid wfCode" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" disabled />
-                                    <input type="hidden" class="form-control form-control-solid wfCode" placeholder="Enter Workflow Code" name="workflow_code" required autocomplete="off" /> <!--end::Input-->
+                                    <input type="text" class="form-control form-control-solid wfCode" placeholder=" Workflow Code" name="workflow_code" required autocomplete="off" disabled />
+                                    <input type="hidden" class="form-control form-control-solid wfCode" placeholder="Workflow Code" name="workflow_code" required autocomplete="off" /> <!--end::Input-->
                                     <p id="wfCodeAlert" class="notifyAlert"></p>
                                 </div>
                                 <!--end::Col-->
@@ -1227,7 +1227,7 @@
     }
     $(document).on('blur', '.workflow_name', function() {
         var wfname = $('.workflow_name').val();
-        console.log("well");
+       if(wfname){
         $.ajax({
             url: "{{url('getWorkflowCodeFormat')}}",
             type: 'ajax',
@@ -1257,6 +1257,7 @@
                 $('.wfCode').val(result);
             }
         });
+    }
     });
 </script>
 @endsection

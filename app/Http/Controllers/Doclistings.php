@@ -1404,7 +1404,7 @@ class Doclistings extends Controller
             $workflowName = $workflowModel->workflow_name . ' & ' . $workflowModel->workflow_code;
             $employeeModel = $model->employee;
             $initiaterName = $employeeModel->first_name . ' ' . $employeeModel->middle_name . ' ' . $employeeModel->last_name;
-            $departmentModel = $model->department;
+            $departmentModel = $employeeModel->department;
             $department = $departmentModel->name;
 
             $response = ['projectId' => $model->id, 'department' => $department, 'ticketNo' => $ticket_no, 'projectName' => $projectName, 'workflowName' => $workflowName, 'initiaterName' => $initiaterName];
@@ -1440,7 +1440,7 @@ class Doclistings extends Controller
             $workflowName = $workflowModel->workflow_name . ' & ' . $workflowModel->workflow_code;
             $employeeModel = $model->employee;
             $initiaterName = $employeeModel->first_name . ' ' . $employeeModel->middle_name . ' ' . $employeeModel->last_name;
-            $departmentModel = $model->department;
+            $departmentModel = $employeeModel->department;
             $department = $departmentModel->name;
 
             $response = ['projectId' => $model->id, 'department' => $department, 'ticketNo' => $ticket_no, 'projectName' => $projectName, 'workflowName' => $workflowName, 'initiaterName' => $initiaterName];

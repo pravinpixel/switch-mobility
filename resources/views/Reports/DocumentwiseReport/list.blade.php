@@ -326,12 +326,12 @@
             column7 = row.cells[6].innerText;
             column8 = row.cells[7].innerText;
             column9 = row.cells[8].innerText;
-            column10 = row.cells[9].innerText;
+          
 
             /* add a new records in the array */
             rows.push(
                 [
-                    
+                    column1,
                     column2,
                     column3,
                     column4,
@@ -340,7 +340,7 @@
                     column7,
                     column8,
                     column9,
-                    column10,
+                  
                 ]
             );
 

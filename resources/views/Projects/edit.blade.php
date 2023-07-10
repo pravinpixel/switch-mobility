@@ -1121,10 +1121,10 @@ validation=false;
                             levelTabContentData += '</div><br><br>';
                             levelTabContentData += '<div class="col-md-12 fv-row"><label class="required fs-6 fw-semibold mb-2">Priority</label><br>';
 
-                            levelTabContentData += '<input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1"> Important &nbsp;&nbsp;';
-                            levelTabContentData += '<input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2"> Medium &nbsp;&nbsp;';
-                            levelTabContentData += '<input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3"> Low &nbsp;&nbsp;';
-                            levelTabContentData += '<input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" checked> High';
+                            levelTabContentData += '<input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1" data-getLevel="' + WFLevelBtn[wfl].levelId+'" > Important &nbsp;&nbsp;';
+                            levelTabContentData += '<input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2" data-getLevel="' + WFLevelBtn[wfl].levelId+'"> Medium &nbsp;&nbsp;';
+                            levelTabContentData += '<input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3" data-getLevel="' + WFLevelBtn[wfl].levelId+'"> Low &nbsp;&nbsp;';
+                            levelTabContentData += '<input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" checked data-getLevel="' + WFLevelBtn[wfl].levelId+'"> High';
 
                             levelTabContentData += '</div><br><br>';
                             levelTabContentData += '<h4>Approvers</h4>';
@@ -1301,10 +1301,10 @@ validation=false;
                         var check3 = (priority == 3) ? "checked" : "";
                         var check4 = (priority == 4) ? "checked" : "";
 
-                        levelTabContentData += ' <input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1" ' + check1 + '> Important &nbsp;&nbsp;';
-                        levelTabContentData += '<input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2" ' + check2 + '> Medium &nbsp;&nbsp;';
-                        levelTabContentData += '<input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3" ' + check3 + '> Low &nbsp;&nbsp;';
-                        levelTabContentData += '<input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" ' + check4 + '> High ';
+                        levelTabContentData += ' <input id="critical" type="checkbox" class="priority priority1' + WFLevelBtn[wfl].levelId + ' getPriority' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="1" ' + check1 + ' data-getLevel="' + WFLevelBtn[wfl].levelId+'"> Important &nbsp;&nbsp;';
+                        levelTabContentData += '<input id="low" type="checkbox" class="priority priority2' + WFLevelBtn[wfl].levelId + ' getPriority' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="2" ' + check2 + ' data-getLevel="' + WFLevelBtn[wfl].levelId+'"> Medium &nbsp;&nbsp;';
+                        levelTabContentData += '<input id="medium" type="checkbox" class="priority priority3' + WFLevelBtn[wfl].levelId + ' getPriority' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="3" ' + check3 + ' data-getLevel="' + WFLevelBtn[wfl].levelId+'"> Low &nbsp;&nbsp;';
+                        levelTabContentData += '<input id="high" type="checkbox" class="priority priority4' + WFLevelBtn[wfl].levelId + ' getPriority' + WFLevelBtn[wfl].levelId + '" name="priority[]" value="4" ' + check4 + ' data-getLevel="' + WFLevelBtn[wfl].levelId+'"> High ';
 
                         levelTabContentData += '</div><br><br>';
                         levelTabContentData += '<h4>Approvers</h4>';
@@ -1455,7 +1455,9 @@ validation=false;
         });
 
     $(document).on('change', '.priority', function() {
-        $('input[name="priority[]"]').not(this).prop('checked', false);
+        var levelId = $(this).attr('data-getlevel');
+    //    $('input[name="priority'+levelId+'"]').not(this).prop('checked', false);
+        $('.getPriority'+levelId).not(this).prop('checked', false);
     });
 
     function delete_item(id) {
