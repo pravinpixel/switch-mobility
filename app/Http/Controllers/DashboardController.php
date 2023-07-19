@@ -11,10 +11,12 @@ use App\Models\Project;
 use App\Models\ProjectApprover;
 use App\Models\projectDocument;
 use App\Models\ProjectDocumentDetail;
+use App\Models\ProjectDocumentStatusByLevel;
 use App\Models\ProjectEmployee;
 use App\Models\ProjectLevels;
 use App\Models\ProjectMilestone;
 use App\Models\Workflow;
+use App\Models\Workflowlevels;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,9 +35,9 @@ class DashboardController extends Controller
   public function index()
   {
     $empId = Auth::user()->emp_id;
-  
+
     $countArray = $this->getCount();
-   
+
     $this->basicController->BasicFunction();
     $role = auth()->user()->roles->first();
     if ($role) {
@@ -87,6 +89,7 @@ class DashboardController extends Controller
 
     $totalPendingmodels->whereNull('deleted_at');
     $totalPendingmodels->where('current_status', 0);
+    $totalPendingmodels->where('end_date', '>', now()->toDateString());
     $totalPendingProjects = $totalPendingmodels->count();
 
 
@@ -125,11 +128,11 @@ class DashboardController extends Controller
     if ($empId) {
 
       $initiaterProjectModels = Project::with('workflow', 'employee', 'employee.department')->where('initiator_id', $empId)->get();
-    
+
       foreach ($initiaterProjectModels as $initiaterProjectModel) {
         $projectId = $initiaterProjectModel->id;
-       // 
-       // dd($projectId);
+        // 
+        // dd($projectId);
         $DocsModel = ProjectDocumentDetail::where('project_id', $projectId)->count();
         if (!$DocsModel) {
           array_push($initiatingProjects, $initiaterProjectModel);
@@ -187,7 +190,7 @@ class DashboardController extends Controller
 
   public function getCount()
   {
-   
+
     $empId = Auth::user()->emp_id;
 
     $projectModels = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
@@ -208,45 +211,82 @@ class DashboardController extends Controller
     $totalDeclinedDocumentCount = 0;
     $totalOverDueDocumentCount = 0;
 
-if($totalProject){
-    foreach ($getProjectModels as $key => $getProjectModel) {
+    if ($totalProject) {
+      foreach ($getProjectModels as $key => $getProjectModel) {
 
-      $projectId = $getProjectModel->id;
-
-      $ProjectDocumentCount = projectDocument::where('project_id', $projectId)->where('type', 1)->count();
-      $totalDocumentCount += $ProjectDocumentCount;
-
-      $approvedProjectDocumentCount = projectDocument::where('project_id', $projectId)->where('type', 1)->where('status', 4)->count();
-      $totalApprovedDocumentCount += $approvedProjectDocumentCount;
-
-      $pendingProjectDocumentCount = projectDocument::where('project_id', $projectId)->where('type', 1)->where('status', 1)->count();
-      $totalPendingDocumentCount += $pendingProjectDocumentCount;
-
-      $declinedProjectDocumentCount = projectDocument::where('project_id', $projectId)->where('type', 1)->where('status', 2)->count();
-      $totalDeclinedDocumentCount += $declinedProjectDocumentCount;
-
-      $projectLevelModels = ProjectLevels::where('project_id', $projectId)->get();
-      foreach ($projectLevelModels as $projectLevelModel) {
-        $dueDate = $projectLevelModel->due_date;
-        $level = $projectLevelModel->project_level;
-
-
-
+        $projectId = $getProjectModel->id;
+        $workflowId = $getProjectModel->workflow_id;
+        $dueDate = $getProjectModel->end_date;
         $toDayDate = now()->toDateString();
         $date1 = \Carbon\Carbon::parse($dueDate);
         $date2 = \Carbon\Carbon::parse($toDayDate);
 
-        if ($date1->lt($date2)) {
+        $getProjectDocs = projectDocument::where('project_id', $projectId)->where('type', 1)->get();
+        $ProjectDocumentCount = count($getProjectDocs);
+        foreach ($getProjectDocs as $getProjectDoc) {
+          $docId = $getProjectDoc->id;
+          $wfModel = Workflowlevels::where('workflow_id', $workflowId)->get();
+          $lastLevelIndex = count($wfModel) - 1;
 
-          $getOverDueDocs = ProjectDocumentDetail::where('project_id', $projectId)
-            ->where('is_latest', 1)
-            ->where('status', '!=', 4)
-            ->count();
-          $totalOverDueDocumentCount += ($getOverDueDocs) ? 1 : 0;
+          if ($lastLevelIndex) {
+            $lastLevel = $wfModel[$lastLevelIndex]->levels;
+            $docsModelStatusLevel = ProjectDocumentStatusByLevel::where('level_id', $lastLevel)
+              ->where('doc_id', $docId)
+              ->first();
+            if ($docsModelStatusLevel) {
+              if ($docsModelStatusLevel->status == 1||$docsModelStatusLevel->status == 3) {
+           
+                  if ($date1->lt($date2)) {
+                    $totalOverDueDocumentCount +=1;
+                  }else{
+                    $totalPendingDocumentCount += 1;
+                  }
+               
+              } else if ($docsModelStatusLevel->status == 2) {
+             
+                  if ($date1->lt($date2)) {
+                    $totalOverDueDocumentCount +=1;
+                  }else{
+                    $totalDeclinedDocumentCount += 1;
+                  }
+              } else {
+                $totalApprovedDocumentCount += 1;
+              }
+            }
+          }
+        }
+        $totalDocumentCount += $ProjectDocumentCount;
+
+        // $approvedProjectDocumentCount = projectDocument::where('project_id', $projectId)->where('type', 1)->where('status', 4)->count();
+        // $totalApprovedDocumentCount += $approvedProjectDocumentCount;
+
+        // $pendingProjectDocumentCount = projectDocument::where('project_id', $projectId)->where('type', 1)->where('status', 1)->count();
+        // $totalPendingDocumentCount += $pendingProjectDocumentCount;
+
+        // $declinedProjectDocumentCount = projectDocument::where('project_id', $projectId)->where('type', 1)->where('status', 2)->count();
+        // $totalDeclinedDocumentCount += $declinedProjectDocumentCount;
+
+        $projectLevelModels = ProjectLevels::where('project_id', $projectId)->get();
+        foreach ($projectLevelModels as $projectLevelModel) {
+          $dueDate = $projectLevelModel->due_date;
+          $level = $projectLevelModel->project_level;
+
+
+
+          $toDayDate = now()->toDateString();
+          $date1 = \Carbon\Carbon::parse($dueDate);
+          $date2 = \Carbon\Carbon::parse($toDayDate);
+
+          if ($date1->lt($date2)) {
+
+            $getOverDueDocs = ProjectDocumentDetail::where('project_id', $projectId)
+              ->where('is_latest', 1)
+              ->where('status', '!=', 4)
+              ->count();
+           // $totalOverDueDocumentCount += ($getOverDueDocs) ? 1 : 0;
+          }
         }
       }
-
-
       $response = [
         'totalProjectCount' => $totalProject,
         'totalDocumentCount' => $totalDocumentCount,
@@ -255,21 +295,20 @@ if($totalProject){
         'totalDeclinedDocumentCount' => $totalDeclinedDocumentCount,
         'totalOverDueDocumentCount' => $totalOverDueDocumentCount
       ];
-    
+
+      return $response;
+    } else {
+      $response = [
+        'totalProjectCount' => $totalProject,
+        'totalDocumentCount' => $totalDocumentCount,
+        'totalApprovedDocumentCount' => $totalApprovedDocumentCount,
+        'totalPendingDocumentCount' => $totalPendingDocumentCount,
+        'totalDeclinedDocumentCount' => $totalDeclinedDocumentCount,
+        'totalOverDueDocumentCount' => $totalOverDueDocumentCount
+      ];
+
       return $response;
     }
-  }else{
-    $response = [
-      'totalProjectCount' => $totalProject,
-      'totalDocumentCount' => $totalDocumentCount,
-      'totalApprovedDocumentCount' => $totalApprovedDocumentCount,
-      'totalPendingDocumentCount' => $totalPendingDocumentCount,
-      'totalDeclinedDocumentCount' => $totalDeclinedDocumentCount,
-      'totalOverDueDocumentCount' => $totalOverDueDocumentCount
-    ];
-  
-    return $response;
-  }
   }
 
 
@@ -307,7 +346,7 @@ if($totalProject){
           ->orWhereBetween('end_date', [$startDate, $endDate]);
       });
       $initiaterProjectModels = $initiaterAllProjectModels->get();
-     
+
       foreach ($initiaterProjectModels as $initiaterProjectModel) {
         $projectId = $initiaterProjectModel->id;
         $DocsModel = ProjectDocumentDetail::where('project_id', $projectId)->count();
@@ -330,7 +369,7 @@ if($totalProject){
       });
       $myAprovingProjectModels->whereNull('deleted_at');
       $myAprovingProjects = $myAprovingProjectModels->get();
-    
+
       foreach ($myAprovingProjects as $myApprovingProject) {
         $projectId = $myApprovingProject->id;
         $workflowModel = $myApprovingProject['workflow'];

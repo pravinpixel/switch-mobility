@@ -82,7 +82,7 @@
                                     <!--begin::Input-->
                                     <!--begin::Input-->
                                     <select name="documentName" id="documentName" class="form-select documentType">
-                                        <option value=""> Select Workflow Name</option>
+                                        <option value=""> Select Document Type</option>
 
 
                                     </select>
@@ -100,12 +100,12 @@
                                 </div>
                                 <div class="col-md-1">
                                     <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <button class="btn btn-warning badge badge-secondary" onclick="reset()">Reset</button>
+                                    <button class="btn btn-warning badge" onclick="reset()">Reset</button>
                                 </div>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <div class="col-md-1">
+                              
+                                <div class="col-md-1" onclick="exportData()">
                                     <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <button class="btn btn-success badge badge-secondary" onclick="exportData()">Export to Excel</button>
+                                    <span class="btn btn-success badge " >Export to Excel</span>
                                 </div>
                             </div>
 
@@ -356,7 +356,7 @@
         var encodedUri = encodeURI(csvContent);
         var link = document.createElement("a");
         link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "DocumnetwiseReports.csv");
+        link.setAttribute("download", "DocumentwiseReports.csv");
         document.body.appendChild(link);
         link.click();
     }

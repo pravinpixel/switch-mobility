@@ -124,10 +124,10 @@
                                     <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
                                     <button class="btn btn-warning resetBtn badge badge-secondary">Reset</button>
                                 </div>
-                                &nbsp; &nbsp; &nbsp; &nbsp;
-                                <div class="col-md-1">
+                               
+                                <div class="col-md-1" onclick="exportData()">
                                     <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <button class="btn btn-success badge badge-secondary" onclick="exportData()">Export to Excel</button>
+                                    <span class="btn btn-success badge badge-secondary" >Export to Excel</span>
                                 </div>
                             </div> <br>
 

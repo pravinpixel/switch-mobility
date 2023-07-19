@@ -246,7 +246,7 @@
         $('body').append(form);
         form.submit();
 
-    })
+    });
     $(document).on('click', '.toggleBtn', function() {
         var toggleBtn = $('.toggleBtn');
         var columnIndex = 4;

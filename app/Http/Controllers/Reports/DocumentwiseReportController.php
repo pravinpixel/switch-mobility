@@ -65,6 +65,9 @@ class DocumentwiseReportController extends Controller
         if ($documentId) {
             $modelDatas->where('document_type_id', $documentId);
         }
+        if ($projectId) {
+            $modelDatas->where('projects.id', $projectId);
+        }
         $modelDatas->whereNull('deleted_at');
         $models = $modelDatas->get();
         $entities = $this->projectController->ReportDataLooping($models);

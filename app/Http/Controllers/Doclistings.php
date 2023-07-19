@@ -639,6 +639,7 @@ class Doclistings extends Controller
                 } else {
                     $updateOldDocDetail = $this->updateDocDetails($documentId, $level, $status, $remark, 1);
                     $updateDocFirstStage = $this->updateStage1Document($documentId, $level, $status);
+                    $updateStatusCurrentLevel = $this->UpdateToStatusLevelModel($projectId, $level, $documentId, $status);
                     $getMainDocs = projectDocument::where('id', $documentId)->first();
                     if ($getMainDocs) {
                         $getMainDocs->status = 4;
@@ -780,7 +781,8 @@ class Doclistings extends Controller
                         Log::info('fileUpload ->return 2');
                     }
                 } else {
-
+                    $updateStatusCurrentLevel = $this->UpdateToStatusLevelModel($projectId, $level, $documentId, $status);
+               
                     $nextLevel = $this->getNextLevel($documentId, $level);
                     $updateOldData = $this->updateDocDetails($documentId, $level, $status, $remark);
                     if ($nextLevel) {

@@ -82,11 +82,11 @@
                                 </div>
                                 <div class="col-md-2" onclick="filterData()">
                                     <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <span class="btn btn-success" >Search</span>
+                                    <button class="btn switchPrimaryBtn badge badge-secondary" >Search</button>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-2" onclick="exportData()">
                                     <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <span class="btn btn-warning" style=" padding: 5px 10px;font-size: 13px;" onclick="exportData()">Export to Excel</span>
+                                    <button class="btn btn-success badge badge-secondary">Export to Excel</button>
                                 </div>
                             </div>
                         </div>

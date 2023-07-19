@@ -238,6 +238,10 @@
                                             <button class="btn btn-success " onclick="search()">Search</button>
 
                                         </div>
+                                        <div class="col-md-1">
+                                            <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                            <button class="btn btn-warning resetBtn ">Reset</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <br>
@@ -418,7 +422,45 @@
         function() {
             chart1();
             chart2();
+            $(".toDate").change(function() {
+                console.log("well");
+                var startDate = $('.fromDate').val();
+                var endDate = $('.toDate').val();
 
+
+                if (startDate > endDate) {
+                    Swal.fire(
+                        'Warning!',
+                        'End date should be greater than Start date.',
+                        'error'
+                    );
+
+                    $('.toDate').val('');
+                }
+            });
+            $(".fromDate").change(function() {
+                console.log("well");
+                var startDate = $('.fromDate').val();
+                var endDate = $('.toDate').val();
+
+                if (startDate && endDate) {
+                    console.log("Yes found ");
+                    if (startDate < endDate) {
+                        Swal.fire(
+                            'Warning!',
+                            'End date should be Less than Start date.',
+                            'error'
+                        );
+
+                        $('.fromDate').val('');
+                    }
+                }
+            });
+            $('.resetBtn').on('click', function() {
+
+                location.reload();
+                // $("#service_table").load(location.href + " #service_table");
+            });
 
         });
 
@@ -547,6 +589,7 @@
         form.submit();
 
     });
+
     function search() {
         console.log("well done");
 
@@ -582,7 +625,7 @@
                 console.log(initiatingProjectArray);
                 console.log(approvingProjectArray);
                 console.log(activeProjects);
-              
+
                 //initiating projects
                 $.each(initiatingProjectArray, function(key, val) {
                     var ticketNo = val.ticketNo;
@@ -602,12 +645,12 @@
 
                     initiatingProjectTable.row.add([ticketNo, projectNameAndCode, workflowNameAndCode, initiater, department, viewBtn]).draw();
                 });
-                 //approving Projects
-                 $.each(approvingProjectArray, function(key, val) {
+                //approving Projects
+                $.each(approvingProjectArray, function(key, val) {
                     var ticketNo = val.ticketNo;
                     var projectName = val.projectName;
                     var projectCode = val.projectCode;
-                    var workflowName = val.wfname ;
+                    var workflowName = val.wfname;
                     var workflowCode = val.wfCode;
 
                     var startDate = val.startDate;
@@ -621,7 +664,7 @@
                     var viewBtn = '<button id=' + projectId +
                         ' class="btn btn-success editDocument" style="color:white" >View</button>';
 
-                        approvingProjectTable.row.add([ticketNo, projectName,projectCode,workflowName, workflowCode, department,startDate,endDate,dueDate,level,viewBtn]).draw();
+                    approvingProjectTable.row.add([ticketNo, projectName, projectCode, workflowName, workflowCode, department, startDate, endDate, dueDate, level, viewBtn]).draw();
                 });
                 //active Projects
                 $.each(activeProjects, function(key, val) {
