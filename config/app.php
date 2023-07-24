@@ -15,7 +15,7 @@ return [
 
     "BCCEMail"  => env('BCCEMail'),
     "PSPDFKIT_API_KEY"  => env('PSPDFKIT_API_KEY'),
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'SwitchMobility'),
 
     /*
     |--------------------------------------------------------------------------
