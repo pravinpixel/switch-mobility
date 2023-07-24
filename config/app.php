@@ -14,6 +14,7 @@ return [
     */
 
     "BCCEMail"  => env('BCCEMail'),
+    "PSPDFKIT_API_KEY"  => env('PSPDFKIT_API_KEY'),
     'name' => env('APP_NAME', 'Laravel'),
 
     /*
@@ -68,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Kolkata',
 
     /*
     |--------------------------------------------------------------------------
@@ -177,8 +178,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,      
       
-         Barryvdh\DomPDF\ServiceProvider::class,
-         Intervention\Image\ImageServiceProvider::class,
+        //  Barryvdh\DomPDF\ServiceProvider::class,
+        //  Intervention\Image\ImageServiceProvider::class,
 
     ],
 
