@@ -331,7 +331,7 @@
                 if (isConfirmed.value) {
                     Swal.fire(
                         'Deleted!',
-                        'Department has been deleted.',
+                        'User has been deleted.',
                         'success'
                     );
 

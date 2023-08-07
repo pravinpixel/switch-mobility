@@ -406,18 +406,16 @@
                                 'error'
                             );
                         } else {
-                            getListData();
-                        }
-                    }
-                });
-                if (isConfirmed.value) {
-                    Swal.fire(
+                            Swal.fire(
                         'Deleted!',
                         'Workflow has been deleted.',
                         'success'
                     );
-
-                }
+                            getListData();
+                        }
+                    }
+                });
+              
             }
         });
     }

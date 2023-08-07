@@ -353,7 +353,7 @@ use Carbon\Carbon;
             </div>
             <div class="col-md-3">
                 <h4>Document Type</h4>
-                <p>{{ $details->workflow_name }}</p>
+                <p>{{ $details->document_type }}</p>
             </div>
             <div class="col-md-3">
                 <h4>WorkFlow Name & Code </h4>
@@ -620,7 +620,7 @@ use Carbon\Carbon;
                         //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
                         //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
                         //     newDate = day + '-' + month + '-' + yr;
-                        $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row"><div class="col-md-2">Approvers</div><div class="col-md-6 image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="col-md-2">Due Date:<p class="due_date_' + level + '"></p></div><div class="col-md-2">Priority:<p class="priority_' + level + '"></p></div><div class="docsPart"><hr><div style="text-align:left;font-weight:bold;margin-left:10px;margin-bottom:10px;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div style="text-align:left;font-weight:bold;margin-left:10px;margin-top:20px;">&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div><div class="emptyDocsPart" style="display:none"><hr><p>No Documents is assigned For appproval!</p></div></div></div>');
+                        $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row justify-content-between px-5 align-items-center"><div class="w-auto fw-bold">Approvers</div><div class="w-auto image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="w-auto"><span class="fw-bold">Due Date:</span><p class="due_date_' + level + '"></p></div><div class="w-auto"><span class="fw-bold">Priority:</span><p class="priority_' + level + '"></p></div><div class="docsPart"><hr><div style="text-align:left;font-weight:bold;margin-left:10px;margin-bottom:10px;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div style="text-align:left;font-weight:bold;margin-left:10px;margin-top:20px;">&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div><div class="emptyDocsPart" style="display:none"><hr><p>No Documents is assigned For appproval!</p></div></div></div>');
                         //if (data.length > 0) {
 
                         $(".image_append" + level).empty();
@@ -674,7 +674,7 @@ use Carbon\Carbon;
                             } else {
                                 var profile = 'icon-5359553_960_720.png';
                             }
-                            $(".image_append" + level).append('<figure><img src="' + baseUrl + '/' + profile + '" class="rounded"  width="50" height="50"><figcaption  style="white-space: nowrap;">[' + val.first_name + ' ,' + val.desName + ']&nbsp;</figcaption></figure>');
+                            $(".image_append" + level).append('<figure><img src="' + baseUrl + '/' + profile + '" class="rounded"  width="50" height="50"><figcaption  style="white-space: normal;width:300px;">[' + val.first_name + ' ,' + val.desName + ']&nbsp;</figcaption></figure>');
                         });
                         $.ajax({
                             url: "{{ url('getlevelwiseDocument') }}",
@@ -867,7 +867,7 @@ use Carbon\Carbon;
                                     $.each(data.aux_docs, function(key, val) {
                                         versionAuxDocDiv1 += '<tr>';
                                         versionAuxDocDiv1 += '<td>' + val.original_name + '</td>';
-                                        versionAuxDocDiv1 += '<td><a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + val.document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a> Download1</td>';
+                                        versionAuxDocDiv1 += '<td><a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + val.document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a> Download</td>';
                                         versionAuxDocDiv1 += '</tr>';
                                     });
                                     versionAuxDocDiv1 += ' </table>';

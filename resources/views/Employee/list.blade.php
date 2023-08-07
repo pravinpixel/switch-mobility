@@ -88,22 +88,22 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-1">
-                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                <div class="w-auto">
+                                    <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
                                     <span class="btn btn-warning " onclick="resetFilter()">Reset</span>
                                 </div>
                                 @if (auth()->user()->is_super_admin == 1 ||
                                 auth()->user()->can('employee-create'))
-                                <div class="col-md-1">
+                                <div class="w-auto">
                                     <a href="{{url('employees/create')}}">
-                                        <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                        <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
                                         <span class="btn switchPrimaryBtn  ">+Add</span>
                                     </a>
                                 </div>
                                 @endif
-                                <div class="col-md-1">
+                                <div class="w-auto">
                                     <a href="{{url('bulkUploadCreate')}}">
-                                        <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                        <label class="fs-6 fw-semibold mb-2 d-block" >&nbsp;</label>
                                         <span class="btn btn-success ">Import</span>
                                     </a>
                                 </div>

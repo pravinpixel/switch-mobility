@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use PDO;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -92,18 +93,19 @@ class ProjectController extends Controller
         $project = Project::with('employee', 'employee.department', 'employee.designation', 'docType', 'workflow', 'milestone')->where('id', $id)->first();
 
         $levelModels = $this->getProjectLevelLooping($id);
-        // dd($levelModels);
+      
         return view('Projects/edit', compact('employee', 'document_type', 'workflow', 'project', 'levelModels'));
     }
     public function show($id)
     {
-        
+
         $employee = Employee::whereNull('deleted_at')->get();
         $document_type = DocumentType::whereNull('deleted_at')->get();
         $workflow = Workflow::whereNull('deleted_at')->get();
         $project = Project::with('employee', 'employee.department', 'employee.designation', 'docType', 'workflow', 'milestone')->where('id', $id)->first();
 
         $levelModels = $this->getProjectLevelLooping($id);
+      
         // dd($levelModels);
         return view('Projects/edit', compact('employee', 'document_type', 'workflow', 'project', 'levelModels'));
     }
@@ -118,8 +120,10 @@ class ProjectController extends Controller
         $project = Project::with('employee', 'employee.department', 'employee.designation', 'docType', 'workflow', 'milestone')->where('id', $id)->first();
 
         $levelModels = $this->getProjectLevelLooping($id);
+        $isDocuments = projectDocument::where('project_id',$id)->count();
+       
         // dd($levelModels);
-        return view('Projects/edit', compact('employee', 'document_type', 'workflow', 'project', 'levelModels'));
+        return view('Projects/edit', compact('employee', 'document_type', 'workflow', 'project', 'levelModels','isDocuments'));
     }
 
 
@@ -211,12 +215,12 @@ class ProjectController extends Controller
             $project->is_active = $request->is_active ? 1 : 0;
             $project->save();
 
-           
-            
+
+
 
             Log::info('ProjectController->Store:-ProjectData ' . json_encode($project));
             if ($project) {
-              
+
                 if (!$request->project_id) {
                     $ticket = substr($project->project_name, 0, 3) . date('YmdHis');
                     $project->ticket_no = $ticket;
@@ -244,16 +248,23 @@ class ProjectController extends Controller
                         // File::deleteDirectory($path);
                     }
                 } else {
-                  //  $mail = $this->emailController->SendProjectInitiaterEmail(1, $request->initiator_id, 1, $request->project_name, $request->project_code);
+                    //  $mail = $this->emailController->SendProjectInitiaterEmail(1, $request->initiator_id, 1, $request->project_name, $request->project_code);
 
-                   // Log::info('ProjectController->Store:-InitiaterMail Response ' . json_encode($mail));
+                    // Log::info('ProjectController->Store:-InitiaterMail Response ' . json_encode($mail));
                 }
 
-                $ed = date('ymdhms');
+                $ed = date('YmdHis');
+                Log::info('ProjectController->Store:-Random Number' . json_encode($ed));
+
                 $MainDocumentCount = (isset($request->main_document)) ? count($request->main_document) : 0;
 
                 Log::info('ProjectController->Store:-Main Document Count ' . $MainDocumentCount);
                 if ($MainDocumentCount) {
+                    if (isset($request->project_id) == null) {
+
+                        $levelApprovermail = $this->emailController->NewApprovalToApprover($project->id, $firstWfLevel);
+                        Log::info('ProjectController->Store:-Approver Mail Response ' . json_encode($levelApprovermail));
+                    }
                     $halfPath =  $project->ticket_no . '/main_document/';
                     $upload_path = public_path() . '/projectDocuments/' . $halfPath;
                     Log::info('ProjectController->Store:-Main Doc upload Path  ' . $upload_path);
@@ -266,8 +277,14 @@ class ProjectController extends Controller
                         $fileArray = $_FILES['main_document']['name'][$d];
                         $filePart = explode('.', $fileArray);
                         Log::info('ProjectController->Store:-fileNameExtension With ' . ($d + 1) . " " . $filePart[1]);
+                        Log::info('ProjectController->Store:-$filePart[0] With ' . ($d + 1) . " " . $filePart[0]);
+                        // Remove white spaces from the input string
+                        $inputString = str_replace(' ', '', $filePart[0]);
+                        // Resize the string to 5 characters
+                        $fileOrgName = substr($inputString, 0, 5);
+                        Log::info('ProjectController->Store:-fileOrgName ' . $fileOrgName);
 
-                        $fileName = $filePart[0] . '_' . $ed . "." . $filePart[1];
+                        $fileName = $fileOrgName . '_' . $ed . "." . $filePart[1];
                         //  $fileName = "MainDocument" . ($d + 1) . "." . $filePart[1];
                         Log::info('ProjectController->Store:-filename ' . $fileName);
 
@@ -314,7 +331,17 @@ class ProjectController extends Controller
                         $filePart1 = explode('.', $fileArray);
                         log::info('Aux fileNamePart ' . json_encode($filePart1));
                         //$fileName = "AuxilaryDocument" . ($d + 1) . "." . $filePart1[1];
-                        $fileName = $filePart1[0] . '_' . $ed . "." . $filePart1[1];
+                        Log::info('ProjectController->Store:-$filePart[0] With ' . ($d + 1) . " " . $filePart1[0]);
+                        // Remove white spaces from the input string
+                        $inputString1 = str_replace(' ', '', $filePart1[0]);
+                        // Resize the string to 5 characters
+                        $fileOrgName1 = substr($inputString1, 0, 5);
+                        Log::info('ProjectController->Store:-fileOrgName1 ' . $fileOrgName1);
+
+                        $fileName = $fileOrgName1 . '_' . $ed . "." . $filePart1[1];
+                        //  $fileName = "MainDocument" . ($d + 1) . "." . $filePart[1];
+                        Log::info('ProjectController->Store:-filename ' . $fileName);
+                  
                         $banner = $_FILES['auxillary_document']['name'][$d];
                         $bannerpath = $upload_path . $fileName;
 
@@ -389,11 +416,7 @@ class ProjectController extends Controller
                     }
                 }
             }
-            if (isset($request->project_id) == null) {
-             
-                $levelApprovermail = $this->emailController->NewApprovalToApprover($project->id, $firstWfLevel);
-                Log::info('ProjectController->Store:-Approver Mail Response ' . json_encode($levelApprovermail));
-            }
+
             return redirect('projects')->with('success', "Projects " . $msg . " successfully.");
         } catch (Exception $e) {
 
@@ -692,7 +715,9 @@ class ProjectController extends Controller
                 $filePart1 = $expbanner[1];
                 Log::info('ProjectController->Store:-filePart1' . json_encode($filePart1));
                 $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
-                $ed = date('ymdhms');
+                $ed = date('YmdHis');
+                Log::info('ProjectController->Store:-Random Number' . json_encode($ed));
+                //date('ymdhms');
                 $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
 
 
@@ -849,8 +874,12 @@ class ProjectController extends Controller
     public function projectNameValidation(Request $request)
     {
 
-        $model = Project::where('project_name', $request->name)->where('id', '!=', $request->id)->whereNull('deleted_at')->get();
-
+        $models = Project::where('project_name', $request->name);
+        if ($request->id) {
+            $models->where('id', '!=', $request->id);
+        }
+        $models->whereNull('deleted_at');
+        $model = $models->get();
 
         $response = (count($model)) ? false : true;
 
@@ -928,6 +957,8 @@ class ProjectController extends Controller
             $projectId = $request->projectId;
         } elseif ($request->paramName == "initiatorId") {
             $initiatorId = $request->initiatorId;
+        }
+        if ($request->paramName == "") {
         } else {
             $dateFilter = $request->paramName;
             $startDate = $request->startDate;
@@ -946,7 +977,7 @@ class ProjectController extends Controller
                 $projects = $this->getProjectIdByEmployee()($empId);
                 $models->whereIn('id', $projects);
             }
-       
+
             if ($startDate || $endDate) {
                 $models->where(function ($query) use ($startDate, $endDate) {
                     $query->whereBetween('start_date', [$startDate, $endDate])

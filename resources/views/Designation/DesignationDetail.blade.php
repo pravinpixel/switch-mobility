@@ -102,8 +102,8 @@
                                 <button type="reset" class="btn btn-light me-3 reset">Reset</button>
                                 <a href="{{route('designation.index')}}">
                                     <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
-                                <button type="button" class="btn switchPrimaryBtn submitBtn" data-kt-users-modal-action="submit">
-                                    <span class="indicator-label" onclick="deptValidation();">Save and Exit</span>
+                                <button  onclick="deptValidation();" type="button" class="btn switchPrimaryBtn submitBtn" data-kt-users-modal-action="submit">
+                                    <span class="indicator-label">Save and Exit</span>
                                     <span class="indicator-progress">Please wait...
                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                 </button>
@@ -129,7 +129,7 @@
         $('.submitBtn').attr('disabled', 'true');
         if ($('.id').val()) {
             $('.submitBtn').removeAttr('disabled');
-            $('.reset').css('display','none');
+            $('.reset').css('display', 'none');
         }
         $('.reset').on('click', function() {
             $('.submitBtn').attr('disabled', 'true');
@@ -137,7 +137,7 @@
 
     });
     $(document).on('input', '.name', function() {
-        if ($(this).val()) {
+        if ($(this).val().trim()) {
             $('.submitBtn').removeAttr('disabled');
         } else {
             $('.submitBtn').attr('disabled', 'true');
@@ -147,38 +147,39 @@
     function deptValidation() {
 
         //  Swal.fire('Any fool can use a computer');
-        var name = $('.name').val();
+        var name = $('.name').val().trim();
         var id = $('.id').val();
-        $.ajax({
-            url: "{{url('designationValidation')}}",
-            type: 'ajax',
-            method: 'post',
-            data: {
-                "_token": "{{ csrf_token() }}",
-                name: name,
-                id: id
-            },
-            success: function(result) {
+        if (name) {
+            $.ajax({
+                url: "{{url('designationValidation')}}",
+                type: 'ajax',
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    name: name,
+                    id: id
+                },
+                success: function(result) {
 
-                var alertName = 'nameAlert';
+                    var alertName = 'nameAlert';
 
 
 
-                if (result.response == false) {
-                    $('.submitBtn').attr('disabled', true);
+                    if (result.response == false) {
+                        $('.submitBtn').attr('disabled', true);
 
-                    document.getElementById(alertName).style.display = "block";
-                    document.getElementById(alertName).style.color = "red";
-                    document.getElementById(alertName).innerHTML = 'Name is Allready Exists*';
-                    return false;
+                        document.getElementById(alertName).style.display = "block";
+                        document.getElementById(alertName).style.color = "red";
+                        document.getElementById(alertName).innerHTML = 'Name is Allready Exists*';
+                        return false;
+                    }
+                    document.getElementById(alertName).style.display = "none";
+                    $('.submitBtn').removeAttr('disabled');
+                    $(".form").submit();
+                    return true;
                 }
-                document.getElementById(alertName).style.display = "none";
-                $('.submitBtn').removeAttr('disabled');
-                $(".form").submit();
-                return true;
-            }
-        });
-
+            });
+        }
 
     }
 </script>

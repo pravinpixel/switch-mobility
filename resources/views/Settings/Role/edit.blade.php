@@ -70,7 +70,7 @@
                 <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                     <!--begin::Title-->
                     <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                    Privileges</h1>
+                        Privileges</h1>
                     <!--end::Title-->
                     <!--begin::Breadcrumb-->
                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
@@ -298,82 +298,82 @@
 
                                             </tr>
                                             <tr>
-                                                    <td>9</td>
-                                                    <td>Dashboard</td>
-                                                    <td><input type="checkbox" name="permission[]" value="dashboard-view" class='permission permissionEdit' <?php echo (in_array("dashboard-view", $allroles) ? "checked" : ''); ?> ></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>10</td>
-                                                    <td>Document Listing</td>
-                                                    <td><input type="checkbox" name="permission[]" value="document-listing-view" class='permission permissionEdit' <?php echo (in_array("document-listing-view", $allroles) ? "checked" : ''); ?>></td>
-                                                    <td></td>
-                                                    <td><input type="checkbox" name="permission[]" value="document-listing-edit" class='permission permissionEdit' <?php echo (in_array("document-listing-edit", $allroles) ? "checked" : ''); ?>></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>11</td>
-                                                    <td>Approval Listing</td>
-                                                    <td><input type="checkbox" name="permission[]" value="approval-listing-view" class='permission permissionEdit' <?php echo (in_array("approval-listing-view", $allroles) ? "checked" : ''); ?>></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>12</td>
-                                                    <td>Datewise Report</td>
-                                                    <td><input type="checkbox" name="permission[]" value="datewise-report" class='permission permissionEdit' <?php echo (in_array("datewise-report", $allroles) ? "checked" : ''); ?>></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>13</td>
-                                                    <td>Projectwise Report</td>
-                                                    <td><input type="checkbox" name="permission[]" value="projectwise-report" class='permission permissionEdit' <?php echo (in_array("projectwise-report", $allroles) ? "checked" : ''); ?>></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>14</td>
-                                                    <td>Documentwise Report</td>
-                                                    <td><input type="checkbox" name="permission[]" value="documentwise-report" class='permission permissionEdit' <?php echo (in_array("documentwise-report", $allroles) ? "checked" : ''); ?>></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>15</td>
-                                                    <td>Userwise Report</td>
-                                                    <td><input type="checkbox" name="permission[]" value="userwise-report" class='permission permissionEdit' <?php echo (in_array("userwise-report", $allroles) ? "checked" : ''); ?>></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
+                                                <td>9</td>
+                                                <td>Dashboard</td>
+                                                <td><input type="checkbox" name="permission[]" value="dashboard-view" class='permission permissionEdit' <?php echo (in_array("dashboard-view", $allroles) ? "checked" : ''); ?>></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>10</td>
+                                                <td>Document Listing</td>
+                                                <td><input type="checkbox" name="permission[]" value="document-listing-view" class='permission permissionEdit' <?php echo (in_array("document-listing-view", $allroles) ? "checked" : ''); ?>></td>
+                                                <td></td>
+                                                <td><input type="checkbox" name="permission[]" value="document-listing-edit" class='permission permissionEdit' <?php echo (in_array("document-listing-edit", $allroles) ? "checked" : ''); ?>></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>11</td>
+                                                <td>Approval Listing</td>
+                                                <td><input type="checkbox" name="permission[]" value="approval-listing-view" class='permission permissionEdit' <?php echo (in_array("approval-listing-view", $allroles) ? "checked" : ''); ?>></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>12</td>
+                                                <td>Datewise Report</td>
+                                                <td><input type="checkbox" name="permission[]" value="datewise-report" class='permission permissionEdit' <?php echo (in_array("datewise-report", $allroles) ? "checked" : ''); ?>></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>13</td>
+                                                <td>Projectwise Report</td>
+                                                <td><input type="checkbox" name="permission[]" value="projectwise-report" class='permission permissionEdit' <?php echo (in_array("projectwise-report", $allroles) ? "checked" : ''); ?>></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>14</td>
+                                                <td>Documentwise Report</td>
+                                                <td><input type="checkbox" name="permission[]" value="documentwise-report" class='permission permissionEdit' <?php echo (in_array("documentwise-report", $allroles) ? "checked" : ''); ?>></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>15</td>
+                                                <td>Userwise Report</td>
+                                                <td><input type="checkbox" name="permission[]" value="userwise-report" class='permission permissionEdit' <?php echo (in_array("userwise-report", $allroles) ? "checked" : ''); ?>></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                             {{-- FORM --}}
                             <div class="text-center pt-15">
-                            <a href="{{route('roles.index')}}">
+                                <a href="{{route('roles.index')}}">
                                     <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
                                 <button type="submit" id="updateBtn" class="btn switchPrimaryBtn " data-kt-users-modal-action="submit">
                                     <span class="indicator-label">Update and Exit</span>
@@ -442,48 +442,47 @@
     });
     $(document).on('input', '.roleName', function() {
         console.log($(this).attr('fieldData'));
+       if($(this).val().trim()){
+            $.ajax({
+                url: "{{ route('roleNameValidation') }}",
+                type: 'ajax',
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    name: $(this).val(),
+                    id: $(this).attr('fieldData'),
+                },
+                success: function(data) {
+                    var alertName = 'roleNameAlert';
+                    console.log(data.response);
+                    console.log(alertName);
+
+                    if (data.response == false) {
+                        $('#submitBtn').attr('disabled', true);
+                        $('#updateBtn').attr('disabled', true);
+
+                        document.getElementById(alertName).style.display = "block";
+                        document.getElementById(alertName).style.color = "red";
+                        document.getElementById(alertName).innerHTML = 'Role Is Exists*';
+
+                        document.getElementById('roleNameAddAlert').style.display = "block";
+                        document.getElementById('roleNameAddAlert').style.color = "red";
+                        document.getElementById('roleNameAddAlert').innerHTML = 'Role Is Exists*';
+                        return false;
+                    }
+                    document.getElementById(alertName).style.display = "none";
+                    $('#submitBtn').removeAttr('disabled');
+                    $('#updateBtn').removeAttr('disabled');
+                    return true;
 
 
-        $.ajax({
-            url: "{{ route('roleNameValidation') }}",
-            type: 'ajax',
-            method: 'post',
-            data: {
-                "_token": "{{ csrf_token() }}",
-                name: $(this).val(),
-                id: $(this).attr('fieldData'),
-            },
-            success: function(data) {
-                var alertName = 'roleNameAlert';
-                console.log(data.response);
-                console.log(alertName);
-
-                if (data.response == false) {
-                    $('#submitBtn').attr('disabled', true);
-                    $('#updateBtn').attr('disabled', true);
-
-                    document.getElementById(alertName).style.display = "block";
-                    document.getElementById(alertName).style.color = "red";
-                    document.getElementById(alertName).innerHTML = 'Role Is Exists*';
-
-                    document.getElementById('roleNameAddAlert').style.display = "block";
-                    document.getElementById('roleNameAddAlert').style.color = "red";
-                    document.getElementById('roleNameAddAlert').innerHTML = 'Role Is Exists*';
-                    return false;
+                },
+                error: function() {
+                    $("#otp_error").text("Update Error");
                 }
-                document.getElementById(alertName).style.display = "none";
-                $('#submitBtn').removeAttr('disabled');
-                $('#updateBtn').removeAttr('disabled');
-                return true;
 
-
-            },
-            error: function() {
-                $("#otp_error").text("Update Error");
-            }
-
-        });
-
+            });
+        }
     });
 </script>
 @endsection

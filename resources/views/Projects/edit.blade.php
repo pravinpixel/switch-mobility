@@ -175,7 +175,7 @@
 
     .pdf-iframe {
         width: 50px;
-        height: 50px;
+        height: 65px;
 
     }
 
@@ -343,7 +343,8 @@
                             <label class="required fs-6 fw-semibold mb-2">Initiator</label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <select class="form-control form-control-solid initiator_id" name="initiator_id" onchange="get_employee_details(this.value);" required>
+                            <input type="hidden" class="form-control initiator_id" placeholder="Enter Project Code" name="initiator_id" required />
+                            <select class="form-control form-control-solid initiator_id1" name="initiator_id1" disabled onchange="get_employee_details(this.value);" required>
                                 <option value="">Select</option>
                                 @foreach ($employee as $emp)
                                 <option value="<?php echo $emp['id']; ?>"><?php echo $emp['first_name'] . ' ' . $emp['last_name'] . '(' . $emp['sap_id'] . ')'; ?></option>
@@ -422,7 +423,8 @@
                             <label class="required fs-6 fw-semibold mb-2">Document Type</label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <select class="form-control document_type_id" name="document_type_id" onchange="get_document_workflow(this.value);" required>
+                            <input type="hidden" class="document_type_id" name = "document_type_id" >
+                            <select class="form-control document_type_id1" name="document_type_id1" disabled onchange="get_document_workflow(this.value);" required>
                                 <option value="">Select</option>
                                 @foreach ($document_type as $doc)
                                 <option value="{{ $doc['id'] }}">{{ $doc['name'] }}</option>
@@ -581,7 +583,7 @@
                         <div class="col-md-12 p-3 pdf_container input-group">
                             <label class="row col-12 m-2 pdf-view row " for="pdf1">
                                 <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div>
-                            </label> <input type="file" name="main_document[]" id="pdf1" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx">
+                            </label> <input type="file" name="main_document[]" id="pdf1" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx" <?php echo($isDocuments)?"disabled":""?>>
                         </div>
                     </div>
                     <div class="col-md-6 fv-row">
@@ -733,7 +735,7 @@
                 var alertName = 'projectCodeAlert';
                 console.log(data.response);
                 console.log(alertName);
-
+                document.getElementById(alertName).style.display = "none";
                 if (data.response == false) {
                   
 
@@ -742,7 +744,7 @@
                     document.getElementById(alertName).innerHTML = 'Code Is Exists*';
                    
                 }
-                document.getElementById(alertName).style.display = "none";
+             
                
 
 
@@ -775,7 +777,7 @@
                 var alertName = 'projectNameAlert';
                 console.log(data.response);
                 console.log(alertName);
-
+                document.getElementById(alertName).style.display = "none";
                 if (data.response == false) {
                    
 
@@ -784,7 +786,7 @@
                     document.getElementById(alertName).innerHTML = 'Name Is Exists*';
                    
                 }
-                document.getElementById(alertName).style.display = "none";
+              
               
            
 
@@ -836,6 +838,7 @@
     });
     $(document).ready(function() {
         $(".tablinks:first-child").addClass("active");
+        
     });
 </script>
 
@@ -847,8 +850,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
-        $(".initiator_id").select2();
-        $(".document_type_id").select2();
+        
+        // $(".initiator_id").select2();
+        // $(".document_type_id").select2();
+        // $('.initiator_id').prop('disabled', true);
+        // $('.document_type_id').prop('disabled', true);
+
         var modelId = "{{$project->id}}";
         get_edit_details(modelId);
         // on form submit
@@ -1541,8 +1548,10 @@ validation=false;
                 $(".start_date").val(data.project.start_date);
                 $(".end_date").val(data.project.end_date);
                 $(".role").val(data.project.role);
-                $(".initiator_id").val(data.project.initiator_id).trigger('change')
-                $(".document_type_id").val(data.project.document_type_id).attr("selected", "selected").select2();
+                $(".initiator_id").val(data.project.initiator_id);
+                $(".initiator_id1").val(data.project.initiator_id);
+                $(".document_type_id").val(data.project.document_type_id);
+                $(".document_type_id1").val(data.project.document_type_id).attr("selected", "selected").select2();
                 $(".total_levels").val(data.levelArray.length);
                 //get_document_workflow(data.project.document_type_id);
                 $(".workflow_id").val(data.project.workflow_id).prop("selected", true);
@@ -1685,6 +1694,10 @@ validation=false;
     function deletepdf(event) {
 
         var connect = $(event).prev().attr('connect_id');
+        var connectName = $("input").filter("[connect_id='" + connect + "']").attr("name");
+        if (connectName === 'main_document[]') {
+            $("input").filter("[connect_id='" + connect + "']").next().prop("disabled", false);
+        }
         $("input").filter("[connect_id='" + connect + "']").remove();
         $("iframe , img").filter("[connect_id='" + connect + "']").parent().remove();
 
@@ -1697,6 +1710,9 @@ validation=false;
     function pdfPreview(file) {
         console.log("Well");
         var pdfFile = file.files[0];
+        var isDocuments = "{{$isDocuments}}";
+      
+         var disableCheck = ($(file).attr("name") == "main_document[]") ? "disabled" : "";
         var uniqueNumber = "in-if" + Date.now() + Math.random();
         file.setAttribute('connect_id', uniqueNumber);
 
@@ -1704,20 +1720,20 @@ validation=false;
             var objectURL = URL.createObjectURL(pdfFile);
             var FileParent = $(file).parent();
             $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><iframe src="' + objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber + '" scrolling="no"></iframe><button class="btn btn-danger btn-sm pdf_delete_btn  " onclick="deletepdf(this)">Delete</button></div>');
-            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;">');
+            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;"'+disableCheck+'>');
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
         }   else if(pdfFile["name"].endsWith(".doc") ||pdfFile["name"].endsWith(".docx") ){
             var objectURL = " https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Microsoft_Office_Word_%282019%E2%80%93present%29.svg/1101px-Microsoft_Office_Word_%282019%E2%80%93present%29.svg.png";
             var FileParent = $(file).parent();
             $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><img src="' + objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber + '" scrolling="no"></img><button class="btn btn-danger btn-icon w-30px h-30px btn-sm pdf_delete_btn  " onclick="deletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button></div>');
-            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;">');
+            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;"'+disableCheck+'>');
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
         }
         else if(pdfFile["name"].endsWith(".csv") ||pdfFile["name"].endsWith(".xlsx") || pdfFile["name"].endsWith(".xls")) {
             var objectURL = " https://download.logo.wine/logo/Microsoft_Excel/Microsoft_Excel-Logo.wine.png";
             var FileParent = $(file).parent();
             $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><img src="' + objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber + '" scrolling="no"></img><button class="btn btn-danger btn-sm pdf_delete_btn  " onclick="deletepdf(this)">Delete</button></div>');
-            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;">');
+            $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber + '" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;"'+disableCheck+'>');
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
         }
 

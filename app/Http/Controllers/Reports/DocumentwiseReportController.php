@@ -22,7 +22,7 @@ class DocumentwiseReportController extends Controller
     public function index()
     {
         $projectDatas = Project::whereNull('deleted_at')->get();
-        $workflowDatas = Workflow::whereNull('deleted_at')->get();
+        $workflowDatas = Workflow::where('is_active',1)->whereNull('deleted_at')->get();
         $documentDatas = DocumentType::whereNull('deleted_at')->get();
        // $models= Project::with('workflow', 'employee', 'employee.department', 'docType')->whereNull('deleted_at')->get();
        

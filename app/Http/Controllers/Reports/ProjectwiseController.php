@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Doclistings;
 use App\Models\Department;
 use App\Models\Project;
+use App\Models\ProjectDocumentStatusByLevel;
 use App\Models\Workflow;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -12,6 +14,11 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjectwiseController extends Controller
 {
+    public $Doclistings;
+    public function __construct(Doclistings $Doclistings)
+    {
+        $this->Doclistings = $Doclistings;
+    }
     public function index()
     {
         // $models = Project::with('workflow', 'employee', 'employee.department')->whereNull('deleted_at')->get();
@@ -29,8 +36,8 @@ class ProjectwiseController extends Controller
         $modeldatas->whereNull('deleted_at');
         $models = $modeldatas->get();
 
-        $departmentDatas = Department::whereNull('deleted_at')->get();
-        $workflowDatas = Workflow::whereNull('deleted_at')->get();
+        $departmentDatas = Department::where('is_active', 1)->whereNull('deleted_at')->get();
+        $workflowDatas = Workflow::where('is_active', 1)->whereNull('deleted_at')->get();
         $entities = $this->ReportDataLooping($models);
         //dd($entities);
         $projectDatas = $models;
@@ -97,7 +104,27 @@ class ProjectwiseController extends Controller
     public function ReportDataLooping($models)
     {
         $entities = collect($models)->map(function ($model) {
-
+            $lastlevel = $this->Doclistings->getLastLevelProject($model->id);
+            $status = "No Documents";
+            if ($lastlevel) {
+                $LastLevelmodels = ProjectDocumentStatusByLevel::where('project_id', $model->id)
+                    ->where('level_id', $lastlevel)
+                    ->first();
+                if ($LastLevelmodels) {
+                    if ($LastLevelmodels->status == 2) {
+                        $status = "Declined";
+                    } else if ($LastLevelmodels->status == 3)
+                    {
+                        $status = "Change Request";
+                    } else if ($LastLevelmodels->status == 4)
+                    {
+                        $status = "Approved";
+                    }else{
+                        $status = "Waiting For Approval";
+                    }
+                   
+                }
+            }
             $workflowModel = $model['workflow'];
             $employeeModel = $model['employee'];
             $departmentModel = "";
@@ -122,7 +149,7 @@ class ProjectwiseController extends Controller
             $workflowLevel = $workflowModel->total_levels;
             $initiater = $employeeModel->first_name . " " . $employeeModel->last_name;
             $department = ($departmentModel) ? $departmentModel->name : "";
-            $data = ['ticketNo' => $ticketNo, 'workflowId' => $workflowId, 'noOfDays' => $noOfDays, 'dueDate' => $model->end_date, 'workflowLevel' => $workflowLevel, 'projectId' => $projectId, 'workflowName' => $workflowName, 'projectCode' => $projectCode, 'projectName' => $projectName, 'workflowCode' => $workflowCode, 'initiater' => $initiater, 'department' => $department];
+            $data = ['status'=>$status,'ticketNo' => $ticketNo, 'workflowId' => $workflowId, 'noOfDays' => $noOfDays, 'dueDate' => $model->end_date, 'workflowLevel' => $workflowLevel, 'projectId' => $projectId, 'workflowName' => $workflowName, 'projectCode' => $projectCode, 'projectName' => $projectName, 'workflowCode' => $workflowCode, 'initiater' => $initiater, 'department' => $department];
 
             return $data;
         });

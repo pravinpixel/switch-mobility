@@ -35,7 +35,7 @@
                             <div class="container">
                                 <h5 class="section-title h1">Overview</h5>
                                 <div class="row">
-                                    <div class="col-2">
+                                    <div class="col-2 d-flex">
                                         <!--begin::Items-->
                                         <div class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" style="border: none;border-top:5px solid #3565ed">
                                             <!--begin::Symbol-->
@@ -63,7 +63,7 @@
 
                                     <!-- ./Team member -->
                                     <!-- Team member -->
-                                    <div class="col-2">
+                                    <div class="col-2 d-flex">
                                         <!--begin::Items-->
                                         <div class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" style="border: none;border-top:5px solid orange">
                                             <!--begin::Symbol-->
@@ -92,7 +92,7 @@
                                     <!-- ./Team member -->
 
                                     <!-- Team member -->
-                                    <div class="col-2">
+                                    <div class="col-2 d-flex">
                                         <!--begin::Items-->
                                         <div class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" style="border: none;border-top:5px solid #38eb7a">
                                             <!--begin::Symbol-->
@@ -120,7 +120,7 @@
                                     <!-- ./Team member -->
 
                                     <!-- Team member -->
-                                    <div class="col-2">
+                                    <div class="col-2 d-flex">
                                         <!--begin::Items-->
                                         <div class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" style="border: none;border-top:5px solid #3565ed">
                                             <!--begin::Symbol-->
@@ -148,7 +148,7 @@
                                     <!-- ./Team member -->
 
                                     <!-- Team member -->
-                                    <div class="col-2" style="">
+                                    <div class="col-2 d-flex" style="">
                                         <!--begin::Items-->
                                         <div class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" style="border: none;border-top:5px solid #e6b410">
                                             <!--begin::Symbol-->
@@ -173,7 +173,7 @@
                                         </div>
                                         <!--end::Items-->
                                     </div>
-                                    <div class="col-2">
+                                    <div class="col-2 d-flex">
                                         <!--begin::Items-->
                                         <div class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" style="border: none;border-top:5px solid #38eb7a">
                                             <!--begin::Symbol-->
@@ -182,7 +182,7 @@
                                             <!--begin::Stats-->
                                             <div class="m-0">
                                                 @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('document-listing-view'))
-                                                <a href="{{url('doclistingIndex')}}">
+                                                <a href="{{url('doclistingIndex/overdue')}}">
                                                     @endif
                                                     <!--begin::Number-->
                                                     <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{$countArray['totalOverDueDocumentCount']}}</span>
@@ -232,14 +232,14 @@
                                         </div>
 
 
-                                        <div class="col-md-1">
+                                        <div class="w-auto">
 
-                                            <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                            <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
                                             <button class="btn btn-success " onclick="search()">Search</button>
 
                                         </div>
-                                        <div class="col-md-1">
-                                            <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                        <div class="w-auto">
+                                            <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
                                             <button class="btn btn-warning resetBtn ">Reset</button>
                                         </div>
                                     </div>
@@ -423,10 +423,9 @@
             chart1();
             chart2();
             $(".toDate").change(function() {
-                console.log("well");
+           
                 var startDate = $('.fromDate').val();
                 var endDate = $('.toDate').val();
-
 
                 if (startDate > endDate) {
                     Swal.fire(
@@ -439,13 +438,12 @@
                 }
             });
             $(".fromDate").change(function() {
-                console.log("well");
+                              
                 var startDate = $('.fromDate').val();
                 var endDate = $('.toDate').val();
-
                 if (startDate && endDate) {
-                    console.log("Yes found ");
-                    if (startDate < endDate) {
+                    if (startDate > endDate) {
+
                         Swal.fire(
                             'Warning!',
                             'End date should be Less than Start date.',
@@ -453,6 +451,8 @@
                         );
 
                         $('.fromDate').val('');
+                        $('.toDate').val('');
+
                     }
                 }
             });

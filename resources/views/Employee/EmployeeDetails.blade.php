@@ -597,7 +597,7 @@
         });
     }
     $(document).on('input', '.department', function() {
-        if ($(this).val()) {
+        if ($(this).val().trim()) {
             $('.submitBtn').removeAttr('disabled');
         } else {
             $('.submitBtn').attr('disabled', 'true');
@@ -634,13 +634,13 @@
     }
 
     function nameValidation() {
-        var firstName = $('.first_name').val();
-        var lastName = $('.last_name').val();
-        var email = $('.email').val();
-        var mobile = $('.mobile').val();
-        var department = $('.department').val();
-        var designation = $('.designation_id').val();
-        var sapId = $('.sapId').val();
+        var firstName = $('.first_name').val().trim();
+        var lastName = $('.last_name').val().trim();
+        var email = $('.email').val().trim();
+        var mobile = $('.mobile').val().trim();
+        var department = $('.department').val().trim();
+        var designation = $('.designation_id').val().trim();
+        var sapId = $('.sapId').val().trim();
 
 
         if (!firstName) {
@@ -836,10 +836,10 @@
         document.getElementById('mobileAlert').style.display = "none";
         if (!mobile) {
             raiseAlert('mobileAlert', 'Mobile', 'Mandate');
-        } else if (mobile.length < 10) {
+        } else if (mobile.length <10) {
             document.getElementById('mobileAlert').style.display = "block";
             document.getElementById('mobileAlert').style.color = "red";
-            document.getElementById('mobileAlert').innerHTML = fieldname + ' Is Minimum 10 Digit*';
+            document.getElementById('mobileAlert').innerHTML = 'Mobile No Is Minimum 10 Digit*';
         } else {
             $.ajax({
                 url: "{{ route('getEmployeeDetailByParams') }}",

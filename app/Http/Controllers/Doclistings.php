@@ -39,79 +39,80 @@ class Doclistings extends Controller
 
         $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
 
+    
+
+        $getmodels = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
         if ($empId) {
-            $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
-            if ($empId) {
-                $models->whereHas('projectEmployees', function ($q) use ($empId) {
-                    if ($empId != "") {
-                        $q->where('employee_id', '=', $empId);
-                    }
-                });
-            }
-
-            $models->whereNull('deleted_at');
-            $models1 = $models->get();
-            $includedFilterProject = array();
-            $finalFilterProject = array();
-
-            foreach ($models1 as $modelData) {
-                array_push($includedFilterProject, $modelData->id);
-            }
-
-            if ($type == "approved") {
-
-                $filterModels = projectDocument::select('project_id')->whereIn('project_id', $includedFilterProject)
-                    ->where('status', 4)
-                    ->whereNull('deleted_at')
-                    ->get();
-            } else if ($type == "declined") {
-
-                $filterModels = projectDocument::select('project_id')
-                    ->whereIn('project_id', $includedFilterProject)
-                    ->where('status', 2)
-                    ->whereNull('deleted_at')
-                    ->get();
-            } else if ($type == "pending") {
-
-                $filterModels = projectDocument::select('project_id')->whereIn('project_id', $includedFilterProject)
-                    ->where('status', 1)
-                    ->whereNull('deleted_at')
-                    ->get();
-            }
-
-            foreach ($filterModels as $filterModel) {
-
-                array_push($finalFilterProject, $filterModel->project_id);
-            }
-            $finalFilterProject = array_unique($finalFilterProject);
-            $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
-            if ($empId) {
-                $models->whereHas('projectEmployees', function ($q) use ($empId) {
-                    if ($empId != "") {
-                        $q->where('employee_id', '=', $empId);
-                    }
-                });
-            }
-
-            $models->whereIn('id', $finalFilterProject);
-            $models->whereNull('deleted_at');
-            $models1 = $models->get();
-        } else {
-
-            $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
-            if ($empId) {
-                $models->whereHas('projectEmployees', function ($q) use ($empId) {
-                    if ($empId != "") {
-                        $q->where('employee_id', '=', $empId);
-                    }
-                });
-            }
-
-            $models->whereNull('deleted_at');
-            $models1 = $models->get();
+            $getmodels->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
         }
 
-        $project = $this->projectLooping($models1);
+        $getmodels->whereNull('deleted_at');
+        $getAllmodels = $getmodels->get();
+        $approvedmodelIds = [];
+        $declinedmodelIds = [];
+        $overDuemodelIds = [];
+        $pandingDocumentModelIds = [];
+        foreach ($getAllmodels as $getAllmodel) {
+            $projectId = $getAllmodel->id;
+            $dueDate = $getAllmodel->end_date;
+            $toDayDate = now()->toDateString();
+
+            $date1 = \Carbon\Carbon::parse($dueDate);
+            $date2 = \Carbon\Carbon::parse($toDayDate);
+
+            $getLastLevel = $this->getLastLevelProject($projectId);
+            $getStatus = ProjectDocumentStatusByLevel::where('level_id', $getLastLevel)
+                ->where('project_id', $projectId)
+                ->first();
+            if ($getStatus->status == 4) {
+                array_push($approvedmodelIds, $projectId);
+            } elseif ($getStatus->status == 2) {
+                if ($date1->lt($date2)) {
+                    array_push($overDuemodelIds, $projectId);
+                } else {
+                    array_push($declinedmodelIds, $projectId);
+                }
+            } else {
+                if ($date1->lt($date2)) {
+                    array_push($overDuemodelIds, $projectId);
+                } else {
+                    array_push($pandingDocumentModelIds, $projectId);
+                }
+            }
+        }
+
+
+        $findmodels = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+        if ($empId) {
+            $findmodels->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
+        }
+        $findmodels->whereNull('deleted_at');
+        if ($type == "declined") {
+
+            $findmodels->whereIn('projects.id', $declinedmodelIds);
+        }
+        if ($type == "approved") {
+            $findmodels->whereIn('projects.id', $approvedmodelIds);
+        }
+        if ($type == "pending") {
+
+            $findmodels->whereIn('projects.id', $pandingDocumentModelIds);
+        }
+        if ($type == "overdue") {
+           
+            $findmodels->whereIn('projects.id', $overDuemodelIds);
+        }
+        $findAllmodels = $findmodels->get();
+       
+        $project = $this->projectLooping($findAllmodels);
         $employees = Employee::where(['is_active' => 1])->get();
         $departments = Department::where(['is_active' => 1])->get();
         $designation = Designation::where(['is_active' => 1])->get();
@@ -172,7 +173,6 @@ class Doclistings extends Controller
     }
     public function docListingSearch(Request $request)
     {
-
         $startDate = $request->start_date;
         $endDate = $request->end_date;
         $model = Project::select('projects.id', 'projects.id as projectId', 'projects.ticket_no', 'projects.project_code', 'projects.project_name', 'workflows.workflow_code', 'workflows.workflow_name', 'employees.first_name', 'departments.name as deptName');
@@ -181,7 +181,7 @@ class Doclistings extends Controller
         $model->leftjoin('designations', 'designations.id', '=', 'employees.designation_id');
         $model->leftjoin('workflows', 'workflows.id', '=', 'projects.workflow_id');
         if ($request->ticket_no) {
-            $model->where('projects.ticket_no', $request->ticket_no);
+            $model->where('projects.id', $request->ticket_no);
         }
         if ($request->project_code_name) {
             $model->where('projects.project_code', $request->project_code_name);
@@ -584,7 +584,11 @@ class Doclistings extends Controller
         $remark = $request->statusremarks;
         $empId = Auth::user()->emp_id;
 
-
+        $getMainDocs = projectDocument::where('id', $documentId)->first();
+        if ($getMainDocs) {
+            $getMainDocs->status = $status;
+            $getMainDocs->save();
+        }
 
         $getParentModel = projectDocument::select('ticket_no', 'type', 'project_name', 'projects.id as projectId')
             ->leftjoin('projects', 'projects.id', 'project_documents.project_id')
@@ -650,6 +654,8 @@ class Doclistings extends Controller
             } else {
 
                 if ($status == 2) {
+
+
                     $previousLevel = $this->getPreviousLevel($documentId, $level);
                     Log::info("DocListings previousLevel Id " . json_encode($previousLevel));
                     if ($previousLevel) {
@@ -688,8 +694,13 @@ class Doclistings extends Controller
                             Log::info('fileUpload ->filePart1' . json_encode($filePart1));
                             $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
                             Log::info('fileUpload ->lastversion' . json_encode($lastversion));
-                            $ed = date('ymdhms');
-                            $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
+                            $ed = date('YmdHis');
+                            // Remove white spaces from the input string
+                            $inputString = str_replace(' ', '', $expbanner[0]);
+                            // Resize the string to 5 characters
+                            $fileOrgName = substr($inputString, 0, 5);
+                            Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
+                            $fileName1 = $fileOrgName . '_' . $ed . "." . $filePart1;
 
 
                             //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
@@ -748,8 +759,17 @@ class Doclistings extends Controller
                             Log::info('fileUpload2 ->filePart1' . json_encode($filePart1));
                             $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
                             Log::info('fileUpload2 ->lastversion' . json_encode($lastversion));
-                            $ed = date('ymdhms');
-                            $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
+
+
+
+                            $ed = date('YmdHis');
+                            // Remove white spaces from the input string
+                            $inputString = str_replace(' ', '', $expbanner[0]);
+                            // Resize the string to 5 characters
+                            $fileOrgName = substr($inputString, 0, 5);
+                            Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
+                            $fileName1 = $fileOrgName . '_' . $ed . "." . $filePart1;
+
 
 
                             //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
@@ -782,7 +802,7 @@ class Doclistings extends Controller
                     }
                 } else {
                     $updateStatusCurrentLevel = $this->UpdateToStatusLevelModel($projectId, $level, $documentId, $status);
-               
+
                     $nextLevel = $this->getNextLevel($documentId, $level);
                     $updateOldData = $this->updateDocDetails($documentId, $level, $status, $remark);
                     if ($nextLevel) {
@@ -806,9 +826,14 @@ class Doclistings extends Controller
                     Log::info('fileUpload2 ->filePart1' . json_encode($filePart1));
                     $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
                     Log::info('fileUpload2 ->lastversion' . json_encode($lastversion));
-                    $ed = date('ymdhms');
-                    $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
 
+                    $ed = date('YmdHis');
+                    // Remove white spaces from the input string
+                    $inputString = str_replace(' ', '', $expbanner[0]);
+                    // Resize the string to 5 characters
+                    $fileOrgName = substr($inputString, 0, 5);
+                    Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
+                    $fileName1 = $fileOrgName . '_' . $ed . "." . $filePart1;
 
                     //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
                     Log::info('fileupload2 ->:-fileName1' . json_encode($fileName1));
@@ -1115,8 +1140,9 @@ class Doclistings extends Controller
     public function finalApproveProject($projectId)
     {
         $totCompletedDocs = 0;
-        $projectDocumentModels = projectDocument::where('project_id', $projectId)->get();
+        $projectDocumentModels = projectDocument::where('project_id', $projectId)->where('type', 1)->get();
         $totalDocs = count($projectDocumentModels);
+        Log::info("Total Docs" . json_encode($totalDocs));
         foreach ($projectDocumentModels as $projectDocumentModel) {
             $documentId = $projectDocumentModel->id;
             $lastDocLeveId = $this->getLastLevelProject($projectId);
@@ -1126,7 +1152,13 @@ class Doclistings extends Controller
                 $totCompletedDocs += ($subDocLevelModel->status == 4) ? 1 : 0;
             }
         }
+        Log::info("totCompletedDocs " . json_encode($totCompletedDocs));
         if ($totalDocs == $totCompletedDocs) {
+            $pModel = Project::where('id', $projectId)->first();
+            if ($pModel) {
+                $pModel->current_status = 4;
+                $pModel->save();
+            }
             $finalApproveMail = $this->emailController->finalApprovementProject($projectId);
         }
         return true;
@@ -1292,8 +1324,14 @@ class Doclistings extends Controller
             Log::info('fileUpload ->filePart1' . json_encode($filePart1));
             $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
             Log::info('fileUpload ->lastversion' . json_encode($lastversion));
-            $ed = date('ymdhms');
-            $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
+            $ed = date('YmdHis');
+            // Remove white spaces from the input string
+            $inputString = str_replace(' ', '', $expbanner[0]);
+            // Resize the string to 5 characters
+            $fileOrgName = substr($inputString, 0, 5);
+            Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
+            $fileName1 = $fileOrgName . '_' . $ed . "." . $filePart1;
+
 
 
             //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
@@ -1391,10 +1429,12 @@ class Doclistings extends Controller
                 }
             });
         }
-        $models->whereHas('workflow', function ($q1) use ($wfId) {
+        if ($wfId) {
+            $models->whereHas('workflow', function ($q1) use ($wfId) {
 
-            $q1->where('workflow_id', '=', $wfId);
-        });
+                $q1->where('workflow_id', '=', $wfId);
+            });
+        }
         $models->whereNull('deleted_at');
         $models1 = $models->get();
 
@@ -1430,7 +1470,9 @@ class Doclistings extends Controller
                 }
             });
         }
-        $models->where('id', '=', $projectId);
+        if ($projectId) {
+            $models->where('id', '=', $projectId);
+        }
         $models->whereNull('deleted_at');
         $models1 = $models->get();
 

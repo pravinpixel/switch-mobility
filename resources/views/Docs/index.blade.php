@@ -195,10 +195,10 @@
                                 <!--begin::Col-->
                                 <div class="col-md-3">
                                     <label class="fs-6 form-label fw-bold text-dark "> Ticket No. </label>
-                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="ticket_no" data-kt-select2="true" data-placeholder="Ticket No" data-allow-clear="true" id="ticketno">
+                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter ticket_no" name="ticket_no" data-kt-select2="true" data-placeholder="Ticket No" data-allow-clear="true" id="ticketno">
                                         <option></option>
                                         @foreach ($projects as $project)
-                                        <option name="ticket_no" value="{{ $project['ticket_no'] }}">
+                                        <option name="ticket_no" value="{{ $project['id'] }}">
                                             {{ $project['ticket_no'] }}
                                         </option>
                                         @endforeach
@@ -243,15 +243,15 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <label class="fs-6 form-label fw-bold text-dark">Start Date</label>
-                                    <input type="date" class="form-control dateWiseFilter" id="startDate" name="start_date" placeholder="Enter Start Date">
+                                    <input type="date" class="form-control dateWiseFilter start_date" id="startDate" name="start_date" placeholder="Enter Start Date">
                                 </div>
                                 <div class="col-sm-2">
                                     <label class="fs-6 form-label fw-bold text-dark">End Date</label>
-                                    <input type="date" class="form-control dateWiseFilter" id="endDate" name="end_date" placeholder="Enter End Date">
+                                    <input type="date" class="form-control dateWiseFilter to_date" id="endDate" name="end_date" placeholder="Enter End Date">
                                 </div>
-                                <div class="col-md-1">
-                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <span class="btn btn-success SearchFilter">Search</span>
+                                <div class="w-auto SearchFilter">
+                                    <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
+                                    <span class="btn btn-success ">Search</span>
                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <div class="col-md-1">
                                     <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
@@ -358,6 +358,7 @@
             if ($('.projectFilter').val()) {
                 $('.projectFilter').val('').trigger('change');
             }
+
         });
         // $('.doclistFilter').on('change', function() {
         //     $("input[type=date]").val("");
@@ -370,6 +371,8 @@
             if ($('.projectFilter').val()) {
                 $('.projectFilter').val('').trigger('change');
             }
+            $('.start_date').val('');
+            $('.to_date').val('');
             $.ajax({
                 url: "{{ route('getProjectByWorkflow') }}",
                 type: 'ajax',
@@ -403,7 +406,7 @@
                                 '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:blue"></i></div>';
                         }
                         act += '</span>';
-                        table.row.add([ticketNo,wfCodeandwfName, projectCodeandName,  initiator, deptName, act]).draw();
+                        table.row.add([ticketNo, wfCodeandwfName, projectCodeandName, initiator, deptName, act]).draw();
 
 
                         projectFilter.append('<option value="' + projectId + '">' + projectCodeandName + '</option>');
@@ -417,8 +420,53 @@
             });
 
         });
-        $('.projectFilter').on('change', function() {
+        $(document).on('change click', '.to_date', function() {
+            console.log("To Date");
+            var startDate = $('.start_date').val().trim();
+            var endDate = $('.to_date').val().trim();
 
+            console.log(startDate);
+            console.log(endDate);
+            if (startDate && endDate) {
+                if (startDate > endDate) {
+                    console.log("If part 1 start Date");
+                    Swal.fire(
+                        'Warning!',
+                        'End date should be Lessthen than Start date.',
+                        'error'
+                    );
+
+                    $('.to_date').val('');
+                }
+            }
+        });
+        $(document).on('change click', '.start_date', function() {
+            console.log("Start Date");
+            var startDate = $('.start_date').val().trim();
+            var endDate = $('.to_date').val().trim();
+
+            console.log(startDate);
+            console.log(endDate);
+
+            if (startDate && endDate) {
+                console.log("If part 1 start Date");
+                if (startDate > endDate) {
+                    console.log("If part 2 start Date");
+                    Swal.fire(
+                        'Warning!',
+                        'End date should be greater than End date.',
+                        'error'
+                    );
+
+                    $('.start_date').val('');
+                    $('.to_date').val('');
+
+                }
+            }
+        });
+        $('.projectFilter').on('change', function() {
+            $('.start_date').val('');
+            $('.to_date').val('');
             var table = $('#service_table').DataTable();
             $('.filterDeptAndDes').val('').trigger('change');
             console.log("well one");
@@ -453,7 +501,7 @@
                                 '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:blue"></i></div>';
                         }
                         act += '</span>';
-                        table.row.add([ticketNo,wfCodeandwfName, projectCodeandName,  initiator, deptName, act]).draw();
+                        table.row.add([ticketNo, wfCodeandwfName, projectCodeandName, initiator, deptName, act]).draw();
 
 
 
@@ -467,7 +515,7 @@
             });
         });
         $('.SearchFilter').on('click', function() {
-            var ticketNo = $('#select2-ticketno-container').text();
+            var ticketNo = $('#ticketno').val();
             var ticketValue = (ticketNo === 'Ticket No') ? '' : ticketNo;
             var projectCode = $('#select2-projectCode-container').text();
             var projectValue = (projectCode === 'Project Code / Name') ? '' : projectCode;
@@ -485,20 +533,24 @@
                 $('.doclistFilter').val("").trigger('change');
                 documnetFilter();
             }
-            if (ticketValue || projectValue || workflowValue || deptValue || desgValue || UserValue) {
-                $("input[type=date]").val("");
+            // if (ticketValue || projectValue || workflowValue || deptValue || desgValue || UserValue) {
+            //     $("input[type=date]").val("");
+            //     documnetFilter();
+            // } else {
+            //     console.log('failed');
+            // }
+            else {
                 documnetFilter();
-            } else {
-                console.log('failed');
             }
-
         });
 
         function documnetFilter() {
             var table = $('#service_table').DataTable();
             var ticketNo = $('#ticketno').val();
-            var projectCode = $('#projectCode').val();
-            var workflow = $('#workflow').val();
+            console.log(ticketNo);
+
+            var projectCode = "";
+            var workflow = "";
             var user = $('#users').val();
             var deptId = $('#deptId').val();
             var desgId = $('#desgId').val();
@@ -544,11 +596,11 @@
                                 '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:blue"></i></div>';
                         }
                         act += '</span>';
-                        table.row.add([ticketNo,wfCode + wfName, projectCode + projectName, 
+                        table.row.add([ticketNo, wfCode + wfName, projectCode + projectName,
                             initiator, deptName, act
                         ]).draw();
                     });
-                    $('.doclistFilter option:selected').prop("selected", false);
+                    //$('.doclistFilter option:selected').prop("selected", false);
                 },
                 error: function() {
                     $("#otp_error").text("Update Error");

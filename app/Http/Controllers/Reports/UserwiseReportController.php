@@ -38,8 +38,8 @@ class UserwiseReportController extends Controller
        $models= $modeldatas->get();
         $entities = $this->projectController->ReportDataLooping($models);
 
-        $initiatorDatas = Employee::whereNull('deleted_at')->get();
-        $workflowDatas = Workflow::whereNull('deleted_at')->get();
+        $initiatorDatas = Employee::where('is_active',1)->whereNull('deleted_at')->get();
+        $workflowDatas = Workflow::where('is_active',1)->whereNull('deleted_at')->get();
         return view('Reports/UserwiseReport/list', compact(['entities', 'initiatorDatas', 'workflowDatas']));
     }
     public function filterSearch(Request $request)

@@ -58,11 +58,11 @@
                     </div>
                     @endif
                     <div class="card-header border-0 pt-6">
-                        <div class="card-title">
+                        <div class="">
                             <div class="row col-md-12">
 
                                 <div class="col-md-3" id="workflowCodeField">
-                                    <label class=" fs-6 fw-semibold mb-2">workflow Name & Code</label>
+                                    <label class=" fs-6 fw-semibold mb-2">Workflow Name & Code</label>
                                     <select name="workflowCode" id="workflowCode" class="form-select workFlow">
                                         <option value="">Select workflow </option>
                                         @foreach ($workflowDatas as $workflowData)
@@ -75,7 +75,7 @@
 
 
                                 </div>
-                                <div class="col-md-3" id="documentNameField">
+                                <div class="col-md-3" id="documentNameField" style="display: none;">
                                     <!--begin::Label-->
                                     <label class=" fs-6 fw-semibold mb-2">Document Name </label>
                                     <!--end::Label-->
@@ -98,14 +98,14 @@
 
                                     </select>
                                 </div>
-                                <div class="col-md-1">
-                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <button class="btn btn-warning badge" onclick="reset()">Reset</button>
+                                <div class="w-auto">
+                                    <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
+                                    <button class="btn btn-warning " onclick="reset()">Reset</button>
                                 </div>
-                              
-                                <div class="col-md-1" onclick="exportData()">
-                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <span class="btn btn-success badge " >Export to Excel</span>
+
+                                <div class="w-auto" onclick="exportData()">
+                                    <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
+                                    <span class="btn btn-success  ">Export to Excel</span>
                                 </div>
                             </div>
 
@@ -129,7 +129,7 @@
                                 <!--begin::Table row-->
                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
 
-                                    
+
                                     <th>Workflow Code</th>
                                     <th>Workflow Name</th>
                                     <th>Initiator</th>
@@ -147,7 +147,7 @@
                             <tbody class="text-gray-600 fw-semibold" id="tableContent">
                                 @foreach($entities as $entity )
                                 <tr>
-                                   
+
                                     <td>{{$entity['workflowCode']}}</td>
                                     <td>{{$entity['workflowName']}}</td>
                                     <td>{{$entity['initiater']}}</td>
@@ -155,7 +155,7 @@
                                     <td>{{$entity['workflowLevel']}}</td>
                                     <td>{{$entity['dueDate']}}</td>
                                     <td>{{$entity['noOfDays']}}</td>
-                                    <td></td>
+                                    <td>{{ $entity['status'] }}</td>
                                     <td>
                                         <div id="{{$entity['projectId']}}" class="btn switchPrimaryBtn  viewDocs">View</div>
                                     </td>
@@ -204,8 +204,11 @@
                 $("#projectName").append(projectOptiondata);
 
             });
-            $('#documentName,#projectName,#workflowCode').on('change', function() {
-                filterData();
+            $('#workflowCode').on('change', function() {
+                filterData('workflowCode');
+            });
+            $('#projectName').on('change', function() {
+                filterData('projectName');
             });
             $(document).on('click', '.viewDocs', function() {
                 console.log("well and good");
@@ -220,7 +223,7 @@
                 form.submit();
             });
 
-            function filterData() {
+            function filterData(fieldName) {
 
                 var workflow = $('#workflowCode').val();
                 var docuName = $('#documentName').val();
@@ -253,39 +256,41 @@
                                 $("#documentName").append(documentitems);
                             }
                             table.clear().draw();
-                            if (projectName == '') {
+                            if (fieldName == 'workflowCode') {
                                 $("#projectName").empty();
                                 var projectOption = '<option value=""> Select Project Name</option>';
                                 $("#projectName").append(projectOption);
                             }
-                                $.each(entities, function(key, val) {
-                                    console.log(entities);
-                                    var sNo = key + 1;
-                                    var projectCode = val.projectCode;
-                                    var projectName = val.projectName;
-                                    var workflowName = val.workflowName;
-                                    var workflowCode = val.workflowCode;
-                                    var workflowLevel = val.workflowLevel;
-                                    var dueDate = val.dueDate;
-                                    var noOfDays = val.noOfDays;
-                                    var initiater = val.initiater;
-                                    var department = val.department;
-                                    var projectId = val.projectId;
-                                    var activeStatus = "";
+                            $.each(entities, function(key, val) {
+                                console.log(entities);
+                                var sNo = key + 1;
+                                var projectCode = val.projectCode;
+                                var projectName = val.projectName;
+                                var workflowName = val.workflowName;
+                                var workflowCode = val.workflowCode;
+                                var workflowLevel = val.workflowLevel;
+                                var dueDate = val.dueDate;
+                                var noOfDays = val.noOfDays;
+                                var initiater = val.initiater;
+                                var department = val.department;
+                                var projectId = val.projectId;
+                                var activeStatus =val.status;
 
-                                    var viewBtn = '<div id=' + projectId +
-                                        ' class="btn switchPrimaryBtn  viewDocs">View</div>';
-                                    var projectNameOptionItems = "<option value=" + projectId +
-                                        ">" +
-                                        projectName + "(" + projectCode + ")</option>";
+                                var viewBtn = '<div id=' + projectId +
+                                    ' class="btn switchPrimaryBtn  viewDocs">View</div>';
+                                var projectNameOptionItems = "<option value=" + projectId +
+                                    ">" +
+                                    projectName + "(" + projectCode + ")</option>";
+                                if (fieldName == 'workflowCode') {
                                     $("#projectName").append(projectNameOptionItems);
-                                    table.row.add([workflowCode, workflowName, initiater,
-                                        department, workflowLevel, dueDate, noOfDays,
-                                        activeStatus, viewBtn
-                                    ]).draw();
+                                }
+                                table.row.add([workflowCode, workflowName, initiater,
+                                    department, workflowLevel, dueDate, noOfDays,
+                                    activeStatus, viewBtn
+                                ]).draw();
 
-                                });
-                            
+                            });
+
                         },
                         error: function() {
                             $("#otp_error").text("Update Error");
@@ -326,7 +331,7 @@
             column7 = row.cells[6].innerText;
             column8 = row.cells[7].innerText;
             column9 = row.cells[8].innerText;
-          
+
 
             /* add a new records in the array */
             rows.push(
@@ -340,7 +345,7 @@
                     column7,
                     column8,
                     column9,
-                  
+
                 ]
             );
 

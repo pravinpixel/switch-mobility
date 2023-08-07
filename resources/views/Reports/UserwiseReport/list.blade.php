@@ -62,9 +62,9 @@
                             <div class="card-title">
                                 <div class="row">
                                     <div class="col-md-4" id="workflowCodeField">
-                                        <label class=" fs-6 fw-semibold mb-2">workflow Name & Code</label>
+                                        <label class=" fs-6 fw-semibold mb-2">Workflow Name & Code</label>
                                         <select name="workflowCode" id="workflowCode" class="form-select">
-                                            <option value="">Select workflow </option>
+                                            <option value="">Select Workflow </option>
                                             @foreach ($workflowDatas as $workflowData)
                                                 <option value="{{ $workflowData->id }}">
                                                     {{ $workflowData->workflow_name }}-{{ $workflowData->workflow_code }}
@@ -89,13 +89,13 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-1">
-                                        <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                        <button class="btn btn-warning resetBtn badge badge-secondary">Reset</button>
-                                    </div>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <div class="col-md-1">
-                                        <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                        <button class="btn btn-success badge badge-secondary" onclick="exportData()">Export to Excel</button>
+                                    <div class="w-auto">
+                                        <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
+                                        <button class="btn btn-warning resetBtn ">Reset</button>
+                                    </div>
+                                    <div class="w-auto">
+                                        <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
+                                        <button class="btn btn-success" onclick="exportData()">Export to Excel</button>
                                     </div>
                                 </div>
                             </div>
@@ -164,7 +164,7 @@
                                                 <td>{{ $entity['workflowLevel'] }}</td>
                                                 <td>{{ $entity['dueDate'] }}</td>
                                                 <td>{{ $entity['noOfDays'] }}</td>
-                                                <td></td>
+                                                <td>{{ $entity['status'] }}</td>
                                                 <td><div id="{{$entity['projectId']}}" class="btn btn-primary btn-sm viewDocs">View</div></td>
 
                                             </tr>
@@ -224,7 +224,7 @@
                                 var datas = data.datas;
                                 if (workflow && Employee == '') {
                                     $("#initiatorName").empty();
-                                    var wfOption = '<option value=""> Select Workflow Name</option>';
+                                    var wfOption = '<option value=""> Select Initiater Name</option>';
                                     $("#initiatorName").append(wfOption);
                                     $.each(datas, function(key, val) {
                                         initiatorItems = "<option  value=" + val.id + ">" + val
@@ -245,7 +245,7 @@
                                     var initiater = val.initiater;
                                     var department = val.department;
                                     var projectId = val.projectId;
-                                    var activeStatus = "";
+                                    var activeStatus =val.status;
 
                                     var editurl = '{{ route('viewDocListing', ':id') }}';
                                     editurl = editurl.replace(':id', projectId);

@@ -289,12 +289,12 @@
                                     <label class="fs-6 form-label fw-bold text-dark">End Date</label>
                                     <input type="date" class="form-control dateWiseFilter endDate" id="endDate" name="end_date" placeholder="Enter End Date">
                                 </div>
-                                <div class="col-md-1 SearchFilter">
-                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                <div class="w-auto SearchFilter">
+                                    <label class="fs-6 fw-semibold d-block mb-2">&nbsp;</label>
                                     <span class="btn btn-success">Search</span>
-                                </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <div class="col-md-1">
-                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                </div>
+                                <div class="w-auto">
+                                    <label class="fs-6 fw-semibold d-block mb-2">&nbsp;</label>
                                     <span class="btn btn-warning " onclick="reset()">Reset</span>
                                 </div>
                             </div>
@@ -514,7 +514,8 @@
 
         } else {
 
-            return false;
+            paramName = "";
+            nextpart = true;
         }
 
         if (nextpart == true) {

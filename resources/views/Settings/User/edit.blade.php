@@ -265,10 +265,10 @@
 
 
     function rolesValidation() {
-        var sap_id = $('.sap_id').val();
+        var sap_id = $('.sap_id').val().trim();
         var roles = $('.Privillage').val();
-        var password = $('.password').val();
-        var cpassword = $('.cpassword').val();
+        var password = $('.password').val().trim();
+        var cpassword = $('.cpassword').val().trim();
 
         var sapIdError = validateField('employeeAlert', 'Employee', sap_id);
         var roleError = validateField('roleAlert', 'Privilage', roles);

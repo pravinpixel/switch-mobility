@@ -354,7 +354,7 @@ use Carbon\Carbon;
             </div>
             <div class="col-md-3">
                 <h4>Document Type</h4>
-                <p>{{ $details->workflow_name }}</p>
+                <p>{{ $details->document_type }}</p>
             </div>
             <div class="col-md-3">
                 <h4>WorkFlow Name & Code </h4>

@@ -26,11 +26,12 @@ use PHPUnit\Framework\Constraint\Count;
 
 class DashboardController extends Controller
 {
-  protected $basicController, $projectwiseController;
-  public function __construct(BasicController $basicController, ProjectwiseController $projectwiseController)
+  protected $basicController, $projectwiseController, $doclistings;
+  public function __construct(BasicController $basicController, ProjectwiseController $projectwiseController, Doclistings $doclistings)
   {
     $this->basicController = $basicController;
     $this->projectwiseController = $projectwiseController;
+    $this->doclistings = $doclistings;
   }
   public function index()
   {
@@ -113,10 +114,30 @@ class DashboardController extends Controller
 
     $totalOverDuemodels->whereNull('deleted_at');
     $totalOverDuemodels->where('current_status', '!=', 4);
-    $totalOverDuemodels->where('end_date', '<', now()->toDateString());
-    $totalOverDueProjects = $totalOverDuemodels->count();
+    $totalOverDueProjectsModels = $totalOverDuemodels->get();
+    $totalOverDueProjects = 0;
+    foreach ($totalOverDueProjectsModels as $getAllmodel) {
+      $projectId = $getAllmodel->id;
+      $dueDate = $getAllmodel->end_date;
+      $toDayDate = now()->toDateString();
 
+      $date1 = \Carbon\Carbon::parse($dueDate);
+      $date2 = \Carbon\Carbon::parse($toDayDate);
 
+      $getLastLevel = $this->doclistings->getLastLevelProject($projectId);
+
+      $getStatus = ProjectDocumentStatusByLevel::where('level_id', $getLastLevel)
+        ->where('project_id', $projectId)
+        ->first();
+      if (isset($getStatus->status) != 4) {
+
+        if ($date1->lt($date2)) {
+         $totalOverDueProjects +=1;
+        }
+      }
+    }
+   
+    //dd(now()->toDateString(),$totalOverDueProjects);
 
 
     // dd($totProject);
@@ -158,13 +179,22 @@ class DashboardController extends Controller
         $departmentModel = $employeeModel['department'];
 
 
-        $getMyApproverLevels = ProjectEmployee::where('project_id', $projectId)->where('employee_id', $empId)->where('type', 2)->get();
+        $getMyApproverLevels = ProjectEmployee::where('project_id', $projectId)
+          ->where('employee_id', $empId)
+          ->where('type', 2)
+          ->get();
+
+
+
         foreach ($getMyApproverLevels as $getMyApproverLevel) {
 
           $level = $getMyApproverLevel->level;
+
           $getProjectLevelModel = ProjectLevels::where('project_id', $projectId)->where('project_level', $level)->first();
 
           $DocsModel2 = ProjectDocumentDetail::where('project_id', $projectId)->where('upload_level', $level)->count();
+
+          // dd($getProjectLevelModel,$DocsModel2);
           if (!$DocsModel2) {
             $newDatas = [
               'projectId' => $myApprovingProject->id,
@@ -179,6 +209,7 @@ class DashboardController extends Controller
               'dueDate' => ($getProjectLevelModel) ? date("d-m-Y", strtotime($getProjectLevelModel->due_date)) : "",
               'level' => $level
             ];
+
             array_push($approvingProjects, $newDatas);
           }
         }
@@ -234,21 +265,20 @@ class DashboardController extends Controller
               ->where('doc_id', $docId)
               ->first();
             if ($docsModelStatusLevel) {
-              if ($docsModelStatusLevel->status == 1||$docsModelStatusLevel->status == 3) {
-           
-                  if ($date1->lt($date2)) {
-                    $totalOverDueDocumentCount +=1;
-                  }else{
-                    $totalPendingDocumentCount += 1;
-                  }
-               
+              if ($docsModelStatusLevel->status == 1 || $docsModelStatusLevel->status == 3) {
+
+                if ($date1->lt($date2)) {
+                  $totalOverDueDocumentCount += 1;
+                } else {
+                  $totalPendingDocumentCount += 1;
+                }
               } else if ($docsModelStatusLevel->status == 2) {
-             
-                  if ($date1->lt($date2)) {
-                    $totalOverDueDocumentCount +=1;
-                  }else{
-                    $totalDeclinedDocumentCount += 1;
-                  }
+
+                if ($date1->lt($date2)) {
+                  $totalOverDueDocumentCount += 1;
+                } else {
+                  $totalDeclinedDocumentCount += 1;
+                }
               } else {
                 $totalApprovedDocumentCount += 1;
               }
@@ -283,7 +313,7 @@ class DashboardController extends Controller
               ->where('is_latest', 1)
               ->where('status', '!=', 4)
               ->count();
-           // $totalOverDueDocumentCount += ($getOverDueDocs) ? 1 : 0;
+            // $totalOverDueDocumentCount += ($getOverDueDocs) ? 1 : 0;
           }
         }
       }

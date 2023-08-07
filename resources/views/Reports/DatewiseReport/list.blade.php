@@ -59,8 +59,8 @@
                     @endif
                     <div class="card-header border-0 pt-6">
 
-                        <div class="card-title">
-                            <div class="row">
+                        <div class="card-title col-12">
+                            <div class="row col-12">
                                 <div class="col-md-4" style="display:inline;">
                                     <!--begin::Label-->
                                     <label class="required fs-6 fw-semibold mb-2">Start Date</label>
@@ -80,13 +80,13 @@
 
 
                                 </div>
-                                <div class="col-md-2" onclick="filterData()">
-                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <button class="btn switchPrimaryBtn badge badge-secondary" >Search</button>
+                                <div class="w-auto" onclick="filterData()">
+                                    <label class="fs-6 d-block fw-semibold mb-2">&nbsp;</label>
+                                    <button class="btn switchPrimaryBtn " >Search</button>
                                 </div>
-                                <div class="col-md-2" onclick="exportData()">
-                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <button class="btn btn-success badge badge-secondary">Export to Excel</button>
+                                <div class="w-auto" onclick="exportData()">
+                                    <label class="fs-6 d-block fw-semibold mb-2">&nbsp;</label>
+                                    <button class="btn btn-success  ">Export to Excel</button>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +174,7 @@
             //     filterData();
             // });
 
-            $(".endDate").change(function() {
+            $(".endDate1").change(function() {
                 var startDate = $('.startDate').val();
                 var endDate = $('.endDate').val();
 
@@ -191,6 +191,50 @@
             });
 
 
+        });
+        $(document).on('change click', '.endDate', function() {
+            console.log("To Date");
+            var startDate = $('.startDate').val().trim();
+            var endDate = $('.endDate').val().trim();
+
+            console.log(startDate);
+            console.log(endDate);
+            if (startDate && endDate) {
+                if (startDate > endDate) {
+                    console.log("If part 1 start Date");
+                    Swal.fire(
+                        'Warning!',
+                        'End date should be Lessthen than Start date.',
+                        'error'
+                    );
+
+                    $('.endDate').val('');
+                }
+            }
+        });
+        $(document).on('change click', '.startDate', function() {
+            console.log("Start Date");
+            var startDate = $('.startDate').val().trim();
+            var endDate = $('.endDate').val().trim();
+
+            console.log(startDate);
+            console.log(endDate);
+
+            if (startDate && endDate) {
+                console.log("If part 1 start Date");
+                if (startDate > endDate) {
+                    console.log("If part 2 start Date");
+                    Swal.fire(
+                        'Warning!',
+                        'End date should be greater than End date.',
+                        'error'
+                    );
+
+                    $('.startDate').val('');
+                    $('.endDate').val('');
+
+                }
+            }
         });
 
             function filterData() {
@@ -221,7 +265,7 @@
                                 var initiater = val.initiater;
                                 var department = val.department;
                                 var projectId = val.projectId;
-                                var activeStatus = "";
+                                var activeStatus = val.status;
 
                                 var editurl = '{{ route("viewDocListing", ":id") }}';
                                 editurl = editurl.replace(':id', projectId);

@@ -28,8 +28,8 @@ class EmployeeController extends Controller
     }
     public function edit($id)
     {
-        $departments = Department::get();
-        $designation = Designation::get();
+        $departments = Department::where('is_active', 1)->get();
+        $designation = Designation::where('is_active', 1)->get();
 
         $model = Employee::findOrFail($id);
         return view('Employee/EmployeeDetails', ['model' => $model, 'departments' => $departments, 'designation' => $designation]);

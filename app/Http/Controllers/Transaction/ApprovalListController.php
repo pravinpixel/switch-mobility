@@ -17,6 +17,7 @@ use App\Models\ProjectMilestone;
 use App\Models\Workflow;
 use App\Models\WorkflowLevelDetail;
 use App\Models\Workflowlevels;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -258,6 +259,9 @@ class ApprovalListController extends Controller
         // // Save the PDF file
         // $writer->save(public_path('temp/file1.pdf'));
         $uploadFolder = public_path('uploads');
+        if (!File::exists($uploadFolder)) {
+            mkdir($$uploadFolder . '/', 0777, true);
+        }
         $id = $request->id;
         $model = ProjectDocumentDetail::with('documentName')->where('project_doc_id', $id)
             ->where('is_latest', 1)
@@ -411,7 +415,8 @@ class ApprovalListController extends Controller
                     }
                     $html .= '</tr>';
                 }
-                $html .= '</table>';         }
+                $html .= '</table>';
+            }
             $html .= '</div>';
             $dompdf = new Dompdf();
             $dompdf->loadHtml($html);
@@ -421,7 +426,7 @@ class ApprovalListController extends Controller
             $randomNumber = Str::random(6);
             $filename =  $randomNumber . '.pdf';
 
-$pdfPath = $uploadFolder . '/' . $filename;
+            $pdfPath = $uploadFolder . '/' . $filename;
             file_put_contents($pdfPath, $dompdf->output());
         } else if ($extension == "pdf") {
             $pdfPath = public_path('projectDocuments/' . $model->document_name);
@@ -430,6 +435,9 @@ $pdfPath = $uploadFolder . '/' . $filename;
             $filePath = public_path('projectDocuments/' . $model->document_name);
 
             $xltoPdf = public_path('/xlToPdf');
+            if (!File::exists($xltoPdf)) {
+                mkdir($xltoPdf . '/', 0777, true);
+            }
             $newPdfName = "temp" . $request->id . ".pdf";
 
 
@@ -449,6 +457,11 @@ $pdfPath = $uploadFolder . '/' . $filename;
             $PDFWriter->save($pdfPath);
         }
 
+        $delimiter = '/';
+
+        $lastPartFileName = Str::afterLast($pdfPath, $delimiter);
+        $substringBeforeDotFileName = Str::before($lastPartFileName, '.');
+       
 
         $imagePath = public_path('DocumentImages/' . $id);
         if (File::exists($imagePath)) {
@@ -536,7 +549,8 @@ $pdfPath = $uploadFolder . '/' . $filename;
             }
         }
         Log::info("passedLine no 132 ter ");
-        return $pdf->Output('ApprovedDocs.pdf', 'D');
+        $dFilename = $substringBeforeDotFileName.'.pdf';
+        return $pdf->Output($dFilename, 'D');
     }
     private function saveImageFromDrawing(Drawing $drawing, $uploadFolder)
     {

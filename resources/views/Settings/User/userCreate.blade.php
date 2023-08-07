@@ -284,14 +284,14 @@
 
       function rolesValidation1() {
 
-          var sap_id = $('.sap_id').val();
-          var Privillage = $('.Privillage').val();
-          var paswd = $('.password').val();
-          var confPaswd = $('.cpassword').val();
+          var sap_id = $('.sap_id').val().trim();
+          var Privillage = $('.Privillage').val().trim();
+          var paswd = $('.password').val().trim();
+          var confPaswd = $('.cpassword').val().trim();
 
 
 
-          if ($('.sap_id').val() == "") {
+          if (sap_id == "") {
               console.log('No');
               return false;
           } else {
@@ -341,10 +341,10 @@
       }
 
       function rolesValidation() {
-          var sap_id = $('.sap_id').val();
+          var sap_id = $('.sap_id').val().trim();
           var roles = $('.Privillage').val();
-          var password = $('.password').val();
-          var cpassword = $('.cpassword').val();
+          var password = $('.password').val().trim();
+          var cpassword = $('.cpassword').val().trim();
 
           var sapIdError = validateField('employeeAlert', 'Employee', sap_id);
           var roleError = validateField('roleAlert', 'Privilage', roles);

@@ -58,7 +58,7 @@
                     </div>
                     @endif
                     <div class="card-header border-0 pt-6">
-                        <div class="card-title">
+                        <div class="">
                             <div class="row col-md-12">
                                 <div class="col-md-3" style="display:inline;" id="workflowCodeField">
                                     <!--begin::Label-->
@@ -86,7 +86,7 @@
 
 
                                 </div>
-                                <div class="col-md-3" style="display:inline;" id="departmentField">
+                                <div class="col-md-3" style="display:none;" id="departmentField">
                                     <!--begin::Label-->
                                     <label class="fs-6 fw-semibold mb-2">Department</label>
                                     <!--end::Label-->
@@ -120,14 +120,14 @@
 
 
                                 </div>
-                                <div class="col-md-1">
-                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <button class="btn btn-warning resetBtn badge badge-secondary">Reset</button>
+                                <div class="w-auto">
+                                    <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
+                                    <button class="btn btn-warning resetBtn  ">Reset</button>
                                 </div>
-                               
-                                <div class="col-md-1" onclick="exportData()">
-                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
-                                    <span class="btn btn-success badge badge-secondary" >Export to Excel</span>
+
+                                <div class="w-auto" onclick="exportData()">
+                                    <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
+                                    <span class="btn btn-success">Export to Excel</span>
                                 </div>
                             </div> <br>
 
@@ -195,7 +195,7 @@
                                     <td>{{ $entity['workflowLevel'] }}</td>
                                     <td>{{ $entity['dueDate'] }}</td>
                                     <td>{{ $entity['noOfDays'] }}</td>
-                                    <td></td>
+                                    <td>{{ $entity['status'] }}</td>
                                     <td>
                                         <div id="{{$entity['projectId']}}" class="btn btn-primary viewDocs">View</div>
                                     </td>
@@ -237,7 +237,7 @@
 
 
 
-            $('#workflowCode').on('change', function() {              
+            $('#workflowCode').on('change', function() {
 
                 $("#projectName").empty();
                 var wfOptiondata = '<option value="">Select Project</option>';
@@ -247,8 +247,11 @@
 
             });
 
-            $('#projectName,#workflowCode').on('change', function() {
-                filterData();
+            $('#projectName').on('change', function() {
+                filterData('projectName');
+            });
+            $('#workflowCode').on('change', function() {
+                filterData('workflowCode');
             });
             $('.resetBtn').on('click', function() {
                 $('#department').val("").trigger('change');
@@ -256,11 +259,11 @@
                 // $("#service_table").load(location.href + " #service_table");
             });
 
-            function filterData() {
+            function filterData(fieldName) {
                 //var department = ($('#department').val()) ? $('#department').val() : "";
                 var projectName = ($('#projectName').val()) ? $('#projectName').val() : "";
                 var workflowCode = ($('#workflowCode').val()) ? $('#workflowCode').val() : "";
-                var department ="";
+                var department = "";
 
                 if (workflowCode) {
                     $.ajax({
@@ -269,13 +272,13 @@
                         method: 'post',
                         data: {
                             "_token": "{{ csrf_token() }}",
-                           // department: department,
+                            // department: department,
                             projectId: projectName,
                             workflowId: workflowCode,
                         },
                         success: function(data) {
                             var table = $('#service_table').DataTable();
-                            $("#projectName").empty();
+
                             var entities = data.entities;
                             var workflowData = data.workflowDatas;
                             if (department && workflowCode == "") {
@@ -295,10 +298,13 @@
                             }
 
                             table.clear().draw();
+                            if (fieldName == "workflowCode") {
+                                $("#projectName").empty();
+                                var projectNameOptionData =
+                                    '<option value="">Select Project Name & Code</option>';
 
-                            var projectNameOptionData =
-                                '<option value="">Select Project Name & Code</option>';
-                            $("#projectName").append(projectNameOptionData);
+                                $("#projectName").append(projectNameOptionData);
+                            }
                             var projectNameOptionItems = "";
                             $.each(entities, function(key, val) {
                                 var sNo = key + 1;
@@ -314,7 +320,7 @@
                                 var initiater = val.initiater;
                                 var department = val.department;
                                 var projectId = val.projectId;
-                                var activeStatus = "";
+                                var activeStatus =val.status;
 
                                 var viewBtn = '<div id=' + projectId +
                                     ' class="btn btn-success viewDocs">View</div>';
@@ -328,9 +334,11 @@
                             });
                             console.log(projectNameOptionItems);
                             // $("#workflowCode").html("");
+                            if (fieldName == "workflowCode") {
                             $("#projectName").append(projectNameOptionItems);
                             $("#projectName").val(projectName);
                             $("#projectName").select2();
+                            }
                         },
                         error: function() {
                             $("#otp_error").text("Update Error");

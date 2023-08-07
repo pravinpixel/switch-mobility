@@ -118,7 +118,7 @@
                                 <!--begin::Col-->
                                 <div class="col-md-12 fv-row">
                                     <label class="required fs-6 fw-semibold mb-2">Workflow</label>
-                                    <select class="form-control workflow_id" name="workflow_id" onchange="get_work_flow_levels(this.value);" required>
+                                    <select class=" workflow_id form-select form-select-solid" data-kt-select2="true" data-placeholder="Select Workflow" data-allow-clear="true" name="workflow_id" onchange="get_work_flow_levels(this.value);" required>
                                         <option value="">Select</option>
                                         @foreach($workflow as $wf)
 
@@ -197,7 +197,7 @@
     }
     $(document).on('input', '.name', function() {
         var id = $('.id').val();
-        if ($(this).val()) {
+        if ($(this).val().trim()) {
 
             sampleValidation();
         }
@@ -270,7 +270,7 @@
     function validation() {
 
         //  Swal.fire('Any fool can use a computer');
-        var name = $('.name').val().length;
+        var name = $('.name').val().trim();
         console.log(name);
         var id = $('.id').val();
         var workflow_id = $('.workflow_id').val();

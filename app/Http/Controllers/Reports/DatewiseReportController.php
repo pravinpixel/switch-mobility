@@ -26,6 +26,7 @@ class DatewiseReportController extends Controller
         $startDate = $request->startDate;
         $endDate = $request->endDate;
         $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+
         $modeldatas = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
 
         $modeldatas->where(function ($query) use ($startDate, $endDate) {
@@ -41,6 +42,7 @@ class DatewiseReportController extends Controller
         }
         $modeldatas->whereNull('deleted_at');
         $models= $modeldatas->get();
+
 
         $entities = $this->projectController->ReportDataLooping($models);
         return response()->json(['entities' => $entities]);
