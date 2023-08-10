@@ -34,6 +34,15 @@ class EmployeeController extends Controller
         $model = Employee::findOrFail($id);
         return view('Employee/EmployeeDetails', ['model' => $model, 'departments' => $departments, 'designation' => $designation]);
     }
+    public function employeeEdit(Request $request)
+    {
+        $id = $request->id;
+        $departments = Department::where('is_active', 1)->get();
+        $designation = Designation::where('is_active', 1)->get();
+
+        $model = Employee::findOrFail($id);
+        return view('Employee/EmployeeDetails', ['model' => $model, 'departments' => $departments, 'designation' => $designation]);
+    }
     function employeeValidation(Request $request)
     {
         dd($request->all());

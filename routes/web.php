@@ -70,7 +70,7 @@ Route::group([
     Route::resource('designation', DesignationController::class);
     Route::post('changedDocumentTypeActiveStatus', [DocumentTypeController::class, 'changedDocumentTypeActiveStatus'])->name('changedDocumentTypeActiveStatus');
     Route::get('docTypeDetails', [DocumentTypeController::class, 'docTypeDetails'])->name('docTypeDetails');
-    Route::get('documentTypeEdit/{id}', [DocumentTypeController::class, 'documentTypeEdit'])->name('documentTypeEdit');
+   // Route::get('documentTypeEdit/{id}', [DocumentTypeController::class, 'documentTypeEdit'])->name('documentTypeEdit');
 
     Route::resource('documentType', DocumentTypeController::class);
     Route::resource('employees', EmployeeController::class);
@@ -148,7 +148,13 @@ Route::post('approverDownloadDocs', [Doclistings::class, 'approverDownloadDocs']
 
 //Department
 Route::post('departmentEdit', [DepartmentController::class, 'departmentEdit'])->name('departmentEdit');
+Route::post('workflowEdit', [WorkflowController::class, 'workflowEdit'])->name('workflowEdit');
 Route::post('projectEdit', [ProjectController::class, 'projectEdit'])->name('projectEdit');
+Route::post('designationEdit', [DesignationController::class, 'designationEdit'])->name('designationEdit');
+Route::post('employeeEdit', [EmployeeController::class, 'employeeEdit'])->name('employeeEdit');
+Route::post('documentTypeEdit', [DocumentTypeController::class, 'documentTypeEdit'])->name('documentTypeEdit');
+Route::post('privilageEdit', [RolesController::class, 'privilageEdit'])->name('privilageEdit');
+Route::post('userEdit', [UserController::class, 'userEdit'])->name('userEdit');
 
 
 

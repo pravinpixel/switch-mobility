@@ -42,6 +42,13 @@ class DesignationController extends Controller
 
         return view('Designation/DesignationDetail', compact('model'));
     }
+    public function designationEdit(Request $request)
+    {
+        $id = $request->id;
+        $model = Designation::findOrFail($id);
+
+        return view('Designation/DesignationDetail', compact('model'));
+    }
 
     /**
      * Store a newly created resource in storage.

@@ -245,7 +245,7 @@
                         {{ session('error') }}
                     </div>
                     @endif
-                    <div class="card-header border-0 pt-6 ">
+                    <div class="card-header border-0 p-3 ">
 
                         <form method="post">
                             @csrf
@@ -373,7 +373,7 @@
                     </div>
                     <!--end::Card header-->
                     <!--begin::Card body-->
-                    <div class="card-body py-4">
+                    <div class="card-body  p-3">
 
                         <!--begin::Table-->
                         <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
@@ -475,22 +475,32 @@
         }
 
     });
+    $(".endDate").change(function() {
+        $('.startDate').attr("max", $(this).val());
+        var startDate = $('.startDate').val();
+        var endDate = $('.startDate').val();     
+    });
+    $(".startDate").change(function() {
+        $('.endDate').attr("min", $(this).val());
+        var startDate = $('.startDate').val();
+        var endDate = $('.endDate').val();       
+    });
 
     function reset() {
 
-       
+
         location.reload();
         // $("#service_table").load(location.href + " #service_table").abort();
 
 
 
-    
+
     }
     $(document).on('click', '.SearchFilter', function() {
         var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
         var isAuthorityEdit = "{{ auth()->user()->can('project-edit') }}";
         var isAuthorityDelete = "{{ auth()->user()->can('project-delete') }}";
-        
+
         console.log("well");
         var table = $('#service_table').DataTable();
         var projectId = $('.projectId').val();

@@ -28,7 +28,7 @@
                     @endif
 
                     <!--end::Card header-->
-                    <div class="card-body">
+                    <div class="card-body  p-3">
 
                         <!-- Team -->
                         <section id="team" class="pb-5">
@@ -37,14 +37,14 @@
                                 <div class="row">
                                     <div class="col-2 d-flex">
                                         <!--begin::Items-->
-                                        <div class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" style="border: none;border-top:5px solid #3565ed">
+                                        <a class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5"  href="{{url('projects')}}" style="border: none;border-top:5px solid #3565ed">
                                             <!--begin::Symbol-->
 
                                             <!--end::Symbol-->
                                             <!--begin::Stats-->
                                             <div class="m-0">
                                                 @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('project-view'))
-                                                <a href="{{url('projects')}}">
+                                                <span>
                                                     @endif
                                                     <!--begin::Number-->
                                                     <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{$countArray['totalProjectCount']}}</span>
@@ -52,11 +52,11 @@
                                                     <!--begin::Desc-->
                                                     <span class="text-gray-500 fw-semibold fs-6">Total Number Of Projects</span>
                                                     @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('project-view')) <!--end::Desc-->
-                                                </a>
+                                                </span>
                                                 @endif
                                             </div>
                                             <!--end::Stats-->
-                                        </div>
+                                        </a>
                                         <!--end::Items-->
                                     </div>
                                     <!-- Team member -->
@@ -65,7 +65,7 @@
                                     <!-- Team member -->
                                     <div class="col-2 d-flex">
                                         <!--begin::Items-->
-                                        <div class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" style="border: none;border-top:5px solid orange">
+                                        <a class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5"  href="{{url('doclisting')}}" style="border: none;border-top:5px solid orange">
                                             <!--begin::Symbol-->
 
                                             <!--end::Symbol-->
@@ -73,7 +73,7 @@
 
                                             <div class="m-0">
                                                 @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('document-listing-view'))
-                                                <a href="{{url('doclisting')}}">
+                                                <span>
                                                     @endif
                                                     <!--begin::Number-->
                                                     <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{$countArray['totalDocumentCount']}}</span>
@@ -88,20 +88,20 @@
                                             <!--end::Stats-->
                                         </div>
                                         <!--end::Items-->
-                                    </div>
+                                  
                                     <!-- ./Team member -->
 
                                     <!-- Team member -->
                                     <div class="col-2 d-flex">
                                         <!--begin::Items-->
-                                        <div class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" style="border: none;border-top:5px solid #38eb7a">
+                                        <a class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" href="{{url('doclistingIndex/approved')}}" style="border: none;border-top:5px solid #38eb7a">
                                             <!--begin::Symbol-->
 
                                             <!--end::Symbol-->
                                             <!--begin::Stats-->
                                             <div class="m-0">
                                                 @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('document-listing-view'))
-                                                <a href="{{url('doclistingIndex/approved')}}">
+                                                <span>
                                                     @endif
                                                     <!--begin::Number-->
                                                     <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{$countArray['totalApprovedDocumentCount']}}</span>
@@ -110,11 +110,11 @@
                                                     <span class="text-gray-500 fw-semibold fs-6">No.of Documents Approved</span>
                                                     <!--end::Desc-->
                                                     @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('document-listing-view'))
-                                                </a>
+                                                </span>
                                                 @endif
                                             </div>
                                             <!--end::Stats-->
-                                        </div>
+                                        </a>
                                         <!--end::Items-->
                                     </div>
                                     <!-- ./Team member -->
@@ -122,14 +122,14 @@
                                     <!-- Team member -->
                                     <div class="col-2 d-flex">
                                         <!--begin::Items-->
-                                        <div class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" style="border: none;border-top:5px solid #3565ed">
+                                        <a class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" href="{{url('doclistingIndex/pending')}}" style="border: none;border-top:5px solid #3565ed">
                                             <!--begin::Symbol-->
 
                                             <!--end::Symbol-->
                                             <!--begin::Stats-->
                                             <div class="m-0">
                                                 @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('document-listing-view'))
-                                                <a href="{{url('doclistingIndex/pending')}}">
+                                                <span >
                                                     @endif
                                                     <!--begin::Number-->
                                                     <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{$countArray['totalPendingDocumentCount']}}</span>
@@ -138,11 +138,11 @@
                                                     <span class="text-gray-500 fw-semibold fs-6">No.of Documents Pending</span>
                                                     <!--end::Desc-->
                                                     @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('document-listing-view'))
-                                                </a>
+                                                </span>
                                                 @endif
                                             </div>
                                             <!--end::Stats-->
-                                        </div>
+                                        </a>
                                         <!--end::Items-->
                                     </div>
                                     <!-- ./Team member -->
@@ -150,14 +150,14 @@
                                     <!-- Team member -->
                                     <div class="col-2 d-flex" style="">
                                         <!--begin::Items-->
-                                        <div class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" style="border: none;border-top:5px solid #e6b410">
+                                        <a class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" href="{{url('doclistingIndex/declined')}}" style="border: none;border-top:5px solid #e6b410">
                                             <!--begin::Symbol-->
 
                                             <!--end::Symbol-->
                                             <!--begin::Stats-->
                                             <div class="m-0">
                                                 @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('document-listing-view'))
-                                                <a href="{{url('doclistingIndex/declined')}}">
+                                                <span >
                                                     @endif
                                                     <!--begin::Number-->
                                                     <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{$countArray['totalDeclinedDocumentCount']}}</span>
@@ -166,23 +166,23 @@
                                                     <span class="text-gray-500 fw-semibold fs-6">Declined Documents</span>
                                                     <!--end::Desc-->
                                                     @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('document-listing-view'))
-                                                </a>
+                                                </span>
                                                 @endif
                                             </div>
                                             <!--end::Stats-->
-                                        </div>
+                                        </a>
                                         <!--end::Items-->
                                     </div>
                                     <div class="col-2 d-flex">
                                         <!--begin::Items-->
-                                        <div class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" style="border: none;border-top:5px solid #38eb7a">
+                                        <a class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5" href="{{url('doclistingIndex/overdue')}}" style="border: none;border-top:5px solid #38eb7a">
                                             <!--begin::Symbol-->
 
                                             <!--end::Symbol-->
                                             <!--begin::Stats-->
                                             <div class="m-0">
                                                 @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('document-listing-view'))
-                                                <a href="{{url('doclistingIndex/overdue')}}">
+                                                <span>
                                                     @endif
                                                     <!--begin::Number-->
                                                     <span class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">{{$countArray['totalOverDueDocumentCount']}}</span>
@@ -191,11 +191,11 @@
                                                     <span class="text-gray-500 fw-semibold fs-6">Documents Overdue</span>
                                                     <!--end::Desc-->
                                                     @if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('document-listing-view'))
-                                                </a>
+                                                </span>
                                                 @endif
                                             </div>
                                             <!--end::Stats-->
-                                        </div>
+                                        </a>
                                         <!--end::Items-->
                                     </div>
                                     <!-- ./Team member -->
@@ -213,8 +213,9 @@
                                         <div id="barchart_material1" style="width: 500px; height: 400px;"></div>
                                     </div>
                                 </div>
-                                <br>
+                               
                                 <hr>
+                                @if(count($approvingProjects)||count($initiatingProjects))
                                 <div class="" style="">
                                     <div class="row g-8">
                                         <!--begin::Col-->
@@ -244,6 +245,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
+                                @if(count($initiatingProjects))
                                 <br>
                                 <div class="row">
 
@@ -293,6 +296,8 @@
                                     </table>
                                 </div>
                                 <br>
+                                @endif
+                                @if(count($approvingProjects))
                                 <div class="row">
 
                                     <h5 class="section-title h1">Approval Pending Projects</h5>
@@ -345,6 +350,7 @@
                                     </table>
                                 </div>
                                 <br>
+                                @endif
                                 <div class="row">
 
                                     <h5 class="section-title h1">Recently Uploaded Documents</h5>
@@ -423,38 +429,10 @@
             chart1();
             chart2();
             $(".toDate").change(function() {
-           
-                var startDate = $('.fromDate').val();
-                var endDate = $('.toDate').val();
-
-                if (startDate > endDate) {
-                    Swal.fire(
-                        'Warning!',
-                        'End date should be greater than Start date.',
-                        'error'
-                    );
-
-                    $('.toDate').val('');
-                }
+                $('.fromDate').attr("max",$(this).val());         
             });
             $(".fromDate").change(function() {
-                              
-                var startDate = $('.fromDate').val();
-                var endDate = $('.toDate').val();
-                if (startDate && endDate) {
-                    if (startDate > endDate) {
-
-                        Swal.fire(
-                            'Warning!',
-                            'End date should be Less than Start date.',
-                            'error'
-                        );
-
-                        $('.fromDate').val('');
-                        $('.toDate').val('');
-
-                    }
-                }
+                $('.toDate').attr("min",$(this).val());                             
             });
             $('.resetBtn').on('click', function() {
 

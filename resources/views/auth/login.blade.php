@@ -21,7 +21,7 @@
             <div class="d-flex flex-center flex-lg-start flex-column">
                 <!--begin::Logo-->
                 <a href="{{ route('login') }}" class="mb-7">
-                    <img alt="Logo" src="assets/media/logos/limage.png" />
+                    <img alt="Logo" src="assets/media/logos/SwitchLogo.jpg" width="600px" height="600px"/>
                 </a>
                 <!--end::Logo-->
                 <!--begin::Title-->

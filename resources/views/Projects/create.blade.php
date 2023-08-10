@@ -266,6 +266,9 @@
             flex-wrap: wrap;
 
         }
+        body{
+            overflow-x: hidden
+        }
     </style>
     <!--begin::Modal title-->
     <h2 class="text-center m-5">Create Project</h2>
@@ -418,7 +421,7 @@
                                 <!--end::Label-->
                                 <!--begin::Input-->
                                 <input type="date" class="form-control form-control-solid end_date"
-                                    placeholder="Enter End Date" name="end_date" required />
+                                    placeholder="Enter End Date" name="end_date" required  onchange="set_max(this.value);"/>
                                 <!--end::Input-->
                             </div>
                             <!--end::Col-->
@@ -537,11 +540,11 @@
                                         <!--begin::Col-->
                                         <div class="col-md-2 fv-row">
                                             <!--begin::Label-->
-                                            <label class="required fs-6 fw-semibold mb-2">Start Date</label>
+                                            <label class="required fs-6 fw-semibold mb-2 ">Start Date</label>
                                             <!--end::Label-->
                                             <!--begin::Input-->
                                             <input type="date" class="form-control form-control-solid mile_start_date"
-                                                placeholder="Enter Start Date" name="mile_start_date[]" required />
+                                                placeholder="Enter Start Date" name="mile_start_date[]" required onchange="mileStone_min_date(this)" />
                                             <!--end::Input-->
                                         </div>
                                         <!--end::Col-->
@@ -741,7 +744,7 @@
 
 
         document.getElementsByName("start_date")[0].value = getCurrentDate();
-
+        set_min(getCurrentDate());
 
         function getEndDate() {
             var today = new Date();
@@ -759,6 +762,7 @@
             return endDate;
         }
         $(".end_date").val(getEndDate());
+        set_max(getEndDate());
         // alert(getEndDate());
 
         $(document).on('change', '.end_date', function() {
@@ -777,6 +781,7 @@
                     );
 
                     $('.end_date').val('');
+
                 }
             }
         });
@@ -958,9 +963,28 @@
     });
 
     function set_min(start_date) {
+        // alert("ok");
         $('.end_date').attr('min', start_date);
+        $(".mile_start_date").val("");
+        $(".mile_end_date").val("");
+        $(".mile_start_date").attr('min', start_date);
+        $(".mile_end_date").attr('min', start_date);
     }
+    function set_max(end_date) {
+        // alert("ok");
+        $('.start_date').attr('max', end_date);
+        $(".mile_end_date").val("");
+        $(".mile_start_date").val("");
+        $(".mile_start_date").attr('max', end_date);
+        $(".mile_end_date").attr('max', end_date);
+    }
+function mileStone_min_date(mStartDate) {
+    const closestMileEndDate = $(mStartDate).parent().next().find(".mile_end_date");
+    console.log(closestMileEndDate);
+    const startDateValue = $(mStartDate).val();
 
+    closestMileEndDate.attr("min", startDateValue);
+}
     function set_min_max_value() {
         var start_date = $('.start_date').val();
         var end_date = $('.end_date').val();
@@ -1267,7 +1291,7 @@
 
                             levelTabContentData += '</div><br><br>';
                             levelTabContentData += '<h4>Approvers</h4>';
-                            levelTabContentData += ' <div class="col-md-6 fv-row">';
+                            levelTabContentData += ' <div class="col-md-6 fv-row pe-none">';
                             var uniqueId = "SelectLevel" + wfl;
                             var uniqueApproverName = "approver_" + WFLevelBtn[wfl].levelId;
                             SelectId.push(uniqueId);
@@ -1886,4 +1910,9 @@
 
 
     }
+
+    
+    
+
+    
 </script>

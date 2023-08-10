@@ -85,7 +85,7 @@
                     </div>
                     <!--end::Card header-->
                     <!--begin::Card body-->
-                    <div class="card-body py-4">
+                    <div class="card-body p-3">
                         <!--begin::Card title-->
                         <div class="card-title">
                             <!--begin::Search-->

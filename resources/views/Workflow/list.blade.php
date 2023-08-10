@@ -127,7 +127,7 @@
                     </div>
                     <!--end::Card header-->
                     <!--begin::Card body-->
-                    <div class="card-body py-4">
+                    <div class="card-body  p-3">
                         <div class="card-title">
                             <!--begin::Search-->
                             <div class="d-flex align-items-center position-relative my-1">
@@ -165,13 +165,13 @@
                             <!--begin::Table body-->
                             <tbody class="text-gray-600 fw-semibold">
                                 <!--begin::Table row-->
-                                @foreach($workflow as $key=>$d)
+                                @foreach($models as $key=>$d)
                                 <tr>
 
-                                    <td>{{$d['workflow_name']}}</td>
-                                    <td>{{$d['workflow_code']}}</td>
+                                    <td>{{$d['wfName']}}</td>
+                                    <td>{{$d['wfCode']}}</td>
                                     <td>{{$d['total_levels']}}</td>
-                                    <td>{{($d['workflow_type'] == 1) ? 'Full' : 'Partial' }}</td>
+                                    <td>{{$d['wfType'] }}</td>
                                     <td>
                                         <label class="switch">
                                             <input type="checkbox" data-id="{{ $d['id'] }}" value="" class="status" <?php echo $d['is_active'] == 1 ? 'checked' : ''; ?>>
@@ -180,13 +180,17 @@
 
                                     </td>
                                     <td class="text-end">
+                                        @if($d['runningStatus'])
+                                        <span class="badge badge-success">Running Workflow</span>
+                                        @else
+                                     
                                         <div class="d-flex my-3 ms-9">
                                             <!--begin::Edit-->
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('workflow-edit'))
-                                            <a href="{{route('workflow.edit',$d['id'])}}" style="display:inline;cursor: pointer;" id="{{ $d['id'] }}" title="Edit workflow"><i class="fa-solid fa-pen" style="color:orange"></i></a>
+                                            <a class = "editWf" style="display:inline;cursor: pointer;" id="{{ $d['id'] }}" title="Edit workflow"><i class="fa-solid fa-pen" style="color:orange"></i></a>
 
-
+                                      
                                             @endif
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('workflow-delete'))
@@ -196,6 +200,7 @@
 
                                             <!--end::More-->
                                         </div>
+                                        @endif
                                     </td>
 
                                 </tr>
@@ -220,27 +225,7 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-
-        $('.select_level').change(function() {
-            $('.select_level option[value=' + $(this).val() + ']').css('color', 'red').attr('disabled', 'disabled');
-            $(this).next('.levels').val(this.value);
-            $(this).parent().next().find('.designation').attr("name", "approver_designation" + this.value + "[]").end();
-            // $(this).parent().next().find('.select2').select2("destroy").select2();
-            // $('.select2').select2(); 
-            // $('.designation').attr("id","page_navigation1");
-            // $(this).parent().find('.levels').val($(this).val());
-        });
-
-
-
-        $(document).on("change", '.select_level1', function() {
-            $('.select_level1 option[value=' + $(this).val() + ']').css('color', 'red').attr('disabled', 'disabled');
-            $(this).next('.levels1').val(this.value);
-            $(this).parent().next().find('.designation1').attr("name", "approver_designation" + this.value + "[]").end();
-        });
-
-    });
+   
     $(document).ready(function() {
         $('select').selectpicker();
 
@@ -268,116 +253,25 @@
     });
 </script>
 <script>
-    $(document).ready(function() {
-        $('.modal').each(function() {
-            $(this).on('hidden.bs.modal', function() {
-                window.location.reload();
-                //fires when evey popup close. Ex. resetModal();
-            });
-        });
-    });
 
-    $(document).ready(function() {
-        // on form submit
-        $("#designation_form").on('submit', function() {
-            // to each unchecked checkbox
-            $(this).find('input[type=checkbox]:not(:checked)').prop('checked', true).val(0);
-        })
 
-        $(".designation_form_edit").on('submit', function() {
-            // to each unchecked checkbox
-            $(this).find('input[type=checkbox]:not(:checked)').prop('checked', true).val(0);
-        })
-    })
-
-    $(document).ready(function() {
-        $(".multi-field-wrapper").hide();
-        $(".full_level1").hide();
-        $(".partial11").hide();
-        $(".levels").prop('disabled', true);
-        $('.partial').change(function() {
-            if (this.checked) {
-                $(".full_level").hide();
-                $(".multi-field-wrapper").show();
-                $(".levels").prop('disabled', false);
-                $(".full_work").prop('disabled', true);
-            } else {
-                $(".full_level").show();
-                $(".levels").prop('disabled', true);
-                $(".full_work").prop('disabled', false);
-                $(".multi-field-wrapper").hide();
-            }
-        });
-    });
-    $(function() {
-        $('.multi-field-wrapper').each(function() {
-
-            var $wrapper = $('.multi-fields', this);
-
-            $(".add-field", $(this)).click(function(e) {
-                var length = $(".multi-field").length;
-                if (length <= 10) {
-                    $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper).find('input', 'select').val('').end()
-                        .find(".level_name").html(length + 1).end()
-                        .find(".levels").select2("destroy").select2();
-
-                    // .find(".levels").val(length + 1).end();
-                    focus();
-                }
-            });
-            $('.multi-field .remove-field', $wrapper).click(function() {
-                if ($('.multi-field', $wrapper).length > 1)
-                    $(this).parent('.multi-field').remove();
-            });
-        });
-    });
 
 
     // Edit
 
 
-    $(document).ready(function() {
-        $('.partial1').change(function() {
+  
 
-            if (this.checked) {
-                $(".full_level1").hide();
-                $(".multi-field-wrapper1").show();
-                $(".levels1").prop('disabled', false);
-                $(".full_work1").prop('disabled', true);
-            } else {
-                $(".full_level1").show();
-                $(".levels1").prop('disabled', true);
-                $(".full_work1").prop('disabled', false);
-                $(".multi-field-wrapper1").hide();
-            }
-        });
+    $(document).on('click', '.editWf', function() {
+        var id = $(this).attr('id');
+        var url = "{{route('workflowEdit')}}";
+        var form = $('<form action="' + url + '" method="post">' +
+            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
+            '</form>');
+        $('body').append(form);
+        form.submit();
+
     });
-    $(function() {
-        $('.multi-field-wrapper1').each(function() {
-            var $wrapper = $('.multi-fields1', this);
-
-            $(".add-field1", $(this)).click(function(e) {
-                // $(".append_div_partial").empty();
-                // $(".append_div_partial").append('<tr><td><label>Level-<span class="level_name1">1</span></label><input type="hidden" name="levels[]" class="levels1" value="1"></td><td class="text-center"><select class="form-control levels1" name="approver_designation[]" required><option value="">Select</option>@foreach($designation_edit as $desi)<option  value="{{$desi->id}}">{{$desi->name}}</option>@endforeach</select></td></tr>');
-                var length = $('table.edittable tr:last').index() + 1;
-
-                if (length + 1 <= 11) {
-                    $('<tr><td> <select class="form-control select_level1" name="levels[]"> <option value="0">Select</option> @for($i=1;$i<=11;$i++) <option value="<?php echo $i; ?>"><?php echo $i; ?></option> @endfor </select> <input type="hidden" name="levels[]" class="levels1" value="1"> </td><td class="text-center"> <select class="form-control designation1 select2" name="approver_designation[]" multiple required> <option value="">Select</option> @foreach($designation as $desi) <option value="{{$desi['id']}}">{{$desi['name']}}</option> @endforeach </select> </td></tr>').appendTo(".append_div_partial").find('input').val('').end()
-                        .find(".level_name1").html("").end();
-                    // .find(".level_name1").html(length + 1).end()
-                    // .find(".levels1").val(length + 1).end();
-                    focus();
-                }
-            });
-            $('.multi-field1 .remove-field1', $wrapper).click(function() {
-                $(".edittable tr:last-child").remove();
-                // if ($('.multi-field1', $wrapper).length > 1)
-                // $(this).parent('.multi-field1').remove();
-            });
-        });
-    });
-
-
 
     function delete_item(id) {
         Swal.fire({
@@ -497,6 +391,7 @@
             }
         });
     });
+
     function getListData() {
         var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
         var isAuthorityEdit = "{{ auth()->user()->can('workflow-edit') }}";
@@ -548,57 +443,5 @@
                         }
         });
     }
-    $(document).ready(
-        function() {
 
-            $(document).on('input', '.search', function() {
-                var searchData = $('.search').val();
-                $.ajax({
-                    url: "{{ route('workflowSearch') }}",
-                    type: 'ajax',
-                    method: 'post',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        searchData: searchData,
-                    },
-                    success: function(data) {
-
-
-                        table.clear().draw();
-                        $.each(data, function(key, val) {
-                            var sNo = key + 1;
-                            var id = val.id;
-                            var wfname = val.workflow_name;
-                            var wfcode = val.workflow_code;
-                            var wfLevel = val.total_levels;
-                            var wfType = (val.workflow_type == 1) ? "FULL" : "Partial";
-                            var activeStatus = (val.is_active == 1) ? "checked" : "";
-
-                            var editurl = '{{ route("workflow.edit", ":id") }}';
-                            editurl = editurl.replace(':id', id);
-                            var result = (
-                                '<label class="switch"><input type="checkbox" data-id="' +
-                                id + '" class="status" ' + activeStatus +
-                                '>  <span class="slider round"></span></label>');
-                            var editBtn = (
-                                '<a href="' + editurl + '" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" <span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit"><span class="svg-icon svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path opacity="0.3" d="M21.4 8.35303L19.241 10.511L13.485 4.755L15.643 2.59595C16.0248 2.21423 16.5426 1.99988 17.0825 1.99988C17.6224 1.99988 18.1402 2.21423 18.522 2.59595L21.4 5.474C21.7817 5.85581 21.9962 6.37355 21.9962 6.91345C21.9962 7.45335 21.7817 7.97122 21.4 8.35303ZM3.68699 21.932L9.88699 19.865L4.13099 14.109L2.06399 20.309C1.98815 20.5354 1.97703 20.7787 2.03189 21.0111C2.08674 21.2436 2.2054 21.4561 2.37449 21.6248C2.54359 21.7934 2.75641 21.9115 2.989 21.9658C3.22158 22.0201 3.4647 22.0084 3.69099 21.932H3.68699Z" fill="currentColor" /><path d="M5.574 21.3L3.692 21.928C3.46591 22.0032 3.22334 22.0141 2.99144 21.9594C2.75954 21.9046 2.54744 21.7864 2.3789 21.6179C2.21036 21.4495 2.09202 21.2375 2.03711 21.0056C1.9822 20.7737 1.99289 20.5312 2.06799 20.3051L2.696 18.422L5.574 21.3ZM4.13499 14.105L9.891 19.861L19.245 10.507L13.489 4.75098L4.13499 14.105Z" fill="currentColor" /></svg> </span></span></a>'
-                            );
-                            var Action = (editBtn +
-                                '<a class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" href="javascript:void(0);" class="menu-link px-3" onclick="delete_item(' +
-                                id +
-                                ')"><span class="svg-icon svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor" /><path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor" /><path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor" /></svg></span></a>'
-                            );
-                            table.row.add([sNo, wfname, wfcode, wfLevel, wfType, result, Action]).draw();
-                        });
-                    },
-                    error: function() {
-                        $("#otp_error").text("Update Error");
-                    }
-
-                });
-
-
-            });
-
-        });
 </script>

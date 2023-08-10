@@ -160,7 +160,7 @@
                     @endif
 
                     <!--end::Card header-->
-                    <div class="card-body">
+                    <div class="card-body  p-3">
                         <form method="post">
                             @csrf
                             <!--begin::Row-->
@@ -170,7 +170,7 @@
                                 <div class="col-md-3">
                                     <label class="fs-6 form-label fw-bold text-dark "> WorkFlow Code/Name </label>
                                     <!--begin::Select-->
-                                    <select class="form-select form-select-solid workflowFilter" name="workflow_code_name" data-kt-select2="true" data-placeholder="WorkFlow Code/Name" data-allow-clear="true" id="workflow">
+                                    <select class="form-select form-select-solid workflowFilter" name="workflow_code_name" data-kt-select2="true" data-placeholder="WorkFlow Code/Name" data-allow-clear="false" id="workflow">
                                         <option></option>
                                         @foreach ($workflow as $wf)
                                         <option value="{{ $wf['id'] }}">
@@ -183,7 +183,7 @@
                                 <!--begin::Col-->
                                 <div class="col-md-3">
                                     <label class="fs-6 form-label fw-bold text-dark ">Project Code / Name </label>
-                                    <select class="form-select form-select-solid projectFilter" name="project_code_name" data-kt-select2="true" data-placeholder="Project Code / Name" data-allow-clear="true" id="projectCode">
+                                    <select class="form-select form-select-solid projectFilter" name="project_code_name" data-kt-select2="true" data-placeholder="Project Code / Name" data-allow-clear="false" id="projectCode">
                                         <option></option>
                                         @foreach ($projects as $project)
                                         <option value="{{ $project['id'] }}">
@@ -195,7 +195,7 @@
                                 <!--begin::Col-->
                                 <div class="col-md-3">
                                     <label class="fs-6 form-label fw-bold text-dark "> Ticket No. </label>
-                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter ticket_no" name="ticket_no" data-kt-select2="true" data-placeholder="Ticket No" data-allow-clear="true" id="ticketno">
+                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter ticket_no" name="ticket_no" data-kt-select2="true" data-placeholder="Ticket No" data-allow-clear="false" id="ticketno">
                                         <option></option>
                                         @foreach ($projects as $project)
                                         <option name="ticket_no" value="{{ $project['id'] }}">
@@ -209,7 +209,7 @@
                                 <div class="col-lg-3">
                                     <label class="fs-6 form-label fw-bold text-dark"> Department </label>
                                     <!--begin::Select-->
-                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="department" data-kt-select2="true" data-placeholder="Department" data-allow-clear="true" id="deptId">
+                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="department" data-kt-select2="true" data-placeholder="Department" data-allow-clear="false" id="deptId">
                                         <option></option>
                                         @foreach ($departments as $dept)
                                         <option name="department" value="{{ $dept['id'] }}">{{ $dept['name'] }}
@@ -221,7 +221,7 @@
                                 <div class="col-lg-3">
                                     <label class="fs-6 form-label fw-bold text-dark"> Designation </label>
                                     <!--begin::Select-->
-                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="designation" data-kt-select2="true" data-placeholder="Designation" name="designation" data-allow-clear="true" id="desgId">
+                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="designation" data-kt-select2="true" data-placeholder="Designation" name="designation" data-allow-clear="false" id="desgId">
                                         <option></option>
                                         @foreach ($designation as $des)
                                         <option value="{{ $des['id'] }}">{{ $des['name'] }}
@@ -234,7 +234,7 @@
                                 <div class="col-lg-2">
                                     <label class="fs-6 form-label fw-bold text-dark"> Users </label>
                                     <!--begin::Select-->
-                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="users" data-kt-select2="true" data-placeholder="Users" data-allow-clear="true" id="users">
+                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="users" data-kt-select2="true" data-placeholder="Users"  id="users">
                                         <option></option>
                                         @foreach ($employee as $emp)
                                         <option value="<?php echo $emp['id']; ?>"><?php echo $emp['first_name'] . ' ' . $emp['last_name']; ?></option>
@@ -261,7 +261,7 @@
                         </form>
 
 
-                        <hr>
+                        <hr style="">
                         <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
                             <!--begin::Table head-->
                             <thead>
@@ -422,6 +422,7 @@
         });
         $(document).on('change click', '.to_date', function() {
             console.log("To Date");
+            $('.start_date').attr("max",$(this).val());  
             var startDate = $('.start_date').val().trim();
             var endDate = $('.to_date').val().trim();
 
@@ -441,6 +442,7 @@
             }
         });
         $(document).on('change click', '.start_date', function() {
+            $('.to_date').attr("min",$(this).val()); 
             console.log("Start Date");
             var startDate = $('.start_date').val().trim();
             var endDate = $('.to_date').val().trim();
@@ -515,33 +517,23 @@
             });
         });
         $('.SearchFilter').on('click', function() {
-            var ticketNo = $('#ticketno').val();
-            var ticketValue = (ticketNo === 'Ticket No') ? '' : ticketNo;
-            var projectCode = $('#select2-projectCode-container').text();
-            var projectValue = (projectCode === 'Project Code / Name') ? '' : projectCode;
-            var workflow = $('#select2-workflow-container').text();
-            var workflowValue = (workflow === 'WorkFlow Code/Name') ? '' : workflow;
-            var department = $('#select2-deptId-container').text();
-            var deptValue = (department === 'Department') ? '' : department;
-            var designation = $('#select2-desgId-container').text();
-            var desgValue = (designation === 'Designation') ? '' : designation;
-            var user = $('#select2-users-container').text();
-            var UserValue = (user === 'Users') ? '' : user;
+            var ticketNo = $('#ticketno').val();     
+            var deptValue = $('#deptId').val();       
+            var desgValue = $('#desgId').val();       
+            var UserValue = $('#users').val();
+            
             var startdate = $('#startDate').val();
             var enddate = $('#endDate').val();
             if (startdate && enddate) {
                 $('.doclistFilter').val("").trigger('change');
                 documnetFilter();
             }
-            // if (ticketValue || projectValue || workflowValue || deptValue || desgValue || UserValue) {
-            //     $("input[type=date]").val("");
-            //     documnetFilter();
-            // } else {
-            //     console.log('failed');
-            // }
-            else {
+            if (ticketNo|| deptValue || desgValue || UserValue) {
+                $("input[type=date]").val("");
                 documnetFilter();
             }
+           
+           
         });
 
         function documnetFilter() {

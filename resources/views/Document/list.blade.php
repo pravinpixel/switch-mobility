@@ -118,7 +118,7 @@
                     </div>
                     <!--end::Card header-->
                     <!--begin::Card body-->
-                    <div class="card-body py-4">
+                    <div class="card-body p-3">
                         <div class="card-title">
                             <!--begin::Search-->
 
@@ -168,7 +168,7 @@
                                             <!--begin::Edit-->
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('document-type-edit'))
-                                            <a href="{{route('documentType.edit',$d->id)}}" style="display:inline;cursor: pointer;" id="{{ $d->id }}" title="Edit Document Type"><i class="fa-solid fa-pen" style="color:orange"></i></a>
+                                            <a class="editPage" style="display:inline;cursor: pointer;" id="{{ $d->id }}" title="Edit Document Type"><i class="fa-solid fa-pen" style="color:orange"></i></a>
                                             @endif
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('document-type-delete'))
@@ -264,7 +264,16 @@
         });
 
 
+        $(document).on('click', '.editPage', function() {
+        var id = $(this).attr('id');
+        var url = "{{route('documentTypeEdit')}}";
+        var form = $('<form action="' + url + '" method="post">' +
+            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
+            '</form>');
+        $('body').append(form);
+        form.submit();
 
+    });
     function get_work_flow_levels(workflow_id) {
         $.ajax({
             url: "{{url('getWorkflowLevels')}}",

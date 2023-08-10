@@ -42,6 +42,15 @@ class DocumentTypeController extends Controller
         $workflow = Workflow::where('is_active', 1)->whereNull('deleted_at')->get();
         return view('Document/DocTypeDetails', compact('model', 'workflow'));
     }
+    public function documentTypeEdit(Request $request)
+    {
+        $id = $request->id;
+        $model = DocumentType::findOrFail($id);
+
+
+        $workflow = Workflow::where('is_active', 1)->whereNull('deleted_at')->get();
+        return view('Document/DocTypeDetails', compact('model', 'workflow'));
+    }
     public function validation(Request $request)
     {
 

@@ -57,7 +57,7 @@
                                 {{ session('error') }}
                             </div>
                         @endif
-                        <div class="card-header border-0 pt-6">
+                        <div class="card-header border-0 p-3">
 
                             <div class="card-title">
                                 <div class="row">
@@ -102,7 +102,7 @@
                         </div>
                             <!--end::Card header-->
                             <!--begin::Card body-->
-                            <div class="card-body py-4">
+                            <div class="card-body  p-3">
                                 <!--begin::Card title-->
                                 <div class="card-title">
                                     <!--begin::Search-->

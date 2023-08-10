@@ -137,6 +137,12 @@ class RolesController extends Controller
         $roles = Role::where('id', $id)->first();
         return view('Settings.Role.edit', ['roles' => $roles]);
     }
+    public function privilageEdit(Request $request)
+    {
+        $id = $request->id;
+        $roles = Role::where('id', $id)->first();
+        return view('Settings.Role.edit', ['roles' => $roles]);
+    }
 
     /**
      * Update the specified resource in storage.
@@ -162,14 +168,13 @@ class RolesController extends Controller
         $role = Role::find($id);
 
         $users = $role->users;
-    
+
 
         if (count($users)) {
             return response()->json([
                 "status" => "failed",
                 'message' => 'You cannot delete a role that has permissions assigned!'
             ]);
-            
         } else {
             $department_update = Role::where("id", $id)->delete();
             return response()->json([

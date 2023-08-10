@@ -112,6 +112,20 @@ class UserController extends Controller
 
         return view('Settings.User.edit', ['roles' => $roles, 'employees' => $employees, 'userDetails' => $userDetails, 'userModel' => $userModel, 'roleId' => $roleId]);
     }
+    public function userEdit(Request $request)
+    {
+        $id = $request->id;
+        $roles = Role::select('name', 'id')->get();
+        $userDetails = User::select('employees.id as empId', 'employees.mobile', 'employees.email', 'users.emp_id')
+            ->leftjoin('employees', 'employees.id', '=', 'users.emp_id')
+            ->where('users.id', $id)->first();
+        $employees = Employee::where('id', $userDetails->emp_id)->get();
+        $userModel = User::with('roles', 'employee')->where('id', $id)->first();
+
+        $roleId = $userModel->roles->pluck("id")->first();
+
+        return view('Settings.User.edit', ['roles' => $roles, 'employees' => $employees, 'userDetails' => $userDetails, 'userModel' => $userModel, 'roleId' => $roleId]);
+    }
 
     /**
      * Update the specified resource in storage.

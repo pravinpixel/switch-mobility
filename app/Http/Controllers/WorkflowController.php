@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Designation;
 use App\Models\DocumentType;
 use App\Models\Employee;
+use App\Models\Project;
 use App\Models\Workflow;
 use App\Models\WorkflowLevelDetail;
 use App\Models\Workflowlevels;
@@ -62,7 +63,7 @@ class WorkflowController extends Controller
             ];
         } else {
             $model = Workflow::where("id", $request->id)->update(["is_active" => $request->status]);
-            
+
             $workflow = Workflow::whereNull('deleted_at')->get()->toArray();
             $data = [
                 "message" => "Success",
@@ -71,17 +72,15 @@ class WorkflowController extends Controller
         }
         return response()->json($data);
     }
-    public function getWorkflowListData(){
+    public function getWorkflowListData()
+    {
         $models = Workflow::whereNull('deleted_at')->get()->toArray();
         return response()->json($models);
     }
     public function index()
     {
-        $designation = Designation::where('is_active', 1)->whereNull('deleted_at')->get()->toArray();
-        $designation_edit = Designation::where('is_active', 1)->whereNull('deleted_at')->get();
-        $workflow = Workflow::whereNull('deleted_at')->get()->toArray();
-        $allwork_flow = $this->get_all_workflow();
-        return view('Workflow/list', ['designation_edit' => $designation_edit, 'all_workflow' => $allwork_flow, 'workflow' => $workflow, 'designation' => $designation]);
+        $models = $this->getRunningWorkflowInProject();
+        return view('Workflow/list', ['models' => $models]);
     }
     /**
      * Store a newly created resource in storage.
@@ -89,6 +88,51 @@ class WorkflowController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    public function getRunningWorkflowInProject()
+    {
+        //  dd("wel");
+        $models = Workflow::whereNull('deleted_at')->get();
+        $responseDatas = [];
+        foreach ($models as $model) {
+            // dd($model);
+            $wfId = $model->id;
+            $wfname = $model->workflow_name;
+            $wfCode = $model->workflow_code;
+            $level = $model->total_levels;
+            $is_active = $model->is_active;
+            $wfType = ($model->workflow_type == 1) ? "Full" : "Partial";
+            $wflastLevelId = $this->wfLastLevelId($wfId);
+            $runningStatus = $this->getProjectStatus($wfId, $wflastLevelId);
+            $response = [
+                'id' => $wfId,
+                'wfName' => $wfname,
+                'wfCode' => $wfCode,
+                'wfType' => $wfType,
+                'runningStatus' => $runningStatus,
+                'total_levels' => $level,
+                'is_active' => $is_active
+            ];
+            array_push($responseDatas, $response);
+        }
+        return $responseDatas;
+    }
+    public function getProjectStatus($wfId, $wflastLevelId)
+    {
+        $model = Project::select('project_document_status_by_levels.*')->leftjoin('project_document_status_by_levels', 'project_document_status_by_levels.project_id', 'projects.id')
+            ->where('projects.workflow_id', $wfId)
+            ->where('project_document_status_by_levels.level_id', $wflastLevelId)
+            ->where('project_document_status_by_levels.status', '!=', 4)
+            ->whereNull('projects.deleted_at')
+            ->first();
+
+        $response = ($model) ? true : false;
+        return $response;
+    }
+    public function wfLastLevelId($id)
+    {
+        return Workflowlevels::where('workflow_id', $id)->orderBy('id', 'desc')->first()->levels;
+    }
     public function create()
     {
         $workflow = Workflow::latest('id')->first();
@@ -123,7 +167,41 @@ class WorkflowController extends Controller
 
         return view('Workflow/addPage', compact('designationDatas', 'wfCode', 'employeeDatas'));
     }
+    public function workflowEdit(Request $request)
+    {
+        $id = $request->id;
 
+        $designationDatas = Designation::where('is_active', 1)->where('is_active', 1)->get();
+        $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $id)->get();
+
+        $modelWorkflow = Workflow::find($id);
+        $entities = collect($models)->map(function ($model) {
+            $levelDetails = $model['workflowLevelDetail'];
+
+            $e = collect($levelDetails)->map(function ($levelDetail) {
+                $designationId = $levelDetail->employee_id;
+
+                return $designationId;
+            });
+            $designationArray =  $e->toArray();
+
+
+            $datas = ['levelId' => $model->levels, 'designationId' => $designationArray];
+
+            return $datas;
+        });
+
+        $employeeModels = Employee::with('designation')->whereNull('deleted_at')->where('is_active', 1)->get();
+        $employeeDatas = collect($employeeModels)->map(function ($employeeData) {
+            $designationData = ($employeeData['designation']);
+
+            $designationName = $designationData->name;
+            $name = $employeeData->first_name . " " . $employeeData->last_name . '(' . $employeeData->sap_id . ')' . '-(' . $designationName . ')';
+
+            return ['id' => $employeeData->id, 'data' => $name];
+        });
+        return view('Workflow/editPage', compact('designationDatas', 'entities', 'modelWorkflow', 'employeeDatas'));
+    }
     public function edit($id)
     {
         $designationDatas = Designation::where('is_active', 1)->where('is_active', 1)->get();
