@@ -66,7 +66,7 @@
                             <div class="row g-8">
                                 <!--begin::Col-->
                                 <div class="col-md-3">
-                                    <label class="fs-6 form-label fw-bold text-dark "> Department </label>
+                                    <label class="form-label text-dark "> Department </label>
                                     <select class="form-select form-select-solid filterDeptAndDes" data-kt-select2="true" data-placeholder="Department" data-allow-clear="true" id="deptFilter">
                                         <option></option>
                                         @foreach ($departments as $department)

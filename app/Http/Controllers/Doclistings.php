@@ -690,6 +690,7 @@ class Doclistings extends Controller
 
                             $banner = $request->file('againestDocument')->getClientOriginalName();
                             $expbanner = explode('.', $banner);
+                            $filePart0 = $expbanner[0];
                             $filePart1 = $expbanner[1];
                             Log::info('fileUpload ->filePart1' . json_encode($filePart1));
                             $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
@@ -700,7 +701,7 @@ class Doclistings extends Controller
                             // Resize the string to 5 characters
                             $fileOrgName = substr($inputString, 0, 5);
                             Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
-                            $fileName1 = $fileOrgName . '_' . $ed . "." . $filePart1;
+                            $fileName1 = $ticketNo."_".$filePart0 . '_' . $ed . "." . $filePart1;
 
 
                             //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
@@ -756,6 +757,7 @@ class Doclistings extends Controller
                             $banner = $request->file('againestDocument')->getClientOriginalName();
                             $expbanner = explode('.', $banner);
                             $filePart1 = $expbanner[1];
+                            $filePart0 = $expbanner[0];
                             Log::info('fileUpload2 ->filePart1' . json_encode($filePart1));
                             $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
                             Log::info('fileUpload2 ->lastversion' . json_encode($lastversion));
@@ -768,7 +770,7 @@ class Doclistings extends Controller
                             // Resize the string to 5 characters
                             $fileOrgName = substr($inputString, 0, 5);
                             Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
-                            $fileName1 = $fileOrgName . '_' . $ed . "." . $filePart1;
+                            $fileName1 = $ticketNo."_".$filePart0 . '_' . $ed . "." . $filePart1;
 
 
 
@@ -822,6 +824,7 @@ class Doclistings extends Controller
 
                     $banner = $request->file('againestDocument')->getClientOriginalName();
                     $expbanner = explode('.', $banner);
+                    $filePart0 = $expbanner[0];
                     $filePart1 = $expbanner[1];
                     Log::info('fileUpload2 ->filePart1' . json_encode($filePart1));
                     $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
@@ -833,7 +836,7 @@ class Doclistings extends Controller
                     // Resize the string to 5 characters
                     $fileOrgName = substr($inputString, 0, 5);
                     Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
-                    $fileName1 = $fileOrgName . '_' . $ed . "." . $filePart1;
+                    $fileName1 = $ticketNo."_".$filePart0 . '_' . $ed . "." . $filePart1;
 
                     //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
                     Log::info('fileupload2 ->:-fileName1' . json_encode($fileName1));
@@ -1320,6 +1323,7 @@ class Doclistings extends Controller
 
             $banner = $request->file('againestDocument')->getClientOriginalName();
             $expbanner = explode('.', $banner);
+            $filePart0 = $expbanner[0];
             $filePart1 = $expbanner[1];
             Log::info('fileUpload ->filePart1' . json_encode($filePart1));
             $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
@@ -1330,7 +1334,7 @@ class Doclistings extends Controller
             // Resize the string to 5 characters
             $fileOrgName = substr($inputString, 0, 5);
             Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
-            $fileName1 = $fileOrgName . '_' . $ed . "." . $filePart1;
+            $fileName1 = $ticketNo . '_' .$filePart0 . '_' . $ed . "." . $filePart1;
 
 
 

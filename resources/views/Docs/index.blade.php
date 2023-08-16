@@ -195,7 +195,7 @@
                                 <!--begin::Col-->
                                 <div class="col-md-3">
                                     <label class="fs-6 form-label fw-bold text-dark "> Ticket No. </label>
-                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter ticket_no" name="ticket_no" data-kt-select2="true" data-placeholder="Ticket No" data-allow-clear="false" id="ticketno">
+                                    <select class="form-select form-select-solid doclistFilter ticket_no" name="ticket_no" data-kt-select2="true" data-placeholder="Ticket No" data-allow-clear="false" id="ticketno">
                                         <option></option>
                                         @foreach ($projects as $project)
                                         <option name="ticket_no" value="{{ $project['id'] }}">
@@ -209,7 +209,7 @@
                                 <div class="col-lg-3">
                                     <label class="fs-6 form-label fw-bold text-dark"> Department </label>
                                     <!--begin::Select-->
-                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="department" data-kt-select2="true" data-placeholder="Department" data-allow-clear="false" id="deptId">
+                                    <select class="form-select form-select-solid doclistFilter deptId" name="department" data-kt-select2="true" data-placeholder="Department" data-allow-clear="false" id="deptId">
                                         <option></option>
                                         @foreach ($departments as $dept)
                                         <option name="department" value="{{ $dept['id'] }}">{{ $dept['name'] }}
@@ -221,7 +221,7 @@
                                 <div class="col-lg-3">
                                     <label class="fs-6 form-label fw-bold text-dark"> Designation </label>
                                     <!--begin::Select-->
-                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="designation" data-kt-select2="true" data-placeholder="Designation" name="designation" data-allow-clear="false" id="desgId">
+                                    <select class="form-select form-select-solid  desgId" name="designation" data-kt-select2="true" data-placeholder="Designation" name="designation" data-allow-clear="false" id="desgId">
                                         <option></option>
                                         @foreach ($designation as $des)
                                         <option value="{{ $des['id'] }}">{{ $des['name'] }}
@@ -234,7 +234,7 @@
                                 <div class="col-lg-2">
                                     <label class="fs-6 form-label fw-bold text-dark"> Users </label>
                                     <!--begin::Select-->
-                                    <select class="form-select form-select-solid filterDeptAndDes doclistFilter" name="users" data-kt-select2="true" data-placeholder="Users"  id="users">
+                                    <select class="form-select form-select-solid users" name="users" data-kt-select2="true" data-placeholder="Users" id="users">
                                         <option></option>
                                         @foreach ($employee as $emp)
                                         <option value="<?php echo $emp['id']; ?>"><?php echo $emp['first_name'] . ' ' . $emp['last_name']; ?></option>
@@ -311,7 +311,7 @@
                                             $d['initiatorStatus'] == 'yes' ||
                                             $d['approverStatus'] == 'yes' ||
                                             Session('authorityType') == 1)
-                                            &nbsp; <div style="display:inline;cursor: pointer;" id="{{ $d->id }}" class="editDocument" title="Edit Document"><i class="fa-solid fa-pen" style="color:blue"></i></div>
+                                            &nbsp; <div style="display:inline;cursor: pointer;" id="{{ $d->id }}" class="editDocument" title="Edit Document"><i class="fa-solid fa-pen" style="color:orange"></i></div>
                                         </span>
                                         @endif
                                     </td>
@@ -351,28 +351,63 @@
             });
         });
         $('.dateWiseFilter').on('change', function() {
-            $('.filterDeptAndDes').val('').trigger('change');
-            if ($('.workflowFilter').val()) {
-                $('.workflowFilter').val('').trigger('change');
-            }
-            if ($('.projectFilter').val()) {
-                $('.projectFilter').val('').trigger('change');
-            }
+            console.log("datewise  Onchange ");
+            var selectedValue = $(this).val();
+            if (selectedValue) {
 
+                if ($('#deptId').val()) {
+                    $('#deptId').val('').trigger('change');
+                }
+
+                if ($('#desgId').val()) {
+                    $('#desgId').val('').trigger('change');
+                }
+
+                if ($('.ticket_no').val()) {
+                    $('.ticket_no').val('').trigger('change');
+                }
+
+                if ($('#users').val()) {
+                    $('#users').val('').trigger('change');
+                }
+                if ($('.workflowFilter').val()) {
+                    $('.workflowFilter').val('').trigger('change');
+                }
+                if ($('.projectFilter').val()) {
+                    $('.projectFilter').val('').trigger('change');
+                }
+            }
         });
         // $('.doclistFilter').on('change', function() {
         //     $("input[type=date]").val("");
         //     documnetFilter();
         // });
         $('.workflowFilter').on('change', function() {
-            console.log("well");
+            console.log("workflowFilter Onchange ");
             var table = $('#service_table').DataTable();
-            $('.filterDeptAndDes').val('').trigger('change');
-            if ($('.projectFilter').val()) {
-                $('.projectFilter').val('').trigger('change');
+            var selectedValue = $(this).val();
+            if (selectedValue) {
+                if ($('#deptId').val()) {
+                    $('#deptId').val('').trigger('change');
+                }
+
+                if ($('#desgId').val()) {
+                    $('#desgId').val('').trigger('change');
+                }
+
+                if ($('.ticket_no').val()) {
+                    $('.ticket_no').val('').trigger('change');
+                }
+
+                if ($('#users').val()) {
+                    $('#users').val('').trigger('change');
+                }
+                if ($('.projectFilter').val()) {
+                    $('.projectFilter').val('').trigger('change');
+                }
+                $('.start_date').val('');
+                $('.to_date').val('');
             }
-            $('.start_date').val('');
-            $('.to_date').val('');
             $.ajax({
                 url: "{{ route('getProjectByWorkflow') }}",
                 type: 'ajax',
@@ -422,7 +457,7 @@
         });
         $(document).on('change click', '.to_date', function() {
             console.log("To Date");
-            $('.start_date').attr("max",$(this).val());  
+            $('.start_date').attr("max", $(this).val());
             var startDate = $('.start_date').val().trim();
             var endDate = $('.to_date').val().trim();
 
@@ -442,7 +477,7 @@
             }
         });
         $(document).on('change click', '.start_date', function() {
-            $('.to_date').attr("min",$(this).val()); 
+            $('.to_date').attr("min", $(this).val());
             console.log("Start Date");
             var startDate = $('.start_date').val().trim();
             var endDate = $('.to_date').val().trim();
@@ -467,11 +502,30 @@
             }
         });
         $('.projectFilter').on('change', function() {
-            $('.start_date').val('');
-            $('.to_date').val('');
-            var table = $('#service_table').DataTable();
-            $('.filterDeptAndDes').val('').trigger('change');
-            console.log("well one");
+            console.log("Project Onchange ");
+            var selectedValue = $(this).val();
+          
+            if (selectedValue) {
+                $('.start_date').val('');
+                $('.to_date').val('');
+                var table = $('#service_table').DataTable();
+                if ($('#deptId').val()) {
+                    $('#deptId').val('').trigger('change');
+                }
+
+                if ($('#desgId').val()) {
+                    $('#desgId').val('').trigger('change');
+                }
+
+                if ($('.ticket_no').val()) {
+                    $('.ticket_no').val('').trigger('change');
+                }
+
+                if ($('#users').val()) {
+                    $('#users').val('').trigger('change');
+                }
+            }
+           
             $.ajax({
                 url: "{{ route('getProjectById') }}",
                 type: 'ajax',
@@ -500,7 +554,7 @@
                             '" class="viewDocument" title="View Document"><i class="fa-solid fa-eye" style="color:blue"></i></div>';
                         if (isSuperAdmin || isAuthorityEdit) {
                             act += '&nbsp; <div style = "display:inline" id="' + projectId +
-                                '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:blue"></i></div>';
+                                '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:orange"></i></div>';
                         }
                         act += '</span>';
                         table.row.add([ticketNo, wfCodeandwfName, projectCodeandName, initiator, deptName, act]).draw();
@@ -517,23 +571,23 @@
             });
         });
         $('.SearchFilter').on('click', function() {
-            var ticketNo = $('#ticketno').val();     
-            var deptValue = $('#deptId').val();       
-            var desgValue = $('#desgId').val();       
+            var ticketNo = $('#ticketno').val();
+            var deptValue = $('#deptId').val();
+            var desgValue = $('#desgId').val();
             var UserValue = $('#users').val();
-            
+
             var startdate = $('#startDate').val();
             var enddate = $('#endDate').val();
             if (startdate && enddate) {
                 $('.doclistFilter').val("").trigger('change');
                 documnetFilter();
             }
-            if (ticketNo|| deptValue || desgValue || UserValue) {
+            if (ticketNo || deptValue || desgValue || UserValue) {
                 $("input[type=date]").val("");
                 documnetFilter();
             }
-           
-           
+
+
         });
 
         function documnetFilter() {
@@ -599,18 +653,143 @@
                 }
             });
         }
-    });
-    $(document).on('change click', '.filterDeptAndDes', function() {
-        console.log("well");
-        $('.filterDeptAndDes').not($(this)).val('').trigger('change');
-        if ($('.workflowFilter').val()) {
-            $('.workflowFilter').val('').trigger('change');
-        }
-        if ($('.projectFilter').val()) {
-            $('.projectFilter').val('').trigger('change');
-        }
-    });
 
+        $(document).on('change', '.ticket_no', function() {
+            console.log("Ticket No Onchange ");
+            var selectedValue = $(this).val();
+            console.log("selectedValue " + selectedValue);
+            if (selectedValue) {
+                if ($('#deptId').val()) {
+                    $('#deptId').val('').trigger('change');
+                }
+
+                if ($('#desgId').val()) {
+                    $('#desgId').val('').trigger('change');
+                }
+
+                // if ($('.ticket_no').val()) {
+                //     $('.ticket_no').val('').trigger('change');
+                // }
+
+                if ($('#users').val()) {
+                    $('#users').val('').trigger('change');
+                }
+
+
+                if ($('.workflowFilter').val()) {
+                    $('.workflowFilter').val('').trigger('change');
+                }
+                if ($('.projectFilter').val()) {
+                    $('.projectFilter').val('').trigger('change');
+                }
+                $('.start_date').val('');
+                $('.to_date').val('');
+              
+
+            }
+        });
+        $(document).on('change', '.desgId', function() {
+            console.log("Designation Onchange ");
+            var selectedValue = $(this).val();
+            console.log("selectedValue " + selectedValue);
+
+
+            if (selectedValue) {
+                if ($('#deptId').val()) {
+                    $('#deptId').val('').trigger('change');
+                }
+
+                // if ($('#desgId').val()) {
+                //     $('#desgId').val('').trigger('change');
+                // }
+
+                if ($('.ticket_no').val()) {
+                    $('.ticket_no').val('').trigger('change');
+                }
+
+                if ($('#users').val()) {
+                    $('#users').val('').trigger('change');
+                }
+
+
+                if ($('.workflowFilter').val()) {
+                    $('.workflowFilter').val('').trigger('change');
+                }
+                if ($('.projectFilter').val()) {
+                    $('.projectFilter').val('').trigger('change');
+                }
+                $('.start_date').val('');
+                $('.to_date').val('');
+              
+
+            }
+        });
+        $(document).on('change', '.deptId', function() {
+            console.log("Department Onchange ");
+            var selectedValue = $(this).val();
+            console.log("selectedValue " + selectedValue);
+
+
+            if (selectedValue) {
+
+
+                if ($('#desgId').val()) {
+                    $('#desgId').val('').trigger('change');
+                }
+
+                if ($('.ticket_no').val()) {
+                    $('.ticket_no').val('').trigger('change');
+                }
+
+                if ($('#users').val()) {
+                    $('#users').val('').trigger('change');
+                }
+
+
+                if ($('.workflowFilter').val()) {
+                    $('.workflowFilter').val('').trigger('change');
+                }
+                if ($('.projectFilter').val()) {
+                    $('.projectFilter').val('').trigger('change');
+                }
+                $('.start_date').val('');
+                $('.to_date').val('');              
+
+            }
+        });
+        $(document).on('change', '.users', function() {
+            console.log("Users Onchange ");
+
+            var selectedValue = $(this).val();
+
+            console.log("selectedValue " + selectedValue);
+
+
+            if (selectedValue) {
+                if ($('#deptId').val()) {
+                    $('#deptId').val('').trigger('change');
+                }
+                if ($('#desgId').val()) {
+                    $('#desgId').val('').trigger('change');
+                }
+                if ($('.ticket_no').val()) {
+                    $('.ticket_no').val('').trigger('change');
+                }
+
+
+                if ($('.workflowFilter').val()) {
+                    $('.workflowFilter').val('').trigger('change');
+                }
+                if ($('.projectFilter').val()) {
+                    $('.projectFilter').val('').trigger('change');
+                }
+                $('.start_date').val('');
+                $('.to_date').val('');             
+
+            }
+        });
+
+    });
     $(document).on('click', '.viewDocument', function() {
         console.log("well and good");
 

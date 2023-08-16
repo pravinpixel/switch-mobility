@@ -289,7 +289,7 @@
                                                 <td>{{ $WorkFlow->workflow_name . ' & ' . $WorkFlow->workflow_code }}</td>
 
                                                 <td>{{ $department->name }}</td>
-                                                <td><button class="btn btn-sm btn-success editProject" style="color:white" id="{{ $d->id }}">View</button></td>
+                                                <td><button class="btn btn-sm switchPrimaryBtn editProject" style="color:white" id="{{ $d->id }}">View</button></td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -341,7 +341,7 @@
                                                 <td style="width: 70px;">{{ $d['endDate'] }}</td>
                                                 <td style="width: 80px;">{{ $d['dueDate'] }}</td>
                                                 <td style="width: 40px;">{{ $d['level'] }}</td>
-                                                <td><button class="btn btn-sm btn-success editDocument" style="color:white" id="{{ $d['projectId'] }}">View</button></td>
+                                                <td><button class="btn btn-sm switchPrimaryBtn editDocument" style="color:white" id="{{ $d['projectId'] }}">View</button></td>
 
 
                                             </tr>
@@ -393,7 +393,7 @@
                                                 <td>{{ $WorkFlow->workflow_name . ' & ' . $WorkFlow->workflow_code }}</td>
                                                 <td>{{ $initiator->first_name . ' ' . $initiator->last_name }}</td>
                                                 <td>{{ $department->name }}</td>
-                                                <td><button class="btn btn-sm btn-success editDocument" style="color:white" id="{{ $d->id }}">View</button></td>
+                                                <td><button class="btn btn-sm switchPrimaryBtn editDocument" style="color:white" id="{{ $d->id }}">View</button></td>
 
                                             </tr>
                                             @endforeach
@@ -619,7 +619,7 @@
                     var editurl = "";
                     editurl = editurl.replace(':id', projectId);
                     var viewBtn = '<button id=' + projectId +
-                        ' class="btn btn-success editDocument" style="color:white" >View</button>';
+                        ' class="btn switchPrimaryBtn editDocument" style="color:white" >View</button>';
 
                     initiatingProjectTable.row.add([ticketNo, projectNameAndCode, workflowNameAndCode, initiater, department, viewBtn]).draw();
                 });
@@ -640,7 +640,7 @@
                     var activeStatus = "";
 
                     var viewBtn = '<button id=' + projectId +
-                        ' class="btn btn-success editDocument" style="color:white" >View</button>';
+                        ' class="btn switchPrimaryBtn editDocument" style="color:white" >View</button>';
 
                     approvingProjectTable.row.add([ticketNo, projectName, projectCode, workflowName, workflowCode, department, startDate, endDate, dueDate, level, viewBtn]).draw();
                 });
@@ -659,7 +659,7 @@
                     var editurl = "";
                     editurl = editurl.replace(':id', projectId);
                     var viewBtn = '<button id=' + projectId +
-                        ' class="btn btn-success editDocument" style="color:white" >View</button>';
+                        ' class="btn switchPrimaryBtn editDocument" style="color:white" >View</button>';
 
                     activetable.row.add([ticketNo, projectNameAndCode, workflowNameAndCode, initiater, department, viewBtn]).draw();
                 });

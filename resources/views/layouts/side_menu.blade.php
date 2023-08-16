@@ -91,7 +91,7 @@ $currentRoute = \Route::currentRouteName();
 					<!--begin:Menu item-->
 					<div class="menu-item">
 						<!--begin:Menu link-->
-						<a class="menu-link {{( $currentRoute ==='designation.index'|| $currentRoute ==='designation.edit'|| $currentRoute ==='designation.create')?'active' :''}}" href="{{url('designation')}}">
+						<a class="menu-link {{( $currentRoute ==='designation.index'|| $currentRoute ==='designationEdit'|| $currentRoute ==='designation.create')?'active' :''}}" href="{{url('designation')}}">
 							<span class="menu-icon">
 								<span class="svg-icon svg-icon-2">
 									<i class="fas fa-address-card"></i>
@@ -108,7 +108,7 @@ $currentRoute = \Route::currentRouteName();
 					<!--begin:Menu item-->
 					<div class="menu-item ">
 						<!--begin:Menu link-->
-						<a class="menu-link {{( $currentRoute ==='employees.index'|| $currentRoute ==='employees.edit'|| $currentRoute ==='bulkUploadCreate'||$currentRoute ==='employees.create')?'active' :''}} " href="{{url('employees')}}">
+						<a class="menu-link {{( $currentRoute ==='employees.index'|| $currentRoute ==='employeeEdit'|| $currentRoute ==='bulkUploadCreate'||$currentRoute ==='employees.create')?'active' :''}} " href="{{url('employees')}}">
 							<span class="menu-icon">
 								<span class="svg-icon svg-icon-2">
 									<i class="fas fa-user-tie"></i>
@@ -127,7 +127,7 @@ $currentRoute = \Route::currentRouteName();
 					<!--begin:Menu item-->
 					<div class="menu-item">
 						<!--begin:Menu link-->
-						<a class="menu-link {{( $currentRoute ==='workflow.index'|| $currentRoute ==='workflow.edit'||$currentRoute ==='workflow.create')?'active' :''}}" href="{{url('workflow')}}">
+						<a class="menu-link {{( $currentRoute ==='workflow.index'|| $currentRoute ==='workflowEdit'||$currentRoute ==='workflow.create')?'active' :''}}" href="{{url('workflow')}}">
 							<span class="menu-icon">
 								<span class="svg-icon svg-icon-2">
 
@@ -149,7 +149,7 @@ $currentRoute = \Route::currentRouteName();
 					<!--begin:Menu item-->
 					<div class="menu-item">
 						<!--begin:Menu link-->
-						<a class="menu-link {{( $currentRoute ==='documentType.index'|| $currentRoute ==='documentType.edit'||$currentRoute ==='documentType.create')?'active' :''}}" href="{{url('documentType')}}">
+						<a class="menu-link {{( $currentRoute ==='documentType.index'|| $currentRoute ==='documentTypeEdit'||$currentRoute ==='documentType.create')?'active' :''}}" href="{{url('documentType')}}">
 							<span class="menu-icon">
 								<span class="svg-icon svg-icon-2">
 									<i class="fas fa-file-medical"></i>
@@ -243,7 +243,7 @@ $currentRoute = \Route::currentRouteName();
 					@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('role-view'))
 					<div class="menu-item">
 						<!--begin:Menu link-->
-						<a class="menu-link {{( $currentRoute ==='roles.index'|| $currentRoute ==='roles.edit'||$currentRoute ==='roles.create')?'active' :''}}" href="{{url('roles')}}">
+						<a class="menu-link {{( $currentRoute ==='roles.index'|| $currentRoute ==='privilageEdit'||$currentRoute ==='roles.create')?'active' :''}}" href="{{url('roles')}}">
 							<span class="menu-icon">
 								<span class="svg-icon svg-icon-2">
 									<i class="fas fa-shield-alt"></i>
@@ -260,7 +260,7 @@ $currentRoute = \Route::currentRouteName();
 
 					<div class="menu-item">
 						<!--begin:Menu link-->
-						<a class="menu-link {{( $currentRoute ==='users.index'|| $currentRoute ==='users.edit'||$currentRoute ==='users.create')?'active' :''}}" href="{{url('users')}}">
+						<a class="menu-link {{( $currentRoute ==='users.index'|| $currentRoute ==='userEdit'||$currentRoute ==='users.create')?'active' :''}}" href="{{url('users')}}">
 							<span class="menu-icon">
 								<span class="svg-icon svg-icon-2">
 									<i class="fas fa-user-plus"></i>

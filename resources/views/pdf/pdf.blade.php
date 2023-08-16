@@ -79,11 +79,11 @@
                     <b>{{$projectApprovers[$i]['designation']}}</b>
                     <br>
 
-                    <b>Name:</b>{{$projectApprovers[$i]['appproverName']}}
+                    <b>Name: </b>{{$projectApprovers[$i]['appproverName']}}
                     <br>
-                    <b>Level:</b>{{$projectApprovers[$i]['level']}}
+                    <b>Level: </b>{{$projectApprovers[$i]['level']}}
 
-                    <b> Date:</b>{{$projectApprovers[$i]['updatedate']}}
+                    <b> Date: </b>{{$projectApprovers[$i]['updatedate']}}
                 </p>
             </div>
     </div>

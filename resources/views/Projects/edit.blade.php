@@ -264,6 +264,36 @@
 <!--begin::Modal title-->
 <h2 class="text-center m-5">Edit Project</h2>
 
+@php
+    $mainDocumentPath = $mainDocumentPath ?? ''; // Replace with the actual path
+    $fileExtension = pathinfo($mainDocumentPath, PATHINFO_EXTENSION);
+    $pdf = $excel = $word = $unknown = false;
+
+@endphp
+
+@if (!empty($mainDocumentPath))
+    @php
+        $document=true;
+        $pdf = $excel = $word = $unknown = false;
+
+        if (in_array($fileExtension, ['xlsx', 'xls'])) {
+            $excel = true;
+        } elseif ($fileExtension === 'pdf') {
+            $pdf = true;
+        } elseif (in_array($fileExtension, ['docx', 'doc'])) {
+            $word = true;
+        } else {
+            $unknown = true;
+        }
+    @endphp
+
+
+@else
+@php
+$document=false;
+@endphp
+@endif
+
 
 <!--begin::Modal header-->
 <!--begin::Modal body-->
@@ -308,7 +338,7 @@
                                 <!--begin::Label-->
                                 <label class="fs-6 fw-semibold">Active</label>
                                 <!--end::Label-->
-
+                                <input name="isDeletedOldMainDocument" class="isDeletedOldMainDocument" type="hidden" value="<?php echo($isDocuments)?"1":"0"?>" />
                             </div>
                             <!--end::Label-->
                             <!--begin::Switch-->
@@ -582,8 +612,34 @@
                         <label class="fs-6 fw-semibold mb-2 required">Main Document</label><br>
                         <div class="col-md-12 p-3 pdf_container input-group">
                             <label class="row col-12 m-2 pdf-view row " for="pdf1">
-                                <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div>
-                            </label> <input type="file" name="main_document[]" id="pdf1" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx" <?php echo($isDocuments)?"disabled":""?>>
+                                <div class="upload-text">
+                                    <i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span>
+                                </div>
+                                @if ($excel)
+                                <div class="pdf" onclick="event.preventDefault()"><img src=" https://download.logo.wine/logo/Microsoft_Excel/Microsoft_Excel-Logo.wine.png" class="pdf-iframe " scrolling="no">
+                                    @if ($isAllowDeleteMainDocument)
+                                    <button class="btn btn-danger btn-sm pdf_delete_btn" path_name="{{ $mainDocumentPath}}" onclick="dbdeletepdf(this)">Delete</button>
+                                    @endif
+                                   
+                                </div>
+                            @elseif ($pdf)
+                            <div class="pdf" onclick="event.preventDefault()"><iframe src="{{$mainDocumentPath}}" class="pdf-iframe "  scrolling="no"></iframe>
+                                @if ($isAllowDeleteMainDocument)
+                                <button class="btn btn-danger btn-sm pdf_delete_btn  " onclick="dbdeletepdf(this)">Delete</button>
+                                @endif
+                            </div>
+                            @elseif ($word)
+                            <div class="pdf" onclick="event.preventDefault()"><img src=" https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Microsoft_Office_Word_%282019%E2%80%93present%29.svg/1101px-Microsoft_Office_Word_%282019%E2%80%93present%29.svg.png" class="pdf-iframe "  scrolling="no">
+                                @if ($isAllowDeleteMainDocument)
+                                    
+                            
+                                <button class="btn btn-danger btn-icon w-30px h-30px btn-sm pdf_delete_btn  " onclick="dbdeletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
+                                @endif
+                            </div>
+                            @else
+                                <!-- Handle unknown file types here -->
+                            @endif
+                            </label> <input type="file" name="main_document[]" id="pdf1" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".csv,.pdf,.xlsx,.xls,.doc,.docx" <?php echo($document)?"disabled":""?>>
                         </div>
                     </div>
                     <div class="col-md-6 fv-row">
@@ -883,7 +939,21 @@
     });
 
     function set_min(start_date) {
+        
+        // alert(start_date);
         $('.end_date').attr('min', start_date);
+        // $(".mile_start_date").val("");
+        // $(".mile_end_date").val("");
+        $(".mile_start_date").attr('min', start_date);
+        $(".mile_end_date").attr('min', start_date);
+    }
+    function set_max(end_date) {
+        // alert("ok");
+        $('.start_date').attr('max', end_date);
+        // $(".mile_end_date").val("");
+        // $(".mile_start_date").val("");
+        $(".mile_start_date").attr('max', end_date);
+        $(".mile_end_date").attr('max', end_date);
     }
 
     function set_min_max_value() {
@@ -1557,12 +1627,13 @@ validation=false;
                 $(".workflow_id").val(data.project.workflow_id).prop("selected", true);
                 $(".workflow_hidden").val(data.project.workflow_id);
                 set_min(data.project.start_date);
+                set_max(data.project.end_date);
                 get_workflow_typeEdit(data.project.workflow_id);
                 get_employee_details(data.project.initiator_id);
 
                 $(".multi-fields").html("");
                 $.each(data.milestone, function(key, val) {
-                    var s1 = '<div class="multi-field"> <div class="row remove_append"> <div class="col-md-4 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Mile Stone</label> <!--end::Label--> <!--begin::Input--> <input type="text" class="form-control" name="milestone[]" value="' + val.milestone + '" oninput="set_mile_min_max();" required /> <!--end::Input--> </div> <!-- <div class="col-md-4 fv-row"> <label class="required fs-6 fw-semibold mb-2">Planned Date</label> <input type="date" class="form-control planned_date" name="planned_date[]" onclick="set_min_max_value();" required /> </div> --> <!--begin::Col--> <div class="col-md-2 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Start Date</label> <!--end::Label--> <!--begin::Input--> <input type="date" class="form-control form-control-solid mile_start_date" placeholder="Enter Start Date" name="mile_start_date[]" value="' + val.mile_start_date + '" required /> <!--end::Input--> </div> <!--end::Col--> <!--begin::Col--> <div class="col-md-2 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">End Date</label> <!--end::Label--> <!--begin::Input--> <input type="date" class="form-control form-control-solid mile_end_date" placeholder="Enter End Date" name="mile_end_date[]" value="' + val.mile_end_date + '"  required /> <!--end::Input--> </div> <!--end::Col--> <div class="col-md-4 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Level To Be Crossed1</label> <!--end::Label--> <!--begin::Input--> <select class="form-control levels_to_be_crossed" name="level_to_be_crosssed[]" required>';
+                    var s1 = '<div class="multi-field"> <div class="row remove_append"> <div class="col-md-4 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Mile Stone</label> <!--end::Label--> <!--begin::Input--> <input type="text" class="form-control" name="milestone[]" value="' + val.milestone + '" oninput="set_mile_min_max();" required /> <!--end::Input--> </div> <!-- <div class="col-md-4 fv-row"> <label class="required fs-6 fw-semibold mb-2">Planned Date</label> <input type="date" class="form-control planned_date" name="planned_date[]" onclick="set_min_max_value();" required /> </div> --> <!--begin::Col--> <div class="col-md-2 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Start Date</label> <!--end::Label--> <!--begin::Input--> <input type="date" class="form-control form-control-solid mile_start_date" min="'+data.project.start_date+'" max="'+val.mile_end_date+'" placeholder="Enter Start Date" name="mile_start_date[]" value="' + val.mile_start_date + '" required /> <!--end::Input--> </div> <!--end::Col--> <!--begin::Col--> <div class="col-md-2 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">End Date</label> <!--end::Label--> <!--begin::Input--> <input type="date" class="form-control form-control-solid mile_end_date" placeholder="Enter End Date" name="mile_end_date[]" value="' + val.mile_end_date + '" min="'+val.mile_start_date+'" max="'+data.project.end_date+'"  required /> <!--end::Input--> </div> <!--end::Col--> <div class="col-md-4 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Level To Be Crossed1</label> <!--end::Label--> <!--begin::Input--> <select class="form-control levels_to_be_crossed" name="level_to_be_crosssed[]" required>';
 
                     $.each(data.levelArray, function(key1, val1) {
                         var selectedCrosses = (val.levels_to_be_crossed == val1.levelId) ? "selected" : "";
@@ -1739,5 +1810,14 @@ validation=false;
 
 
 
+    }
+
+    function dbdeletepdf(event) {
+   
+       $("form").append("<input type='hidden' value='"+$(event).attr("path_name")+"'>");
+       $(event).parent().parent().parent().find("input").prop("disabled",false);
+       $(event).parent().remove();
+       $('.isDeletedOldMainDocument').val(0);
+     
     }
 </script>

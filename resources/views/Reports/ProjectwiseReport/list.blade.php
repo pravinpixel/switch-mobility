@@ -197,7 +197,7 @@
                                     <td>{{ $entity['noOfDays'] }}</td>
                                     <td>{{ $entity['status'] }}</td>
                                     <td>
-                                        <div id="{{$entity['projectId']}}" class="btn btn-primary viewDocs">View</div>
+                                        <div id="{{$entity['projectId']}}" class="btn switchPrimaryBtn viewDocs">View</div>
                                     </td>
 
                                 </tr>
@@ -323,7 +323,7 @@
                                 var activeStatus =val.status;
 
                                 var viewBtn = '<div id=' + projectId +
-                                    ' class="btn btn-success viewDocs">View</div>';
+                                    ' class="btn switchPrimaryBtn viewDocs">View</div>';
 
                                 projectNameOptionItems += "<option value=" + projectId + ">" +
                                     projectName + "(" + projectCode + ")</option>";

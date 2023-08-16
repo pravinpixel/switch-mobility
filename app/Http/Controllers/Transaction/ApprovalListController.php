@@ -267,6 +267,8 @@ class ApprovalListController extends Controller
             ->where('is_latest', 1)
             ->first();
         $projectDocModel = $model->documentName;
+
+
         $projectId = $projectDocModel->project_id;
         $project = Project::with('docType', 'employee', 'employee.department', 'workflow')->where('id', $projectId)->first();
         $projectApprovers = $this->projectApprovers($projectId);
@@ -290,6 +292,8 @@ class ApprovalListController extends Controller
         $extension = \File::extension($model->document_name);
 
         $filePath = public_path('projectDocuments/' . $model->document_name);
+        $filenameWithoutExtension = pathinfo($filePath, PATHINFO_FILENAME);
+
         if ($extension == "Abcd") {
 
             // Get the path to the Excel file in the public folder
@@ -460,8 +464,8 @@ class ApprovalListController extends Controller
         $delimiter = '/';
 
         $lastPartFileName = Str::afterLast($pdfPath, $delimiter);
-        $substringBeforeDotFileName = Str::before($lastPartFileName, '.');
-       
+        $substringBeforeDotFileName = ($filenameWithoutExtension) ? $filenameWithoutExtension : Str::before($lastPartFileName, '.');
+
 
         $imagePath = public_path('DocumentImages/' . $id);
         if (File::exists($imagePath)) {
@@ -473,9 +477,11 @@ class ApprovalListController extends Controller
         $imagick = new Imagick();
         $imagick->readImage($pdfPath);
         $imagick->setImageFormat('png');
-
+      
+    
         foreach ($imagick as $pageNumber => $page) {
             // Set the image quality (0-100, where 100 is the best quality)
+            //$page->setResolution(300, 300);
             $page->setImageCompressionQuality(100);
             // Save each page as an image
             $currentPath = 'img' . ($pageNumber + 1) . '.png';
@@ -549,7 +555,7 @@ class ApprovalListController extends Controller
             }
         }
         Log::info("passedLine no 132 ter ");
-        $dFilename = $substringBeforeDotFileName.'.pdf';
+        $dFilename = $substringBeforeDotFileName . '.pdf';
         return $pdf->Output($dFilename, 'D');
     }
     private function saveImageFromDrawing(Drawing $drawing, $uploadFolder)

@@ -61,7 +61,7 @@
 
                         <div class="card-title col-12">
                             <div class="row col-12">
-                                <div class="col-md-4" style="display:inline;">
+                                <div class="col-md-2" style="display:inline;">
                                     <!--begin::Label-->
                                     <label class="required fs-6 fw-semibold mb-2">Start Date</label>
                                     <!--end::Label-->
@@ -71,7 +71,7 @@
 
                                 </div>
 
-                                <div class="col-md-4" style="display:inline;">
+                                <div class="col-md-2" style="display:inline;">
                                     <!--begin::Label-->
                                     <label class="required fs-6 fw-semibold mb-2">End Date</label>
                                     <!--end::Label-->

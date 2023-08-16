@@ -170,7 +170,7 @@
 
                                     <td>{{$d['wfName']}}</td>
                                     <td>{{$d['wfCode']}}</td>
-                                    <td>{{$d['total_levels']}}</td>
+                                    <td>Level-{{$d['total_levels']}}</td>
                                     <td>{{$d['wfType'] }}</td>
                                     <td>
                                         <label class="switch">
@@ -181,7 +181,7 @@
                                     </td>
                                     <td class="text-end">
                                         @if($d['runningStatus'])
-                                        <span class="badge badge-success">Running Workflow</span>
+                                        <span class="badge badge-success">Workflow Assigned</span>
                                         @else
                                      
                                         <div class="d-flex my-3 ms-9">

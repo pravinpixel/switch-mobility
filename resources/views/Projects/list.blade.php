@@ -253,7 +253,7 @@
                             <div class="row">
                                 <!--begin::Col-->
                                 <div class="col-md-3">
-                                    <label class="fs-6 form-label fw-bold text-dark ">Project Code / Name </label>
+                                    <label class="form-label text-dark ">Project Code / Name </label>
                                     <select class="form-select form-select-solid mainFilters projectId" name="project_code_name" data-kt-select2="true" data-placeholder="Project Code / Name" data-allow-clear="true" id="projectCode">
                                         <option></option>
                                         @foreach ($projects_all as $project)

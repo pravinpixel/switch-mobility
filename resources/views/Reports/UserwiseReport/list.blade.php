@@ -61,9 +61,10 @@
 
                             <div class="card-title">
                                 <div class="row">
-                                    <div class="col-md-4" id="workflowCodeField">
-                                        <label class=" fs-6 fw-semibold mb-2">Workflow Name & Code</label>
-                                        <select name="workflowCode" id="workflowCode" class="form-select">
+                                         
+                                    <div class="col-md-3" id="workflowCodeField">
+                                        <label class=" fs-6 fw-semibold  mb-2">Workflow Name & Code</label>
+                                        <select name="workflowCode" id="workflowCode" class="form-select" data-kt-select2="true" >
                                             <option value="">Select Workflow </option>
                                             @foreach ($workflowDatas as $workflowData)
                                                 <option value="{{ $workflowData->id }}">
@@ -75,12 +76,12 @@
 
 
                                     </div>
-                                    <div class="col-md-4" id="initiatorNameField">
+                                    <div class="col-md-3" id="initiatorNameField">
                                         <!--begin::Label-->
                                         <label class=" fs-6 fw-semibold mb-2">Initiator Name & SAP ID</label>
                                         <!--end::Label-->
                                         <!--begin::Input-->
-                                        <select name="initiatorName" id="initiatorName" class="form-select">
+                                        <select name="initiatorName" id="initiatorName" class="form-select" data-kt-select2="true" >
                                             <option value="">Select Initiator </option>
                                             @foreach ($initiatorDatas as $initiatorData)
                                                 <option value="{{ $initiatorData->id }}">
@@ -165,7 +166,7 @@
                                                 <td>{{ $entity['dueDate'] }}</td>
                                                 <td>{{ $entity['noOfDays'] }}</td>
                                                 <td>{{ $entity['status'] }}</td>
-                                                <td><div id="{{$entity['projectId']}}" class="btn btn-primary btn-sm viewDocs">View</div></td>
+                                                <td><div id="{{$entity['projectId']}}" class="btn switchPrimaryBtn btn-sm viewDocs">View</div></td>
 
                                             </tr>
                                         @endforeach
@@ -194,15 +195,9 @@
                 function() {
 
 
-                    $("#initiatorName").select2({
-                        dropdownParent: $("#initiatorNameField")
-                    });
-                    $("#workflowCode").select2({
-                        dropdownParent: $("#workflowCodeField")
-                    });
+                   
 
-
-                    $('#initiatorName,#workflowCode').on('change', function() {
+                    $('#initiatorName,.workflowCode').on('change', function() {
                         filterData();
                     });
 
@@ -250,7 +245,7 @@
                                     var editurl = '{{ route('viewDocListing', ':id') }}';
                                     editurl = editurl.replace(':id', projectId);
                                     var viewBtn = '<div id=' + projectId +
-                                    ' class="btn btn-success viewDocs">View</div>';
+                                    ' class="btn switchPrimaryBtn viewDocs">View</div>';
                                     table.row.add([ workflowCode,
                                         workflowName, projectCode, projectName,initiater, department, workflowLevel,
                                         dueDate, noOfDays, activeStatus, viewBtn

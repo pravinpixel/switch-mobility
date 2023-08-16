@@ -384,7 +384,40 @@ class DashboardController extends Controller
           array_push($initiatingProjects, $initiaterProjectModel);
         }
       }
+$initiatingProjectsModels1=[];
+      foreach ($initiatingProjects as $myApprovingProject) {
+        $projectId = $myApprovingProject->id;
+        $workflowModel = $myApprovingProject['workflow'];
+        $employeeModel = $myApprovingProject['employee'];
+        $departmentModel = $employeeModel['department'];
 
+
+        $getMyApproverLevels = ProjectEmployee::where('project_id', $projectId)->where('employee_id', $empId)->where('type', 2)->get();
+        foreach ($getMyApproverLevels as $getMyApproverLevel) {
+
+          $level = $getMyApproverLevel->level;
+          $getProjectLevelModel = ProjectLevels::where('project_id', $projectId)->where('project_level', $level)->first();
+
+          $DocsModel2 = ProjectDocumentDetail::where('project_id', $projectId)->where('upload_level', $level)->count();
+          if (!$DocsModel2) {
+            $newDatas = [
+              'projectId' => $myApprovingProject->id,
+              'ticketNo' => $myApprovingProject->ticket_no,
+              'projectName' => $myApprovingProject->project_name,
+              'projectCode' => $myApprovingProject->project_code,
+              'wfname' => $workflowModel->workflow_name,
+              'wfCode' => $workflowModel->workflow_code,
+              'department' => $departmentModel->name,
+              'startDate' => date("d-m-Y", strtotime($myApprovingProject->start_date)),
+              'endDate' => date("d-m-Y", strtotime($myApprovingProject->end_date)),
+              'dueDate' => ($getProjectLevelModel) ? date("d-m-Y", strtotime($getProjectLevelModel->due_date)) : "",
+              'level' => $level
+            ];
+            array_push($initiatingProjectsModels1, $newDatas);
+          }
+        }
+      }
+     
       $myAprovingProjectModels = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
       if ($empId) {
         $myAprovingProjectModels->whereHas('projectEmployees', function ($q) use ($empId) {
@@ -434,7 +467,7 @@ class DashboardController extends Controller
       }
     }
 
-    return response()->json(['activeProjects' => $allProjectsentities, 'approvingProjects' => $approvingProjects, 'myProjects' => $initiatingProjects]);
+    return response()->json(['activeProjects' => $allProjectsentities, 'approvingProjects' => $approvingProjects, 'myProjects' => $initiatingProjectsModels1]);
   }
   public function get_all_projects()
   {

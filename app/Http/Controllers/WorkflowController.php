@@ -104,6 +104,7 @@ class WorkflowController extends Controller
             $wfType = ($model->workflow_type == 1) ? "Full" : "Partial";
             $wflastLevelId = $this->wfLastLevelId($wfId);
             $runningStatus = $this->getProjectStatus($wfId, $wflastLevelId);
+            Log::info('get run Status id '.$wfId." runstatus ".$runningStatus);
             $response = [
                 'id' => $wfId,
                 'wfName' => $wfname,
@@ -123,6 +124,7 @@ class WorkflowController extends Controller
             ->where('projects.workflow_id', $wfId)
             ->where('project_document_status_by_levels.level_id', $wflastLevelId)
             ->where('project_document_status_by_levels.status', '!=', 4)
+            //->where('projects.current_status', '!=', 4)
             ->whereNull('projects.deleted_at')
             ->first();
 
