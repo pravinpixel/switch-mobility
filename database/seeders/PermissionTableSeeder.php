@@ -225,6 +225,10 @@ class PermissionTableSeeder extends Seeder
             'name' => 'userwise-report',
             'guard_name' => 'web'
          ],
+         [
+            'name' => 'approval-listing-view',
+            'guard_name' => 'web'
+         ],
 
       ];
 

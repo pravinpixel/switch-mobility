@@ -477,8 +477,8 @@ class ApprovalListController extends Controller
         $imagick = new Imagick();
         $imagick->readImage($pdfPath);
         $imagick->setImageFormat('png');
-      
-    
+
+
         foreach ($imagick as $pageNumber => $page) {
             // Set the image quality (0-100, where 100 is the best quality)
             //$page->setResolution(300, 300);
@@ -534,28 +534,48 @@ class ApprovalListController extends Controller
         }
         $ffiles = File::allFiles(storage_path('app/finalPdf'));
         // $sheetq = $this->tempController->genarate($destinationPath);
+        $formatOrientationId = $project->document_orientation;
+        $formatSizeId = $project->document_size;
 
         $pdf = new Fpdi();
 
+        $formatOrientation = ($formatOrientationId == 1) ? "P" : "L";
+        $formatPageSize = ($formatSizeId == 1) ? "A3" : "A4";
+
         // Merge all PDF files into a single file
         foreach ($ffiles as $key => $ffile) {
-            // dd($key);
-            // if($key == 1){
-            //     dd("well");
-            // }
 
 
             $pageCount = $pdf->setSourceFile($ffile->getPathname());
 
             for ($i = 1; $i <= $pageCount; $i++) {
                 $template = $pdf->importPage($i);
-                $pdf->AddPage();
+                // // $pdf->AddPage();
+                // $pdf->AddPage('L', 'A4');
+                // $pdf->useTemplate($template);
 
-                $pdf->useTemplate($template);
+                if ($formatOrientation == "L" && $formatPageSize == "A4") {
+                    $pdf->AddPage('L', 'A4');
+                    $pdf->useTemplate($template, 0, 0, 280, 200);
+                } elseif ($formatOrientation == "L" && $formatPageSize == "A3") {
+                    $pdf->AddPage('L', 'A3');
+                    $pdf->useTemplate($template, 0, 0, 420, 297);
+                } elseif ($formatOrientation == "P" && $formatPageSize == "A3") {
+                    $pdf->AddPage('P', 'A3');
+                    $templateWidthInInches = 11.69; // 297 mm converted to inches
+                    $templateHeightInInches = 16.54; // 420 mm converted to inches
+                    $templateWidthInPoints = $templateWidthInInches * 72;
+                    $templateHeightInPoints = $templateHeightInInches * 72;
+                    $pdf->useTemplate($template, 0, 0, 297, 420);
+                } else {
+                    $pdf->AddPage();
+                    $pdf->useTemplate($template);
+                }
             }
         }
         Log::info("passedLine no 132 ter ");
         $dFilename = $substringBeforeDotFileName . '.pdf';
+
         return $pdf->Output($dFilename, 'D');
     }
     private function saveImageFromDrawing(Drawing $drawing, $uploadFolder)

@@ -7,16 +7,27 @@ use App\Imports\EmployeesImport;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\Employee;
+use App\Models\Project;
+use App\Models\ProjectApprover;
 use App\Models\ProjectEmployee;
+use App\Models\ProjectLevels;
+use App\Models\ReAssignedEmployee;
 use App\Models\User;
 use App\Models\WorkflowLevelDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeController extends Controller
 {
+    protected $ProjectController, $workflowController;
+    public function __construct(ProjectController $ProjectController, WorkflowController $workflowController)
+    {
+        $this->ProjectController = $ProjectController;
+        $this->workflowController = $workflowController;
+    }
 
     public function create()
     {
@@ -193,6 +204,7 @@ class EmployeeController extends Controller
     public function index()
     {
         $employee_all = $this->get_all_employee();
+
         $employees = Employee::whereNull('deleted_at')->get()->toArray();
         $departments = Department::where('is_active', 1)->whereNull('deleted_at')->get()->toArray();
         $designation = Designation::where('is_active', 1)->whereNull('deleted_at')->get()->toArray();
@@ -200,11 +212,45 @@ class EmployeeController extends Controller
     }
     public function getEmployeeListData()
     {
-        $model = Employee::with('department','designation')->whereNull('deleted_at')->get()->toArray();
+        $model = $this->get_all_employee();
         return response()->json($model);
-     }
+    }
     public function get_all_employee()
     {
+        $models = Employee::with('department', 'designation')->whereNull('deleted_at')->get();
+        $datas = array();
+        foreach ($models as $model) {
+            $departmentModel = $model->department;
+            $designationModel = $model->designation;
+
+
+            $id = $model->id;
+            $name = $model->first_name . " " . $model->middle_name . " " . $model->last_name;
+            $profileImage = $model->profile_image;
+            $email = $model->email;
+            $sapId = $model->sap_id;
+            $mobile = $model->mobile;
+            $designationName = $designationModel->name;
+            $departmentName = $departmentModel->name;
+            $is_active = $model->is_active;
+            $itsDepend = false;
+
+
+
+            $runningProjects = $this->ProjectController->getRunningProjectsByEmpId($id);
+            Log::info('get running Projects for empId' . $id . " " . json_encode($runningProjects));
+            $runningWorkflow = $this->workflowController->getWorkflowApproverByEmpId($id);
+            Log::info('get running Workflow for empId' . $id . " " . json_encode($runningWorkflow));
+            if (count($runningProjects) || count($runningWorkflow)) {
+                $itsDepend = true;
+            }
+
+            $response = ['itsDepend' => $itsDepend, 'id' => $id, 'name' => $name, 'profileImage' => $profileImage, 'email' => $email, 'sapId' => $sapId, 'mobile' => $mobile, 'designationName' => $designationName, 'departmentName' => $departmentName, 'is_active' => $is_active];
+
+            Log::info('getemployee response for empId' . $id . " " . json_encode($response));
+            array_push($datas, $response);
+        }
+
         $employees = DB::table('employees as e')
             ->select('e.*', 'd.id as department_id', 'd.name as department_name', 'de.id as designation_id', 'de.name as designation_name', 'e.is_active as employee_status')
             ->join('departments as d', 'd.id', '=', 'e.department_id')
@@ -213,8 +259,10 @@ class EmployeeController extends Controller
 
 
             ->get();
-        return $employees;
+        return  $datas;
     }
+
+
     public function employeeDetailById(Request $request)
     {
         $model = Employee::select('employees.id', 'employees.first_name', 'employees.email', 'employees.last_name', 'employees.profile_image', 'employees.mobile', 'employees.is_active', 'employees.sap_id', 'departments.name as deptName', 'designations.name as desgName')
@@ -333,9 +381,12 @@ class EmployeeController extends Controller
     {
 
         $checkChildData = ProjectEmployee::where('employee_id', $id)->first();
+
         $checkChildData1 = WorkflowLevelDetail::where('employee_id', $id)->first();
-        $checkChildData2 = User::where('emp_id', $id)->first();
-        if ($checkChildData || $checkChildData1 || $checkChildData2) {
+
+        // $checkChildData2 = User::where('emp_id', $id)->first();
+
+        if ($checkChildData || $checkChildData1) {
             $data = [
                 "message" => "Failed",
                 "data" => "Reference Data exists, Can’t delete."
@@ -360,8 +411,8 @@ class EmployeeController extends Controller
         $id =  $request->id;
         $checkChildData = ProjectEmployee::where('employee_id', $id)->first();
         $checkChildData1 = WorkflowLevelDetail::where('employee_id', $id)->first();
-        $checkChildData2 = User::where('emp_id', $id)->first();
-        if ($checkChildData || $checkChildData1 || $checkChildData2) {
+
+        if ($checkChildData || $checkChildData1) {
             $data = [
                 "message" => "Failed",
                 "data" => "Reference Data exists, Can’t delete."
@@ -375,7 +426,7 @@ class EmployeeController extends Controller
                 "data" => "Employee Status Changed Successfully."
             ];
         }
-       return response()->json(['data'=>$data]);
+        return response()->json(['data' => $data]);
     }
 
     public function bulkUploadCreate()
@@ -522,5 +573,201 @@ class EmployeeController extends Controller
         } else {
             return null;
         }
+    }
+
+    public function reAssignEmployee(Request $request)
+    {
+        $empId = $request->id;
+        $actionType = $request->actionType;
+
+        $projectWiseEmployees = $this->ProjectController->getRunningProjectsByEmpId($empId);
+        Log::info("projectWiseEmployees   By empId " . $empId . " Data " . json_encode($projectWiseEmployees));
+        $responseDatas = array();
+        $wfIds = array();
+        foreach ($projectWiseEmployees as $projectWiseEmployee) {
+            $type = "";
+            $projectName = $projectWiseEmployee->project_name;
+            $wfId = $projectWiseEmployee->workflow_id;
+            array_push($wfIds, $wfId);
+            $wfData = $this->workflowController->getWorkflowDetailById($wfId);
+            $wfName = $wfData->workflow_name;
+            $level = "";
+            if ($empId == $projectWiseEmployee->initiator_id) {
+                $response = ['type' => "Initiator", 'wfName' => $wfName, 'projectName' => $projectName, 'level' => ""];
+                array_push($responseDatas, $response);
+            }
+
+            $wfModels = $this->workflowController->getWorkflowApproverByEmpIdAndWfId($wfId, $empId);
+            Log::info("Wf With projects  By empId " . $empId . " Data " . json_encode($wfModels));
+            foreach ($wfModels as $wfModel) {
+                $wfLevelModel = $wfModel->workflowLevel;
+                $workflowModel = $wfModel->workFlow;
+
+                $type = "Approver";
+
+                $wfName = $workflowModel->workflow_name;
+                $level =  $wfLevelModel->levels;
+
+                $response = ['type' => $type, 'wfName' => $wfName, 'projectName' => $projectName, 'level' => $level];
+
+                array_push($responseDatas, $response);
+            }
+        }
+
+        if ($wfIds) {
+            $wfIds = array_unique($wfIds);
+        }
+
+        $getWfModels = $this->workflowController->getAllWorkflowByEmpIdWithoutProjectWf($empId, $wfIds);
+        Log::info("Wf Without projects  By empId " . $empId . " Data " . json_encode($getWfModels));
+        foreach ($getWfModels as $getWfModel) {
+
+            $wfLevelModel = $getWfModel->workflowLevel;
+            $wfModel = $getWfModel->workFlow;
+
+            $type = "Approver";
+            $projectName = "";
+            $wfName = $wfModel->workflow_name;
+            $level =  $wfLevelModel->levels;
+
+            $response = ['type' => $type, 'wfName' => $wfName, 'projectName' => $projectName, 'level' => $level];
+            array_push($responseDatas, $response);
+        }
+
+        $employeeModels = Employee::where('is_active', 1)
+            ->where('id', '!=', $empId)
+            ->whereNull('deleted_at')
+            ->get();
+        $employeeDatas = array();
+        foreach ($employeeModels as $employeeModel) {
+            $id = $employeeModel->id;
+            $name = $employeeModel->first_name . " " . $employeeModel->middle_name . " " . $employeeModel->last_name;
+
+            $res = ['id' => $id, 'name' => $name];
+            array_push($employeeDatas, $res);
+        }
+
+        return view('employee.reAssignEmployee', compact('empId', 'actionType', 'responseDatas', 'employeeDatas'));
+    }
+
+    public function reAssignEmployeeUpdate(Request $request)
+    {
+        $oldEmployeeId = $request->empId;
+        $NewEmployeeId = $request->reAssignEmployeeId;
+        $actionType = $request->actionType;
+        $toAllowType = $request->toAllowType;
+
+        $workflowModels = $this->workflowController->getAllWorkflowByEmpIdWithoutProjectWf($oldEmployeeId);
+        Log::info("Get Workflows By Emp id " . json_encode($workflowModels));
+
+        foreach ($workflowModels as $key => $value) {
+            $wfDetailModel = WorkflowLevelDetail::findOrFail($value->id);
+
+            if ($wfDetailModel) {
+                $wfDetailModel->employee_id = $NewEmployeeId;
+                $wfDetailModel->save();
+            }
+
+            $type = "Approver";
+            $wfId = $value->workflow_id;
+            $workflowLevel = $value->workflowLevel;
+            $level = $workflowLevel->levels;
+            $projectId = null;
+
+            $reAssignedEmployeeModel = $this->convertToModelReAssignedEmployee($wfId, $projectId, $level, $type, $oldEmployeeId, $NewEmployeeId);
+        }
+        $projectWiseEmployees = $this->ProjectController->getRunningProjectsEmployeesByEmpId($oldEmployeeId);
+        Log::info("Get projectWiseEmployees  By Emp id " . json_encode($projectWiseEmployees));
+
+        foreach ($projectWiseEmployees as $projectWiseEmployee) {
+            $projectModel = $this->ProjectController->getProjectDetailsByPrimaryId($projectWiseEmployee->project_id);
+            $wfId = "";
+            $level = $projectWiseEmployee->level;
+            $projectId = $projectWiseEmployee->project_id;
+
+            if ($projectModel) {
+                $wfId = $projectModel->workflow_id;
+                if($projectModel->initiator_id == $oldEmployeeId){
+                    $projectModel->initiator_id = $oldEmployeeId;
+                    $projectModel->save();
+                }
+            }
+
+            if ($projectWiseEmployee->type == 1) {
+                $type = "Initiator";
+
+                $updateProjectEmployee =  $this->updateProjectEmployees($projectWiseEmployee->id, $NewEmployeeId);
+                $updateProjectApprover =  $this->updateProjectApprovers($projectWiseEmployee->project_id, $projectWiseEmployee->level, $NewEmployeeId);
+            }
+            if ($projectWiseEmployee->type == 2) {
+                $type = "Approver";
+                if ($toAllowType == 2) {
+                    $updateProjectEmployee =  $this->updateProjectEmployees($projectWiseEmployee->id, $NewEmployeeId);
+                    $updateProjectApprover =  $this->updateProjectApprovers($projectWiseEmployee->project_id, $projectWiseEmployee->level, $NewEmployeeId);
+                } else {
+                    $documentStatus = $this->ProjectController->getProjectslevelStatusByProjectIdAndLevelId($projectWiseEmployee->project_id, $projectWiseEmployee->level);
+                    if ($documentStatus) {
+                        if ($documentStatus->status != 4) {
+
+                            $updateProjectEmployee =  $this->updateProjectEmployees($projectWiseEmployee->id, $NewEmployeeId);
+                            $updateProjectApprover =  $this->updateProjectApprovers($projectWiseEmployee->project_id, $projectWiseEmployee->level, $NewEmployeeId);
+                        }
+                    }
+                }
+            }
+            $reAssignedEmployeeModel = $this->convertToModelReAssignedEmployee($wfId, $projectId, $level, $type, $oldEmployeeId, $NewEmployeeId);
+        }
+
+        $employeeModel = Employee::findOrFail($oldEmployeeId);
+        Log::info("Get employeeModel  By Emp id " . json_encode($employeeModel));
+        if ($employeeModel) {
+            if ($actionType == "delete") {
+                $employeeModel->delete();
+            }
+            if ($actionType == "status") {
+                $employeeModel->is_active = 0;
+                $employeeModel->save();
+            }
+        }
+
+        return redirect()->route('employees.index')->with('success', 'Re-Assigned Employee has been updating.');
+    }
+
+    public function updateProjectEmployees($id, $newEmployeeId)
+    {
+        $model = ProjectEmployee::findOrFail($id);
+        if ($model) {
+            $model->employee_id = $newEmployeeId;
+            $model->save();
+        }
+        return $model;
+    }
+    public function updateProjectApprovers($projectId, $level, $newEmployeeId)
+    {
+        $levelIdModel = ProjectLevels::where('project_id', $projectId)
+            ->where('project_level', $level)
+            ->first();
+        if ($levelIdModel) {
+            $model = ProjectApprover::where('project_id', $projectId)->where('project_level_id', $levelIdModel->id)->first();
+
+            if ($model) {
+                $model->approver_id = $newEmployeeId;
+                $model->save();
+            }
+        }
+        return true;
+    }
+    public function convertToModelReAssignedEmployee($wfId, $projectId = null, $level, $type, $oldEmployeeId, $NewEmployeeId)
+    {
+        $model = new ReAssignedEmployee();
+        $model->workflow_id = $wfId;
+        $model->project_id = $projectId;
+        $model->level = $level;
+        $model->type = $type;
+        $model->old_employee_id = $oldEmployeeId;
+        $model->new_employee_id = $NewEmployeeId;
+        $model->assigned_date = now();
+        $model->save();
+        return $model;
     }
 }

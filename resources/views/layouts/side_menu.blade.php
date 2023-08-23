@@ -108,7 +108,7 @@ $currentRoute = \Route::currentRouteName();
 					<!--begin:Menu item-->
 					<div class="menu-item ">
 						<!--begin:Menu link-->
-						<a class="menu-link {{( $currentRoute ==='employees.index'|| $currentRoute ==='employeeEdit'|| $currentRoute ==='bulkUploadCreate'||$currentRoute ==='employees.create')?'active' :''}} " href="{{url('employees')}}">
+						<a class="menu-link {{( $currentRoute ==='employees.index'|| $currentRoute ==='employeeEdit'|| $currentRoute ==='reAssignEmployee'|| $currentRoute ==='bulkUploadCreate'||$currentRoute ==='employees.create')?'active' :''}} " href="{{url('employees')}}">
 							<span class="menu-icon">
 								<span class="svg-icon svg-icon-2">
 									<i class="fas fa-user-tie"></i>

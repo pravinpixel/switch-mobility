@@ -260,6 +260,19 @@
         flex-wrap: wrap;
 
     }
+    .toAllowType-container {
+            display: inline-block; /* Display divs on the same line */
+            margin-right: 20px; /* Add some space between divs */
+    }
+
+    .radio-labels {
+            display: flex; /* Display radio labels in a row */
+            align-items: center; /* Center align radio labels vertically */
+    }
+
+    .radio-label {
+        margin-right: 10px;
+    }
 </style>
 <!--begin::Modal title-->
 <h2 class="text-center m-5">Edit Project</h2>
@@ -433,7 +446,7 @@ $document=false;
                             <label class="required fs-6 fw-semibold mb-2">End Date</label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <input type="date" class="form-control form-control-solid end_date" placeholder="Enter End Date" name="end_date" required />
+                            <input type="date" class="form-control form-control-solid end_date" placeholder="Enter End Date" name="end_date" required onchange="set_max(this.value);" />
                             <!--end::Input-->
                         </div>
                         <!--end::Col-->
@@ -535,7 +548,7 @@ $document=false;
                                         <!--end::Label-->
                                         <!--begin::Input-->
 
-                                        <input type="text" class="form-control" name="milestone[]" oninput="set_mile_min_max();" required />
+                                        <input type="text" class="form-control" name="milestone[]"  required />
                                         <!--end::Input-->
                                     </div>
                                     <!-- <div class="col-md-4 fv-row">
@@ -608,6 +621,35 @@ $document=false;
 
 
                 <div class="row" style="width: 100%;">
+                <div class="col-md-12 fv-row">
+                    <div class="toAllowType-container">
+                        <label class="main-label fs-6 fw-semibold mb-2">Document size:</label>
+                        <div class="radio-labels">
+                            <label class="radio-label">
+                                <input type="radio" name="document_size" value="1" <?php echo($project->document_size ==1)?"checked":"";?>>
+                                A3
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="document_size" value="2" <?php echo($project->document_size ==2)?"checked":"";?>>
+                                A4
+                            </div>
+                    </div>
+                    <div class="toAllowType-container">
+                            <label class="main-label fs-6 fw-semibold mb-2">Document
+                                Orientation:</label>
+                            <div class="radio-labels">
+                                <label class="radio-label">
+                                    <input type="radio" name="document_orientation" value="1" <?php echo($project->document_orientation ==1)?"checked":"";?>>
+                                    Portrait
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="document_orientation" value="2"
+                                    <?php echo($project->document_orientation ==2)?"checked":"";?>>
+                                    Lanscape
+                                </label>
+                            </div>
+                    </div>
+                </div>
                     <div class="col-md-6 fv-row">
                         <label class="fs-6 fw-semibold mb-2 required">Main Document</label><br>
                         <div class="col-md-12 p-3 pdf_container input-group">
@@ -1633,7 +1675,7 @@ validation=false;
 
                 $(".multi-fields").html("");
                 $.each(data.milestone, function(key, val) {
-                    var s1 = '<div class="multi-field"> <div class="row remove_append"> <div class="col-md-4 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Mile Stone</label> <!--end::Label--> <!--begin::Input--> <input type="text" class="form-control" name="milestone[]" value="' + val.milestone + '" oninput="set_mile_min_max();" required /> <!--end::Input--> </div> <!-- <div class="col-md-4 fv-row"> <label class="required fs-6 fw-semibold mb-2">Planned Date</label> <input type="date" class="form-control planned_date" name="planned_date[]" onclick="set_min_max_value();" required /> </div> --> <!--begin::Col--> <div class="col-md-2 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Start Date</label> <!--end::Label--> <!--begin::Input--> <input type="date" class="form-control form-control-solid mile_start_date" min="'+data.project.start_date+'" max="'+val.mile_end_date+'" start-min="'+data.project.start_date+'" start-max="'+data.project.end_date+'" placeholder="Enter Start Date" name="mile_start_date[]" value="' + val.mile_start_date + '" required /> <!--end::Input--> </div> <!--end::Col--> <!--begin::Col--> <div class="col-md-2 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">End Date</label> <!--end::Label--> <!--begin::Input--> <input type="date" class="form-control form-control-solid mile_end_date" placeholder="Enter End Date" name="mile_end_date[]" value="' + val.mile_end_date + '" start-min="'+data.project.start_date+'" start-max="'+data.project.end_date+'" min="'+val.mile_start_date+'"  max="'+data.project.end_date+'"  required /> <!--end::Input--> </div> <!--end::Col--> <div class="col-md-4 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Level To Be Crossed1</label> <!--end::Label--> <!--begin::Input--> <select class="form-control levels_to_be_crossed" name="level_to_be_crosssed[]" required>';
+                    var s1 = '<div class="multi-field"> <div class="row remove_append"> <div class="col-md-4 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Mile Stone</label> <!--end::Label--> <!--begin::Input--> <input type="text" class="form-control" name="milestone[]" value="' + val.milestone + '" oninput="set_mile_min_max();" required /> <!--end::Input--> </div> <!-- <div class="col-md-4 fv-row"> <label class="required fs-6 fw-semibold mb-2">Planned Date</label> <input type="date" class="form-control planned_date" name="planned_date[]" onclick="set_min_max_value();" required /> </div> --> <!--begin::Col--> <div class="col-md-2 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Start Date</label> <!--end::Label--> <!--begin::Input--> <input type="date" class="form-control form-control-solid mile_start_date" min="'+data.project.start_date+'" max="'+val.mile_end_date+'" start-min="'+data.project.start_date+'" start-max="'+data.project.end_date+'" placeholder="Enter Start Date" name="mile_start_date[]" value="' + val.mile_start_date + '" onchange="mileStone_min_date(this)" required /> <!--end::Input--> </div> <!--end::Col--> <!--begin::Col--> <div class="col-md-2 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">End Date</label> <!--end::Label--> <!--begin::Input--> <input type="date" class="form-control form-control-solid mile_end_date" placeholder="Enter End Date" name="mile_end_date[]" value="' + val.mile_end_date + '" start-min="'+data.project.start_date+'" start-max="'+data.project.end_date+'" min="'+val.mile_start_date+'"  max="'+data.project.end_date+'"  required  onchange="mileStone_max_date(this)"/> <!--end::Input--> </div> <!--end::Col--> <div class="col-md-4 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Level To Be Crossed1</label> <!--end::Label--> <!--begin::Input--> <select class="form-control levels_to_be_crossed" name="level_to_be_crosssed[]" required>';
 
                     $.each(data.levelArray, function(key1, val1) {
                         var selectedCrosses = (val.levels_to_be_crossed == val1.levelId) ? "selected" : "";
@@ -1820,4 +1862,118 @@ validation=false;
        $('.isDeletedOldMainDocument').val(0);
      
     }
+    function set_min(start_date) {
+    $('.end_date').attr('min', start_date);
+    $(".mile_start_date").attr('min', start_date);
+    $(".mile_end_date").attr('min', start_date);
+    $(".mile_start_date").attr('start-min', start_date);
+    $(".mile_end_date").attr('start-min', start_date);
+
+    var startDate = new Date(start_date);
+    var endDate = new Date($('.end_date').val());
+
+    $(".mile_start_date").each(function () {
+        var mileDate = new Date($(this).val());
+        let mileStoneName = $(this).parent().prev().find("input").val();
+        if (mileDate < startDate ) {
+            swal.fire({
+                title: "Date Out of Range",
+                text: mileStoneName + "'s start date is out of range. Do you want to clear it?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, clear it",
+                cancelButtonText: "No, keep it"
+            }).then((result) => {
+                if (result.value === true) {
+                    $(this).val("");
+                }
+            });
+        }
+    });
+
+    $(".mile_end_date").each(function () {
+        var mileDate = new Date($(this).val());
+        if (mileDate > endDate) {
+            swal.fire({
+                title: "Date Out of Range",
+                text: "Some milestone end dates are out of range. Do you want to clear them?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, clear them",
+                cancelButtonText: "No, keep them"
+            }).then((result) => {
+                if (result.value === true) {
+                    $(this).val("");
+                }
+            });
+        }
+    });
+}
+
+function set_max(end_date) {
+    $('.start_date').attr('max', end_date);
+    $(".mile_start_date").attr('max', end_date);
+    $(".mile_end_date").attr('max', end_date);
+ $(".mile_start_date").attr('start-max', end_date);
+    $(".mile_end_date").attr('start-max', end_date);
+
+    var startDate = new Date($('.start_date').val());
+    var endDate = new Date(end_date);
+
+    
+    $(".mile_start_date").each(function () {
+        var mileDate = new Date($(this).val());
+        if (mileDate < startDate) {
+            let mileStoneName = $(this).parent().prev().find("input").val();
+            swal.fire({
+                title: "Date Out of Range",
+                text: mileStoneName + "'s start date is out of range. Do you want to clear it?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, clear it",
+                cancelButtonText: "No, keep it"
+            }).then((result) => {
+                if (result.value === true) {
+                    $(this).val("");
+                }
+            });
+        }
+    });
+
+    $(".mile_end_date").each(function () {
+        var mileDate = new Date($(this).val());
+        if (mileDate > endDate) {
+            swal.fire({
+                title: "Date Out of Range",
+                text: "Some milestone end dates are out of range. Do you want to clear them?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, clear them",
+                cancelButtonText: "No, keep them"
+            }).then((result) => {
+                if (result.value === true) {
+                    $(this).val("");
+                }
+            });
+        }
+    });
+}
+
+    function mileStone_min_date(mStartDate) {
+        // alert(mStartDate);
+    const closestMileEndDate = $(mStartDate).parent().next().find(".mile_end_date");
+    console.log(closestMileEndDate);
+    const startDateValue = $(mStartDate).val();
+    closestMileEndDate.attr("min", startDateValue);
+}
+
+function mileStone_max_date(mEndDate) {
+        // alert(mStartDate);
+    const closestMileStartDate = $(mEndDate).parent().prev().find(".mile_start_date");
+    console.log(closestMileStartDate);  
+
+    const endDateValue = $(mEndDate).val();
+    console.log(endDateValue);
+    closestMileStartDate.attr("max", endDateValue);
+}
 </script>

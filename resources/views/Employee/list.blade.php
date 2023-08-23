@@ -66,7 +66,7 @@
                             <div class="row g-8">
                                 <!--begin::Col-->
                                 <div class="col-md-3">
-                                    <label class="form-label text-dark "> Department </label>
+                                    <label class=" form-label text-dark "> Department </label>
                                     <select class="form-select form-select-solid filterDeptAndDes" data-kt-select2="true" data-placeholder="Department" data-allow-clear="true" id="deptFilter">
                                         <option></option>
                                         @foreach ($departments as $department)
@@ -103,7 +103,7 @@
                                 @endif
                                 <div class="w-auto">
                                     <a href="{{url('bulkUploadCreate')}}">
-                                        <label class="fs-6 fw-semibold mb-2 d-block" >&nbsp;</label>
+                                        <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
                                         <span class="btn btn-success ">Import</span>
                                     </a>
                                 </div>
@@ -133,14 +133,14 @@
                             <tbody class="text-gray-600 fw-semibold">
                                 <!--begin::Table row-->
                                 @foreach ($employee_all as $key => $d)
-                                <tr>
+                                <tr itsDepend="{{$d['itsDepend']}}">
                                     <!--begin::Checkbox-->
 
                                     <!--end::Checkbox-->
                                     <!--begin::User=-->
 
-                                    <?php if ($d->profile_image) {
-                                        $pImage = $d->profile_image;
+                                    <?php if ($d['profileImage']) {
+                                        $pImage = $d['profileImage'];
                                     } else {
                                         $pImage = "noimage.png";
                                     } ?>
@@ -155,21 +155,21 @@
 
                                             <!--begin::Info-->
                                             <div class="d-flex flex-column">
-                                                <a href="javascript:void(0);" class="text-gray-900 text-hover-primary fs-6 fw-bold"><?php echo $d->first_name . ' ' . $d->last_name; ?></a>
+                                                <a href="javascript:void(0);" class="text-gray-900 text-hover-primary fs-6 fw-bold">{{$d['name']}}</a>
 
-                                                <span class="text-gray-400 fw-bold">Email:{{ $d->email }}</span>
+                                                <span class="text-gray-400 fw-bold">Email:{{ $d['email'] }}</span>
                                             </div>
                                             <!--end::Info-->
                                         </div>
 
                                     </td>
-                                    <td>{{ $d->sap_id }}</td>
-                                    <td>{{ $d->mobile }}</td>
-                                    <td>{{ $d->department_name }}</td>
-                                    <td>{{ $d->designation_name }}</td>
+                                    <td>{{ $d['sapId'] }}</td>
+                                    <td>{{ $d['mobile']}}</td>
+                                    <td>{{ $d['departmentName'] }}</td>
+                                    <td>{{ $d['designationName'] }}</td>
                                     <td>
                                         <label class="switch">
-                                            <input type="checkbox" data-id="{{ $d->id }}" value="" class="status" <?php echo $d->is_active == 1 ? 'checked' : ''; ?>>
+                                            <input type="checkbox" data-id="{{ $d['id'] }}" value="" class="status" <?php echo $d['is_active'] == 1 ? 'checked' : ''; ?>>
                                             <span class="slider round"></span>
                                         </label>
 
@@ -179,12 +179,12 @@
                                             <!--begin::Edit-->
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('employee-edit'))
-                                            <a class="editPage" style="display:inline;cursor: pointer;" id="{{ $d->id }}" title="Edit Employee"><i class="fa-solid fa-pen" style="color:orange"></i></a>
+                                            <a class="editPage" style="display:inline;cursor: pointer;" id="{{ $d['id'] }}" title="Edit Employee"><i class="fa-solid fa-pen" style="color:orange"></i></a>
                                             @endif
                                             <!--end::Edit-->
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('employee-delete'))
-                                            <div onclick="delete_item(<?php echo $d->id; ?>);" style="display:inline;cursor: pointer; margin-left: 10px;" id="{{$d->id }}" class="" title="Delete Employee"><i class="fa-solid fa-trash" style="color:red"></i></div>
+                                            <div style="display:inline;cursor: pointer; margin-left: 10px;" id="{{$d['id'] }}" class="deleteEmployee" title="Delete Employee"><i class="fa-solid fa-trash" style="color:red"></i></div>
                                             @endif
                                             <!--end::Delete-->
                                             <!--begin::More-->
@@ -313,6 +313,7 @@
         form.submit();
 
     });
+
     function validateFormEdit() {
 
         var firstname = $('.editFirstName').val();
@@ -441,10 +442,10 @@
                             editurl = editurl.replace(':id', id);
 
                             var editBtn = (
-                                '<a class="editPage" id="'+id+'" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i>></a>'
+                                '<a class="editPage" id="' + id + '" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i>></a>'
                             );
                             var deleteBtn = (
-                                '<div  onclick="delete_item(' + id + ');" style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i>></div>'
+                                '<div  id="' + id + '"  class="deleteEmployee" style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i>></div>'
                             );
 
 
@@ -521,10 +522,10 @@
                             var editurl = '{{ route("employees.edit", ":id") }}';
                             editurl = editurl.replace(':id', id);
                             var editBtn = (
-                                '<a class="editPage" id="'+id+'" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i></a>'
+                                '<a class="editPage" id="' + id + '" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i></a>'
                             );
                             var deleteBtn = (
-                                '<div  onclick="delete_item(' + id + ');" style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i></div>'
+                                '<div id="' + id + '"  class="deleteEmployee"  style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i></div>'
                             );
 
 
@@ -554,90 +555,22 @@
             });
 
 
-
-            $('.tableSearch').on('input', function() {
-                var searchData = $('.tableSearch').val();
-
-
-                $.ajax({
-                    url: "{{ route('employeeSearch') }}",
-                    type: 'ajax',
-                    method: 'post',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        searchData: searchData,
-                    },
-                    success: function(data) {
-
-                        table.clear().draw();
-                        $.each(data, function(key, val) {
-                            var id = val.id;
-                            var sapId = val.sap_id;
-                            var mobile = val.mobile;
-                            var dept = val.deptName;
-                            var desg = val.desgName;
-                            var email = val.email;
-                            var firstName = val.first_name;
-                            var lastName = val.last_name;
-                            var activeStatus = (val.is_active == 1) ? "checked" : "";
-
-                            var pic = (val.profile_image) ? val.profile_image : 'noimage.png';
-                            var folder = "images/Employee/";
-                            folder += pic;
-
-                            var firsttd =
-                                '<div class="symbol symbol-circle symbol-50px overflow-hidden me-3">';
-                            firsttd += '<a href="javascript:void(0);">';
-                            firsttd += '<div class="symbol-label">';
-                            firsttd +=
-                                '<img src=' + folder + ' alt="' + firstName + '" width="50" height="50"class="w-100" />';
-                            firsttd += ' </div>';
-                            firsttd += '</a>';
-                            firsttd += '</div>';
-                            firsttd += '<div class="d-flex flex-column">';
-                            firsttd += '<a href="javascript:void(0);"class="text-gray-800 text-hover-primary mb-1" style="position:relative;left:59px;bottom:43px;">' + firstName + ' ' + lastName + '</a>';
-                            firsttd += ' <span style="position:relative;left:59px;bottom:43px;">Email:' + email + '</span>';
-                            firsttd += ' </div>';
-                            var editurl = '{{ route("employees.edit", ":id") }}';
-                            editurl = editurl.replace(':id', id);
-                            var editBtn = (
-                                '<a id="'+id+'" class="editPage btn btn-icon btn-active-light-primary w-30px h-30px me-3" <span data-bs-toggle="tooltip" data-bs-trigger="hover" title="Edit"><span class="svg-icon svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path opacity="0.3" d="M21.4 8.35303L19.241 10.511L13.485 4.755L15.643 2.59595C16.0248 2.21423 16.5426 1.99988 17.0825 1.99988C17.6224 1.99988 18.1402 2.21423 18.522 2.59595L21.4 5.474C21.7817 5.85581 21.9962 6.37355 21.9962 6.91345C21.9962 7.45335 21.7817 7.97122 21.4 8.35303ZM3.68699 21.932L9.88699 19.865L4.13099 14.109L2.06399 20.309C1.98815 20.5354 1.97703 20.7787 2.03189 21.0111C2.08674 21.2436 2.2054 21.4561 2.37449 21.6248C2.54359 21.7934 2.75641 21.9115 2.989 21.9658C3.22158 22.0201 3.4647 22.0084 3.69099 21.932H3.68699Z" fill="currentColor" /><path d="M5.574 21.3L3.692 21.928C3.46591 22.0032 3.22334 22.0141 2.99144 21.9594C2.75954 21.9046 2.54744 21.7864 2.3789 21.6179C2.21036 21.4495 2.09202 21.2375 2.03711 21.0056C1.9822 20.7737 1.99289 20.5312 2.06799 20.3051L2.696 18.422L5.574 21.3ZM4.13499 14.105L9.891 19.861L19.245 10.507L13.489 4.75098L4.13499 14.105Z" fill="currentColor" /></svg> </span></span></a>'
-                            );
-                            //   var img=('<img src='  'width=50' 'height=50' 'class=w-100'' />')
-                            var Action = (editBtn +
-                                '<a id="'+id+'" class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" href="javascript:void(0);" class="menu-link px-3" onclick="delete_item(' +
-                                id +
-                                ')"><span class="svg-icon svg-icon-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor" /><path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor" /><path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor" /></svg></span></a>'
-                            );
-                            var status = val.is_active;
-                            var person = pic + "<br>" + firstName + " " + lastName +
-                                "<br>" + "Email:" + email;
-                            var result = (
-                                '<label class="switch"><input type="checkbox" data-id="' +
-                                id + '" class="status" ' + activeStatus +
-                                '>  <span class="slider round"></span></label>');
-
-                            table.row.add([firsttd, sapId, mobile, dept, desg, result,
-                                Action
-                            ]).draw();
-                        });
-                    },
-                    error: function() {
-                        $("#otp_error").text("Update Error");
-                    }
-
-                });
-
-
-            });
         });
 
 
 
-    function delete_item(id) {
+    $(document).on('click', '.deleteEmployee', function() {
+        var id = $(this).attr('id');
+        var alertmsg = "You won't be able to revert this!";
+        var itsdepend = $(this).closest('tr').attr('itsdepend');
+        console.log(itsdepend);
+        if (itsdepend ==true) {
+            alertmsg = "This employee already mapped with the workflow,Do You want to want to re-assign to another Employee? ";
+        }
+
         Swal.fire({
             title: 'Are you sure?',
-            text: "You won't be able to revert this!",
+            text: alertmsg,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3565ed',
@@ -645,35 +578,39 @@
             confirmButtonText: 'Yes, delete it!'
         }).then(isConfirmed => {
             if (isConfirmed.value) {
-                $.ajax({
-                    url: "{{ url('employees') }}" + "/" + id,
-                    type: 'ajax',
-                    method: 'delete',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        id: id,
-                    },
-                    success: function(result) {
-                        if (result.message == "Failed") {
-                            Swal.fire(
-                                'Deleted!',
-                                result.data,
-                                'error'
-                            );
-                        } else {
-                            Swal.fire(
-                                'Deleted!',
-                                result.data,
-                                'success'
-                            );
-                          getListData();
+                if (itsdepend ==true) {
+                    reAssignEmployee(id, "delete");
+                } else {
+                    $.ajax({
+                        url: "{{ url('employees') }}" + "/" + id,
+                        type: 'ajax',
+                        method: 'delete',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            id: id,
+                        },
+                        success: function(result) {
+                            if (result.message == "Failed") {
+                                Swal.fire(
+                                    'Deleted!',
+                                    result.data,
+                                    'error'
+                                );
+                            } else {
+                                Swal.fire(
+                                    'Deleted!',
+                                    result.data,
+                                    'success'
+                                );
+                                getListData();
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
             }
         });
-    }
+    });
     $(document).on('change', '.status', function() {
         var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
         var isAuthorityEdit = "{{ auth()->user()->can('employee-edit') }}";
@@ -689,11 +626,17 @@
         } else {
             activeStatus = "InActive";
         }
-        console.log(status);
+        var alertmsg = "Are You Sure To " + activeStatus + " This Employee!";
+        var itsdepend = $(this).closest('tr').attr('itsdepend');
+        var ipType = 1;
+        if (itsdepend == true) {
+            alertmsg = "This employee already mapped with the workflow,Do You want to want to re-assign to another Employee? ";
+        }
+
 
         Swal.fire({
             title: 'Change Status',
-            text: "Are You Sure To " + activeStatus + " This Employee!",
+            text: alertmsg,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3565ed',
@@ -701,43 +644,49 @@
             confirmButtonText: 'Yes, Change it!'
         }).then(isConfirmed => {
             if (isConfirmed.value) {
-                $.ajax({
-                    url: "{{ url('changeEmployeeActiveStatus') }}",
-                    type: 'ajax',
-                    method: 'post',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        id: id,
-                        status: status,
-                    },
-                    success: function(result) {
-                        var resDatas = result.data;
-                        console.log(resDatas);
+                if (itsdepend ==true) {
+                    reAssignEmployee(id, "status");
+                } else {
 
-                        if (resDatas.message == "Failed") {
-                            if (status == 1) {
-                                chk.prop('checked', false);
 
+                    $.ajax({
+                        url: "{{ url('changeEmployeeActiveStatus') }}",
+                        type: 'ajax',
+                        method: 'post',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            id: id,
+                            status: status,
+                            itsdepend: itsdepend,
+                        },
+                        success: function(result) {
+                            var resDatas = result.data;
+                            console.log(resDatas);
+
+                            if (resDatas.message == "Failed") {
+                                if (status == 1) {
+                                    chk.prop('checked', false);
+
+                                } else {
+
+                                    chk.prop('checked', true).attr('checked', 'checked');
+                                }
+                                Swal.fire(
+                                    'Status!',
+                                    resDatas.data,
+                                    'error'
+                                );
                             } else {
-
-                                chk.prop('checked', true).attr('checked', 'checked');
+                                Swal.fire(
+                                    'Status!',
+                                    resDatas.data,
+                                    'success'
+                                );
+                                getListData();
                             }
-                            Swal.fire(
-                                'Status!',
-                                resDatas.data,
-                                'error'
-                            );
-                        } else {
-                            Swal.fire(
-                                'Status!',
-                                resDatas.data,
-                                'success'
-                            );
-                            getListData();
                         }
-                    }
-                });
-
+                    });
+                }
             } else {
                 if (status == 1) {
                     chk.prop('checked', false);
@@ -749,6 +698,16 @@
             }
         });
     });
+
+    function reAssignEmployee(empId, status) {
+
+        var url = "{{route('reAssignEmployee')}}";
+        var form = $('<form action="' + url + '" method="post">' +
+            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + empId + '" /> <input type="hidden" name="actionType" value="' + status + '" />' +
+            '</form>');
+        $('body').append(form);
+        form.submit();
+    }
 
     function getListData() {
         var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
@@ -769,19 +728,16 @@
 
                 $.each(result, function(key, val) {
                     console.log(val);
-                    var firstName = val.first_name;
-                    var middleName = (val.middle_name) ? val.middle_name : "";
-                    var lastName = val.last_name;
-
-                    var name = firstName + " " + middleName + " " + lastName;
-                    var description = val.description;
+                                 
+                    var itsDepend = (val.itsDepend)?1:0;
+                    var name = val.name ;                   
                     var id = val.id;
-                    var sapId = val.sap_id;
+                    var sapId = val.sapId;
                     var mobile = val.mobile;
-                    var dept = val.department;
-                    var desg = val.designation;
+                    var dept = val.departmentName;
+                    var desg = val.designationName;
                     var email = val.email;
-                    var pic = (val.profile_image) ? val.profile_image : 'noimage.png';
+                    var pic = (val.profileImage) ? val.profileImage : 'noimage.png';
                     var folder = "images/Employee/";
                     folder += pic;
 
@@ -790,12 +746,12 @@
                     firsttd += '<a href="javascript:void(0);">';
                     firsttd += '<div class="symbol-label">';
                     firsttd +=
-                        '<img src=' + folder + ' alt="' + firstName + '" width="50" height="50" class="w-100" />';
+                        '<img src=' + folder + ' alt="' + name + '" width="50" height="50" class="w-100" />';
                     firsttd += ' </div>';
                     firsttd += '</a>';
                     firsttd += '</div>';
                     firsttd += '<div class="d-flex flex-column">';
-                    firsttd += '<a href="javascript:void(0);"class="text-gray-800 text-hover-primary mb-1" style="position:relative;left:59px;bottom:43px;">' + firstName + ' ' + lastName + '</a>';
+                    firsttd += '<a href="javascript:void(0);"class="text-gray-800 text-hover-primary mb-1" style="position:relative;left:59px;bottom:43px;">' + name + '</a>';
                     firsttd += ' <span style="position:relative;left:59px;bottom:43px;">Email:' + email + '</span>';
                     firsttd += ' </div>';
 
@@ -809,13 +765,13 @@
 
                     if (isSuperAdmin || isAuthorityEdit) {
                         var editBtn = (
-                            '<a class="editPage" id="'+id+'" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i></a>'
+                            '<a class="editPage" id="' + id + '" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i></a>'
                         );
                     }
 
                     if (isSuperAdmin || isAuthorityDelete) {
                         var deleteBtn = (
-                            '<div  onclick="delete_item(' + id + ');" style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i></div>'
+                            '<div  id="' + id + '"  class="deleteEmployee"  style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i></div>'
                         );
                     }
 
@@ -824,7 +780,9 @@
                         deleteBtn
                     );
 
-                    table.row.add([firsttd, sapId, mobile, dept.name, desg.name, statusBtn, actionBtn]).draw();
+                    var newRow = table.row.add([firsttd, sapId, mobile, dept, desg, statusBtn, actionBtn]).node();
+                    newRow.setAttribute('itsDepend', itsDepend);
+                    table.draw();
                 });
             }
         });

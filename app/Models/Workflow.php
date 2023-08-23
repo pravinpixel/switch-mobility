@@ -15,4 +15,9 @@ class Workflow extends Model
     {
         return $this->hasMany('App\Models\Workflowlevels', 'workflow_id', 'id');
     }
+
+    public function workflowEmployees()
+    {
+        return $this->hasMany('App\Models\WorkflowLevelDetail', 'workflow_id', 'id');
+    }
 }

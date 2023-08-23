@@ -104,7 +104,7 @@ class WorkflowController extends Controller
             $wfType = ($model->workflow_type == 1) ? "Full" : "Partial";
             $wflastLevelId = $this->wfLastLevelId($wfId);
             $runningStatus = $this->getProjectStatus($wfId, $wflastLevelId);
-            Log::info('get run Status id '.$wfId." runstatus ".$runningStatus);
+            Log::info('get run Status id ' . $wfId . " runstatus " . $runningStatus);
             $response = [
                 'id' => $wfId,
                 'wfName' => $wfname,
@@ -476,5 +476,48 @@ class WorkflowController extends Controller
             ->get();
 
         return response()->json($model);
+    }
+    public function getWorkflowApproverByEmpId($empId)
+    {
+        $models = Workflow::with('workflowEmployees')
+            ->whereRelation('workflowEmployees', 'employee_id', $empId)
+            ->where('is_active', 1)
+            ->get();
+        return $models;
+    }
+    public function getWorkflowApproverByEmpIdAndWfId($wfId, $empId)
+    {
+
+
+
+        $model = WorkflowLevelDetail::with('workFlow', 'workflowLevel')
+            ->where('employee_id', $empId)
+            ->whereRelation('workFlow', 'id', $wfId)
+            ->whereRelation('workFlow', 'is_active', 1)
+            ->whereRelation('workFlow', 'deleted_at', null)
+            ->get();
+
+
+        return $model;
+    }
+    public function getWorkflowDetailById($wfId)
+    {
+        return Workflow::findOrFail($wfId);
+    }
+    public function getAllWorkflowByEmpIdWithoutProjectWf($empId, $withoutId = null)
+    {
+
+        $models = WorkflowLevelDetail::with('workFlow', 'workflowLevel');
+        $models->where('employee_id', $empId);
+        if ($withoutId) {
+            $models->whereDoesntHave('workFlow', function ($query) use ($withoutId) {
+                $query->whereIn('id', $withoutId);
+            });
+        }
+        $models->whereRelation('workFlow', 'is_active', 1);
+        $models->whereRelation('workFlow', 'deleted_at', null);
+        $modelData =  $models->get();
+
+        return $modelData;
     }
 }

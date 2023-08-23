@@ -254,6 +254,8 @@ class ProjectController extends Controller
             $project->document_type_id = $request->document_type_id;
             $project->workflow_id = $request->workflow_id;
             $project->is_active = $request->is_active ? 1 : 0;
+            $project->document_size = $request->document_size;
+            $project->document_orientation = $request->document_orientation;
             $project->save();
 
 
@@ -284,7 +286,7 @@ class ProjectController extends Controller
                         ->first();
                     $allowDeleteDocs = false;
                     if ($PE && $MainDocumentCount != 0) {
-                        dd("well");
+                       
                         $allowDeleteDocs = true;
                     }
                     if ($PE && $request->isDeletedOldMainDocument == 0) {
@@ -1092,4 +1094,30 @@ class ProjectController extends Controller
         $initiaterIds = ($ids->unique())->toArray();
         return $initiaterIds;
     }
+
+    public function getRunningProjectsByEmpId($empId)
+    {
+        $models = Project::with('projectEmployees')
+            ->whereRelation('projectEmployees', 'employee_id', $empId)
+            ->where('current_status', '!=', 4)
+            ->get();
+
+        return $models;
+    }
+
+    public function getRunningProjectsEmployeesByEmpId($empId)
+    {
+        $models = ProjectEmployee::with('project')
+            ->whereRelation('project', 'current_status', '!=', 4)
+            ->where('employee_id', $empId)
+            ->get();
+
+        return $models;
+    }
+    public function getProjectslevelStatusByProjectIdAndLevelId($projectId, $levelId)
+    {
+        return ProjectDocumentStatusByLevel::where('project_id', $projectId)->where('level_id', $levelId)->first();
+    }
+
+    
 }

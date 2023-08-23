@@ -269,6 +269,19 @@
         body{
             overflow-x: hidden
         }
+        .toAllowType-container {
+            display: inline-block; /* Display divs on the same line */
+            margin-right: 20px; /* Add some space between divs */
+    }
+
+    .radio-labels {
+            display: flex; /* Display radio labels in a row */
+            align-items: center; /* Center align radio labels vertically */
+    }
+
+    .radio-label {
+        margin-right: 10px;
+    }
     </style>
     <!--begin::Modal title-->
     <h2 class="text-center m-5">Create Project</h2>
@@ -610,8 +623,38 @@
                 <div data-kt-stepper-element="content" class="level-container">
                     <!--begin::Wrapper-->
                     <div class="row" style="width: 100%;">
+                    <div class="col-md-12 fv-row">
+                    <div class="toAllowType-container">
+                        <label class="main-label fs-6 fw-semibold mb-2">Document size:</label>
+                        <div class="radio-labels">
+                            <label class="radio-label">
+                            <input type="radio" name="document_size" value="1">
+                            A3
+                            </label>
+                            <label class="radio-label">
+                            <input type="radio" name="document_size" value="2" checked>
+                           A4
+                        </div>
+                    </div>
+                    <div class="toAllowType-container">
+                        <label class="main-label fs-6 fw-semibold mb-2">Document Orientation:</label>
+                        <div class="radio-labels">
+                            <label class="radio-label">
+                            <input type="radio" name="document_orientation" value="1">
+                            Portrait
+                            </label>
+                            <label class="radio-label">
+                            <input type="radio" name="document_orientation" value="2" checked>
+                             Lanscape
+                            </label>
+                        </div>
+                    </div>
+                                    <!--end::Input-->
+                
+                                    <!--end::Input-->
+                    </div>
                         <div class="col-md-6 fv-row">
-                            <label class="fs-6 fw-semibold mb-2 required">Main Document </label><br>
+                            <label class="fs-6 fw-semibold mb-2 required">Main Document</label><br>
                             <div class="col-md-12 p-3 pdf_container input-group">
                                 <label class="row col-12 m-2 pdf-view row " for="pdf1">
                                     <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files

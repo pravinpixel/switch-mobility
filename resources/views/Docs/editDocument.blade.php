@@ -223,6 +223,7 @@ use Carbon\Carbon;
         color: blue;
         font-size: 15pt;
     }
+    
 </style>
 <title>VERTICAL TABS</title>
 </head>
@@ -298,6 +299,37 @@ use Carbon\Carbon;
                     <input type="hidden" value="" class="levelId" name="levelId">
                     <div style="color:red;display:none" id="filenotification">Please Upload a File</div>
                 </div>
+                <div class="col-md-12 fv-row">
+                    <div class="toAllowType-container" style="display:none">
+                        <label class="main-label fs-6 fw-semibold mb-2">Document size:</label>
+                        <div class="radio-labels">
+                            <label class="radio-label">
+                                <input type="radio" name="document_size" value="1" checked>
+                                A3
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="document_size" value="2" >
+                                A4
+                            </label>
+                        </div>
+                    </div>
+                    <div class="toAllowType-container" style="display:none">
+                        <label class="main-label fs-6 fw-semibold mb-2">Document Orientation:</label>
+                        <div class="radio-labels">
+                            <label class="radio-label">
+                                <input type="radio" name="document_orientation" value="1" checked>
+                                Portrait
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="document_orientation" value="2" >
+                                Landscape
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+               
+
                 <div class="col-md-12 fv-row">
                     <!--begin::Label-->
                     <input type="hidden" value="" class="statusdocumentId" name="statusdocumentId">
@@ -638,17 +670,17 @@ use Carbon\Carbon;
                             }
                             var daylebel = " days";
 
-                            if (completionDate<=1) {
+                            if (completionDate <= 1) {
                                 daylebel = " day";
                             }
 
                             var dateAr = val.due_date.split('-');
                             var cnewDate = dateAr[2] + '-' + dateAr[1] + '-' + dateAr[0].slice(-4);
                             var duDateAppend = cnewDate;
-                            console.log("new date Format"+duDateAppend);
+                            console.log("new date Format" + duDateAppend);
 
                             var badgeType = (dateSign == '-') ? "danger" : "success";
-                            duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate +daylebel+ '</span></span>';
+                            duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate + daylebel + '</span></span>';
                             $(".due_date_" + level).empty();
 
 
@@ -1081,12 +1113,14 @@ use Carbon\Carbon;
             console.log($(this).val());
             if ($(this).val() == 2 || $(this).val() == 3) {
                 $('.documentUploadDiv').css('display', 'block');
+                $('.toAllowType-container').css('display', 'block');
             } else {
                 $('.documentUploadDiv').css('display', 'none');
+                $('.toAllowType-container').css('display', 'none');
             }
         });
 
-        function isDownloadDocs(isApproverLevel, documentId,levelId) {
+        function isDownloadDocs(isApproverLevel, documentId, levelId) {
             console.log("well dhana");
             console.log(isApproverLevel);
 
@@ -1097,17 +1131,17 @@ use Carbon\Carbon;
                     method: 'post',
                     data: {
                         "_token": "{{ csrf_token() }}",
-                        documentId:documentId,
+                        documentId: documentId,
                         staus: 1,
                     },
                     success: function(result) {
-                       
+
 
                         var ProjectId1 = "{{ $details->id }}";
-                        if (result.status == 'success') {                  
-                                          
+                        if (result.status == 'success') {
+
                             get_level_data(levelId, ProjectId1);
-                        } 
+                        }
                     }
                 });
             }

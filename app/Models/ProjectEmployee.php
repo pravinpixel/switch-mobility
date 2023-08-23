@@ -16,4 +16,8 @@ class ProjectEmployee extends Model
     {
         return $this->hasOne('App\Models\ProjectLevels', 'project_level', 'level');
     }
+    public function project()
+    {
+        return $this->hasOne('App\Models\Project', 'id', 'project_id');
+    }
 }

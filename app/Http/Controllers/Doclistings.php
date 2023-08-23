@@ -39,7 +39,7 @@ class Doclistings extends Controller
 
         $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
 
-    
+
 
         $getmodels = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
         if ($empId) {
@@ -107,11 +107,11 @@ class Doclistings extends Controller
             $findmodels->whereIn('projects.id', $pandingDocumentModelIds);
         }
         if ($type == "overdue") {
-           
+
             $findmodels->whereIn('projects.id', $overDuemodelIds);
         }
         $findAllmodels = $findmodels->get();
-       
+
         $project = $this->projectLooping($findAllmodels);
         $employees = Employee::where(['is_active' => 1])->get();
         $departments = Department::where(['is_active' => 1])->get();
@@ -652,6 +652,14 @@ class Doclistings extends Controller
                     $sendMailfinalApproveProject = $this->finalApproveProject($projectId);
                 }
             } else {
+                $changeunApproveProjectStatus = Project::where('id', $projectId)->first();
+                if ($changeunApproveProjectStatus)
+                {
+                    $changeunApproveProjectStatus->current_status = 1;
+                    $changeunApproveProjectStatus->document_size = $request->document_size;
+                    $changeunApproveProjectStatus->document_orientation = $request->document_orientation;
+                    $changeunApproveProjectStatus->save();
+                }
 
                 if ($status == 2) {
 
@@ -701,7 +709,7 @@ class Doclistings extends Controller
                             // Resize the string to 5 characters
                             $fileOrgName = substr($inputString, 0, 5);
                             Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
-                            $fileName1 = $ticketNo."_".$filePart0 . '_' . $ed . "." . $filePart1;
+                            $fileName1 = $ticketNo . "_" . $filePart0 . '_' . $ed . "." . $filePart1;
 
 
                             //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
@@ -770,7 +778,7 @@ class Doclistings extends Controller
                             // Resize the string to 5 characters
                             $fileOrgName = substr($inputString, 0, 5);
                             Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
-                            $fileName1 = $ticketNo."_".$filePart0 . '_' . $ed . "." . $filePart1;
+                            $fileName1 = $ticketNo . "_" . $filePart0 . '_' . $ed . "." . $filePart1;
 
 
 
@@ -836,7 +844,7 @@ class Doclistings extends Controller
                     // Resize the string to 5 characters
                     $fileOrgName = substr($inputString, 0, 5);
                     Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
-                    $fileName1 = $ticketNo."_".$filePart0 . '_' . $ed . "." . $filePart1;
+                    $fileName1 = $ticketNo . "_" . $filePart0 . '_' . $ed . "." . $filePart1;
 
                     //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
                     Log::info('fileupload2 ->:-fileName1' . json_encode($fileName1));
@@ -1334,7 +1342,7 @@ class Doclistings extends Controller
             // Resize the string to 5 characters
             $fileOrgName = substr($inputString, 0, 5);
             Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
-            $fileName1 = $ticketNo . '_' .$filePart0 . '_' . $ed . "." . $filePart1;
+            $fileName1 = $ticketNo . '_' . $filePart0 . '_' . $ed . "." . $filePart1;
 
 
 

@@ -76,6 +76,8 @@ Route::group([
     Route::resource('employees', EmployeeController::class);
     Route::get('bulkUploadCreate', [EmployeeController::class, 'bulkUploadCreate'])->name('bulkUploadCreate');
     Route::post('bulkUploadStore', [EmployeeController::class, 'bulkUploadStore'])->name('bulkUploadStore');
+    Route::post('reAssignEmployee', [EmployeeController::class, 'reAssignEmployee'])->name('reAssignEmployee');
+    Route::post('reAssignEmployeeUpdate', [EmployeeController::class, 'reAssignEmployeeUpdate'])->name('reAssignEmployeeUpdate');
 
     Route::post('employeeValidation', [EmployeeController::class, 'employeeValidation'])->name('employeeValidation');
 
