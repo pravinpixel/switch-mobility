@@ -647,7 +647,7 @@ class EmployeeController extends Controller
             array_push($employeeDatas, $res);
         }
 
-        return view('employee.reAssignEmployee', compact('empId', 'actionType', 'responseDatas', 'employeeDatas'));
+        return view('Employee.reAssignEmployee', compact('empId', 'actionType', 'responseDatas', 'employeeDatas'));
     }
 
     public function reAssignEmployeeUpdate(Request $request)

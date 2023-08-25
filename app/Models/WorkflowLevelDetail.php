@@ -20,7 +20,7 @@ class WorkflowLevelDetail extends Model
     }
     public function workflowLevel()
     {
-        return $this->hasOne('App\Models\WorkflowLevels', 'id', 'workflow_level_id');
+        return $this->hasOne('App\Models\Workflowlevels', 'id', 'workflow_level_id');
     }
     public function workFlow()
     {
