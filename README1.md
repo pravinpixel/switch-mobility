@@ -2,47 +2,79 @@
 ## instalation
 step -1) php artisan migrate
 step-2) Add Spatie packages
-1) composer require spatie/laravel-permission.
-2)config>app.php to add
+        1) composer require spatie/laravel-permission
+        2)config>app.php to add
 
- 'providers' => [
-    // ...
-    Spatie\Permission\PermissionServiceProvider::class,
-];
-3)php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
-4) php artisan optimize:clear
-5)php artisan config:cache
+        'providers' => [
+            // ...
+            Spatie\Permission\PermissionServiceProvider::class,
+        ];
+        3)php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+        And
+        config>permission.php Add  'teams' => false,
+step-3)Following Cmd Run
+    1) php artisan optimize:clear
+    2)php artisan config:cache
+    3)php artisan config:clear
+    4) php artisan migrate
+    5) php artisan db:seed
+step -4)Alter Role Table Run Following Command
 
-6) php artisan migrate
-7) php artisan db:seed
-
-Step-3)to run permission Screen
-
-insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'department-view','web',NULL,NULL),(2,'designation-view','web',NULL,NULL),(3,'document-type-view','web',NULL,NULL),(4,'employee-view','web',NULL,NULL),(5,'workflow-view','web',NULL,NULL),(6,'project-view','web',NULL,NULL),(7,'role-view','web',NULL,NULL),(8,'user-view','web',NULL,NULL),(10,'department-create','web',NULL,NULL),(11,'department-edit','web',NULL,NULL),(12,'department-delete','web',NULL,NULL),(13,'designation-create','web',NULL,NULL),(14,'designation-edit','web',NULL,NULL),(15,'designation-delete','web',NULL,NULL),(16,'document-type-create','web',NULL,NULL),(17,'document-type-edit','web',NULL,NULL),(18,'document-type-delete','web',NULL,NULL),(19,'employee-create','web',NULL,NULL),(20,'employee-edit','web',NULL,NULL),(21,'employee-delete','web',NULL,NULL),(22,'project-create','web',NULL,NULL),(23,'project-edit','web',NULL,NULL),(24,'project-delete','web',NULL,NULL),(25,'workflow-create','web',NULL,NULL),(26,'workflow-edit','web',NULL,NULL),(27,'workflow-delete','web',NULL,NULL),(28,'role-create','web',NULL,NULL),(29,'role-edit','web',NULL,NULL),(30,'role-delete','web',NULL,NULL),(31,'user-create','web',NULL,NULL),(32,'user-edit','web',NULL,NULL),(33,'user-delete','web',NULL,NULL),(34,'department-upload','web',NULL,NULL),(35,'designation-upload','web',NULL,NULL),(36,'document-type-upload','web',NULL,NULL),(37,'employee-upload','web',NULL,NULL),(38,'workflow-upload','web',NULL,NULL),(39,'project-upload','web',NULL,NULL),(40,'role-upload','web',NULL,NULL),(41,'user-upload','web',NULL,NULL),(42,'department-download','web',NULL,NULL),(43,'designation-download','web',NULL,NULL),(44,'document-type-download','web',NULL,NULL),(45,'employee-download','web',NULL,NULL),(46,'workflow-download','web',NULL,NULL),(47,'project-download','web',NULL,NULL),(48,'role-download','web',NULL,NULL),(49,'user-download','web',NULL,NULL);
+        ALTER TABLE roles ADD authority_type INTEGER;
+     
 
 step 5)finally Ur Logged Id Default Admin Temp:
-1)user name:Admin
-2)password:1234
+            1)user name:Admin
+            2)password:1234
+
+INSERT INTO `permissions`(`name`, `guard_name`) VALUES ('dashboard-view','web');
+INSERT INTO `permissions`(`name`, `guard_name`) VALUES ('document-listing-view','web');
+INSERT INTO `permissions`(`name`, `guard_name`) VALUES ('document-listing-edit','web');
+
+DROP TABLE IF EXISTS `project_employees`;
+
+CREATE TABLE `project_employees` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL,
+  `level` int(11) DEFAULT NULL,
+  `employee_id` int(11) NOT NULL,
+  `type` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=210 DEFAULT CHARSET=utf8mb4;
 
 
+  ALTER TABLE project_document_details ADD project_id INTEGER;
+  ALTER TABLE project_document_details ADD upload_level INTEGER;
+  ALTER TABLE project_document_details ADD updated_by INTEGER;
+  ALTER TABLE project_document_details ADD is_latest INTEGER;
+
+INSERT INTO `permissions`(`name`, `guard_name`) VALUES ('datewise-report','web');
+INSERT INTO `permissions`(`name`, `guard_name`) VALUES ('projectwise-report','web');
+INSERT INTO `permissions`(`name`, `guard_name`) VALUES ('documentwise-report','web');
+INSERT INTO `permissions`(`name`, `guard_name`) VALUES ('userwise-report','web');
 
 
-Truncate Tables:
+04/04/23
 
+ ALTER TABLE projects ADD current_status INTEGER;
 
-TRUNCATE TABLE project_approvers;  
-TRUNCATE TABLE project_document_details; 
-TRUNCATE TABLE project_levels;  
-TRUNCATE TABLE project_documents; 
-TRUNCATE TABLE project_milestone;  
-TRUNCATE TABLE projects; 
+php artisan migrate --path=/database/migrations/2023_04_26_050057_create_project_document_first_stages_table.php  
+php artisan migrate --path=/database/migrations/2023_04_22_063651_create_project_document_status_by_levels_table.php  
+//test
+ 
+ALTER TABLE project_document_details
+ADD COLUMN is_downloaded INTEGER DEFAULT 0;
 
-TRUNCATE TABLE workflow_level_details;  
-TRUNCATE TABLE workflow_levels; 
-TRUNCATE TABLE workflows;
+ALTER TABLE project_document_details
+ADD COLUMN is_downloaded_time DATETIME DEFAULT NULL;
 
-TRUNCATE TABLE employees;   
-TRUNCATE TABLE document_types; 
+<======================================================>
+18.8.23
 
-ALTER TABLE roles
-ADD authority_type INTEGER;
+ALTER TABLE projects
+ADD COLUMN document_size INT DEFAULT 1,
+ADD COLUMN document_orientation INT DEFAULT 1;
+
+<======================================================>
