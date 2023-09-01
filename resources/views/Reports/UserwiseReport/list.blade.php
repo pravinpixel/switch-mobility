@@ -59,8 +59,8 @@
                         @endif
                         <div class="card-header border-0 p-3">
 
-                            <div class="card-title">
-                                <div class="row">
+                            <div class="card-title col-12">
+                                <div class="row col-12">
                                          
                                     <div class="col-md-3" id="workflowCodeField">
                                         <label class=" fs-6 fw-semibold  mb-2">Workflow Name & Code</label>

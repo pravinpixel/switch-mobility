@@ -302,7 +302,7 @@
         </div>
         <div id="kt_app_content" class="app-content flex-column-fluid">
             <div id="kt_app_content_container" class="app-container container-xxl">
-                <div class="card" style="width:1200px;margin:auto;">
+                <div class="card col-12" style="margin;:auto;">
                     @if (session('success'))
                     <div class="alert alert-success" role="alert">
                         {{ session('success') }}

@@ -169,6 +169,6 @@ Route::get('/', function () {
     return redirect(route('login'));
 });
 
-Auth::routes();
-
+// Auth::routes();
+Auth::routes(['reset' => false]);
 Route::get('tempOpen/{id}', [BasicController::class, 'tempOpen'])->name('tempOpen');

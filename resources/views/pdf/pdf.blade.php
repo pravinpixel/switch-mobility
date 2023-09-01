@@ -12,7 +12,7 @@
 <body style="height: 100%;margin:0">
     <div class="header" style="position: fixed;width: 100%;">
         <div class="top-bar" style="border: 2px solid black;background-color: white;padding: 10px 0 0 10px;">
-            <img src="{{$logo}}" alt="Left Image" style="width: 150px;display:inline-block;">
+            <img src="{{$logo}}" alt="Left Image" style="width: 150px;display:inline-block;margin-top: 7px;margin-right: 13px;">
             <h1 style="margin: 0 auto;display:inline-block">Online Approval Management</h1>
         </div>
         <div style="height:8%;padding: 5px;margin-top: 7px;">
@@ -57,37 +57,39 @@
 
 
 
-    <div class="footer" style="position: fixed;bottom: 0px;width: 100%;height:17.5%;border-style: solid;border-color: black;">
-        @for($i=0;$i<count($projectApprovers);$i++) <?php
-                                                    if ($i >= 6) {
-                                                        $marginStyle = '0px';
-                                                    } else {
-                                                        $marginStyle = '25px';
-                                                    }
-                                                    if ($i== 6||$i==0) {
-                                                        $marginleftStyle = '6px';
-                                                    } else {
-                                                        $marginleftStyle = '0px';
-                                                    }
-                                                    ?> 
-    <div class="row" style="margin-bottom:0px;display:inline-block;margin-left:<?php echo $marginleftStyle; ?>;margin-top:<?php echo $marginStyle; ?>;border:1px solid black;height:44%;width:15%">
+    <div class="footer" style="position: fixed; bottom: 0px; width: 100%; height: 17.5%; border-style: solid; border-color: black;">
+    @for($i = 0; $i < count($projectApprovers); $i++)
+    <?php
+    if ($i >= 6) {
+        $marginStyle = '0px';
+    } else {
+        $marginStyle = '25px';
+    }
+    if ($i == 6 || $i == 0) {
+        $marginleftStyle = '6px';
+    } else {
+        $marginleftStyle = '0px';
+    }
+    ?>
+    <div class="row" style="margin-bottom: 0px; display: inline-block; margin-left: <?php echo $marginleftStyle; ?>; margin-top: <?php echo $marginStyle; ?>; border: 1px solid black; height: 44%; width: 15%;">
 
-            <div style="border-bottom:2px;height:50%;">
-                <p style="font-size:8px">
-                    <img src="{{$projectApprovers[$i]['signImageWithPath']}}" width="80" height="30" style="margin:auto;margin-left:5px">
+        <div style="border-bottom: 2px; height: 50%;">
+            <p style="font-size: 8px; text-align: center;">
+                <img src="{{$projectApprovers[$i]['signImageWithPath']}}"  style="max-width: 100%; max-height: 30px; margin: auto; margin-left: 5px;">
+                <br>
+                <strong>{{$projectApprovers[$i]['designation']}}</strong>
                     <br>
-                    <b>{{$projectApprovers[$i]['designation']}}</b>
+                    <strong>Name:</strong> {{$projectApprovers[$i]['appproverName']}}
                     <br>
-
-                    <b>Name: </b>{{$projectApprovers[$i]['appproverName']}}
+                    <strong>Level:</strong> {{$projectApprovers[$i]['level']}}
                     <br>
-                    <b>Level: </b>{{$projectApprovers[$i]['level']}}
-
-                    <b> Date: </b>{{$projectApprovers[$i]['updatedate']}}
+                    <strong>Date:</strong> {{$projectApprovers[$i]['updatedate']}}
                 </p>
-            </div>
+        </div>
     </div>
     @endfor
+</div>
+
     </div>
 </body>
 

@@ -896,12 +896,17 @@ use Carbon\Carbon;
                                     versionAuxDocDiv1 += '</thead>';
                                     versionAuxDocDiv1 += ' <tbody>';
                                     versionAuxDocDiv1 += ' </tbody>';
+                                    if (data.aux_docs.length > 0) {
                                     $.each(data.aux_docs, function(key, val) {
                                         versionAuxDocDiv1 += '<tr>';
                                         versionAuxDocDiv1 += '<td>' + val.original_name + '</td>';
                                         versionAuxDocDiv1 += '<td><a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + val.document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a> Download</td>';
                                         versionAuxDocDiv1 += '</tr>';
                                     });
+                                }else {
+                                        // Display a "No Data Available" message if aux_docs is empty
+                                        versionAuxDocDiv1 = '<tr><td colspan="2">No Data Available</td></tr>';
+                                    }
                                     versionAuxDocDiv1 += ' </table>';
                                     versionAuxDocDiv1 += ' </br>';
                                     $(".auxdoc_append" + level).append(versionAuxDocDiv1);

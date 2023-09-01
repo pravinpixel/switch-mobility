@@ -6,6 +6,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException as AccessDeniedHttpException;
+
 class Handler extends ExceptionHandler
 {
     /**
@@ -42,7 +43,9 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof AccessDeniedHttpException) {
-            return response(view('errors.404'), 404);
+          
+            auth()->logout();
+            return redirect()->route('logout');
         }
         return parent::render($request, $exception);
     }

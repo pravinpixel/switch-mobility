@@ -402,7 +402,7 @@ use Carbon\Carbon;
                                 <td>
                                 <a target="_blank" class="btn switchPrimaryBtn  viewDocument btn-xs" title="View Document" id="{{$model->projectId}}"><i class="fas fa-eye text-white"></i> </a> View Document
                                 <a download="OriginalDocs" href="{{ asset('/projectDocuments/') }}<?php echo "/".$model->document_name; ?>" class="btn btn-warning btn-xs" title="Orginal Document Download" id="{{$model->id}}"><i class="las la-download" style=""></i></a> Download Orginal Document
-                                <a target="_blank" class="btn btn-success btn-xs actionDocs" title="Conversion Document Download" id="{{$model->id}}"><i class="las la-download"></i> </a> Download</td>
+                                <a target="_blank" class="btn btn-success btn-xs actionDocs" title="Approved Document Download" id="{{$model->id}}"><i class="las la-download"></i> </a> Download</td>
                             </tr>
                             @endforeach
 

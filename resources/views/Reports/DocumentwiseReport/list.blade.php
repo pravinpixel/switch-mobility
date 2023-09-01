@@ -58,7 +58,7 @@
                     </div>
                     @endif
                     <div class="card-header border-0 p-3">
-                        <div class="">
+                        <div class="col-12">
                             <div class="row col-md-12">
 
                                 <div class="col-md-3" id="workflowCodeField">

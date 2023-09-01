@@ -460,43 +460,46 @@ class ApprovalListController extends Controller
             $PDFWriter = \PhpOffice\PhpWord\IOFactory::createWriter($Content, 'PDF');
             $PDFWriter->save($pdfPath);
         }
-
         $delimiter = '/';
 
         $lastPartFileName = Str::afterLast($pdfPath, $delimiter);
         $substringBeforeDotFileName = ($filenameWithoutExtension) ? $filenameWithoutExtension : Str::before($lastPartFileName, '.');
-
-
+        
         $imagePath = public_path('DocumentImages/' . $id);
         if (File::exists($imagePath)) {
-
             File::deleteDirectory($imagePath);
         }
         File::makeDirectory($imagePath, $mode = 0777, true, true);
-
+        $command = "gs -dNOPAUSE -sDEVICE=jpeg -r600 -o {$imagePath}/img%d.jpeg {$pdfPath}";
+        shell_exec($command);
         $imagick = new Imagick();
         $imagick->readImage($pdfPath);
-        $imagick->setImageFormat('png');
-
-
+        
         foreach ($imagick as $pageNumber => $page) {
-            // Set the image quality (0-100, where 100 is the best quality)
-            //$page->setResolution(300, 300);
+            // Set the image format and quality
+            $page->setImageFormat('jpeg'); // Change format to JPEG
             $page->setImageCompressionQuality(100);
+        
+            // Set a higher resolution (DPI)
+            $page->setResolution(600, 600);
+        
+            // Enable anti-aliasing
+         
+        
             // Save each page as an image
-            $currentPath = 'img' . ($pageNumber + 1) . '.png';
+            $currentPath = 'img' . ($pageNumber + 1) . '.jpeg'; // Adjust the file format
             $imgpath1 = $imagePath . '/' . $currentPath;
-
+        
             $page->writeImage($imgpath1);
-
-            // $model = new Accounting();
-            // $model->path = $currentPath;
-            // $model->save();
         }
+        
         // Close the Imagick object
         $imagick->clear();
         $imagick->destroy();
-        $imagefiles = File::allFiles($imagePath);
+        
+        $imagefiles = File::allFiles($imagePath);      
+          
+
         $pdfPath1 = storage_path('app/finalPdf');
 
         if (File::exists($pdfPath1)) {
@@ -576,7 +579,7 @@ class ApprovalListController extends Controller
         Log::info("passedLine no 132 ter ");
         $dFilename = $substringBeforeDotFileName . '.pdf';
 
-        return $pdf->Output($dFilename, 'D');
+        return $pdf->Output($dFilename, 'I');
     }
     private function saveImageFromDrawing(Drawing $drawing, $uploadFolder)
     {

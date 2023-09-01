@@ -58,8 +58,8 @@
                     </div>
                     @endif
                     <div class="card-header border-0 p-3">
-                        <div class="">
-                            <div class="row col-md-12">
+                        <div class="col-md-12">
+                            <div class="row col-12">
                                 <div class="col-md-3" style="display:inline;" id="workflowCodeField">
                                     <!--begin::Label-->
                                     <label class="fs-6 fw-semibold mb-2">Workflow Name & Code</label>

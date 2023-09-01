@@ -254,7 +254,7 @@
                                 <!--begin::Col-->
                                 <div class="col-md-3">
                                     <label class="form-label text-dark ">Project Code / Name </label>
-                                    <select class="form-select form-select-solid mainFilters projectId" name="project_code_name" data-kt-select2="true" data-placeholder="Project Code / Name" data-allow-clear="true" id="projectCode">
+                                    <select class="form-select form-select-solid mainFilters projectId" name="project_code_name" data-kt-select2="true" data-placeholder="Project Code / Name"  id="projectCode">
                                         <option></option>
                                         @foreach ($projects_all as $project)
                                         <option value="{{ $project['id'] }}">
@@ -266,7 +266,7 @@
                                 <!--begin::Col-->
                                 <div class="col-md-2">
                                     <label class="fs-6 form-label fw-bold text-dark "> Initiator </label>
-                                    <select class="form-select form-select-solid mainFilters initiatorId " name="initiater" data-kt-select2="true" data-placeholder="Select Initiator" data-allow-clear="true" id="initiator">
+                                    <select class="form-select form-select-solid mainFilters initiatorId " name="initiater" data-kt-select2="true" data-placeholder="Select Initiator" id="initiator">
                                         <option></option>
                                         @foreach ($initiaters as $employee)
                                         <?php
@@ -522,11 +522,7 @@
             paramName = "dates";
             nextpart = true;
 
-        } else {
-
-            paramName = "";
-            nextpart = true;
-        }
+        } 
 
         if (nextpart == true) {
             $.ajax({

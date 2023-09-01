@@ -34,7 +34,7 @@
                         <section id="team" class="pb-5">
                             <div class="container">
                                 <h5 class="section-title h1">Overview</h5>
-                                <div class="row">
+                                <div class="row responsive-card">
                                     <div class="col-2 d-flex">
                                         <!--begin::Items-->
                                         <a class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5"  href="{{url('projects')}}" style="border: none;border-top:5px solid #3565ed">
@@ -203,12 +203,12 @@
                                 </div>
                                 <br>
 
-                                <div class="col-md-12" style=" display: flex;justify-content: center;">
-                                    <div class="col-md-6">
+                                <div class="col-md-12 " style=" display: flex;justify-content: center;flex-wrap:wrap;">
+                                    <div class="w-auto">
                                         <!-- <h1 class="text-center">Laravel 9 Dynamic Bar Chart Example - Techsolutionstuff</h1> -->
                                         <div id="barchart_material" style="width: 500px; height: 400px;"></div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="w-auto">
                                         <!-- <h1 class="text-center">Laravel 9 Dynamic Bar Chart Example - Techsolutionstuff</h1> -->
                                         <div id="barchart_material1" style="width: 500px; height: 400px;"></div>
                                     </div>
@@ -420,6 +420,18 @@
 </div>
 </section>
 <!-- Team -->
+<script>
+    
+</script>
+<style>
+     .responsive-card {
+        row-gap: 10px;
+     }
+    .responsive-card > div{
+     min-width: 120px !important;
+
+    }
+</style>
 @endsection
 <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.3.1/echarts.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
