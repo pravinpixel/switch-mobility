@@ -1,4 +1,5 @@
 $(document).ready(
+    
     function () {
 
         $("#searchInput").on("keyup keypress input", function () {
@@ -113,3 +114,23 @@ function workFlowType(type) {
         $('.fullWorkflow .designation ').attr('required', true);
     }
 }
+$(window).keydown(function(event) {
+
+    if (event.keyCode == 13) {
+        console.log("not hit enter button");
+        event.preventDefault();           
+        return false;
+    }
+});
+
+$(document).ready(function () {
+    $("form").submit(function(event) {
+
+            $("[data-kt-users-modal-action]").attr("data-kt-indicator", "on");
+            setTimeout(function() {
+                if ($(".notifyAlert").is(":visible")) {
+                    $("[data-kt-users-modal-action]").removeAttr("data-kt-indicator");
+                }
+            }, 500);
+    });
+});

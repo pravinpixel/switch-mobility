@@ -37980,7 +37980,25 @@ code:not([class*="language-"]) {
     --bs-table-active-bg: var(--kt-table-active-bg);
     --bs-table-hover-color: var(--kt-table-hover-color);
     --bs-table-hover-bg: var(--kt-table-hover-bg);
+   
 }
+/* // dhanaWrited */
+.levelReporttable {
+    border-collapse: collapse;
+   
+}
+
+.levelReporttable th, .levelReporttable  td {
+    border: 0.5px solid #dfd9d9;
+    padding: 8px;
+    text-align: left;
+
+    /* Set the desired width for all table cells */
+    width: 150px!important; /* Adjust the value as needed */
+    /* You can also use other units like percentages, ems, or pixels */
+}
+
+
 .table > :not(:first-child) {
     border-color: transparent;
     border-width: 0;
@@ -52379,5 +52397,5 @@ button[data-toggle="collapse"][aria-expanded="true"]{
    color:white;
   }
   .add-button-datatable{
-    display: none !important;
+   display: none !important; /* test */
   }

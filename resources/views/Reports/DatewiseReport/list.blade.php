@@ -131,6 +131,8 @@
                                     <th>Workflow Code</th>
                                     <th>Project Code</th>
                                     <th>Project Name</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
                                     <th>Initiator</th>
                                     <th>Department</th>
                                     <th>Status</th>
@@ -235,13 +237,15 @@
                                 var department = val.department;
                                 var projectId = val.projectId;
                                 var activeStatus = val.status;
+                                var startDate = val.startDate;
+                                var endDate = val.endDate;
 
                                 var editurl = '{{ route("viewDocListing", ":id") }}';
                                 editurl = editurl.replace(':id', projectId);
                                 var viewBtn = '<div id=' + projectId + ' class="btn switchPrimaryBtn  viewDocs">View</div>';
 
 
-                                table.row.add([ workflowName, workflowCode,projectCode, projectName, initiater, department, activeStatus, viewBtn]).draw();
+                                table.row.add([ workflowName, workflowCode,projectCode, projectName,startDate,endDate, initiater, department, activeStatus, viewBtn]).draw();
                             });
                         },
                         error: function() {

@@ -63,6 +63,7 @@ class ApprovalListController extends Controller
     {
 
         $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+      
 
         $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
         if ($empId) {
@@ -260,7 +261,7 @@ class ApprovalListController extends Controller
         // $writer->save(public_path('temp/file1.pdf'));
         $uploadFolder = public_path('uploads');
         if (!File::exists($uploadFolder)) {
-            mkdir($$uploadFolder . '/', 0777, true);
+            mkdir($uploadFolder . '/', 0777, true);
         }
         $id = $request->id;
         $model = ProjectDocumentDetail::with('documentName')->where('project_doc_id', $id)

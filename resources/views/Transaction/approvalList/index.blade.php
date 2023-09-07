@@ -266,6 +266,9 @@
                                     <th class="min-w-125px">Ticket No</th>
                                     <th class="min-w-125px">Work Flow Code & Name</th>
                                     <th class="min-w-125px">Project Code & Name</th>
+                                    <th class="min-w-125px">start Date </th>
+                                    <th class="min-w-125px">End Date </th>
+
                                     <th class="min-w-125px">Initiator</th>
                                     <th class="min-w-125px">Department</th>
                                     <th class="">Action</th>
@@ -286,6 +289,9 @@
                                     <td>{{ $project['ticket_no'] }}</td>
                                     <td>{{ $WorkFlow['workflow_name'] . ' & ' . $WorkFlow['workflow_code'] }}</td>
                                     <td>{{ $project['project_name'] . ' & '. $project['project_code'] }}</td>
+                                    <td>{{ date('d-m-Y', strtotime($project['start_date'])) }}</td>
+                                    <td>{{ date('d-m-Y', strtotime($project['end_date'])) }}</td>
+                                   
                                     <td>{{ $initiator['first_name'] . ' ' . $initiator['last_name'] }}</td>
                                     <td>{{ $department['name'] }}</td>
                                     <td>
@@ -353,11 +359,12 @@
                         var wfCodeandwfName = val.workflowName;
 
                         var projectId = val.projectId;
-
-
+                        var startDate = val.startDate;
+                        var endDate = val.endDate;
+                        console.log(startDate,endDate);
                         var act = '<a id="' + projectId + '" screen="view" class="actionDocs badge switchPrimaryBtn" style=";cursor: pointer;">View Approved Docs</a>';
 
-                        table.row.add([ticketNo, wfCodeandwfName, projectCodeandName, initiator, deptName, act]).draw();
+                        table.row.add([ticketNo, wfCodeandwfName, projectCodeandName, startDate, endDate, initiator, deptName, act]).draw();
 
 
                         projectFilter.append('<option value="' + projectId + '">' + projectCodeandName + '</option>');
@@ -399,11 +406,13 @@
 
                         var projectId = val.projectId;
 
-
+                        var startDate = val.startDate;
+                        var endDate = val.endDate;
+                        console.log(startDate,endDate);
                         var act = '<a id="' + projectId + '" screen="view" class="actionDocs badge switchPrimaryBtn" style=";cursor: pointer;">View Approved Docs</a>';
 
                         act += '</span>';
-                        table.row.add([ticketNo, wfCodeandwfName, projectCodeandName, initiator, deptName, act]).draw();
+                        table.row.add([ticketNo, wfCodeandwfName, projectCodeandName,startDate, endDate, initiator, deptName, act]).draw();
 
 
 
@@ -534,10 +543,13 @@
                         var projectId = val.projectId;
                         var isInitiator = (val.initiatorStatus == "yes") ? 1 : 0;
                         var isApprover = (val.approverStatus == "yes") ? 1 : 0;
+                        var pStartDate = formatedDate(val.start_date);
+                        var pEndDate = formatedDate(val.end_date);
+                     
 
                         var act = '<a id="' + projectId + '" screen="view" class="actionDocs badge switchPrimaryBtn" style=";cursor: pointer;">View Approved Docs</a>';
 
-                        table.row.add([ticketNo, wfName + ' & ' + wfCode, projectName + ' & ' + projectCode,
+                        table.row.add([ticketNo, wfName + ' & ' + wfCode, projectName + ' & ' + projectCode,pStartDate, pEndDate,
                             initiator, deptName, act
                         ]).draw();
                     });
@@ -554,6 +566,15 @@
 
     });
 
+    function formatedDate(date) {
+            const inputDate = date;
+            const parts = inputDate.split("-");
+            const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;  
+
+            return formattedDate;
+            // Output: "1-8-23"
+
+        }
     $(document).on('change click', '.filterDeptAndDes', function() {
         console.log("well");
         $('.filterDeptAndDes').not($(this)).val('').trigger('change');

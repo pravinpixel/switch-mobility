@@ -18,6 +18,7 @@ use App\Models\ProjectMilestone;
 use App\Models\Workflow;
 use App\Models\WorkflowLevelDetail;
 use App\Models\Workflowlevels;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -175,7 +176,7 @@ class Doclistings extends Controller
     {
         $startDate = $request->start_date;
         $endDate = $request->end_date;
-        $model = Project::select('projects.id', 'projects.id as projectId', 'projects.ticket_no', 'projects.project_code', 'projects.project_name', 'workflows.workflow_code', 'workflows.workflow_name', 'employees.first_name', 'departments.name as deptName');
+        $model = Project::select('projects.id', 'projects.start_date', 'projects.end_date', 'projects.id as projectId', 'projects.ticket_no', 'projects.project_code', 'projects.project_name', 'workflows.workflow_code', 'workflows.workflow_name', 'employees.first_name', 'departments.name as deptName');
         $model->leftjoin('employees', 'employees.id', '=', 'projects.initiator_id');
         $model->leftjoin('departments', 'departments.id', '=', 'employees.department_id');
         $model->leftjoin('designations', 'designations.id', '=', 'employees.designation_id');
@@ -569,7 +570,7 @@ class Doclistings extends Controller
         $response = ['ApproverExactLevel' => $ApproverExactLevel, 'main_docs' => $mainAreaDocument, 'aux_docs' => $auxdocument, 'lastLevel' => $lastLevel, 'approverLevels' => $approverLevels];
         return response()->json($response);
     }
-
+    //approve docs
     public function updatelevelwiseDocumentStatus(Request $request)
     {
 
@@ -653,8 +654,7 @@ class Doclistings extends Controller
                 }
             } else {
                 $changeunApproveProjectStatus = Project::where('id', $projectId)->first();
-                if ($changeunApproveProjectStatus)
-                {
+                if ($changeunApproveProjectStatus) {
                     $changeunApproveProjectStatus->current_status = 1;
                     $changeunApproveProjectStatus->document_size = $request->document_size;
                     $changeunApproveProjectStatus->document_orientation = $request->document_orientation;
@@ -1269,13 +1269,25 @@ class Doclistings extends Controller
 
     public function UpdateToStatusLevelModel($projectId, $level, $documentId, $status)
     {
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
         $levelModel = ProjectDocumentStatusByLevel::where('project_id', $projectId)
             ->where('level_id', $level)
             ->where('doc_id', $documentId)
             ->first();
 
         if ($levelModel) {
+            if ($status == 4) {
+                $levelModel->approved_date = Carbon::now();
+                if ($empId) {
+                    $levelModel->approver_id = $empId;
+                }
+            }else{
+                $levelModel->approver_id = null;
+                $levelModel->approved_date = null;
+            }
             $levelModel->status = $status;
+            $levelModel->status = $status;
+
             $levelModel->save();
             return $levelModel;
         } else {
@@ -1460,8 +1472,10 @@ class Doclistings extends Controller
             $initiaterName = $employeeModel->first_name . ' ' . $employeeModel->middle_name . ' ' . $employeeModel->last_name;
             $departmentModel = $employeeModel->department;
             $department = $departmentModel->name;
+            $projectStartDate = formatDateInActualView($model->start_date);
+            $projectEndDate = formatDateInActualView($model->end_date);
 
-            $response = ['projectId' => $model->id, 'department' => $department, 'ticketNo' => $ticket_no, 'projectName' => $projectName, 'workflowName' => $workflowName, 'initiaterName' => $initiaterName];
+            $response = ['startDate' => $projectStartDate, 'endDate' => $projectEndDate, 'projectId' => $model->id, 'department' => $department, 'ticketNo' => $ticket_no, 'projectName' => $projectName, 'workflowName' => $workflowName, 'initiaterName' => $initiaterName];
             return $response;
         });
         return response()->json(['datas' => $entities]);
@@ -1498,8 +1512,10 @@ class Doclistings extends Controller
             $initiaterName = $employeeModel->first_name . ' ' . $employeeModel->middle_name . ' ' . $employeeModel->last_name;
             $departmentModel = $employeeModel->department;
             $department = $departmentModel->name;
+            $projectStartDate = formatDateInActualView($model->start_date);
+            $projectEndDate = formatDateInActualView($model->end_date);
 
-            $response = ['projectId' => $model->id, 'department' => $department, 'ticketNo' => $ticket_no, 'projectName' => $projectName, 'workflowName' => $workflowName, 'initiaterName' => $initiaterName];
+            $response = ['startDate' => $projectStartDate, "endDate" => $projectEndDate, 'projectId' => $model->id, 'department' => $department, 'ticketNo' => $ticket_no, 'projectName' => $projectName, 'workflowName' => $workflowName, 'initiaterName' => $initiaterName];
             return $response;
         });
 

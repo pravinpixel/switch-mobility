@@ -141,6 +141,9 @@ class ProjectwiseController extends Controller
             $projectId = $model->id;
             $projectCode = $model->project_code;
             $projectName = $model->project_name;
+            $projectStartDate = formatDateInActualView($model->start_date);
+            $projectEndDate = formatDateInActualView($model->end_date);
+         
             $ticketNo = $model->ticket_no;
 
             $workflowId = $workflowModel->id;
@@ -149,7 +152,7 @@ class ProjectwiseController extends Controller
             $workflowLevel = $workflowModel->total_levels;
             $initiater = $employeeModel->first_name . " " . $employeeModel->last_name;
             $department = ($departmentModel) ? $departmentModel->name : "";
-            $data = ['status'=>$status,'ticketNo' => $ticketNo, 'workflowId' => $workflowId, 'noOfDays' => $noOfDays, 'dueDate' => $model->end_date, 'workflowLevel' => $workflowLevel, 'projectId' => $projectId, 'workflowName' => $workflowName, 'projectCode' => $projectCode, 'projectName' => $projectName, 'workflowCode' => $workflowCode, 'initiater' => $initiater, 'department' => $department];
+            $data = ['startDate'=>$projectStartDate,"endDate"=>$projectEndDate,'status'=>$status,'ticketNo' => $ticketNo, 'workflowId' => $workflowId, 'noOfDays' => $noOfDays, 'dueDate' => $model->end_date, 'workflowLevel' => $workflowLevel, 'projectId' => $projectId, 'workflowName' => $workflowName, 'projectCode' => $projectCode, 'projectName' => $projectName, 'workflowCode' => $workflowCode, 'initiater' => $initiater, 'department' => $department];
 
             return $data;
         });

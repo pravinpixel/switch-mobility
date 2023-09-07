@@ -706,7 +706,7 @@ use Carbon\Carbon;
                             } else {
                                 var profile = 'icon-5359553_960_720.png';
                             }
-                            $(".image_append" + level).append('<figure><img src="' + baseUrl + '/' + profile + '" class="rounded"  width="50" height="50"><figcaption  style="white-space: normal;width:300px;">[' + val.first_name + ' ,' + val.desName + ']&nbsp;</figcaption></figure>');
+                            $(".image_append" + level).append('<figure><img src="' + baseUrl + '/' + profile + '" class="rounded"  width="50" height="50"><figcaption  style="white-space: normal;width:300px;">[' + val.employee_full_name + ' ,' + val.desName + ']&nbsp;</figcaption></figure>');
                         });
                         $.ajax({
                             url: "{{ url('getlevelwiseDocument') }}",

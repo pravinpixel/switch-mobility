@@ -286,7 +286,7 @@ class ProjectController extends Controller
                         ->first();
                     $allowDeleteDocs = false;
                     if ($PE && $MainDocumentCount != 0) {
-                       
+
                         $allowDeleteDocs = true;
                     }
                     if ($PE && $request->isDeletedOldMainDocument == 0) {
@@ -612,7 +612,7 @@ class ProjectController extends Controller
     {
         $id = $request->project_id;
         $level = $request->level;
-        $projectDataWithLevelId = Project::select('project_levels.priority', 'project_levels.due_date', 'employees.first_name', 'designations.name as desName', 'employees.profile_image', 'employees.last_name')
+        $projectDataWithLevelId = Project::select('project_levels.priority', 'project_levels.due_date', 'employees.first_name', 'designations.name as desName', 'employees.profile_image', 'employees.last_name',DB::raw("CONCAT(employees.first_name, ' ', COALESCE(employees.middle_name, ''), ' ', employees.last_name) AS employee_full_name"))
             //->leftjoin('project_milestones', 'project_milestones.project_id', '=', 'projects.id')
             ->leftjoin('project_levels', 'project_levels.project_id', '=', 'projects.id')
             ->leftjoin('project_approvers', 'project_approvers.project_level_id', '=', 'project_levels.id')
@@ -1119,5 +1119,47 @@ class ProjectController extends Controller
         return ProjectDocumentStatusByLevel::where('project_id', $projectId)->where('level_id', $levelId)->first();
     }
 
-    
+    public function getProjectModelsByWfId($wfId)
+    {
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+
+        $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+        $models->whereHas('workflow', function ($q) use ($wfId) {
+
+            $q->where('id', '=', $wfId);
+        });
+        if ($empId) {
+            $models->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
+        }
+
+        $models->whereNull('deleted_at');
+        $models1 = $models->get();
+       return $models1;
+    }
+    public function getMaindocumentFileNameById($projectId){
+       return projectDocument::where('project_id',$projectId)->where('type',1)->first();
+    }
+    public function getProjectLevelByProjectId($projectId){
+       return ProjectLevels::where('project_id', $projectId)->get();
+    }
+    public function getProjectLevelStausBylevelIdandProjectId($projectId,$levelId){
+        return ProjectDocumentStatusByLevel::where('project_id', $projectId)
+        ->where('level_id', $levelId)
+        ->first();
+     }
+     public function getProjectLevelApproverByProjectIdAndLevelId($projectId, $levelId)
+     {
+ 
+        return ProjectApprover::select(DB::raw("CONCAT(first_name, ' ', COALESCE(middle_name, ''), ' ', last_name) AS employee_name"))
+             ->leftjoin('project_levels', 'project_levels.id', 'project_approvers.project_level_id')
+             ->leftjoin('employees', 'employees.id', 'project_approvers.approver_id')
+             ->where('project_level', $levelId)
+             ->where('project_levels.project_id', $projectId)
+             ->first();
+          
+     }
 }

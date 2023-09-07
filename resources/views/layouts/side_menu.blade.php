@@ -339,6 +339,20 @@ $currentRoute = \Route::currentRouteName();
 						<!--end:Menu link-->
 					</div>
 					@endif
+					@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('datewise-report'))
+					<div class="menu-item">
+						<!--begin:Menu link-->
+						<a class="menu-link {{request()->is('levelReportIndex')?'active' :''}}" href="{{url('levelReportIndex')}}">
+							<span class="menu-icon">
+								<span class="svg-icon svg-icon-2">
+									<i class="fas fa-calendar"></i>
+								</span>
+							</span>
+							<span class="menu-title">Level Report</span>
+						</a>
+						<!--end:Menu link-->
+					</div>
+					@endif
 				</div>
 				<!--end::Menu-->
 			</div>

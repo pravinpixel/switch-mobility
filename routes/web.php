@@ -13,6 +13,7 @@ use App\Http\Controllers\Masters\DesignationController;
 use App\Http\Controllers\Masters\DocumentTypeController;
 use App\Http\Controllers\Reports\DatewiseReportController;
 use App\Http\Controllers\Reports\DocumentwiseReportController;
+use App\Http\Controllers\Reports\LevelReportController;
 use App\Http\Controllers\Reports\ProjectwiseController;
 use App\Http\Controllers\Reports\UserwiseReportController;
 use App\Http\Controllers\settings\RolesController;
@@ -31,7 +32,7 @@ use Illuminate\Support\Facades\Route;
 
 // Department
 Route::group([
-    'middleware' => ['auth','is_admin','web']
+    'middleware' => ['auth', 'is_admin', 'web']
 ], function () {
     Route::get('home', [HomeController::class, 'adminHome'])->name('home');
     Route::get('doclistingIndex/{type}', [Doclistings::class, 'filterindex'])->name('doclistingIndex');
@@ -46,7 +47,7 @@ Route::group([
     Route::post('docListingSearch', [Doclistings::class, 'docListingSearch'])->name('docListingSearch');
     Route::post('Search', [Doclistings::class, 'Search'])->name('Search')->middleware('is_admin');
     Route::resource('department', DepartmentController::class);
-    
+
     Route::get('getDepartmentListData', [DepartmentController::class, 'getDepartmentListData'])->name('getDepartmentListData');
     Route::get('getDesignationListData', [DesignationController::class, 'getDesignationListData']);
     Route::get('getEmployeeListData', [EmployeeController::class, 'getEmployeeListData']);
@@ -56,7 +57,7 @@ Route::group([
 
     Route::post('getProjectByWorkflow', [Doclistings::class, 'getProjectByWorkflow'])->name('getProjectByWorkflow');
     Route::post('getProjectById', [Doclistings::class, 'getProjectById'])->name('getProjectById');
-  
+
 
     Route::post('designationSearch', [DesignationController::class, 'designationSearch'])->name('designationSearch');
     Route::post('departmentValidation', [DepartmentController::class, 'departmentValidation'])->name('departmentValidation');
@@ -70,7 +71,7 @@ Route::group([
     Route::resource('designation', DesignationController::class);
     Route::post('changedDocumentTypeActiveStatus', [DocumentTypeController::class, 'changedDocumentTypeActiveStatus'])->name('changedDocumentTypeActiveStatus');
     Route::get('docTypeDetails', [DocumentTypeController::class, 'docTypeDetails'])->name('docTypeDetails');
-   // Route::get('documentTypeEdit/{id}', [DocumentTypeController::class, 'documentTypeEdit'])->name('documentTypeEdit');
+    // Route::get('documentTypeEdit/{id}', [DocumentTypeController::class, 'documentTypeEdit'])->name('documentTypeEdit');
 
     Route::resource('documentType', DocumentTypeController::class);
     Route::resource('employees', EmployeeController::class);
@@ -98,7 +99,7 @@ Route::group([
     Route::get('viewProject/{id}', [ProjectController::class, 'viewProject'])->name('viewProject')->middleware('is_admin');
 
     Route::post('viewDocListing', [Doclistings::class, 'viewDocListing'])->name('viewDocListing');
-    Route::post('editDocument',[Doclistings::class, 'editDocument'])->name('editDocument');
+    Route::post('editDocument', [Doclistings::class, 'editDocument'])->name('editDocument');
 
     Route::post('deleteDocument', [ProjectController::class, 'deleteDocument'])->name('deleteDocument')->middleware('is_admin');
     Route::post('getProjectDetailsById', [ProjectController::class, 'getProjectDetailsById'])->name('getProjectDetailsById')->middleware('is_admin');
@@ -112,7 +113,7 @@ Route::group([
 
     Route::post('getWorkflowById', [WorkflowController::class, 'getWorkflowById'])->name('getWorkflowById')->middleware('is_admin');
     Route::post('changeWorkflowActiveStatus', [WorkflowController::class, 'changeWorkflowActiveStatus'])->name('changeWorkflowActiveStatus');
-   
+
     Route::post('getWorkflowLevels', [WorkflowController::class, 'getWorkflowLevels'])->name('getWorkflowLevels')->middleware('is_admin');
     Route::post('workflowValidation', [WorkflowController::class, 'workflowValidation'])->name('workflowValidation');
 
@@ -122,31 +123,33 @@ Route::group([
     Route::resource('users', UserController::class);
     Route::post('rolesSearch', [RolesController::class, 'search'])->name('rolesSearch');
     Route::post('UserSearch', [UserController::class, 'search'])->name('UserSearch');
- 
+
     Route::post('getWorkflowByProjectId', [ProjectController::class, 'getWorkflowByProjectId'])->name('getWorkflowByProjectId');
 
     //reports
- Route::get('datewiseReportIndex', [DatewiseReportController::class, 'index'])->name('datewiseReportIndex');
- Route::post('dateWiseReportSearchFilter', [DatewiseReportController::class, 'filterSearch'])->name('dateWiseReportSearchFilter');
- 
- 	//projectwiseReport 
-Route::get('projectwiseReportIndex', [ProjectwiseController::class, 'index'])->name('projectwiseReportIndex');
-Route::post('projectwiseReportSearchFilter', [ProjectwiseController::class, 'filterSearch'])->name('projectwiseReportSearchFilter');
+    Route::get('datewiseReportIndex', [DatewiseReportController::class, 'index'])->name('datewiseReportIndex');
+    Route::post('dateWiseReportSearchFilter', [DatewiseReportController::class, 'filterSearch'])->name('dateWiseReportSearchFilter');
 
- //docuWiseReport 
- Route::get('documentWiseReportIndex', [DocumentwiseReportController::class, 'index'])->name('documentWiseReportIndex');
- Route::post('documnetWiseReportSearchFilter', [DocumentwiseReportController::class, 'filterSearch'])->name('documnetWiseReportSearchFilter');
-//userwiseReport 
-Route::get('userWiseReportIndex', [UserwiseReportController::class, 'index'])->name('userWiseReportIndex');
-Route::post('userWiseReportSearchFilter', [UserwiseReportController::class, 'filterSearch'])->name('userWiseReportSearchFilter');
-//by dhana
-Route::post('getlevelwiseDocument', [Doclistings::class, 'getlevelwiseDocument'])->name('getlevelwiseDocument');
-Route::post('updatelevelwiseDocumentStatus', [Doclistings::class, 'updatelevelwiseDocumentStatus'])->name('updatelevelwiseDocumentStatus');
+    //projectwiseReport 
+    Route::get('projectwiseReportIndex', [ProjectwiseController::class, 'index'])->name('projectwiseReportIndex');
+    Route::post('projectwiseReportSearchFilter', [ProjectwiseController::class, 'filterSearch'])->name('projectwiseReportSearchFilter');
 
-Route::get('AssignedProject/{id}', [ProjectController::class, 'show'])->name('AssignedProject');
+    //docuWiseReport 
+    Route::get('documentWiseReportIndex', [DocumentwiseReportController::class, 'index'])->name('documentWiseReportIndex');
+    Route::post('documnetWiseReportSearchFilter', [DocumentwiseReportController::class, 'filterSearch'])->name('documnetWiseReportSearchFilter');
+    //userwiseReport 
+    Route::get('userWiseReportIndex', [UserwiseReportController::class, 'index'])->name('userWiseReportIndex');
+    Route::post('userWiseReportSearchFilter', [UserwiseReportController::class, 'filterSearch'])->name('userWiseReportSearchFilter');
+    //by dhana
+    Route::post('getlevelwiseDocument', [Doclistings::class, 'getlevelwiseDocument'])->name('getlevelwiseDocument');
+    Route::post('updatelevelwiseDocumentStatus', [Doclistings::class, 'updatelevelwiseDocumentStatus'])->name('updatelevelwiseDocumentStatus');
 
-Route::post('approverDownloadDocs', [Doclistings::class, 'approverDownloadDocs'])->name('approverDownloadDocs');
-});
+    Route::get('AssignedProject/{id}', [ProjectController::class, 'show'])->name('AssignedProject');
+
+    Route::post('approverDownloadDocs', [Doclistings::class, 'approverDownloadDocs'])->name('approverDownloadDocs');
+
+    Route::get('levelReportIndex', [LevelReportController::class, 'index'])->name('levelReportIndex');
+
 
 //Department
 Route::post('departmentEdit', [DepartmentController::class, 'departmentEdit'])->name('departmentEdit');
@@ -162,9 +165,10 @@ Route::post('userEdit', [UserController::class, 'userEdit'])->name('userEdit');
 
 //Approval List
 Route::get('approvalListIndex', [ApprovalListController::class, 'index'])->name('approvalListIndex');
- Route::post('approvedDocsView', [ApprovalListController::class, 'approvedDocsView'])->name('approvedDocsView');
- Route::post('approvedDocsDownload', [ApprovalListController::class, 'approvedDocsDownload'])->name('approvedDocsDownload');
+Route::post('approvedDocsView', [ApprovalListController::class, 'approvedDocsView'])->name('approvedDocsView');
+Route::post('approvedDocsDownload', [ApprovalListController::class, 'approvedDocsDownload'])->name('approvedDocsDownload');
 
+});
 Route::get('/', function () {
     return redirect(route('login'));
 });

@@ -271,6 +271,8 @@
                                     <th class="min-w-125px">Ticket No</th>
                                     <th class="min-w-125px">Work Flow Name & Code </th>
                                     <th class="min-w-125px">Project Name & Code</th>
+                                    <th class="min-w-125px">start Date </th>
+                                    <th class="min-w-125px">End Date </th>
 
                                     <th class="min-w-125px">Initiator</th>
                                     <th class="min-w-125px">Department</th>
@@ -298,7 +300,8 @@
                                     </td>
                                     <td>{{ $WorkFlow->workflow_name . ' & ' . $WorkFlow->workflow_code }}</td>
                                     <td>{{ $d->project_name . '&' . $d->project_code }}</td>
-
+                                    <td>{{ date('d-m-Y', strtotime($d->start_date)) }}</td>
+                                    <td>{{ date('d-m-Y', strtotime($d->end_date)) }}</td>
                                     <td>{{ $initiator->first_name .' ' . $initiator->middle_name .' ' . $initiator->last_name }}</td>
                                     <td>{{ $department->name }}</td>
                                     <td>
@@ -432,7 +435,8 @@
 
                         var projectId = val.projectId;
 
-
+                        var startDate = val.startDate;
+                        var endDate = val.endDate;
                         var act = '<span>';
                         act += '<div style = "display:inline" id="' + projectId +
                             '" class="viewDocument" title="View Document"><i class="fa-solid fa-eye" style="color:blue"></i></div>';
@@ -441,7 +445,7 @@
                                 '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:blue"></i></div>';
                         }
                         act += '</span>';
-                        table.row.add([ticketNo, wfCodeandwfName, projectCodeandName, initiator, deptName, act]).draw();
+                        table.row.add([ticketNo, wfCodeandwfName, projectCodeandName, startDate, endDate, initiator, deptName, act]).draw();
 
 
                         projectFilter.append('<option value="' + projectId + '">' + projectCodeandName + '</option>');
@@ -504,7 +508,7 @@
         $('.projectFilter').on('change', function() {
             console.log("Project Onchange ");
             var selectedValue = $(this).val();
-          
+
             if (selectedValue) {
                 $('.start_date').val('');
                 $('.to_date').val('');
@@ -525,7 +529,7 @@
                     $('#users').val('').trigger('change');
                 }
             }
-           
+
             $.ajax({
                 url: "{{ route('getProjectById') }}",
                 type: 'ajax',
@@ -547,7 +551,8 @@
                         var wfCodeandwfName = val.workflowName;
 
                         var projectId = val.projectId;
-
+                        var startDate = val.startDate;
+                        var endDate = val.endDate;
 
                         var act = '<span>';
                         act += '<div style = "display:inline" id="' + projectId +
@@ -557,7 +562,7 @@
                                 '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:orange"></i></div>';
                         }
                         act += '</span>';
-                        table.row.add([ticketNo, wfCodeandwfName, projectCodeandName, initiator, deptName, act]).draw();
+                        table.row.add([ticketNo, wfCodeandwfName, projectCodeandName, startDate, endDate, initiator, deptName, act]).draw();
 
 
 
@@ -633,6 +638,10 @@
                         console.log("isInitiator" + isInitiator);
                         console.log("isApprover" + isApprover);
 
+                        var pStartDate = formatedDate(val.start_date);
+                        var pEndDate = formatedDate(val.end_date);
+                     
+
                         var act = '<span>';
                         act += '<div style = "display:inline" id="' + projectId +
                             '" class="viewDocument" title="View Document"><i class="fa-solid fa-eye" style="color:blue"></i></div>';
@@ -642,7 +651,7 @@
                                 '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:blue"></i></div>';
                         }
                         act += '</span>';
-                        table.row.add([ticketNo, wfCode + wfName, projectCode + projectName,
+                        table.row.add([ticketNo, wfCode + wfName, projectCode + projectName,pStartDate, pEndDate,
                             initiator, deptName, act
                         ]).draw();
                     });
@@ -654,6 +663,15 @@
             });
         }
 
+        function formatedDate(date) {
+            const inputDate = date;
+            const parts = inputDate.split("-");
+            const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;  
+
+            return formattedDate;
+            // Output: "1-8-23"
+
+        }
         $(document).on('change', '.ticket_no', function() {
             console.log("Ticket No Onchange ");
             var selectedValue = $(this).val();
@@ -684,7 +702,7 @@
                 }
                 $('.start_date').val('');
                 $('.to_date').val('');
-              
+
 
             }
         });
@@ -720,7 +738,7 @@
                 }
                 $('.start_date').val('');
                 $('.to_date').val('');
-              
+
 
             }
         });
@@ -753,7 +771,7 @@
                     $('.projectFilter').val('').trigger('change');
                 }
                 $('.start_date').val('');
-                $('.to_date').val('');              
+                $('.to_date').val('');
 
             }
         });
@@ -784,7 +802,7 @@
                     $('.projectFilter').val('').trigger('change');
                 }
                 $('.start_date').val('');
-                $('.to_date').val('');             
+                $('.to_date').val('');
 
             }
         });
