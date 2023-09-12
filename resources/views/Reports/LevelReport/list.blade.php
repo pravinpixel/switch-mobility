@@ -16,14 +16,17 @@
 
     table.table.dataTable td.levelTd {
         color: white !important;
-        max-width: 100px !important;
-        min-width: 100px !important;
- 
-   
+        max-width: 144px !important;
+        min-width: 144px !important;
+
+
     }
-table.table.dataTable  td , table.table.dataTable  th{
-    border: 1px solid lightgrey;
-}
+
+    table.table.dataTable td,
+    table.table.dataTable th {
+        border: 1px solid lightgrey;
+    }
+
     .view-button {
         display: inline-block;
         padding: 5px 10px;
@@ -119,12 +122,8 @@ table.table.dataTable  td , table.table.dataTable  th{
                                     <label class="fs-6 form-label fw-bold text-dark "> Project Code/Name </label>
                                     <!--begin::Select-->
                                     <select class="form-select projectFilter" name="project_code_name" data-kt-select2="true" data-placeholder="Project Code/Name" data-allow-clear="false" id="project_code_name">
-                                        <option></option>
-                                        @foreach ($projectDataModels as $projectDataModel)
-                                        <option value="{{ $projectDataModel['projectId'] }}">
-                                            {{ $projectDataModel['projectName'] }}({{ $projectDataModel['projectCode'] }})
-                                        </option>
-                                        @endforeach
+                                        <option value="">First Select Workflow</option>
+
                                     </select>
                                     <!--end::Select-->
                                 </div>
@@ -196,7 +195,7 @@ table.table.dataTable  td , table.table.dataTable  th{
                             <tbody class="text-gray-600 fw-semibold" id="tableContent">
                                 @foreach($tableDatas as $key=>$tableData)
                                 <tr>
-                                    <td>{{$tableData['wfName'] }}{{$key}}</td>
+                                    <td>{{$tableData['wfName'] }}</td>
                                     <td>{{$tableData['projectName']}}</td>
                                     <td>{{$tableData['docName']}}</td>
                                     <?php
@@ -223,98 +222,75 @@ table.table.dataTable  td , table.table.dataTable  th{
 
                                     <td class="@if($tableData['getLastLevel'] >= 1){{$level1BgColorStyle}}@endif levelTd">
                                         @if(isset($dynamicLevelStatusData['level1Status']) && isset($dynamicLevelRowResDatas['level1levelResData']))
-                                        {{$dynamicLevelRowResDatas['level1levelResData']}}
+                                        <?php echo $dynamicLevelRowResDatas['level1levelResData']; ?>
                                         @endif
 
-                                        @if(isset($dynamicLevelStatusId['level1StatusId'])&&$dynamicLevelStatusId['level1StatusId'] ==4)
-                                        <a class="view-button" id="{{ $tableData['projectId']}}">View</a>
-                                        @endif
+
                                     </td>
                                     <td class="@if($tableData['getLastLevel'] >= 2){{$level2BgColorStyle}}@endif levelTd">
                                         @if(isset($dynamicLevelStatusData['level2Status']) && isset($dynamicLevelRowResDatas['level2levelResData']))
-                                        {{$dynamicLevelRowResDatas['level2levelResData']}}
-                                        @endif
-                                        @if(isset($dynamicLevelStatusId['level2StatusId'])&&$dynamicLevelStatusId['level2StatusId'] ==4)
-                                        <a class="view-button" id="{{ $tableData['projectId']}}">View</a>
+                                        <?php echo $dynamicLevelRowResDatas['level2levelResData']; ?>
                                         @endif
                                     </td>
                                     <td class="@if($tableData['getLastLevel'] >= 3){{$level3BgColorStyle}}@endif levelTd">
 
                                         @if(isset($dynamicLevelStatusData['level3Status']) && isset($dynamicLevelRowResDatas['level3levelResData']))
-                                        {{$dynamicLevelRowResDatas['level3levelResData']}}
+                                        <?php echo $dynamicLevelRowResDatas['level3levelResData']; ?>
                                         @endif
-                                        @if(isset($dynamicLevelStatusId['level3StatusId'])&&$dynamicLevelStatusId['level3StatusId'] ==4)
-                                        <a class="view-button" id="{{ $tableData['projectId']}}">View</a>
-                                        @endif
+
                                     </td>
                                     <td class="@if($tableData['getLastLevel'] >= 4){{$level4BgColorStyle}}@endif levelTd">
 
                                         @if(isset($dynamicLevelStatusData['level4Status']) && isset($dynamicLevelRowResDatas['level4levelResData']))
-                                        {{$dynamicLevelRowResDatas['level4levelResData']}}
+                                        <?php echo $dynamicLevelRowResDatas['level4levelResData']; ?>
                                         @endif
-                                        @if(isset($dynamicLevelStatusId['level4StatusId'])&&$dynamicLevelStatusId['level4StatusId'] ==4)
-                                        <a class="view-button" id="{{ $tableData['projectId']}}">View</a>
-                                        @endif
+
                                     </td>
                                     <td class="@if($tableData['getLastLevel'] >= 5){{$level5BgColorStyle}}@endif levelTd">
                                         @if(isset($dynamicLevelStatusData['level5Status']) && isset($dynamicLevelRowResDatas['level5levelResData']))
-                                        {{$dynamicLevelRowResDatas['level5levelResData']}}
+                                        <?php echo $dynamicLevelRowResDatas['level5levelResData']; ?>
                                         @endif
-                                        @if(isset($dynamicLevelStatusId['level5StatusId'])&&$dynamicLevelStatusId['level5StatusId'] ==4)
-                                        <a class="view-button" id="{{ $tableData['projectId']}}">View</a>
-                                        @endif
+
                                     </td>
                                     <td class="@if($tableData['getLastLevel'] >= 6){{$level6BgColorStyle}}@endif levelTd">
 
                                         @if(isset($dynamicLevelStatusData['level6Status']) && isset($dynamicLevelRowResDatas['level6levelResData']))
-                                        {{$dynamicLevelRowResDatas['level6levelResData']}}
+                                        <?php echo $dynamicLevelRowResDatas['level6levelResData']; ?>
                                         @endif
-                                        @if(isset($dynamicLevelStatusId['level6StatusId'])&&$dynamicLevelStatusId['level6StatusId'] ==4)
-                                        <a class="view-button" id="{{ $tableData['projectId']}}">View</a>
-                                        @endif
+
                                     </td>
                                     <td class="@if($tableData['getLastLevel'] >= 7){{$level7BgColorStyle}}@endif levelTd">
 
                                         @if(isset($dynamicLevelStatusData['level7Status']) && isset($dynamicLevelRowResDatas['level7levelResData']))
-                                        {{$dynamicLevelRowResDatas['level7levelResData']}}
+                                        <?php echo $dynamicLevelRowResDatas['level7levelResData']; ?>
                                         @endif
-                                        @if(isset($dynamicLevelStatusId['level7StatusId'])&&$dynamicLevelStatusId['level7StatusId'] ==4)
-                                        <a class="view-button" id="{{ $tableData['projectId']}}">View</a>
-                                        @endif
+
                                     </td>
                                     <td class="@if($tableData['getLastLevel'] >= 8){{$level8BgColorStyle}}@endif levelTd">
 
                                         @if(isset($dynamicLevelStatusData['level8Status']) && isset($dynamicLevelRowResDatas['level8levelResData']))
-                                        {{$dynamicLevelRowResDatas['level8levelResData']}}
+                                        <?php echo $dynamicLevelRowResDatas['level8levelResData']; ?>
                                         @endif
-                                        @if(isset($dynamicLevelStatusId['level8StatusId'])&&$dynamicLevelStatusId['level8StatusId'] ==4)
-                                        <a class="view-button" id="{{ $tableData['projectId']}}">View</a>
-                                        @endif
+
                                     </td>
                                     <td class="@if($tableData['getLastLevel'] >= 9){{$level9BgColorStyle}}@endif levelTd">
                                         @if(isset($dynamicLevelStatusData['level9Status']) && isset($dynamicLevelRowResDatas['level9levelResData']))
-                                        {{$dynamicLevelRowResDatas['level9levelResData']}}
+                                        <?php echo $dynamicLevelRowResDatas['level9levelResData']; ?>
                                         @endif
-                                        @if(isset($dynamicLevelStatusId['level9StatusId'])&&$dynamicLevelStatusId['level9StatusId'] ==4)
-                                        <a class="view-button" id="{{ $tableData['projectId']}}">View</a>
-                                        @endif
+
                                     </td>
                                     <td class="@if($tableData['getLastLevel'] >= 10){{$level10BgColorStyle}}@endif levelTd">
                                         @if(isset($dynamicLevelStatusData['level10Status']) && isset($dynamicLevelRowResDatas['level10levelResData']))
-                                        {{$dynamicLevelRowResDatas['level10levelResData']}}
+                                        <?php echo $dynamicLevelRowResDatas['level10levelResData']; ?>
                                         @endif
-                                        @if(isset($dynamicLevelStatusId['level10StatusId'])&&$dynamicLevelStatusId['level10StatusId'] ==4)
-                                        <a class="view-button" id="{{ $tableData['projectId']}}">View</a>
-                                        @endif
+
                                     </td>
                                     <td class="@if($tableData['getLastLevel'] >= 11){{$level11BgColorStyle}}@endif levelTd">
 
                                         @if(isset($dynamicLevelStatusData['level11Status']) && isset($dynamicLevelRowResDatas['level11levelResData']))
-                                        {{$dynamicLevelRowResDatas['level11levelResData']}}
+                                        <?php echo $dynamicLevelRowResDatas['level11levelResData']; ?>
                                         @endif
-                                        @if(isset($dynamicLevelStatusId['level11StatusId'])&&$dynamicLevelStatusId['level11StatusId'] ==4)
-                                        <a class="view-button" id="{{ $tableData['projectId']}}">View</a>
-                                        @endif
+
                                     </td>
                                 </tr>
                                 @endforeach
@@ -351,23 +327,15 @@ table.table.dataTable  td , table.table.dataTable  th{
 
 
 
-            $(".endDate1").change(function() {
-                var startDate = $('.startDate').val();
-                var endDate = $('.endDate').val();
+            $('.workflowFilter').on('change', function() {
+                console.log("well an good");
+                var dropdown = $(".projectFilter");
 
-
-                if (startDate > endDate) {
-                    Swal.fire(
-                        'Warning!',
-                        'End date should be greater than Start date.',
-                        'error'
-                    );
-
-                    $('.endDate').val('');
-                }
+                // Initialize Select2 on the dropdown element
+                dropdown.select2();
+                dropdown.empty();
+                filterData();
             });
-
-
         });
     $(document).on('click', '.view-button', function() {
         console.log("well and good");
@@ -386,53 +354,144 @@ table.table.dataTable  td , table.table.dataTable  th{
         location.reload();
         // $("#service_table").load(location.href + " #service_table");
     });
-    $(document).on('change click', '.endDate', function() {
-        $('.startDate').attr("max", $(this).val());
-    });
-    $(document).on('change click', '.startDate', function() {
-        $('.endDate').attr("min", $(this).val());
-    });
 
-    function filterData(date1 = null, date2 = null) {
 
-        var startDate = ($('.startDate').val()) ? $('.startDate').val() : date1;
-        var endDate = ($('.endDate').val()) ? $('.endDate').val() : date2;
-
-        if (startDate && endDate) {
+    function filterData() {
+        console.log("well");
+        var projectId = $('.projectFilter').val();
+        var wfId = $('.workflowFilter').val();
+        console.log(projectId);
+        console.log(wfId);
+        if (projectId || wfId) {
             $.ajax({
-                url: "{{ route('dateWiseReportSearchFilter') }}",
+                url: "{{ route('levelwiseReportSearchFilter') }}",
                 type: 'ajax',
                 method: 'post',
                 data: {
                     "_token": "{{ csrf_token() }}",
-                    startDate: startDate,
-                    endDate: endDate,
+                    projectId: projectId,
+                    wfId: wfId,
                 },
-                success: function(data) {
-                    var entities = data.entities;
+                success: function(resData) {
+                    console.log(resData);
+                    var entities = resData.entities;
+                    console.log(resData.projectDataModels);
+                    if (!projectId) {
+                        var dropdown = $(".projectFilter");
+
+                        // Initialize Select2 on the dropdown element
+                        dropdown.select2();
+                        dropdown.empty();
+                        var option = new Option("Project Code/Name", "");
+                        dropdown.append(option);
+                        // Assuming 'resData.projectDataModels' is your AJAX response
+                        $.each(resData.projectDataModels, function(index, item) {
+                            var dataf = item.projectName + ' (' + item.projectCode + ')';
+
+                            // Create a new option and append it to the Select2 dropdown
+                            var option = new Option(dataf, item.projectId);
+                            dropdown.append(option);
+                        });
+
+                        // Trigger an event to refresh Select2 after populating data
+                        dropdown.trigger('change');
+                    }
                     var table = $('#service_table').DataTable();
                     table.clear().draw();
+                    // var tableContent = $("#service_table tbody");
+                    // tableContent.empty();
+                    // Clear the existing rows from the table's body
 
-                    $.each(entities, function(key, val) {
-                        var sNo = key + 1;
-                        var projectCode = val.projectCode;
+
+                    $.each(resData.tableDatas, function(index, val) {
+                        console.log(val);
+
+                        var rowresData = val.dynamicLevelRowResDatas;
+                        var rowStatusData = val.dynamicLevelStatusData;
+                        var rowStatusId = val.dynamicLevelStatusId;
+                        var docName = val.docName;
+                        var projectrowId = val.projectId;
                         var projectName = val.projectName;
-                        var workflowName = val.workflowName;
-                        var workflowCode = val.workflowCode;
-                        var initiater = val.initiater;
-                        var department = val.department;
-                        var projectId = val.projectId;
-                        var activeStatus = val.status;
-                        var startDate = val.startDate;
-                        var endDate = val.endDate;
-
-                        var editurl = '{{ route("viewDocListing", ":id") }}';
-                        editurl = editurl.replace(':id', projectId);
-                        var viewBtn = '<div id=' + projectId + ' class="btn switchPrimaryBtn  viewDocs">View</div>';
+                        var workflowName = val.wfName;
 
 
-                        table.row.add(["", "", "", "", "", "", "", "", "", "", "", "", "", "", ]).draw();
+                        var level1levelStatusData = (rowStatusData.level1Status) ? rowStatusData.level1Status : "green-bg";
+                        var level2levelStatusData = (rowStatusData.level2Status) ? rowStatusData.level2Status : "green-bg";
+                        var level3levelStatusData = (rowStatusData.level3Status) ? rowStatusData.level3Status : "green-bg";
+                        var level4levelStatusData = (rowStatusData.level4Status) ? rowStatusData.level4Status : "green-bg";
+                        var level5levelStatusData = (rowStatusData.level5Status) ? rowStatusData.level5Status : "green-bg";
+                        var level6levelStatusData = (rowStatusData.level6Status) ? rowStatusData.level6Status : "green-bg";
+                        var level7levelStatusData = (rowStatusData.level7Status) ? rowStatusData.level7Status : "green-bg";
+                        var level8levelStatusData = (rowStatusData.level8Status) ? rowStatusData.level8Status : "green-bg";
+                        var level9levelStatusData = (rowStatusData.level9Status) ? rowStatusData.level9Status : "green-bg";
+                        var level10levelStatusData = (rowStatusData.level10Status) ? rowStatusData.level10Status : "green-bg";
+                        var level11levelStatusData = (rowStatusData.level11Status) ? rowStatusData.level11Status : "green-bg";
+
+                        var level1levelResData = (rowresData.level1levelResData) ? rowresData.level1levelResData : "";
+                        var level2levelResData = (rowresData.level2levelResData) ? rowresData.level2levelResData : "";
+                        var level3levelResData = (rowresData.level3levelResData) ? rowresData.level3levelResData : "";
+                        var level4levelResData = (rowresData.level4levelResData) ? rowresData.level4levelResData : "";
+                        var level5levelResData = (rowresData.level5levelResData) ? rowresData.level5levelResData : "";
+                        var level6levelResData = (rowresData.level6levelResData) ? rowresData.level6levelResData : "";
+                        var level7levelResData = (rowresData.level7levelResData) ? rowresData.level7levelResData : "";
+                        var level8levelResData = (rowresData.level8levelResData) ? rowresData.level8levelResData : "";
+                        var level9levelResData = (rowresData.level9levelResData) ? rowresData.level9levelResData : "";
+                        var level10levelResData = (rowresData.level10levelResData) ? rowresData.level10levelResData : "";
+                        var level11levelResData = (rowresData.level11levelResData) ? rowresData.level11levelResData : "";
+                        // Create and append a new table row based on your data structure
+                        var newRow = "<tr>" +
+                            "<td>" + workflowName + "</td>" +
+                            "<td>" + projectName + "</td>" +
+                            "<td>" + docName + "</td>" +
+                            "<td class='" + (val.getLastLevel >= 1 ? level1levelStatusData : "") + " levelTd'>" + level1levelResData + "</td>" +
+                            "<td class='" + (val.getLastLevel >= 2 ? level2levelStatusData : "") + " levelTd'>" + level2levelResData + "</td>" +
+                            "<td class='" + (val.getLastLevel >= 3 ? level3levelStatusData : "") + " levelTd'>" + level3levelResData + "</td>" +
+                            "<td class=' " + (val.getLastLevel >= 4 ? level4levelStatusData : "") + " levelTd'>" + level4levelResData + "</td>" +
+                            "<td class='" + (val.getLastLevel >= 5 ? level5levelStatusData : "") + " levelTd'>" + level5levelResData + "</td>" +
+                            "<td class='" + (val.getLastLevel >= 6 ? level6levelStatusData : "") + " levelTd'>" + level6levelResData + "</td>" +
+                            "<td class='" + (val.getLastLevel >= 7 ? level7levelStatusData : "") + " levelTd'>" + level7levelResData + "</td>" +
+                            "<td class='" + (val.getLastLevel >= 8 ? level8levelStatusData : "") + " levelTd'>" + level8levelResData + "</td>" +
+                            "<td class='" + (val.getLastLevel >= 9 ? level9levelStatusData : "") + " levelTd'>" + level9levelResData + "</td>" +
+                            "<td class='" + (val.getLastLevel >= 10 ? level10levelStatusData : "") + " levelTd'>" + level10levelResData + "</td>" +
+                            "<td class='" + (val.getLastLevel >= 11 ? level11levelStatusData : "") + " levelTd'>" + level11levelResData + "</td>" +
+
+                            "</tr>";
+                            table.row.add($(newRow)).draw(false);
+                       // tableContent.append(newRow);
                     });
+                    // $.each(resData.tableDatas, function(key, val) {
+                    //     var rowresData = val.dynamicLevelRowResDatas;
+                    //     var docName = val.docName;
+                    //     // var projectCode = val.projectCode;
+                    //     var projectName = val.projectName;
+                    //     var workflowName = val.wfName;
+                    //     var level1levelResData = (rowresData.level1levelResData) ? rowresData.level1levelResData : "";
+                    //     var level2levelResData = (rowresData.level2levelResData) ? rowresData.level2levelResData : "";
+                    //     var level3levelResData = (rowresData.level3levelResData) ? rowresData.level3levelResData : "";
+                    //     var level4levelResData = (rowresData.level4levelResData) ? rowresData.level4levelResData : "";
+                    //     var level5levelResData = (rowresData.level5levelResData) ? rowresData.level5levelResData : "";
+                    //     var level6levelResData = (rowresData.level6levelResData) ? rowresData.level6levelResData : "";
+                    //     var level7levelResData = (rowresData.level7levelResData) ? rowresData.level7levelResData : "";
+                    //     var level8levelResData = (rowresData.level8levelResData) ? rowresData.level8levelResData : "";
+                    //     var level9levelResData = (rowresData.level9levelResData) ? rowresData.level9levelResData : "";
+                    //     var level10levelResData = (rowresData.level10levelResData) ? rowresData.level10levelResData : "";
+                    //     var level11levelResData = (rowresData.level11levelResData) ? rowresData.level11levelResData : "";
+
+
+                    //     // var initiater = val.initiater;
+                    //     // var department = val.department;
+                    //     // var projectId = val.projectId;
+                    //     // var activeStatus = val.status;
+                    //     // var startDate = val.startDate;
+                    //     // var endDate = val.endDate;
+
+                    //     // var editurl = '{{ route("viewDocListing", ":id") }}';
+                    //     // editurl = editurl.replace(':id', projectId);
+                    //     // var viewBtn = '<div id=' + projectId + ' class="btn switchPrimaryBtn  viewDocs">View</div>';
+
+
+                    //     table.row.add([workflowName, projectName, docName, level1levelResData, level2levelResData, level3levelResData, level4levelResData, level5levelResData, level6levelResData,level7levelResData, level8levelResData, level9levelResData,level10levelResData, level11levelResData]).draw();
+                    // });
                 },
                 error: function() {
                     $("#otp_error").text("Update Error");
@@ -440,66 +499,6 @@ table.table.dataTable  td , table.table.dataTable  th{
 
             });
         }
-    }
-
-    $(document).on('click', '.viewDocs', function() {
-        console.log("well and good");
-        var id = $(this).attr('id');
-
-
-        var url = "{{route('viewDocListing')}}";
-        var form = $('<form action="' + url + '" method="post">' +
-            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
-            '</form>');
-        $('body').append(form);
-        form.submit();
-    });
-
-    function exportData() {
-        /* Get the HTML data using Element by Id */
-        var table = document.getElementById("service_table");
-
-        /* Declaring array variable */
-        var rows = [];
-
-        //iterate through rows of table
-        for (var i = 0, row; row = table.rows[i]; i++) {
-            //rows would be accessed using the "row" variable assigned in the for loop
-            //Get each cell value/column from the row
-            column1 = row.cells[0].innerText;
-            column2 = row.cells[1].innerText;
-            column3 = row.cells[2].innerText;
-            column4 = row.cells[3].innerText;
-            column5 = row.cells[4].innerText;
-            column6 = row.cells[5].innerText;
-            column7 = row.cells[6].innerText;
-            /* add a new records in the array */
-            rows.push(
-                [
-                    column1,
-                    column2,
-                    column3,
-                    column4,
-                    column5,
-                    column6,
-                    column7,
-                ]
-            );
-
-        }
-        csvContent = "data:text/csv;charset=utf-8,";
-
-        /* add the column delimiter as comma(,) and each row splitted by new line character (\n) */
-        rows.forEach(function(rowArray) {
-            row = rowArray.join(",");
-            csvContent += row + "\r\n";
-        });
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "DatewiseReports.csv");
-        document.body.appendChild(link);
-        link.click();
     }
 </script>
 @endsection

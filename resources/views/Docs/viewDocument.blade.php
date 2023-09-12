@@ -478,25 +478,26 @@ use Carbon\Carbon;
 
     </div>
     <style>
-      
-      .float-right-btn {
+        .float-right-btn {
             position: fixed;
-            right:20px;
+            right: 20px;
             top: 50%;
             transform: translateY(-50%);
             width: 40px;
             height: 100px;
             display: flex;
-    justify-content: center;
-    align-items: center;
-          
-        }
-.r-90{
-    position: relative;
+            justify-content: center;
+            align-items: center;
 
-    display: block;
-    rotate: -90deg;
-}
+        }
+
+        .r-90 {
+            position: relative;
+
+            display: block;
+            rotate: -90deg;
+        }
+
         .float-open-btn {
             right: 10px;
         }
@@ -851,111 +852,119 @@ use Carbon\Carbon;
                                 $('.docsPart').css('display', 'none');
                                 $('.emptyDocsPart').css('display', 'block');
                             }
-                            if (data.aux_docs) {
-                                var versionAuxDocDiv1 = '<div class="card-body">';
-                                // var versionAuxDocDiv1 = '<br>';
-                                versionAuxDocDiv1 += '<table class="table table-striped documentTable">';
-                                versionAuxDocDiv1 += '<thead class="documentTableth">';
-                                versionAuxDocDiv1 += '<tr>';
-                                versionAuxDocDiv1 += '<th scope="col">File Name</th><th scope="col">Action</th>';
-                                versionAuxDocDiv1 += '</tr>';
-                                versionAuxDocDiv1 += '</thead>';
-                                versionAuxDocDiv1 += ' <tbody>';
-                                versionAuxDocDiv1 += ' </tbody>';
-                                if (data.aux_docs.length > 0) {
+                            console.log("well daan");
+                            // if (data.aux_docs) {
+                            var versionAuxDocDiv1 = '<div class="card-body">';
+                            // var versionAuxDocDiv1 = '<br>';
+                            versionAuxDocDiv1 += '<table class="table table-striped documentTable">';
+                            versionAuxDocDiv1 += '<thead class="documentTableth">';
+                            versionAuxDocDiv1 += '<tr>';
+                            versionAuxDocDiv1 += '<th scope="col">File Name</th><th scope="col">Action</th>';
+                            versionAuxDocDiv1 += '</tr>';
+                            versionAuxDocDiv1 += '</thead>';
+                            versionAuxDocDiv1 += ' <tbody>';
+
+                            console.log(data.aux_docs);
+
+                            if (data.aux_docs.length != 0) {
                                 $.each(data.aux_docs, function(key, val) {
                                     versionAuxDocDiv1 += '<tr>';
                                     versionAuxDocDiv1 += '<td>' + val.original_name + '</td>';
                                     versionAuxDocDiv1 += '<td><a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + val.document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a> Download</td>';
                                     versionAuxDocDiv1 += '</tr>';
                                 });
-                            }else {
-                                        // Display a "No Data Available" message if aux_docs is empty
-                                        versionAuxDocDiv1 = '<tr><td colspan="2">No Data Available</td></tr>';
-                                    }
-                                versionAuxDocDiv1 += ' </table>';
-                                versionAuxDocDiv1 += ' </br>';
-                                $(".auxdoc_append" + level).append(versionAuxDocDiv1);
-                                // $.each(data.aux_docs, function(key1, val) {
-                                //     var docAuxDetailArray = val.doc_detail;
-
-                                //     var baseUrl = "{{ asset('/') }}";
-                                //     if (val.status == 0) {
-                                //         var status = "Waiting";
-                                //     } else if (val.status == 1) {
-                                //         var status = "Approved";
-                                //     } else {
-                                //         var status = "Pending";
-                                //     }
-                                //     var versionAuxDocDiv = '<div class="row">';
-                                //     versionAuxDocDiv += '<div class="accordion" style="margin:auto;width:98%;" id="accordionExample1">';
-                                //     versionAuxDocDiv += '<div class="card">';
-                                //     versionAuxDocDiv += '<div class="border-0" id="heading' + key1 + '">';
-                                //     versionAuxDocDiv += ' <h5 class="mb-0 w-100"><button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse1' + key1 + '" aria-expanded="false" aria-controls="collapse' + key1 + '"><h3 style = "font-style:bold;padding-left:10px;">' + val.original_name + '</h3><p class="auxlevelStatus' + (key1 - 1) + '"></p><p class="btn btn-light-danger status-accordion" style="margin-right:40px;visibility:hidden;">asdas</p></button></h5>';
-                                //     versionAuxDocDiv += '</div>';
-                                //     versionAuxDocDiv += ' <div id="collapse1' + key1 + '" class="collapse fade" aria-labelledby="heading' + key1 + '" data-parent="#accordionExample1">';
-                                //     versionAuxDocDiv += '<div class="card-body">';
-                                //     versionAuxDocDiv += '<table class="table table-striped documentTable">';
-                                //     versionAuxDocDiv += '<thead class="documentTableth">';
-                                //     versionAuxDocDiv += '<tr>';
-                                //     versionAuxDocDiv += '<th scope="col">Version ID</th><th scope="col">Last Updated</th> <th scope="col">Action</th>';
-                                //     versionAuxDocDiv += '</tr>';
-                                //     versionAuxDocDiv += '</thead>';
-                                //     versionAuxDocDiv += ' <tbody>';
-                                //     var auxDocSize = docAuxDetailArray.length;
-                                //     var showAuxDocAction = auxDocSize - 1;
-
-
-                                //     for (j = docAuxDetailArray.length - 1; j >= 0; --j) {
-                                //         var remarkData = (docAuxDetailArray[j].remark) ? docAuxDetailArray[j].remark : "";
-
-                                //         var dateFormat = new Date(docAuxDetailArray[j].updated_at);
-                                //         var lastUpdate = ("Date: " + dateFormat.getDate() +
-                                //             "/" + (dateFormat.getMonth() + 1) +
-                                //             "/" + dateFormat.getFullYear() +
-                                //             " " + dateFormat.getHours() +
-                                //             ":" + dateFormat.getMinutes() +
-                                //             ":" + dateFormat.getSeconds());
-
-                                //         var statusData = "";
-                                //         if (docAuxDetailArray[j].status == 1) {
-                                //             var statusData = "Waiting For Approval";
-                                //         } else if (docAuxDetailArray[j].status == 2) {
-                                //             var statusData = "Declined";
-                                //         } else if (docAuxDetailArray[j].status == 3) {
-                                //             var statusData = "change Request";
-                                //         } else if (docAuxDetailArray[j].status == 4) {
-                                //             var statusData = "Approved";
-                                //         } else {
-                                //             var statusData = "Waiting For Approval";
-                                //         }
-
-                                //         $(".mainlevelStatus" + j).html("");
-                                //         $(".mainlevelStatus" + j).append("(" + statusData + ")");
-                                //         versionAuxDocDiv += '<tr>';
-                                //         versionAuxDocDiv += '<td>ver ' + docAuxDetailArray[j].version + '</td>';
-                                //         // versionAuxDocDiv += '<td>' + remarkData + '</td>';
-                                //         // versionAuxDocDiv += '<td>' + statusData + '</td>';
-                                //         versionAuxDocDiv += '<td>' + lastUpdate + '</td>';
-                                //         versionAuxDocDiv += '<td>';
-                                //         // if (j == showAuxDocAction) {
-                                //         versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
-                                //         // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
-                                //         versionAuxDocDiv += '</button>';
-                                //         // }
-                                //         versionAuxDocDiv += '</td>';
-                                //         versionAuxDocDiv += '</tr>';
-                                //     }
-                                //     versionAuxDocDiv += '</tbody>';
-                                //     versionAuxDocDiv += '</table>';
-                                //     versionAuxDocDiv += '</div>';
-                                //     versionAuxDocDiv += '</div>';
-                                //     versionAuxDocDiv += '</div>';
-                                //     versionAuxDocDiv += '</div>';
-                                //     versionAuxDocDiv += '</div>';
-                                //     $(".auxdoc_append" + level).append(versionAuxDocDiv);
-                                // });
+                            } else {
+                               
+                                // Display a "No Data Available" message if aux_docs is empty
+                                // versionAuxDocDiv1 = '<tr><td colspan="2">No Data Available</td></tr>';
+                                versionAuxDocDiv1 += '<tr>';
+                                versionAuxDocDiv1 += '<td colspan="2">No Documents Available</td>';
+                                versionAuxDocDiv1 += '</tr>';
                             }
+                            versionAuxDocDiv1 += ' </tbody>';
+                            versionAuxDocDiv1 += ' </table>';
+                            versionAuxDocDiv1 += ' </br>';
+                            $(".auxdoc_append" + level).append(versionAuxDocDiv1);
+                            // $.each(data.aux_docs, function(key1, val) {
+                            //     var docAuxDetailArray = val.doc_detail;
+
+                            //     var baseUrl = "{{ asset('/') }}";
+                            //     if (val.status == 0) {
+                            //         var status = "Waiting";
+                            //     } else if (val.status == 1) {
+                            //         var status = "Approved";
+                            //     } else {
+                            //         var status = "Pending";
+                            //     }
+                            //     var versionAuxDocDiv = '<div class="row">';
+                            //     versionAuxDocDiv += '<div class="accordion" style="margin:auto;width:98%;" id="accordionExample1">';
+                            //     versionAuxDocDiv += '<div class="card">';
+                            //     versionAuxDocDiv += '<div class="border-0" id="heading' + key1 + '">';
+                            //     versionAuxDocDiv += ' <h5 class="mb-0 w-100"><button class="btn  btn-link w-100 p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;" type="button" data-toggle="collapse" data-target="#collapse1' + key1 + '" aria-expanded="false" aria-controls="collapse' + key1 + '"><h3 style = "font-style:bold;padding-left:10px;">' + val.original_name + '</h3><p class="auxlevelStatus' + (key1 - 1) + '"></p><p class="btn btn-light-danger status-accordion" style="margin-right:40px;visibility:hidden;">asdas</p></button></h5>';
+                            //     versionAuxDocDiv += '</div>';
+                            //     versionAuxDocDiv += ' <div id="collapse1' + key1 + '" class="collapse fade" aria-labelledby="heading' + key1 + '" data-parent="#accordionExample1">';
+                            //     versionAuxDocDiv += '<div class="card-body">';
+                            //     versionAuxDocDiv += '<table class="table table-striped documentTable">';
+                            //     versionAuxDocDiv += '<thead class="documentTableth">';
+                            //     versionAuxDocDiv += '<tr>';
+                            //     versionAuxDocDiv += '<th scope="col">Version ID</th><th scope="col">Last Updated</th> <th scope="col">Action</th>';
+                            //     versionAuxDocDiv += '</tr>';
+                            //     versionAuxDocDiv += '</thead>';
+                            //     versionAuxDocDiv += ' <tbody>';
+                            //     var auxDocSize = docAuxDetailArray.length;
+                            //     var showAuxDocAction = auxDocSize - 1;
+
+
+                            //     for (j = docAuxDetailArray.length - 1; j >= 0; --j) {
+                            //         var remarkData = (docAuxDetailArray[j].remark) ? docAuxDetailArray[j].remark : "";
+
+                            //         var dateFormat = new Date(docAuxDetailArray[j].updated_at);
+                            //         var lastUpdate = ("Date: " + dateFormat.getDate() +
+                            //             "/" + (dateFormat.getMonth() + 1) +
+                            //             "/" + dateFormat.getFullYear() +
+                            //             " " + dateFormat.getHours() +
+                            //             ":" + dateFormat.getMinutes() +
+                            //             ":" + dateFormat.getSeconds());
+
+                            //         var statusData = "";
+                            //         if (docAuxDetailArray[j].status == 1) {
+                            //             var statusData = "Waiting For Approval";
+                            //         } else if (docAuxDetailArray[j].status == 2) {
+                            //             var statusData = "Declined";
+                            //         } else if (docAuxDetailArray[j].status == 3) {
+                            //             var statusData = "change Request";
+                            //         } else if (docAuxDetailArray[j].status == 4) {
+                            //             var statusData = "Approved";
+                            //         } else {
+                            //             var statusData = "Waiting For Approval";
+                            //         }
+
+                            //         $(".mainlevelStatus" + j).html("");
+                            //         $(".mainlevelStatus" + j).append("(" + statusData + ")");
+                            //         versionAuxDocDiv += '<tr>';
+                            //         versionAuxDocDiv += '<td>ver ' + docAuxDetailArray[j].version + '</td>';
+                            //         // versionAuxDocDiv += '<td>' + remarkData + '</td>';
+                            //         // versionAuxDocDiv += '<td>' + statusData + '</td>';
+                            //         versionAuxDocDiv += '<td>' + lastUpdate + '</td>';
+                            //         versionAuxDocDiv += '<td>';
+                            //         // if (j == showAuxDocAction) {
+                            //         versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+                            //         // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
+                            //         versionAuxDocDiv += '</button>';
+                            //         // }
+                            //         versionAuxDocDiv += '</td>';
+                            //         versionAuxDocDiv += '</tr>';
+                            //     }
+                            //     versionAuxDocDiv += '</tbody>';
+                            //     versionAuxDocDiv += '</table>';
+                            //     versionAuxDocDiv += '</div>';
+                            //     versionAuxDocDiv += '</div>';
+                            //     versionAuxDocDiv += '</div>';
+                            //     versionAuxDocDiv += '</div>';
+                            //     versionAuxDocDiv += '</div>';
+                            //     $(".auxdoc_append" + level).append(versionAuxDocDiv);
+                            // });
+                            //}
                         },
                         error: function(err) {
                             console.log(err);

@@ -895,8 +895,8 @@ use Carbon\Carbon;
                                     versionAuxDocDiv1 += '</tr>';
                                     versionAuxDocDiv1 += '</thead>';
                                     versionAuxDocDiv1 += ' <tbody>';
-                                    versionAuxDocDiv1 += ' </tbody>';
-                                    if (data.aux_docs.length > 0) {
+                                   
+                                    if (data.aux_docs.length != 0) {
                                     $.each(data.aux_docs, function(key, val) {
                                         versionAuxDocDiv1 += '<tr>';
                                         versionAuxDocDiv1 += '<td>' + val.original_name + '</td>';
@@ -905,8 +905,11 @@ use Carbon\Carbon;
                                     });
                                 }else {
                                         // Display a "No Data Available" message if aux_docs is empty
-                                        versionAuxDocDiv1 = '<tr><td colspan="2">No Data Available</td></tr>';
+                                        versionAuxDocDiv1 += '<tr>';
+                                versionAuxDocDiv1 += '<td colspan="2">No Documents Available</td>';
+                                versionAuxDocDiv1 += '</tr>';
                                     }
+                                    versionAuxDocDiv1 += ' </tbody>';
                                     versionAuxDocDiv1 += ' </table>';
                                     versionAuxDocDiv1 += ' </br>';
                                     $(".auxdoc_append" + level).append(versionAuxDocDiv1);

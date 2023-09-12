@@ -1285,8 +1285,7 @@ class Doclistings extends Controller
                 $levelModel->approver_id = null;
                 $levelModel->approved_date = null;
             }
-            $levelModel->status = $status;
-            $levelModel->status = $status;
+            $levelModel->status = $status;          
 
             $levelModel->save();
             return $levelModel;

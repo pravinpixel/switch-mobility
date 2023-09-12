@@ -149,6 +149,7 @@ Route::group([
     Route::post('approverDownloadDocs', [Doclistings::class, 'approverDownloadDocs'])->name('approverDownloadDocs');
 
     Route::get('levelReportIndex', [LevelReportController::class, 'index'])->name('levelReportIndex');
+    Route::post('levelwiseReportSearchFilter', [LevelReportController::class, 'levelwiseReportSearchFilter'])->name('levelwiseReportSearchFilter');
 
 
 //Department

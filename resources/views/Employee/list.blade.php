@@ -79,7 +79,7 @@
 
                                 <div class="col-md-3">
                                     <label class="fs-6 form-label fw-bold text-dark ">Designation </label>
-                                    <select class="form-select form-select-solid filterDeptAndDes" name="project_code_name" data-kt-select2="true" data-placeholder="Desgination" data-allow-clear="true" id="designationFilter">
+                                    <select class="form-select form-select-solid filterDeptAndDes" name="project_code_name" data-kt-select2="true" data-placeholder="Designation" data-allow-clear="true" id="designationFilter">
                                         <option></option>
                                         @foreach ($designation as $des)
                                         <option value="{{ $des['id'] }}">
@@ -471,7 +471,7 @@
 
                 });
             });
-            // Department & Desgination
+            // Department & Designation
             $('.filterDeptAndDes').on('change', function() {
                 var table = $('#service_table').DataTable();
                 var deptId = $('#deptFilter').val();

@@ -612,7 +612,7 @@ class ProjectController extends Controller
     {
         $id = $request->project_id;
         $level = $request->level;
-        $projectDataWithLevelId = Project::select('project_levels.priority', 'project_levels.due_date', 'employees.first_name', 'designations.name as desName', 'employees.profile_image', 'employees.last_name',DB::raw("CONCAT(employees.first_name, ' ', COALESCE(employees.middle_name, ''), ' ', employees.last_name) AS employee_full_name"))
+        $projectDataWithLevelId = Project::select('project_levels.priority', 'project_levels.due_date', 'employees.first_name', 'designations.name as desName', 'employees.profile_image', 'employees.last_name', DB::raw("CONCAT(employees.first_name, ' ', COALESCE(employees.middle_name, ''), ' ', employees.last_name) AS employee_full_name"))
             //->leftjoin('project_milestones', 'project_milestones.project_id', '=', 'projects.id')
             ->leftjoin('project_levels', 'project_levels.project_id', '=', 'projects.id')
             ->leftjoin('project_approvers', 'project_approvers.project_level_id', '=', 'project_levels.id')
@@ -1119,7 +1119,7 @@ class ProjectController extends Controller
         return ProjectDocumentStatusByLevel::where('project_id', $projectId)->where('level_id', $levelId)->first();
     }
 
-    public function getProjectModelsByWfId($wfId)
+    public function getProjectModelsByWfId($wfId, $projectId = null)
     {
         $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
 
@@ -1135,31 +1135,35 @@ class ProjectController extends Controller
                 }
             });
         }
-
+        if ($projectId) {
+            $models->where('projects.id', $projectId);
+        }
         $models->whereNull('deleted_at');
         $models1 = $models->get();
-       return $models1;
+        return $models1;
     }
-    public function getMaindocumentFileNameById($projectId){
-       return projectDocument::where('project_id',$projectId)->where('type',1)->first();
+    public function getMaindocumentFileNameById($projectId)
+    {
+        return projectDocument::where('project_id', $projectId)->where('type', 1)->first();
     }
-    public function getProjectLevelByProjectId($projectId){
-       return ProjectLevels::where('project_id', $projectId)->get();
+    public function getProjectLevelByProjectId($projectId)
+    {
+        return ProjectLevels::where('project_id', $projectId)->get();
     }
-    public function getProjectLevelStausBylevelIdandProjectId($projectId,$levelId){
+    public function getProjectLevelStausBylevelIdandProjectId($projectId, $levelId)
+    {
         return ProjectDocumentStatusByLevel::where('project_id', $projectId)
-        ->where('level_id', $levelId)
-        ->first();
-     }
-     public function getProjectLevelApproverByProjectIdAndLevelId($projectId, $levelId)
-     {
- 
+            ->where('level_id', $levelId)
+            ->first();
+    }
+    public function getProjectLevelApproverByProjectIdAndLevelId($projectId, $levelId)
+    {
+
         return ProjectApprover::select(DB::raw("CONCAT(first_name, ' ', COALESCE(middle_name, ''), ' ', last_name) AS employee_name"))
-             ->leftjoin('project_levels', 'project_levels.id', 'project_approvers.project_level_id')
-             ->leftjoin('employees', 'employees.id', 'project_approvers.approver_id')
-             ->where('project_level', $levelId)
-             ->where('project_levels.project_id', $projectId)
-             ->first();
-          
-     }
+            ->leftjoin('project_levels', 'project_levels.id', 'project_approvers.project_level_id')
+            ->leftjoin('employees', 'employees.id', 'project_approvers.approver_id')
+            ->where('project_level', $levelId)
+            ->where('project_levels.project_id', $projectId)
+            ->first();
+    }
 }
