@@ -6,13 +6,53 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\ProjectEmployee;
 use Carbon\Carbon;
-use File;
-use Illuminate\Support\Facades\Auth;
 
-use PDF;
+use Illuminate\Support\Facades\File;
+
+use Spatie\PdfToImage\Pdf;
+
 
 class ApprovalListTempController extends Controller
 {
+
+    public function pdtToImage($pdfPath, $storePath)
+    {
+
+        // $pdf = new Pdf($pdfPath);
+        // $pdf->saveImage($storePath);
+        $pdf = new Pdf($pdfPath);
+
+        // Get the total number of pages in the PDF
+        $totalPages = $pdf->getNumberOfPages();
+        // Convert each page of the PDF to an image
+        for ($pageNumber = 1; $pageNumber <= $totalPages; $pageNumber++) {
+            // Generate a unique filename for each image (you can modify this as needed)
+            $imageFilename = 'page_' . $pageNumber . '.png';
+
+            // Set the page number to be converted
+            $pdf->setPage($pageNumber);
+
+            // Save the image
+            $pdf->saveImage($storePath . '/' . $imageFilename);
+        }
+        return true;
+    }
+
+    public function WordToPdf($docxFilePath, $id)
+    {
+        $outputDirectory = public_path('xlToPdf') . '/temp' . $id;
+        $pdfFilePath = $outputDirectory . '.pdf';
+
+        $domPdfPath = base_path('vendor/dompdf/dompdf');
+        \PhpOffice\PhpWord\Settings::setPdfRendererPath($domPdfPath);
+        \PhpOffice\PhpWord\Settings::setPdfRendererName('DomPDF');
+        $Content = \PhpOffice\PhpWord\IOFactory::load($docxFilePath);
+        $PDFWriter = \PhpOffice\PhpWord\IOFactory::createWriter($Content, 'PDF');
+        $PDFWriter->save($outputDirectory);
+
+        dd("wellls");
+        return true;
+    }
     public function frontPdf($id)
     {
         // $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
@@ -31,11 +71,11 @@ class ApprovalListTempController extends Controller
 
         $project = Project::with('docType', 'employee', 'employee.department', 'workflow')->where('id', $id)->first();
         $docModel  = $project->docType;
-        
+
         $employeeModel  = $project->employee;
-        
+
         $departmentModel  = $employeeModel->department;
-     
+
         $workflowModel  = $project->workflow;
 
         $timestamp = strtotime($project->created_at);
@@ -94,7 +134,7 @@ class ApprovalListTempController extends Controller
             $signImageWithPath = public_path('images/employee/' . $signImage);
             //dd($signImageWithPath);
             $employeeName =  ($employeeModel) ? $employeeModel->first_name . " " . $employeeModel->middle_name . " " . $employeeModel->last_name : "";
-            
+
             $data = [
                 'imagePath'    => public_path('assets/media/logos/limage.png'),
                 'signImagePath'    =>  $signImageWithPath,

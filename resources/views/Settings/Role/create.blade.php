@@ -357,7 +357,7 @@
                                 <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Reset</button>
                                 <a href="{{route('roles.index')}}">
                                     <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
-                                <button type="submit" id="submitBtn" class="btn switchPrimaryBtn " data-kt-users-modal-action="submit">
+                                <button type="submit" id="submitBtn" class="btn switchPrimaryBtn submitBtn" data-kt-users-modal-action="submit">
                                     <span class="indicator-label">Save and Exit</span>
                                     <span class="indicator-progress">Please wait...
                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -405,6 +405,10 @@
 
 
     });
+    $(document).on('click', '.submitBtn', function() {
+        $('#submitBtn').attr('disabled', true);
+        $('#department_form').submit();
+    });
     $(document).on('click', '.permission', function() {
         $(this).attr('checked', false);
         var a = document.forms["department_form"];
@@ -448,9 +452,9 @@
                         document.getElementById(alertName).style.color = "red";
                         document.getElementById(alertName).innerHTML = 'Role Is Exists*';
 
-                        document.getElementById('roleNameAddAlert').style.display = "block";
-                        document.getElementById('roleNameAddAlert').style.color = "red";
-                        document.getElementById('roleNameAddAlert').innerHTML = 'Role Is Exists*';
+                        // document.getElementById('roleNameAddAlert').style.display = "block";
+                        // document.getElementById('roleNameAddAlert').style.color = "red";
+                        // document.getElementById('roleNameAddAlert').innerHTML = 'Role Is Exists*';
                         return false;
                     }
                     document.getElementById(alertName).style.display = "none";

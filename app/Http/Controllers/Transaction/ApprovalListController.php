@@ -48,6 +48,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Style\Alignment as Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border as Border;
 use Dompdf\Dompdf;
+use PhpOffice\PhpSpreadsheet\Writer\Pdf\Tcpdf;
 
 class ApprovalListController extends Controller
 {
@@ -63,7 +64,7 @@ class ApprovalListController extends Controller
     {
 
         $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
-      
+
 
         $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
         if ($empId) {
@@ -294,7 +295,7 @@ class ApprovalListController extends Controller
 
         $filePath = public_path('projectDocuments/' . $model->document_name);
         $filenameWithoutExtension = pathinfo($filePath, PATHINFO_FILENAME);
-
+        //dd($extension);
         if ($extension == "Abcd") {
 
             // Get the path to the Excel file in the public folder
@@ -435,6 +436,27 @@ class ApprovalListController extends Controller
             file_put_contents($pdfPath, $dompdf->output());
         } else if ($extension == "pdf") {
             $pdfPath = public_path('projectDocuments/' . $model->document_name);
+            $storePath = public_path('/xlToPdf/temp');
+           // $pf = $this->tempController->pdtToImage($pdfPath, $storePath);
+        } else if ($extension == "doc") {
+
+            $documentPath = public_path('projectDocuments/' . $model->document_name);
+
+            $pdfPath = public_path('xlToPdf/temp' . $request->id . '.pdf');
+            if (File::exists($pdfPath)) {
+
+                File::deleteDirectory($pdfPath);
+            }
+
+            // Load the Word document using PhpSpreadsheet
+            $spreadsheet = IOFactory::load($documentPath);
+
+            // Set PDF rendering options
+            Settings::setPdfRendererName(Settings::PDF_RENDERER_TCPDF);
+            Settings::setPdfRendererPath(base_path('vendor/tecnickcom/tcpdf'));
+            // Create a PDF writer and save the PDF
+            $writer = new Tcpdf($spreadsheet);
+            $writer->save($pdfPath);
         } else {
 
             $filePath = public_path('projectDocuments/' . $model->document_name);
@@ -461,45 +483,47 @@ class ApprovalListController extends Controller
             $PDFWriter = \PhpOffice\PhpWord\IOFactory::createWriter($Content, 'PDF');
             $PDFWriter->save($pdfPath);
         }
+
         $delimiter = '/';
 
         $lastPartFileName = Str::afterLast($pdfPath, $delimiter);
         $substringBeforeDotFileName = ($filenameWithoutExtension) ? $filenameWithoutExtension : Str::before($lastPartFileName, '.');
-        
+
         $imagePath = public_path('DocumentImages/' . $id);
+     
         if (File::exists($imagePath)) {
             File::deleteDirectory($imagePath);
         }
         File::makeDirectory($imagePath, $mode = 0777, true, true);
-        $command = "gs -dNOPAUSE -sDEVICE=jpeg -r600 -o {$imagePath}/img%d.jpeg {$pdfPath}";
-        shell_exec($command);
-        $imagick = new Imagick();
-        $imagick->readImage($pdfPath);
-        
-        foreach ($imagick as $pageNumber => $page) {
-            // Set the image format and quality
-            $page->setImageFormat('jpeg'); // Change format to JPEG
-            $page->setImageCompressionQuality(100);
-        
-            // Set a higher resolution (DPI)
-            $page->setResolution(600, 600);
-        
-            // Enable anti-aliasing
-         
-        
-            // Save each page as an image
-            $currentPath = 'img' . ($pageNumber + 1) . '.jpeg'; // Adjust the file format
-            $imgpath1 = $imagePath . '/' . $currentPath;
-        
-            $page->writeImage($imgpath1);
-        }
-        
-        // Close the Imagick object
-        $imagick->clear();
-        $imagick->destroy();
-        
-        $imagefiles = File::allFiles($imagePath);      
-          
+        // $command = "gs -dNOPAUSE -sDEVICE=jpeg -r600 -o {$imagePath}/img%d.jpeg {$pdfPath}";
+        // shell_exec($command);
+        // $imagick = new Imagick();
+        // $imagick->readImage($pdfPath);
+
+        // foreach ($imagick as $pageNumber => $page) {
+        //     // Set the image format and quality
+        //     $page->setImageFormat('jpeg'); // Change format to JPEG
+        //     $page->setImageCompressionQuality(100);
+
+        //     // Set a higher resolution (DPI)
+        //     $page->setResolution(600, 600);
+
+        //     // Enable anti-aliasing
+
+
+        //     // Save each page as an image
+        //     $currentPath = 'img' . ($pageNumber + 1) . '.jpeg'; // Adjust the file format
+        //     $imgpath1 = $imagePath . '/' . $currentPath;
+
+        //     $page->writeImage($imgpath1);
+        // }
+
+        // // Close the Imagick object
+        // $imagick->clear();
+        // $imagick->destroy();
+        $pf = $this->tempController->pdtToImage($pdfPath, $imagePath);
+        $imagefiles = File::allFiles($imagePath);
+
 
         $pdfPath1 = storage_path('app/finalPdf');
 

@@ -147,7 +147,9 @@
 
 
     function deptValidation() {
-
+        $('.submitBtn').attr('disabled', true);
+        console.log("well good");
+       
         //  Swal.fire('Any fool can use a computer');
         var name = $('.department').val().trim();
 
@@ -177,7 +179,7 @@
                         return false;
                     }
                     document.getElementById(alertName).style.display = "none";
-                    $('.submitBtn').removeAttr('disabled');
+                    // $('.submitBtn').removeAttr('disabled');
                     $(".form").submit();
                     return true;
                 }

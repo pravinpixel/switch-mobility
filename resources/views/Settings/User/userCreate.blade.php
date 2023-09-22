@@ -341,6 +341,7 @@
       }
 
       function rolesValidation() {
+        $('.submitBtn').attr('disabled', true);
           var sap_id = $('.sap_id').val().trim();
           var roles = $('.Privillage').val();
           var password = $('.password').val().trim();
@@ -355,6 +356,7 @@
           console.log(roleError);
           console.log(passwordError);
           console.log(cpasswordError);
+       
           var cpasswordMissmatch = true;
           if (cpassword) {
               if (password != cpassword) {

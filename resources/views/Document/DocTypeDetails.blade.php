@@ -268,7 +268,7 @@
     }
 
     function validation() {
-
+        $('.submitBtn').attr('disabled', true);
         //  Swal.fire('Any fool can use a computer');
         var name = $('.name').val().trim();
         console.log(name);
@@ -317,7 +317,7 @@
                     return false;
                 }
                 document.getElementById(alertName).style.display = "none";
-                $('.submitBtn').removeAttr('disabled');
+                
                 $(".form").submit();
                 return true;
             }

@@ -314,7 +314,7 @@
             <!--end::Nav-->
             <!--begin::Form-->
 
-            <form id="designation_form kt_modal_create_campaign_stepper_form " class="form formStyle " method="post"
+            <form id="designation_form kt_modal_create_campaign_stepper_form " class="form formStyle addProjectValla" method="post"
                 enctype="multipart/form-data" action="{{ url('projects') }}">
                 <!--begin::Step 1-->
                 <div class="current" data-kt-stepper-element="content">
@@ -750,8 +750,9 @@
     </div>
 
     <script>
-        function nextLevel(get) {
 
+        function nextLevel(get) {
+console.log("worked 11");
             var actTab = $(".tablinks.active");
             let event = actTab.next(".tablinks");
             let l = actTab.next(".tablinks").attr("l");
@@ -1007,6 +1008,7 @@
 
     function set_min(start_date) {
         // alert("ok");
+        $('.start_date').attr('min', start_date);
         $('.end_date').attr('min', start_date);
         $(".mile_start_date").val("");
         $(".mile_end_date").val("");
@@ -1186,16 +1188,36 @@ function mileStone_min_date(mStartDate) {
                 if ($(".tablinks.active").is(":last-child")) {
                     // Disable the button after form submission
 
-                    $(".nextlevel").attr("onclick", "$(this).attr('type','submit')");
-                    $(".nextlevel").html('<span class="indicator-label">Submit</span>');
-
-
+                   // $(".nextlevel").attr("onclick", "$(this).attr('type','submit')");
+                    $(".nextlevel").html('<span class="indicator-label projectFinalSubmit">Submit1</span>');
+                
+                  
                 }
             }
         }
 
 
     }
+    var submittedCount = 0;
+    $(document).on('click', '.projectFinalSubmit', function() { 
+     
+        submittedCount++;
+     
+        if(submittedCount ==1){
+
+            console.log("well and good");          
+            $('.addProjectValla').submit();
+        }
+            // to each unchecked checkbox
+            
+        
+           // $(".nextlevel").attr('disabled', true);
+         
+           
+            
+        });
+
+
     $(function() {
 
         document.getElementById("defaultOpen").click(function(e) {

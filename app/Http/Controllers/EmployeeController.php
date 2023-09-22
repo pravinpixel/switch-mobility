@@ -60,7 +60,7 @@ class EmployeeController extends Controller
     }
     public function store(Request $request)
     {
-
+       
         $row = $request->all();
 
         $errors = array();
@@ -106,6 +106,7 @@ class EmployeeController extends Controller
             $model->mobile = $request->mobile;
             $model->department_id = $request->department_id;
             $model->designation_id = $request->designation_id;
+            $model->address = $request->address;
             $model->sap_id = $request->sap_id;
             $model->save();
             if ($request->id != null && $request->IsProfileImage == null) {
@@ -440,6 +441,7 @@ class EmployeeController extends Controller
     {
 
         $employeeImport = new EmployeesImport;
+        Log::info("Employee Import".json_encode($employeeImport));
         $sheet = Excel::import($employeeImport, $request->file('bulkupload')->store('temp'));
         $rows = $employeeImport->data;
         $errors = array();
