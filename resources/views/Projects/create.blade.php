@@ -188,7 +188,7 @@
         .pdf_delete_btn {
             position: absolute !important;
             top: -5px !important;
-            right: -5px !important;
+            right: -33px !important;
             border-radius: 50%;
 
         }
@@ -820,7 +820,7 @@ console.log("worked 11");
                     console.log("If part 1 start Date");
                     Swal.fire(
                         'Warning!',
-                        'End date should be Lessthen than Start date.',
+                        'End date should not be lesser than Start date',
                         'error'
                     );
 
@@ -843,7 +843,7 @@ console.log("worked 11");
                     console.log("If part 2 start Date");
                     Swal.fire(
                         'Warning!',
-                        'End date should be greater than End date.',
+                        'End date should not be lesser than Start date',
                         'error'
                     );
 
@@ -1189,7 +1189,7 @@ function mileStone_min_date(mStartDate) {
                     // Disable the button after form submission
 
                    // $(".nextlevel").attr("onclick", "$(this).attr('type','submit')");
-                    $(".nextlevel").html('<span class="indicator-label projectFinalSubmit">Submit1</span>');
+                    $(".nextlevel").html('<span class="indicator-label projectFinalSubmit">Submit</span>');
                 
                   
                 }
@@ -1305,7 +1305,7 @@ function mileStone_min_date(mStartDate) {
                             var levelBtnRow = '<button type="button" class="tablinks ' + className +
                                 '"  onclick="openCity(event, London' + WFLevelBtn[wfl].levelId + ',' +
                                 WFLevelBtn[wfl].levelId + ')" id="defaultOpen" l="' + WFLevelBtn[wfl]
-                                .levelId + '" >Level' + WFLevelBtn[wfl].levelId + '</button>';
+                                .levelId + '" >Level ' + WFLevelBtn[wfl].levelId + '</button>';
                             $('.tab').append(levelBtnRow);
                             var contentshow = "";
                             if (wfl != 0) {
@@ -1506,7 +1506,7 @@ function mileStone_min_date(mStartDate) {
                         var levelBtnRow =
                             '<button type="button" class="tablinks"  onclick="openCity(event, London' +
                             WFLevelBtn[wfl].levelId + ',' + WFLevelBtn[wfl].levelId +
-                            ')" id="defaultOpen" >Level' + WFLevelBtn[wfl].levelId + '</button>';
+                            ')" id="defaultOpen" >Level ' + WFLevelBtn[wfl].levelId + '</button>';
                         $('.tab').append(levelBtnRow);
                         var contentshow = "";
                         if (wfl != 0) {

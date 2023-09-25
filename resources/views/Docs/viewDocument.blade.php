@@ -222,6 +222,10 @@ use Carbon\Carbon;
         color: blue;
         font-size: 15pt;
     }
+   .milstoneBody {
+    max-height: 300px!important; /* Adjust the height as needed */
+    overflow-y: scroll!important;
+}
 </style>
 <title>VERTICAL TABS</title>
 </head>
@@ -350,7 +354,7 @@ use Carbon\Carbon;
             </div>
             <div class="col-md-3">
                 <h4>Upload Date</h4>
-                <p>{{ $details->created_at }}</p>
+                <p>{{ date('d-m-Y H:i:s', strtotime($details->created_at)) }}</p>
             </div>
             <div class="col-md-3">
                 <h4>Document Type</h4>
@@ -382,13 +386,13 @@ use Carbon\Carbon;
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Milestone Name</th>
+                                    <th>Milestone Name1</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Level</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody >
                                 @foreach($milestoneDatas as $milestoneData)
                                 <tr>
                                     <td>{{$milestoneData->milestone}}</td>
@@ -456,7 +460,7 @@ use Carbon\Carbon;
                             <th>Level</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody >
                         @foreach($milestoneDatas as $milestoneData)
                         <?php
                         $pStartDate = date('d-m-Y', strtotime($milestoneData->mile_start_date));
@@ -763,7 +767,7 @@ use Carbon\Carbon;
                                     versionMainDocDiv += '<div class="accordion " style="margin:auto;width:98%;" id="accordionExample' + key + '">';
                                     versionMainDocDiv += '<div class="card p-0"> <div class=" border-0" id="heading' + key + '">';
                                     versionMainDocDiv += '<h5 class="mb-0 w-100">';
-                                    versionMainDocDiv += '<button class="btn  btn-link p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;width:99%;" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold;padding-left:10px;">' + currentFileName + '</h3> <p class="text-right mainlevelStatus-' + level + "-" + key + '"></p> <p class="btn btn-' + statusColour + ' status-accordion" style="margin-right:40px;">' + currentStatusData + '</p></button>';
+                                    versionMainDocDiv += '<button class="btn  btn-link p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;width:99%;" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold;padding-left:10px;max-width:60px!important">' + currentFileName + '</h3> <p class="text-right mainlevelStatus-' + level + "-" + key + '"></p> <p class="btn btn-' + statusColour + ' status-accordion" style="margin-right:40px;">' + currentStatusData + '</p></button>';
                                     versionMainDocDiv += '</h5>';
                                     versionMainDocDiv += '</div>';
                                     versionMainDocDiv += '<div id="collapse' + key + '" class="collapse fade" aria-labelledby="heading' + key + '" data-parent="#accordionExample' + key + '">';

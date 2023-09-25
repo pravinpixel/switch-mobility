@@ -470,7 +470,7 @@
                     console.log("If part 1 start Date");
                     Swal.fire(
                         'Warning!',
-                        'End date should be Lessthen than Start date.',
+                        'End date should not be lesser than Start date',
                         'error'
                     );
 
@@ -493,7 +493,7 @@
                     console.log("If part 2 start Date");
                     Swal.fire(
                         'Warning!',
-                        'End date should be greater than End date.',
+                        'End date should not be lesser than Start date',
                         'error'
                     );
 

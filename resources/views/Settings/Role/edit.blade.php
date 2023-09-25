@@ -367,6 +367,16 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
+                                            <tr>
+                                                <td>16</td>
+                                                <td>Level Report</td>
+                                                <td><input type="checkbox" name="permission[]" value="level-report-view" class='permission permissionEdit' <?php echo (in_array("level-report-view", $allroles) ? "checked" : ''); ?>></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

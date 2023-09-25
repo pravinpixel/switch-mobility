@@ -232,7 +232,7 @@ class ApprovalListController extends Controller
                 }
             }
             Log::info("passedLine no 132 ter ");
-            $pdf->Output('merged.pdf', 'I');
+            $pdf->Output('merged.pdf', 'd');
         } else {
             $msg = "Approved Docs Not Available!";
             return Redirect::back()->withErrors($msg);
@@ -604,7 +604,7 @@ class ApprovalListController extends Controller
         Log::info("passedLine no 132 ter ");
         $dFilename = $substringBeforeDotFileName . '.pdf';
 
-        return $pdf->Output($dFilename, 'I');
+        return $pdf->Output($dFilename, 'd');
     }
     private function saveImageFromDrawing(Drawing $drawing, $uploadFolder)
     {

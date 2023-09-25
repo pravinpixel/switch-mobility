@@ -23,6 +23,7 @@ use App\Http\Controllers\WorkflowController;
 use App\Models\DocumentType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\SessionTimeoutRedirect;
 /*
 | Here is where you can register web routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
@@ -32,7 +33,7 @@ use Illuminate\Support\Facades\Route;
 
 // Department
 Route::group([
-    'middleware' => ['auth', 'is_admin', 'web']
+    'middleware' => ['auth', 'is_admin', 'web','App\Http\Middleware\SessionTimeoutRedirect']
 ], function () {
     Route::get('home', [HomeController::class, 'adminHome'])->name('home');
     Route::get('doclistingIndex/{type}', [Doclistings::class, 'filterindex'])->name('doclistingIndex');
@@ -152,23 +153,25 @@ Route::group([
     Route::post('levelwiseReportSearchFilter', [LevelReportController::class, 'levelwiseReportSearchFilter'])->name('levelwiseReportSearchFilter');
 
 
-//Department
-Route::post('departmentEdit', [DepartmentController::class, 'departmentEdit'])->name('departmentEdit');
-Route::post('workflowEdit', [WorkflowController::class, 'workflowEdit'])->name('workflowEdit');
-Route::post('projectEdit', [ProjectController::class, 'projectEdit'])->name('projectEdit');
-Route::post('designationEdit', [DesignationController::class, 'designationEdit'])->name('designationEdit');
-Route::post('employeeEdit', [EmployeeController::class, 'employeeEdit'])->name('employeeEdit');
-Route::post('documentTypeEdit', [DocumentTypeController::class, 'documentTypeEdit'])->name('documentTypeEdit');
-Route::post('privilageEdit', [RolesController::class, 'privilageEdit'])->name('privilageEdit');
-Route::post('userEdit', [UserController::class, 'userEdit'])->name('userEdit');
+    //Department
+    Route::post('departmentEdit', [DepartmentController::class, 'departmentEdit'])->name('departmentEdit');
+    Route::post('workflowEdit', [WorkflowController::class, 'workflowEdit'])->name('workflowEdit');
+    Route::post('projectEdit', [ProjectController::class, 'projectEdit'])->name('projectEdit');
+    Route::post('designationEdit', [DesignationController::class, 'designationEdit'])->name('designationEdit');
+    Route::post('employeeEdit', [EmployeeController::class, 'employeeEdit'])->name('employeeEdit');
+    Route::post('documentTypeEdit', [DocumentTypeController::class, 'documentTypeEdit'])->name('documentTypeEdit');
+    Route::post('privilageEdit', [RolesController::class, 'privilageEdit'])->name('privilageEdit');
+    Route::post('userEdit', [UserController::class, 'userEdit'])->name('userEdit');
+
+// Custom Logout Route
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('/logout',  [LoginController::class, 'logout']);
 
 
-
-//Approval List
-Route::get('approvalListIndex', [ApprovalListController::class, 'index'])->name('approvalListIndex');
-Route::post('approvedDocsView', [ApprovalListController::class, 'approvedDocsView'])->name('approvedDocsView');
-Route::post('approvedDocsDownload', [ApprovalListController::class, 'approvedDocsDownload'])->name('approvedDocsDownload');
-
+    //Approval List
+    Route::get('approvalListIndex', [ApprovalListController::class, 'index'])->name('approvalListIndex');
+    Route::post('approvedDocsView', [ApprovalListController::class, 'approvedDocsView'])->name('approvedDocsView');
+    Route::post('approvedDocsDownload', [ApprovalListController::class, 'approvedDocsDownload'])->name('approvedDocsDownload');
 });
 Route::get('/', function () {
     return redirect(route('login'));

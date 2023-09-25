@@ -183,7 +183,7 @@
         .pdf_delete_btn {
             position: absolute !important;
             top: 0px !important;
-            right: -20px !important;
+            right: -33px !important;
             /* border-radius: 50%; */
          
 
@@ -191,7 +191,7 @@
         .pdf-download{
             position: absolute !important;
             bottom: 0px !important;
-            right: -20px !important;
+            right: -33px !important;
             /* border-radius: 50%; */
         }
 
@@ -706,21 +706,23 @@
                                 <div class="pdf" onclick="event.preventDefault()"><img src=" https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg/768px-Microsoft_Office_Excel_%282019%E2%80%93present%29.svg.png?20190925171014" class="pdf-iframe " scrolling="no">
                                     @if ($isAllowDeleteMainDocument)
                                     <button class="btn btn-danger btn-sm pdf_delete_btn btn-icon" path_name="{{ $mainDocumentPath}}" onclick="dbdeletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
+                                    @endif
                                     <button class="btn btn-primary btn-sm btn-icon pdf-download" path_name="{{ $mainDocumentPath}}" onclick="downloadDocs(this)" > 
                                         <i class="fas fa-download "></i>
                                     </button>
-                                    @endif
+                                  
                                    
                                 </div>
                             @elseif ($pdf)
                             <div class="pdf" onclick="event.preventDefault()"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/833px-PDF_file_icon.svg.png" class="pdf-iframe "  scrolling="no"></img>
                                 @if ($isAllowDeleteMainDocument)
                                 <button class="btn btn-danger btn-sm pdf_delete_btn  btn-icon" onclick="dbdeletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
+                                @endif
                                 <button class="btn btn-primary btn-sm  btn-icon pdf-download"  path_name="{{ $mainDocumentPath}}" onclick="downloadDocs(this)"> 
                                     <i class="fas fa-download "></i>
                                 </button>
                                    
-                                @endif
+                               
                             </div>
                             @elseif ($word)
                             <div class="pdf" onclick="event.preventDefault()"><img src=" https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Microsoft_Office_Word_%282019%E2%80%93present%29.svg/1101px-Microsoft_Office_Word_%282019%E2%80%93present%29.svg.png" class="pdf-iframe "  scrolling="no">
@@ -729,6 +731,9 @@
                             
                                 <button class="btn btn-danger btn-icon w-30px h-30px btn-sm pdf_delete_btn btn-icon " onclick="dbdeletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
                                 @endif
+                                <button class="btn btn-primary btn-sm  btn-icon pdf-download"  path_name="{{ $mainDocumentPath}}" onclick="downloadDocs(this)"> 
+                                    <i class="fas fa-download "></i>
+                                </button>
                             </div>
                             @else
                                 <!-- Handle unknown file types here -->
@@ -1307,7 +1312,7 @@
                             var levelBtnRow = '<button type="button" class="tablinks ' + className +
                                 '"  onclick="openCity(event, London' + WFLevelBtn[wfl].levelId + ',' +
                                 WFLevelBtn[wfl].levelId + ')" id="defaultOpen" l="' + WFLevelBtn[wfl]
-                                .levelId + '" >Level' + WFLevelBtn[wfl].levelId + '</button>';
+                                .levelId + '" >Level ' + WFLevelBtn[wfl].levelId + '</button>';
                             $('.tab').append(levelBtnRow);
                             var contentshow = "";
                             if (wfl != 0) {
@@ -1516,7 +1521,7 @@
                         var levelBtnRow = '<button type="button" class="tablinks ' + active +
                             '"  onclick="openCity(event, London' + WFLevelBtn[wfl].levelId + ',' +
                             WFLevelBtn[wfl].levelId + ')" id="defaultOpen"  l="' + WFLevelBtn[wfl].levelId +
-                            '" >Level' + WFLevelBtn[wfl].levelId + '</button>';
+                            '" >Level ' + WFLevelBtn[wfl].levelId + '</button>';
                         $('.tab').append(levelBtnRow);
                         var contentshow = "";
                         if (wfl != 0) {
@@ -1525,7 +1530,7 @@
 
                         var levelTabContentData = '<div id="London' + WFLevelBtn[wfl].levelId +
                             '" class="tabcontent" ' + contentshow + '>';
-                        levelTabContentData += '<br><h4 style="text-align:center;">Level' + WFLevelBtn[wfl]
+                        levelTabContentData += '<br><h4 style="text-align:center;">Level ' + WFLevelBtn[wfl]
                             .levelId + '</h4>';
 
                         levelTabContentData += '<input type="hidden" class="project_level' + WFLevelBtn[wfl]

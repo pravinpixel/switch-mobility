@@ -42,11 +42,19 @@ class Handler extends ExceptionHandler
     }
     public function render($request, Throwable $exception)
     {
-        if ($exception instanceof AccessDeniedHttpException) {
+        // if ($exception instanceof AccessDeniedHttpException) {
           
-            auth()->logout();
+        //     auth()->logout();
+        //     return redirect()->route('logout');
+        // }
+
+        if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
+                auth()->logout();
             return redirect()->route('logout');
-        }
+            // Handle the token mismatch here (e.g., show an error message or redirect)
+        } 
+       
+
         return parent::render($request, $exception);
     }
 }

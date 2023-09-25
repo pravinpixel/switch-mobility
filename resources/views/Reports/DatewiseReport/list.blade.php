@@ -185,7 +185,7 @@
                 if (startDate > endDate) {
                     Swal.fire(
                         'Warning!',
-                        'End date should be greater than Start date.',
+                        'End date should not be lesser than Start date',
                         'error'
                     );
 

@@ -69,13 +69,22 @@ class Doclistings extends Controller
             $getStatus = ProjectDocumentStatusByLevel::where('level_id', $getLastLevel)
                 ->where('project_id', $projectId)
                 ->first();
-            if ($getStatus->status == 4) {
-                array_push($approvedmodelIds, $projectId);
-            } elseif ($getStatus->status == 2) {
-                if ($date1->lt($date2)) {
-                    array_push($overDuemodelIds, $projectId);
+            if ($getStatus) {
+
+                if ($getStatus->status == 4) {
+                    array_push($approvedmodelIds, $projectId);
+                } elseif ($getStatus->status == 2) {
+                    if ($date1->lt($date2)) {
+                        array_push($overDuemodelIds, $projectId);
+                    } else {
+                        array_push($declinedmodelIds, $projectId);
+                    }
                 } else {
-                    array_push($declinedmodelIds, $projectId);
+                    if ($date1->lt($date2)) {
+                        array_push($overDuemodelIds, $projectId);
+                    } else {
+                        array_push($pandingDocumentModelIds, $projectId);
+                    }
                 }
             } else {
                 if ($date1->lt($date2)) {
@@ -1281,11 +1290,11 @@ class Doclistings extends Controller
                 if ($empId) {
                     $levelModel->approver_id = $empId;
                 }
-            }else{
+            } else {
                 $levelModel->approver_id = null;
                 $levelModel->approved_date = null;
             }
-            $levelModel->status = $status;          
+            $levelModel->status = $status;
 
             $levelModel->save();
             return $levelModel;

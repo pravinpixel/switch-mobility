@@ -348,6 +348,16 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
+                                            <tr>
+                                                <td>16</td>
+                                                <td>Level Report</td>
+                                                <td><input type="checkbox" name="permission[]" value="level-report-view" class='permission permisionCreate'></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

@@ -738,15 +738,15 @@
                     var desg = val.designationName;
                     var email = val.email;
                     var pic = (val.profileImage) ? val.profileImage : 'noimage.png';
-                    var folder = "images/Employee/";
+                    var folder = "{{ asset('images/Employee') }}"+"/";                             
                     folder += pic;
-
+               
                     var firsttd =
                         '<div class="symbol symbol-circle symbol-50px overflow-hidden me-3">';
                     firsttd += '<a href="javascript:void(0);">';
                     firsttd += '<div class="symbol-label">';
                     firsttd +=
-                        '<img src=' + folder + ' alt="' + name + '" width="50" height="50" class="w-100" />';
+                        '<img src=' + folder + ' alt="' + name + '" width="50" height="50" class="w-100 testd" />';
                     firsttd += ' </div>';
                     firsttd += '</a>';
                     firsttd += '</div>';

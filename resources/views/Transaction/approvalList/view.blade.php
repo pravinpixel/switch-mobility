@@ -222,6 +222,10 @@ use Carbon\Carbon;
         color: blue;
         font-size: 15pt;
     }
+    .milstoneBody {
+    max-height: 300px!important; /* Adjust the height as needed */
+    overflow-y: scroll!important;
+}
 </style>
 <title>VERTICAL TABS</title>
 </head>
@@ -350,7 +354,7 @@ use Carbon\Carbon;
             </div>
             <div class="col-md-3">
                 <h4>Upload Date</h4>
-                <p>{{ $details->created_at }}</p>
+                <p>{{date('d-m-Y H:i:s', strtotime($details->created_at)) }}</p>
             </div>
             <div class="col-md-3">
                 <h4>Document Type</h4>
