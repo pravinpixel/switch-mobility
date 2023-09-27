@@ -250,8 +250,8 @@ class ApprovalListController extends Controller
     }
     public function approvedDocsDownload(Request $request)
     {
-        $LibreOfficePath = config('app.LibreOfficePath');
-        $environment = config('app.env');
+
+
         // // Load the Excel file
         // $spreadsheet = IOFactory::load(public_path('temp/FinancialSample.xlsx'));
 
@@ -296,7 +296,59 @@ class ApprovalListController extends Controller
         $filePath = public_path('projectDocuments/' . $model->document_name);
         $filenameWithoutExtension = pathinfo($filePath, PATHINFO_FILENAME);
         //  dd($extension);
-        if ($extension == "xlsx" || $extension == "xls") {
+        if ($extension == "Abcd") {
+
+            // Get the path to the Excel file in the public folder
+            $excelFilePath = $filePath;
+
+            // Check if the file exists
+            if (file_exists($excelFilePath)) {
+                // Generate a unique file name for the PDF
+                $timestamp = time();
+                $randomNumber = mt_rand(1000, 9999);
+                $pdfFileName = 'result_' . $timestamp . '_' . $randomNumber . '.pdf';
+                // Get the path to save the PDF file in the same "uploads" folder
+                $pdfFilePath = public_path('uploads/' . $pdfFileName);
+                // Create the instructions JSON
+                $instructions = '{
+                        "parts": [
+                            {
+                                "file": "document"
+                            }
+                        ]
+                    }';
+                // Initialize cURL
+                $curl = curl_init();
+                // Set cURL options
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://api.pspdfkit.com/build',
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_POSTFIELDS => array(
+                        'instructions' => $instructions,
+                        'document' => new \CURLFile($excelFilePath)
+                    ),
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Bearer pdf_live_prG44gX9vAAjcR6y1xyMyczrWtMpgBVHh5hSqA4DIWc'
+                    ),
+                    CURLOPT_FILE => fopen($pdfFilePath, 'w+'),
+                ));
+                // Execute the cURL request
+                $response = curl_exec($curl);
+                // Close the cURL session
+                curl_close($curl);
+                // Check if the conversion was successful
+
+                if ($response) {
+                    $pdfPath = public_path('uploads/' . $pdfFileName);
+                } else {
+                    dd("Conversion failed. Please try again.");
+                }
+            } else {
+                dd("Excel file not found.");
+            }
+        } else if ($extension == "xlsx" || $extension == "xls") {
 
             $pdfLocationFolder = public_path('temp_pdf') . '/' . $request->id;
 
@@ -307,10 +359,10 @@ class ApprovalListController extends Controller
             if (!File::exists($pdfLocationFolder)) {
                 mkdir($pdfLocationFolder . '/', 0777, true);
             }
-
+            $environment = config('app.env');
 
             if ($environment === 'local') {
-                $command = "\"$LibreOfficePath\" --headless --convert-to pdf --outdir " . escapeshellarg($pdfLocationFolder) . " " . escapeshellarg($filePath);
+                $command = "\"C:\\Program Files\\LibreOffice\\program\\soffice.exe\" --headless --convert-to pdf --outdir " . escapeshellarg($pdfLocationFolder) . " " . escapeshellarg($filePath);
             } else {
                 $command = "libreoffice --headless --convert-to pdf --outdir " . escapeshellarg($pdfLocationFolder) . " " . escapeshellarg($filePath);
             }
@@ -336,8 +388,200 @@ class ApprovalListController extends Controller
 
                 dd('error', 'PDF conversion failed check Again .');
             }
+
+
+            // $spreadsheet = IOFactory::load($filePath);
+            // $sheetNames = $spreadsheet->getSheetNames();
+            // $html = '<div>';
+            // foreach ($sheetNames as $sheetName) {
+            //     $worksheet = $spreadsheet->getSheetByName($sheetName);
+            //     $highestRow = $worksheet->getHighestRow();
+            //     $highestColumn = $worksheet->getHighestColumn();
+            //     $highestColumnIndex = Coordinate::columnIndexFromString($highestColumn);
+            //     $html .= '<h2>' . $sheetName . '</h2>';
+            //     $html .= '<table class="table" id="Excel">';
+            //     // Get the drawing collection
+            //     $drawingCollection = $worksheet->getDrawingCollection();
+            //     // Create a 2D array to store images based on their coordinates
+            //     $images = [];
+            //     // Iterate over the drawing collection
+            //     foreach ($drawingCollection as $drawing) {
+            //         // Check if the drawing is an image
+            //         if ($drawing instanceof Drawing && $drawing->getCoordinates() !== null) {
+            //             // Save the image
+            //             $imagePath = $this->saveImageFromDrawing($drawing, $uploadFolder);
+            //             // Determine the position of the image
+            //             $imageCoordinates = $drawing->getCoordinates();
+            //             [$imageColumn, $imageRow] = Coordinate::coordinateFromString($imageCoordinates);
+            //             $imageColumnIndex = Coordinate::columnIndexFromString($imageColumn) - 1;
+            //             // Store the image in the corresponding cell of the images array
+            //             // Read the image file content
+            //             if ($imagePath) {
+            //                 // dd($imagePath);
+            //                 $imageContent = file_get_contents($uploadFolder . "/" . $imagePath);
+            //                 // Encode the image content to base64
+            //                 $base64Image = base64_encode($imageContent);
+            //                 // Create the img tag with the base64 source
+            //                 $imgTag = '<img src="data:image/jpeg;base64,' . $base64Image . '">';
+            //                 // Assign the img tag to the array element
+            //                 $images[$imageRow][$imageColumnIndex] = $imgTag;
+            //             }
+            //         }
+            //     }
+            //     // Iterate over the cells and construct the HTML table
+            //     for ($row = 1; $row <= $highestRow; $row++) {
+            //         $html .= '<tr>';
+            //         $emptyColumnCount = 0;
+            //         for ($column = 1; $column <= $highestColumnIndex; $column++) {
+            //             $cell = $worksheet->getCellByColumnAndRow($column, $row);
+            //             $cellValue = $cell->getFormattedValue();
+            //             $adjustedColumn = $column - $emptyColumnCount;
+            //             $cellStyles = $worksheet->getStyleByColumnAndRow($adjustedColumn, $row);
+            //             $cellAlignment = $cellStyles->getAlignment();
+            //             $cellFont = $cellStyles->getFont();
+            //             $cellFill = $cellStyles->getFill();
+            //             $cellBorders = $cellStyles->getBorders();
+            //             $html .= '<td style="';
+            //             $html .= 'text-align:' . $this->getHorizontalAlign($cellAlignment->getHorizontal()) . ';';
+            //             $html .= 'font-weight:' . ($cellFont->getBold() ? 'bold' : 'normal') . ';';
+            //             $html .= 'color:#' . $cellFont->getColor()->getRGB() . ';';
+            //             $html .= 'background-color:#' . $cellFill->getStartColor()->getRGB() . ';';
+            //             $html .= 'border-top: ' . $this->getBorderStyle($cellBorders->getTop()->getBorderStyle()) . ' ' . $cellBorders->getTop()->getColor()->getRGB() . ';';
+            //             $html .= 'border-right: ' . $this->getBorderStyle($cellBorders->getRight()->getBorderStyle()) . ' ' . $cellBorders->getRight()->getColor()->getRGB() . ';';
+            //             $html .= 'border-bottom: ' . $this->getBorderStyle($cellBorders->getBottom()->getBorderStyle()) . ' ' . $cellBorders->getBottom()->getColor()->getRGB() . ';';
+            //             $html .= 'border-left: ' . $this->getBorderStyle($cellBorders->getLeft()->getBorderStyle()) . ' ' . $cellBorders->getLeft()->getColor()->getRGB() . ';';
+            //             $html .= '">';
+            //             // Check if an image exists at the current cell coordinates
+            //             if (isset($images[$row][$column - 1])) {
+            //                 $html .= $images[$row][$column - 1];
+            //             } else {
+            //                 $html .= $cellValue;
+            //             }
+            //             $html .= '</td>';
+            //         }
+            //         $html .= '</tr>';
+            //     }
+            //     $html .= '</table>';
+            // }
+            // $html .= '</div>';
+            // $dompdf = new Dompdf();
+            // $dompdf->loadHtml($html);
+            // $dompdf->setPaper('A4', 'portrait');
+            // $dompdf->render();
+            // // Save the PDF to the upload folder
+            // $randomNumber = Str::random(6);
+            // $filename =  $randomNumber . '.pdf';
+
+            // $pdfPath = $uploadFolder . '/' . $filename;
+            // file_put_contents($pdfPath, $dompdf->output());
+        } else if ($extension == "XLS11") {
+
+            $pdfLocationFolder = public_path('temp_pdf') . '/' . $request->id;
+            if (File::exists($pdfLocationFolder)) {
+
+                File::deleteDirectory($pdfLocationFolder);
+            }
+            if (!File::exists($pdfLocationFolder)) {
+                mkdir($pdfLocationFolder . '/', 0777, true);
+            }
+            $environment = config('app.env');
+
+            if ($environment === 'local') {
+                $command = "\"C:\\Program Files\\LibreOffice\\program\\soffice.exe\" --headless --convert-to pdf --outdir " . escapeshellarg($pdfLocationFolder) . " " . escapeshellarg($filePath);
+            } else {
+                $command = "libreoffice --headless --convert-to pdf --outdir " . escapeshellarg($pdfLocationFolder) . " " . escapeshellarg($filePath);
+            }
+
+            exec($command, $output, $returnCode);
+            dd("wll");
+            $spreadsheet = IOFactory::load($filePath);
+            $sheetNames = $spreadsheet->getSheetNames();
+            $html = '<div>';
+            foreach ($sheetNames as $sheetName) {
+                $worksheet = $spreadsheet->getSheetByName($sheetName);
+                $highestRow = $worksheet->getHighestRow();
+                $highestColumn = $worksheet->getHighestColumn();
+                $highestColumnIndex = Coordinate::columnIndexFromString($highestColumn);
+                $html .= '<h2>' . $sheetName . '</h2>';
+                $html .= '<table class="table" id="Excel">';
+                // Get the drawing collection
+                $drawingCollection = $worksheet->getDrawingCollection();
+                // Create a 2D array to store images based on their coordinates
+                $images = [];
+                // Iterate over the drawing collection
+                foreach ($drawingCollection as $drawing) {
+                    // Check if the drawing is an image
+                    if ($drawing instanceof Drawing && $drawing->getCoordinates() !== null) {
+                        // Save the image
+                        $imagePath = $this->saveImageFromDrawing($drawing, $uploadFolder);
+                        // Determine the position of the image
+                        $imageCoordinates = $drawing->getCoordinates();
+                        [$imageColumn, $imageRow] = Coordinate::coordinateFromString($imageCoordinates);
+                        $imageColumnIndex = Coordinate::columnIndexFromString($imageColumn) - 1;
+                        // Store the image in the corresponding cell of the images array
+                        // Read the image file content
+                        if ($imagePath) {
+                            // dd($imagePath);
+                            $imageContent = file_get_contents($uploadFolder . "/" . $imagePath);
+                            // Encode the image content to base64
+                            $base64Image = base64_encode($imageContent);
+                            // Create the img tag with the base64 source
+                            $imgTag = '<img src="data:image/jpeg;base64,' . $base64Image . '">';
+                            // Assign the img tag to the array element
+                            $images[$imageRow][$imageColumnIndex] = $imgTag;
+                        }
+                    }
+                }
+                // Iterate over the cells and construct the HTML table
+                for ($row = 1; $row <= $highestRow; $row++) {
+                    $html .= '<tr>';
+                    $emptyColumnCount = 0;
+                    for ($column = 1; $column <= $highestColumnIndex; $column++) {
+                        $cell = $worksheet->getCellByColumnAndRow($column, $row);
+                        $cellValue = $cell->getFormattedValue();
+                        $adjustedColumn = $column - $emptyColumnCount;
+                        $cellStyles = $worksheet->getStyleByColumnAndRow($adjustedColumn, $row);
+                        $cellAlignment = $cellStyles->getAlignment();
+                        $cellFont = $cellStyles->getFont();
+                        $cellFill = $cellStyles->getFill();
+                        $cellBorders = $cellStyles->getBorders();
+                        $html .= '<td style="';
+                        $html .= 'text-align:' . $this->getHorizontalAlign($cellAlignment->getHorizontal()) . ';';
+                        $html .= 'font-weight:' . ($cellFont->getBold() ? 'bold' : 'normal') . ';';
+                        $html .= 'color:#' . $cellFont->getColor()->getRGB() . ';';
+                        $html .= 'background-color:#' . $cellFill->getStartColor()->getRGB() . ';';
+                        $html .= 'border-top: ' . $this->getBorderStyle($cellBorders->getTop()->getBorderStyle()) . ' ' . $cellBorders->getTop()->getColor()->getRGB() . ';';
+                        $html .= 'border-right: ' . $this->getBorderStyle($cellBorders->getRight()->getBorderStyle()) . ' ' . $cellBorders->getRight()->getColor()->getRGB() . ';';
+                        $html .= 'border-bottom: ' . $this->getBorderStyle($cellBorders->getBottom()->getBorderStyle()) . ' ' . $cellBorders->getBottom()->getColor()->getRGB() . ';';
+                        $html .= 'border-left: ' . $this->getBorderStyle($cellBorders->getLeft()->getBorderStyle()) . ' ' . $cellBorders->getLeft()->getColor()->getRGB() . ';';
+                        $html .= '">';
+                        // Check if an image exists at the current cell coordinates
+                        if (isset($images[$row][$column - 1])) {
+                            $html .= $images[$row][$column - 1];
+                        } else {
+                            $html .= $cellValue;
+                        }
+                        $html .= '</td>';
+                    }
+                    $html .= '</tr>';
+                }
+                $html .= '</table>';
+            }
+            $html .= '</div>';
+            $dompdf = new Dompdf();
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+            // Save the PDF to the upload folder
+            $randomNumber = Str::random(6);
+            $filename =  $randomNumber . '.pdf';
+
+            $pdfPath = $uploadFolder . '/' . $filename;
+            file_put_contents($pdfPath, $dompdf->output());
         } else if ($extension == "pdf") {
             $pdfPath = public_path('projectDocuments/' . $model->document_name);
+            $storePath = public_path('/xlToPdf/temp');
+            // $pf = $this->tempController->pdtToImage($pdfPath, $storePath);
         } else if ($extension == "doc" || $extension == "docx") {
 
             $docsPath = public_path('projectDocuments/' . $model->document_name);
@@ -350,10 +594,10 @@ class ApprovalListController extends Controller
             if (!File::exists($pdfLocationFolder)) {
                 mkdir($pdfLocationFolder . '/', 0777, true);
             }
-
+            $environment = config('app.env');
 
             if ($environment === 'local') {
-                $command = "\"$LibreOfficePath\" --headless --convert-to pdf --outdir " . escapeshellarg($pdfLocationFolder) . " " . escapeshellarg($docsPath);
+                $command = "\"C:\\Program Files\\LibreOffice\\program\\soffice.exe\" --headless --convert-to pdf --outdir " . escapeshellarg($pdfLocationFolder) . " " . escapeshellarg($docsPath);
             } else {
                 $command = "libreoffice --headless --convert-to pdf --outdir " . escapeshellarg($pdfLocationFolder) . " " . escapeshellarg($docsPath);
             }
@@ -378,6 +622,25 @@ class ApprovalListController extends Controller
 
                 dd('error', 'PDF conversion failed check Again .');
             }
+
+
+            // $documentPath = public_path('projectDocuments/' . $model->document_name);
+
+            // $pdfPath = public_path('xlToPdf/temp' . $request->id . '.pdf');
+            // if (File::exists($pdfPath)) {
+
+            //     File::deleteDirectory($pdfPath);
+            // }
+
+            // // Load the Word document using PhpSpreadsheet
+            // $spreadsheet = IOFactory::load($documentPath);
+
+            // // Set PDF rendering options
+            // Settings::setPdfRendererName(Settings::PDF_RENDERER_TCPDF);
+            // Settings::setPdfRendererPath(base_path('vendor/tecnickcom/tcpdf'));
+            // // Create a PDF writer and save the PDF
+            // $writer = new Tcpdf($spreadsheet);
+            // $writer->save($pdfPath);
         } else {
 
             $docsPath = public_path('projectDocuments/' . $model->document_name);
@@ -413,6 +676,20 @@ class ApprovalListController extends Controller
 
                 dd('error', 'PDF conversion failed check Again .');
             }
+
+
+            // if (File::exists($pdfPath)) {
+
+            //     File::deleteDirectory($pdfPath);
+            // }
+
+
+            // $domPdfPath = base_path('vendor/dompdf/dompdf');
+            // \PhpOffice\PhpWord\Settings::setPdfRendererPath($domPdfPath);
+            // \PhpOffice\PhpWord\Settings::setPdfRendererName('DomPDF');
+            // $Content = \PhpOffice\PhpWord\IOFactory::load($filePath);
+            // $PDFWriter = \PhpOffice\PhpWord\IOFactory::createWriter($Content, 'PDF');
+            // $PDFWriter->save($pdfPath);
         }
 
         $delimiter = '/';
@@ -426,9 +703,36 @@ class ApprovalListController extends Controller
             File::deleteDirectory($imagePath);
         }
         File::makeDirectory($imagePath, $mode = 0777, true, true);
+        // $command = "gs -dNOPAUSE -sDEVICE=jpeg -r600 -o {$imagePath}/img%d.jpeg {$pdfPath}";
+        // shell_exec($command);
+        // $imagick = new Imagick();
+        // $imagick->readImage($pdfPath);
 
+        // foreach ($imagick as $pageNumber => $page) {
+        //     // Set the image format and quality
+        //     $page->setImageFormat('jpeg'); // Change format to JPEG
+        //     $page->setImageCompressionQuality(100);
+
+        //     // Set a higher resolution (DPI)
+        //     $page->setResolution(600, 600);
+
+        //     // Enable anti-aliasing
+
+
+        //     // Save each page as an image
+        //     $currentPath = 'img' . ($pageNumber + 1) . '.jpeg'; // Adjust the file format
+        //     $imgpath1 = $imagePath . '/' . $currentPath;
+
+        //     $page->writeImage($imgpath1);
+        // }
+
+        // // Close the Imagick object
+        // $imagick->clear();
+        // $imagick->destroy();
         $pf = $this->tempController->pdtToImage($pdfPath, $imagePath);
         $imagefiles = File::allFiles($imagePath);
+
+
         $pdfPath1 = storage_path('app/finalPdf');
 
         if (File::exists($pdfPath1)) {
