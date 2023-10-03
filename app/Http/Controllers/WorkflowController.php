@@ -36,6 +36,8 @@ class WorkflowController extends Controller
     }
     public function genarateWFCode($wfname)
     {
+        $wfname = str_replace(' ', '', $wfname);
+
         $workflow = Workflow::latest('id')->first();
 
         $runningNo = ($workflow) ? ($workflow->id + 1) : 1;
@@ -74,7 +76,7 @@ class WorkflowController extends Controller
     }
     public function getWorkflowListData()
     {
-        $models = Workflow::whereNull('deleted_at')->get()->toArray();
+        $models = $this->getRunningWorkflowInProject();
         return response()->json($models);
     }
     public function index()

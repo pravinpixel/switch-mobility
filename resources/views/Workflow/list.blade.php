@@ -414,10 +414,11 @@
                 console.log(val);
             
                 var id = val.id;
-                var wfname = val.workflow_name;
-                var wfcode = val.workflow_code;
+                var runningStatus = val.runningStatus;
+                var wfname = val.wfName;
+                var wfcode = val.wfCode;
                 var wfLevel = val.total_levels;
-                var wfType = (val.workflow_type == 1) ? "FULL" : "Partial";
+                var wfType = (val.wfType == 1) ? "FULL" : "Partial";
                 var statusRes = (val.is_active == 1) ? "checked" : "";
 
                 var statusBtn = '<label class="switch">';
@@ -435,8 +436,12 @@
                     var deleteBtn = '<div onclick="delete_item(' + id + ');" style="display:inline;cursor: pointer; margin-left: 10px;" id="' + id + '" class="" title="Delete Department"><i class="fa-solid fa-trash" style="color:red"></i></div>';
 
                 }
-
-                var actionBtn = (editBtn + deleteBtn);
+                if(runningStatus == false){
+                    var actionBtn = (editBtn + deleteBtn);
+                }else{
+                    var actionBtn ='<span class="badge badge-success">Workflow Assigned</span>';
+                }
+               
 
                 table.row.add([wfname, wfcode, wfLevel,wfType,statusBtn, actionBtn]).draw();
             });

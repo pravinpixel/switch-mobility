@@ -64,6 +64,9 @@
         "preferred-install": "dist",
         "sort-packages": true
     },
+	"files": [
+        "app/CustomHelper.php" // Add the path to your custom helper file here
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true
 }
