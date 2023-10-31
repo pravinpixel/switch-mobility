@@ -703,7 +703,7 @@
                                     <i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span>
                                 </div>
                                 @if ($excel)
-                                <div class="pdf" onclick="event.preventDefault()"><img src=" https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg/768px-Microsoft_Office_Excel_%282019%E2%80%93present%29.svg.png?20190925171014" class="pdf-iframe " scrolling="no">
+                                <div class="pdf" onclick="event.preventDefault()"><img src="{{ asset('Fileicons/excel.png') }}" class="pdf-iframe " scrolling="no">
                                     @if ($isAllowDeleteMainDocument)
                                     <button class="btn btn-danger btn-sm pdf_delete_btn btn-icon" path_name="{{ $mainDocumentPath}}" onclick="dbdeletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
                                     @endif
@@ -714,7 +714,7 @@
                                    
                                 </div>
                             @elseif ($pdf)
-                            <div class="pdf" onclick="event.preventDefault()"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/833px-PDF_file_icon.svg.png" class="pdf-iframe "  scrolling="no"></img>
+                            <div class="pdf" onclick="event.preventDefault()"><img src="{{ asset('Fileicons/pdf.png') }}" class="pdf-iframe "  scrolling="no"></img>
                                 @if ($isAllowDeleteMainDocument)
                                 <button class="btn btn-danger btn-sm pdf_delete_btn  btn-icon" onclick="dbdeletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
                                 @endif
@@ -725,7 +725,7 @@
                                
                             </div>
                             @elseif ($word)
-                            <div class="pdf" onclick="event.preventDefault()"><img src=" https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Microsoft_Office_Word_%282019%E2%80%93present%29.svg/1101px-Microsoft_Office_Word_%282019%E2%80%93present%29.svg.png" class="pdf-iframe "  scrolling="no">
+                            <div class="pdf" onclick="event.preventDefault()"><img src="{{ asset('Fileicons/word.png') }}" class="pdf-iframe "  scrolling="no">
                                 @if ($isAllowDeleteMainDocument)
                                     
                             
@@ -2015,7 +2015,7 @@
         file.setAttribute('connect_id', uniqueNumber);
 
         if (pdfFile["name"].endsWith(".pdf")) {
-            var objectURL ="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/833px-PDF_file_icon.svg.png";
+            var objectURL ="{{ asset('Fileicons/pdf.png') }}";
             var FileParent = $(file).parent();
             $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><img src="' +
                 objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber +
@@ -2027,7 +2027,7 @@
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
         } else if (pdfFile["name"].endsWith(".doc") || pdfFile["name"].endsWith(".docx")) {
             var objectURL =
-                " https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Microsoft_Office_Word_%282019%E2%80%93present%29.svg/1101px-Microsoft_Office_Word_%282019%E2%80%93present%29.svg.png";
+                "{{ asset('Fileicons/word.png') }}";
             var FileParent = $(file).parent();
             $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><img src="' +
                 objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber +
@@ -2039,7 +2039,7 @@
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
         } else if (pdfFile["name"].endsWith(".csv") || pdfFile["name"].endsWith(".xlsx") || pdfFile["name"].endsWith(
                 ".xls") || pdfFile["name"].endsWith(".XLS")) {
-            var objectURL = " https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg/768px-Microsoft_Office_Excel_%282019%E2%80%93present%29.svg.png?20190925171014";
+            var objectURL = "{{ asset('Fileicons/excel.png') }}";
             var FileParent = $(file).parent();
             $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><img src="' +
                 objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber +

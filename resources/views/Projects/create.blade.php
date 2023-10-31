@@ -760,7 +760,7 @@ console.log("worked 11");
             let lo = "London" + l;
             if ($(".tablinks.active").is(":last-child")) {
                 $(".nextlevel").html(
-                    '<span class="indicator-label  ">Submit <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg--> <!--end::Svg Icon--> </span>'
+                    '<span class="indicator-label  projectFinalSubmit">Submit<!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg--> <!--end::Svg Icon--> </span>'
                 )
             } else {
                 openCity(event, lo, l);
@@ -1189,7 +1189,7 @@ function mileStone_min_date(mStartDate) {
                     // Disable the button after form submission
 
                    // $(".nextlevel").attr("onclick", "$(this).attr('type','submit')");
-                    $(".nextlevel").html('<span class="indicator-label projectFinalSubmit">Submit</span>');
+                    $(".nextlevel").html('<span class="indicator-label projectFinalSubmit">Submit </span>');
                 
                   
                 }
@@ -1202,7 +1202,7 @@ function mileStone_min_date(mStartDate) {
     $(document).on('click', '.projectFinalSubmit', function() { 
      
         submittedCount++;
-     
+        console.log(submittedCount);    
         if(submittedCount ==1){
 
             console.log("well and good");          
@@ -1287,7 +1287,7 @@ function mileStone_min_date(mStartDate) {
                     if (WFLevelBtn.length == 1) {
                         $('.nextLevel').attr('type', 'submit');
                         $(".nextlevel").html(
-                            '<span class="indicator-label  ">Submit <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg--> <!--end::Svg Icon--> </span>'
+                            '<span class="indicator-label projectFinalSubmit">Submit <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg--> <!--end::Svg Icon--> </span>'
                         );
                     }
                     var SelectId = [];
@@ -1933,7 +1933,7 @@ function mileStone_min_date(mStartDate) {
         var disableCheck = ($(file).attr("name") == "main_document[]") ? "disabled" : "";
 
         if (pdfFile["name"].endsWith(".pdf")) {
-            var objectURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/833px-PDF_file_icon.svg.png";
+            var objectURL = "{{ asset('Fileicons/pdf.png') }}";
             var FileParent = $(file).parent();
             $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><img src="' +
                 objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber +
@@ -1945,8 +1945,7 @@ function mileStone_min_date(mStartDate) {
             );
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
         } else if (pdfFile["name"].endsWith(".doc") || pdfFile["name"].endsWith(".docx")) {
-            var objectURL =
-                " https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Microsoft_Office_Word_%282019%E2%80%93present%29.svg/1101px-Microsoft_Office_Word_%282019%E2%80%93present%29.svg.png";
+            var objectURL ="{{ asset('Fileicons/word.png') }}";
             var FileParent = $(file).parent();
             $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><img src="' +
                 objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber +
@@ -1960,7 +1959,7 @@ function mileStone_min_date(mStartDate) {
         } else if (pdfFile["name"].endsWith(".csv") || pdfFile["name"].endsWith(".xlsx") || pdfFile["name"].endsWith(
                 ".xls")||pdfFile["name"].endsWith(
                 ".XLS")) {
-            var objectURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg/768px-Microsoft_Office_Excel_%282019%E2%80%93present%29.svg.png?20190925171014";
+            var objectURL = "{{ asset('Fileicons/excel.png') }}";
             var FileParent = $(file).parent();
             $(FileParent).find(".pdf-view").append('<div class="pdf" onclick="event.preventDefault()" ><img src="' +
                 objectURL + '"  class="pdf-iframe " connect_id="' + uniqueNumber +

@@ -5,6 +5,7 @@ use App\Http\Controllers\BasicController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Doclistings;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\File\FileConversionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\ProjectController;
@@ -171,12 +172,12 @@ Route::post('/logout',  [LoginController::class, 'logout']);
     //Approval List
     Route::get('approvalListIndex', [ApprovalListController::class, 'index'])->name('approvalListIndex');
     Route::post('approvedDocsView', [ApprovalListController::class, 'approvedDocsView'])->name('approvedDocsView');
-    Route::post('approvedDocsDownload', [ApprovalListController::class, 'approvedDocsDownload'])->name('approvedDocsDownload');
+    Route::post('approvedDocsDownload', [FileConversionController::class, 'approvedDocsDownload'])->name('approvedDocsDownload');
 });
 Route::get('/', function () {
     return redirect(route('login'));
 });
 
 // Auth::routes();
-Auth::routes(['reset' => false]);
+Auth::routes(['reset' => false,'logout' => false]);
 Route::get('tempOpen/{id}', [BasicController::class, 'tempOpen'])->name('tempOpen');

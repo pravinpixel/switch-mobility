@@ -339,13 +339,60 @@ class ProjectController extends Controller
 
                 $MainDocumentCount = (isset($request->main_document)) ? count($request->main_document) : 0;
 
+              
+                foreach ($request->milestone as $key => $miles) {
+                    $project_milestone = new ProjectMilestone();
+                    $project_milestone->project_id = $project->id;
+                    $project_milestone->milestone = $request->milestone[$key];
+                    $project_milestone->mile_start_date = $request->mile_start_date[$key];
+                    $project_milestone->mile_end_date = $request->mile_end_date[$key];
+                    $project_milestone->levels_to_be_crossed = $request->level_to_be_crosssed[$key];
+                    $project_milestone->is_active = 1;
+                    $project_milestone->save();
+                }
+
+                for ($a = 0; $a < count($workflowLevelmodels); $a++) {
+
+                    $levelId = $workflowLevelmodels[$a]->levels;
+                    $projectEmployee3 = $this->storeProjectEmployee($request->initiator_id, $project->id, '1', $levelId);
+                    Log::info('ProjectController->Store:-Level Iteration ' . $a . "Level-Id " . ($levelId));
+                    $projectLevelModel = new ProjectLevels();
+                    $projectLevelModel->project_id = $project->id;
+                    $projectLevelModel->project_level = $request->project_level[$a];
+                    $projectLevelModel->priority = (isset($request->priority[$a])) ? $request->priority[$a] : 4;
+                    $projectLevelModel->due_date = (isset($request->due_date[$a])) ? $request->due_date[$a] : date('Y-m-d');
+                    $projectLevelModel->save();
+                    Log::info('ProjectController->Store:-Level Iteration ' . $a . "Level-Id " . ($levelId) . "ProjectLevel " . json_encode($projectLevelModel));
+                    if ($projectLevelModel) {
+                        // for ($b = 0; $b < count($workflowLevelmodels[$a]->workflowLevelDetail); $b++) {
+                        $getname = "approver_" . $levelId;
+
+                        if ($request->$getname) {
+
+
+
+                            $approverArrayCount = (isset($request->$getname)) ? count($request->$getname) : 0;
+                            for ($c = 0; $c < $approverArrayCount; $c++) {
+
+                                $projectApproverModel = new ProjectApprover();
+                                $projectApproverModel->project_id = $project->id;
+                                $projectApproverModel->project_level_id = $projectLevelModel->id;
+                                $projectApproverModel->approver_id = $request->$getname[$c];
+                                $projectApproverModel->designation_id = null;
+                                $projectApproverModel->save();
+
+                                $projectEmployee2 = $this->storeProjectEmployee($request->$getname[$c], $project->id, '2', $request->project_level[$a]);
+                            }
+                        }
+                    }
+                }
                 Log::info('ProjectController->Store:-Main Document Count ' . $MainDocumentCount);
                 if ($MainDocumentCount) {
-                    if (isset($request->project_id) == null) {
+                   // if (isset($request->project_id) == null) {
 
                         $levelApprovermail = $this->emailController->NewApprovalToApprover($project->id, $firstWfLevel);
                         Log::info('ProjectController->Store:-Approver Mail Response ' . json_encode($levelApprovermail));
-                    }
+                   // }
                     $halfPath =  $project->ticket_no . '/main_document/';
                     $upload_path = public_path() . '/projectDocuments/' . $halfPath;
                     Log::info('ProjectController->Store:-Main Doc upload Path  ' . $upload_path);
@@ -447,52 +494,6 @@ class ProjectController extends Controller
                             $docdetail->status = 1;
                             $docdetail->is_latest = 1;
                             $docdetail->save();
-                        }
-                    }
-                }
-                foreach ($request->milestone as $key => $miles) {
-                    $project_milestone = new ProjectMilestone();
-                    $project_milestone->project_id = $project->id;
-                    $project_milestone->milestone = $request->milestone[$key];
-                    $project_milestone->mile_start_date = $request->mile_start_date[$key];
-                    $project_milestone->mile_end_date = $request->mile_end_date[$key];
-                    $project_milestone->levels_to_be_crossed = $request->level_to_be_crosssed[$key];
-                    $project_milestone->is_active = 1;
-                    $project_milestone->save();
-                }
-
-                for ($a = 0; $a < count($workflowLevelmodels); $a++) {
-
-                    $levelId = $workflowLevelmodels[$a]->levels;
-                    $projectEmployee3 = $this->storeProjectEmployee($request->initiator_id, $project->id, '1', $levelId);
-                    Log::info('ProjectController->Store:-Level Iteration ' . $a . "Level-Id " . ($levelId));
-                    $projectLevelModel = new ProjectLevels();
-                    $projectLevelModel->project_id = $project->id;
-                    $projectLevelModel->project_level = $request->project_level[$a];
-                    $projectLevelModel->priority = (isset($request->priority[$a])) ? $request->priority[$a] : 4;
-                    $projectLevelModel->due_date = (isset($request->due_date[$a])) ? $request->due_date[$a] : date('Y-m-d');
-                    $projectLevelModel->save();
-                    Log::info('ProjectController->Store:-Level Iteration ' . $a . "Level-Id " . ($levelId) . "ProjectLevel " . json_encode($projectLevelModel));
-                    if ($projectLevelModel) {
-                        // for ($b = 0; $b < count($workflowLevelmodels[$a]->workflowLevelDetail); $b++) {
-                        $getname = "approver_" . $levelId;
-
-                        if ($request->$getname) {
-
-
-
-                            $approverArrayCount = (isset($request->$getname)) ? count($request->$getname) : 0;
-                            for ($c = 0; $c < $approverArrayCount; $c++) {
-
-                                $projectApproverModel = new ProjectApprover();
-                                $projectApproverModel->project_id = $project->id;
-                                $projectApproverModel->project_level_id = $projectLevelModel->id;
-                                $projectApproverModel->approver_id = $request->$getname[$c];
-                                $projectApproverModel->designation_id = null;
-                                $projectApproverModel->save();
-
-                                $projectEmployee2 = $this->storeProjectEmployee($request->$getname[$c], $project->id, '2', $request->project_level[$a]);
-                            }
                         }
                     }
                 }
@@ -946,9 +947,13 @@ class ProjectController extends Controller
 
     public function projectCodeValidation(Request $request)
     {
-        $model = Project::where('project_code', $request->code)->where('id', '!=', $request->id)->whereNull('deleted_at')->get();
+        $model = Project::where('project_code', $request->code);
+        $model->where('id', '!=', $request->id);
+        $model->whereNull('deleted_at');
+        $getModel = $model->get();
+        
 
-        $response = (count($model)) ? false : true;
+        $response = (count($getModel)) ? false : true;
 
         return response()->json(['response' => $response]);
     }

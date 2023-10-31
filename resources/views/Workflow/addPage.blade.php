@@ -36,11 +36,15 @@
     .Partial-input-container:not(:last-child) .select2-selection__clear {
         /* display: none !important; */
     }
-
-    .select2-selection__choice__remove.addBlock,
+ .select2-selection__choice__remove.addBlock,
     .Partial-input-container button.select2-selection__clear.addBlock {
+       
         display: block !important;
     }
+    [data-kt-indicator="on"] {
+    pointer-events: none!important;   
+}
+   
 </style>
 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
     <!--begin::Content wrapper-->
