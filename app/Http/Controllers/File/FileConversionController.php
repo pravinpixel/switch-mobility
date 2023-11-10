@@ -13,11 +13,12 @@ use PhpOffice\PhpWord\Settings;
 
 class FileConversionController extends Controller
 {
-    protected $excelController, $pdfController;
-    public function __construct(ExcelFileConversionController $excelController, PdfController $pdfController)
+    protected $excelController, $pdfController, $ConvertController;
+    public function __construct(ExcelFileConversionController $excelController, PdfController $pdfController, ConvertController $ConvertController)
     {
         $this->excelController = $excelController;
         $this->pdfController = $pdfController;
+        $this->ConvertController = $ConvertController;
     }
     public function approvedDocsDownload(Request $request)
     {
@@ -33,9 +34,18 @@ class FileConversionController extends Controller
         $fname = $originalFilename . ".pdf";
 
         if ($extension == "xlsx" || $extension == "xls") {
-            dd("under construction");
-            $fileC = $this->excelController->fileConverter($projectId, $filePath);
-            dd($fileC);
+            //new start
+            $epdf = $this->ConvertController->convert($filePath, $projectId);
+            $pdfToImage = $this->pdfToImageFile($epdf, $projectId);
+            $pdfContoller = $this->pdfController->generatePdf($projectId);
+
+            return response()->download($pdfContoller, $fname)->deleteFileAfterSend(true);
+            //new end
+
+
+            // dd("under construction1");
+            // $fileC = $this->excelController->fileConverter($projectId, $filePath);
+            // dd($fileC);
         } elseif ($extension == "pdf") {
             $pdfToImage = $this->pdfToImageFile($filePath, $projectId);
             $pdfContoller = $this->pdfController->generatePdf($projectId);
@@ -65,7 +75,6 @@ class FileConversionController extends Controller
             $pdfContoller = $this->pdfController->generatePdf($projectId);
 
             return response()->download($pdfContoller, $fname)->deleteFileAfterSend(true);
-          
         } else {
             dd("under construction");
         }
@@ -90,6 +99,7 @@ class FileConversionController extends Controller
 
         $pdf = new Pdf($filePath);
         $numPages = $pdf->getNumberOfPages();
+       
         // Set the output directory for the images
         $outputPath = $imageCreatedFolderPath;
         // Convert each page of the PDF to an image
