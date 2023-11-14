@@ -98,30 +98,30 @@ class FileConversionController extends Controller
         $imageWidth = 800;  // Adjust the width as needed
         $imageHeight = 400; // Adjust the height as needed
         // Create Imagick object
-        $imagick = new Imagick();
-        $imagick->readImage($filePath);
+        // $imagick = new Imagick();
+        // $imagick->readImage($filePath);
 
-        // Iterate through each page and convert it to an image
-        foreach ($imagick as $pageNumber => $page) {
-            $page->setImageFormat('png');
-            $outputFile = $imageCreatedFolderPath."/" . 'page_' . ($pageNumber + 1) . '.png';
-            $page->writeImage($outputFile);
-        }
-
-
-        // $pdf = new Pdf($filePath);
-        // $numPages = $pdf->getNumberOfPages();
-        // dd($numPages);
-        // // Set the output directory for the images
-        // $outputPath = $imageCreatedFolderPath;
-        // // Convert each page of the PDF to an image
-        // for ($page = 1; $page <= $numPages; $page++) {
-        //     $imagePath = $outputPath . '/page_' . $page . '.png';
-
-        //     $pdf->setPage($page)->saveImage($imagePath);
-        //     //  $pdf->setPage($page)->setWidth($imageWidth)->setHeight($imageHeight)->saveImage($imagePath);
-        //     //  exec("convert $imagePath -resize {$imageWidth}x{$imageHeight} $imagePath");
+        // // Iterate through each page and convert it to an image
+        // foreach ($imagick as $pageNumber => $page) {
+        //     $page->setImageFormat('png');
+        //     $outputFile = $imageCreatedFolderPath."/" . 'page_' . ($pageNumber + 1) . '.png';
+        //     $page->writeImage($outputFile);
         // }
+
+
+        $pdf = new Pdf($filePath);
+        $numPages = $pdf->getNumberOfPages();
+        // dd($numPages);
+        // Set the output directory for the images
+        $outputPath = $imageCreatedFolderPath;
+        // Convert each page of the PDF to an image
+        for ($page = 1; $page <= $numPages; $page++) {
+            $imagePath = $outputPath . '/page_' . $page . '.png';
+
+            $pdf->setPage($page)->saveImage($imagePath);
+            //  $pdf->setPage($page)->setWidth($imageWidth)->setHeight($imageHeight)->saveImage($imagePath);
+            //  exec("convert $imagePath -resize {$imageWidth}x{$imageHeight} $imagePath");
+        }
         return true;
     }
 }
