@@ -7,86 +7,94 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Writer;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use Dompdf\Dompdf;
-use Spatie\PdfToImage\Pdf;
+use PhpOffice\PhpSpreadsheet\Writer\Pdf\Dompdf;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf;
 use setasign\Fpdi\Fpdi;
 
 class ConvertController extends Controller
 {
     public function convert($filePath, $projectId)
     {
-        $xlToPdfPath = public_path('pdf/ExcelToPdf/' . $projectId);
-        if (File::exists($xlToPdfPath)) {
-            File::deleteDirectory($xlToPdfPath);
+
+
+        $pdfCreatedFolderPath = public_path('temp/xlToPdf/' . $projectId);
+        if (File::exists($pdfCreatedFolderPath)) {
+            File::deleteDirectory($pdfCreatedFolderPath);
         }
 
-        if (!File::exists($xlToPdfPath)) {
-            File::makeDirectory($xlToPdfPath, 0755, true);
+        // Create the folder
+        File::makeDirectory($pdfCreatedFolderPath, 0755, true);
+
+        // Define the PDF path
+        $pdfCreatedFolderPathOriginal = public_path('temp/xlToPdforiginal/' . $projectId);
+
+        if (File::exists($pdfCreatedFolderPathOriginal)) {
+            File::deleteDirectory($pdfCreatedFolderPathOriginal);
         }
 
-        $outputFile = public_path('pdf/mergepdf/' . $projectId);
-        if (File::exists($outputFile)) {
-            File::deleteDirectory($outputFile);
-        }
+        // Create the folder
+        File::makeDirectory($pdfCreatedFolderPathOriginal, 0755, true);
 
-        if (!File::exists($outputFile)) {
-            File::makeDirectory($outputFile, 0755, true);
-        }
-        // Load the Excel file
-        $spreadsheet = IOFactory::load($filePath);
+        $pdfPath = "{$pdfCreatedFolderPathOriginal}/{$projectId}.pdf";
 
-        // Get the number of tabs in the Excel file
-        $tabCount = $spreadsheet->getSheetCount();
-        for ($i = 0; $i < $tabCount; $i++) {
-            // Get the content of the current tab
-            $sheet = $spreadsheet->getSheet($i);
-            $content = $sheet->toArray();
+        try {
 
-            // Create a new PDF instance
-            $dompdf = new Dompdf();
 
-            // Generate the PDF from the tab content
-            $html = '<html><body>';
-            foreach ($content as $row) {
-                $html .= '<p>' . implode(', ', $row) . '</p>';
+            // $spreadsheet = IOFactory::load($filePath);
+            // $worksheetIterator = $spreadsheet->getWorksheetIterator();
+
+            // foreach ($worksheetIterator as $worksheet) {
+            //     //  Log::info("arrayfor" . $worksheetIterator->key());
+            //     $spreadsheetForSheetNew = [""];
+            //     $spreadsheetForSheetNew = $spreadsheet->copy();
+
+            //     $spreadsheetForSheetNew->setActiveSheetIndex($worksheetIterator->key());
+
+            //     // Generate the PDF for the current worksheet
+            //     $pdfFile = $pdfCreatedFolderPath . "/" . $worksheet->getTitle() . '.pdf';
+
+            //     $writer = new Mpdf($spreadsheetForSheetNew);
+            //     $writer->save($pdfFile);
+            // }
+
+
+
+            // $ffiles = File::allFiles($pdfCreatedFolderPath);
+            // $pdf = new Fpdi();
+            // foreach ($ffiles as $key => $ffile) {
+
+
+            //     $pageCount = $pdf->setSourceFile($ffile->getPathname());
+
+
+            //     for ($i = 1; $i <= $pageCount; $i++) {
+            //         $template = $pdf->importPage($i);
+
+            //         $pdf->AddPage();
+            //         $pdf->useTemplate($template);
+            //     }
+            // }
+
+
+            // $pdf->Output($pdfPath, 'F');
+         
+
+            // Load Excel file and create PDF
+            $spreadsheet = IOFactory::load($filePath);
+            $writer = new Dompdf($spreadsheet);
+            $writer->save($pdfPath);
+
+            // Check if PDF was created successfully
+            if (File::exists($pdfPath)) {
+                return $pdfPath;
+            } else {
+                // Handle the case where the PDF was not created successfully
+                return redirect()->route('404'); // Adjust the route accordingly
             }
-            $html .= '</body></html>';
-
-            $dompdf->loadHtml($html);
-            $dompdf->render();
-
-            // Save the PDF file
-            $output = public_path('pdf/ExcelToPdf/' . $projectId . "/" . ($i + 1) . '.pdf');
-            file_put_contents($output, $dompdf->output());
+        } catch (\Exception $e) {
+            // Handle exceptions during the PDF creation process
+            return redirect()->route('404'); // Adjust the route accordingly
         }
-
-        $pdfFolder = $xlToPdfPath;
-
-        $imagefiles = File::allFiles($pdfFolder);
-        $pdfFiles = [];
-        foreach ($imagefiles as $key => $imagefile) {
-            $pathName = $imagefile->getPathname();
-            array_push($pdfFiles, $pathName);
-        }
-
-        $pdf = new Fpdi();
-
-        // Iterate through each PDF file and merge it with the main PDF
-        foreach ($pdfFiles as $file) {
-            $pageCount = $pdf->setSourceFile($file);
-            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-                $templateId = $pdf->importPage($pageNo);
-                $pdf->AddPage();
-                $pdf->useTemplate($templateId);
-            }
-        }
-
-        $mergepdf = $outputFile . "/merge.pdf";
-
-        // Save the merged PDF to the storage
-        $pdf->Output($mergepdf, 'F');
-        return $mergepdf;
     }
 }
