@@ -719,7 +719,7 @@ class Doclistings extends Controller
                             $fileOrgName = substr($inputString, 0, 5);
                             Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
                             $fileName1 = $ticketNo . "_" . $filePart0 . '_' . $ed . "." . $filePart1;
-
+                            $fileName1 = str_replace(' ', '', $fileName1);
 
                             //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
                             Log::info('fileupload ->:-fileName1' . json_encode($fileName1));
@@ -790,7 +790,7 @@ class Doclistings extends Controller
                             $fileName1 = $ticketNo . "_" . $filePart0 . '_' . $ed . "." . $filePart1;
 
 
-
+                            $fileName1 = str_replace(' ', '', $fileName1);
                             //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
                             Log::info('fileupload2 ->:-fileName1' . json_encode($fileName1));
                             $bannerpath = $path . $fileName1;
@@ -854,7 +854,7 @@ class Doclistings extends Controller
                     $fileOrgName = substr($inputString, 0, 5);
                     Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
                     $fileName1 = $ticketNo . "_" . $filePart0 . '_' . $ed . "." . $filePart1;
-
+                    $fileName1 = str_replace(' ', '', $fileName1);
                     //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
                     Log::info('fileupload2 ->:-fileName1' . json_encode($fileName1));
                     $bannerpath = $path . $fileName1;
@@ -1364,7 +1364,7 @@ class Doclistings extends Controller
             Log::info('Doclisting->updatelevelwiseDocumentStatus :-fileOrgName ' . $fileOrgName);
             $fileName1 = $ticketNo . '_' . $filePart0 . '_' . $ed . "." . $filePart1;
 
-
+            $fileName1 = str_replace(' ', '', $fileName1);
 
             //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
             Log::info('fileupload ->:-fileName1' . json_encode($fileName1));

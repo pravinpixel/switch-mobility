@@ -413,6 +413,7 @@ class ProjectController extends Controller
                         Log::info('ProjectController->Store:-fileOrgName ' . $fileOrgName);
 
                         $fileName = $project->ticket_no . "_" . $filePart[0] . '_' . $ed . "." . $filePart[1];
+                        $fileName = str_replace(' ', '', $fileName);
                         //  $fileName = "MainDocument" . ($d + 1) . "." . $filePart[1];
                         Log::info('ProjectController->Store:-filename ' . $fileName);
 
