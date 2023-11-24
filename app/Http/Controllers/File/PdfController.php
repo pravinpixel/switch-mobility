@@ -26,7 +26,7 @@ class PdfController extends Controller
             $filaName = "Print.a4-p";
         } elseif ($pageSize == "A4" && $pageOrientation == "L") {
             $filaName = "Print.a4-l";
-        } elseif ($pageSize == "A4" && $pageOrientation == "P") {
+        } elseif ($pageSize == "A3" && $pageOrientation == "P") {
             $filaName = "Print.a3-p";
         } else {
             $filaName = "Print.a3-l";
@@ -35,15 +35,23 @@ class PdfController extends Controller
         $pdfFileName =  uniqid() . '.pdf';
 
         $imagePaths = [];
-        $imageDirectory = 'Temp\Images/' . $projectId;
+
+        $imageDirectory = public_path("finalOutput/") . $projectId . "/pdfToImage";
 
         // Replace with the actual path to your image directory
-        $images = File::files(public_path($imageDirectory));
-        foreach ($images as $image) {
-            array_push($imagePaths, $image->getPathname());
-        }
-        //dd($filaName);
+        $imagePaths = [];
 
+        // Get all files in the directory
+        $files = glob($imageDirectory . DIRECTORY_SEPARATOR . '*');
+
+        // Sort the files in ascending order
+        sort($files, SORT_NATURAL);
+
+        // Extract file paths
+        foreach ($files as $file) {
+            $imagePaths[] = $file;
+        }
+       
         $pdf = PDF::loadView($filaName, compact('imagePaths', 'projectData', 'projectApprovers'));
         $pdfFileName = uniqid() . '.pdf'; // Unique filename
 
@@ -58,8 +66,11 @@ class PdfController extends Controller
         $pdfPath = public_path('pdf/' . $projectId . "/" . $pdfFileName);
         // Save the PDF to the specified path
         $pdf->save($pdfPath);
-
         return $pdfPath;
+        // header('Content-Type: application/pdf');
+
+        // // Output the PDF content directly to the browser
+        // readfile($pdfPath);
     }
 
     public function projectDataById($projectId)
@@ -104,7 +115,7 @@ class PdfController extends Controller
             $pageSize = 'A4';
         }
         //dd($ticketNumber,$projectCode,$projectName,$date,$docName,$workflowName,$workflowCode,$department,$employeeName);
-
+        $approverCount = 11;
 
         $data = [
 
@@ -117,7 +128,8 @@ class PdfController extends Controller
             'department'        => $department,
             'initiater' => $employeeName,
             "pageSize" => $pageSize,
-            "pageOrientation" => $pageOrientation
+            "pageOrientation" => $pageOrientation,
+            "approverCount" => $approverCount
         ];
 
         return $data;

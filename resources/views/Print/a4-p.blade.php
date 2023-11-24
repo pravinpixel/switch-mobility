@@ -26,21 +26,32 @@
             height: 60px;
             border: 2px solid #000;
             margin-top: -40px !important;
-            margin-left: -40px!important;
+            margin-left: -40px !important;
             padding: 0;
         }
 
-        .rectangle-box1 {
+        <?php
+        if (count($projectApprovers) <= 8) { ?>.rectangle-box1 {
             width: 98%;
-            height: 270px!important;
+            height: 80px !important;
             border: 2px solid #000;
             padding: 0;
             margin-bottom: -120px !important;
-            margin-top:5px !important;
-            margin-left: -40px!important;
+            margin-top: -5px !important;
+            margin-left: -40px !important;
         }
 
-        .col-l12 {
+        <?php } else { ?>.rectangle-box1 {
+            width: 98%;
+            height: 180px !important;
+            border: 2px solid #000;
+            padding: 0;
+            margin-bottom: -120px !important;
+            margin-top: -5px !important;
+            margin-left: -40px !important;
+        }
+
+        <?php } ?>.col-l12 {
             width: 100%;
             display: flex;
             flex-direction: row;
@@ -50,16 +61,17 @@
             width: 21.4%;
             display: inline-block;
             text-align: center;
-
+            font-size: 8px;
             height: auto;
         }
 
         .col-l2,
         .col-l1 {
-            width: 15.8%;
+            max-width: 10.15%;
             display: inline-block;
             text-align: center;
             border: 1px solid black;
+            font-size: 7px;
         }
 
         .col-l2 img,
@@ -67,164 +79,103 @@
             margin-top: 2px;
             /* max-height: 40px;
             max-width: 80px; */
-            width: 70px;
-            height:  40px;
+            width: 50px;
+            height: 30px;
             object-fit: contain;
         }
+
+
+
+
+        <?php
+        if (count($projectApprovers) <= 8) { ?>
 
         /* Adjust the image size for A4 portrait */
         .image-container img {
             width: auto;
-            height: 640px !important;
-           
-            margin-left: -40px!important;
+            max-height: 900px;
+            /* Use max-height instead of height for responsiveness */
+            display: block;
+            /* Ensures the image behaves as a block element */
+            margin: 0 auto;
+            /* Centers the image horizontally */
         }
+
+
+        <?php } else { ?>
+
+        /* Adjust the image size for A4 portrait */
+        .image-container img {
+            width: auto;
+            height: 810px !important;
+
+            margin-left: -40px !important;
+        }
+
+        <?php } ?>
     </style>
 </head>
 
 <body>
     <div class="top-bar rectangle-box">
         <img src="{{ public_path('pdf-images/logo.png') }}" alt="Left Image" style="width: 150px; height: 50px; display: inline-block; margin-top: 15px; ">
-        <h1 style="margin: 0 auto; display: inline-block">Online Approval Management</h1>
+        <h1 style="margin: 0 auto; display: inline-block">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Online Approval Management</h1>
     </div>
     <div class="col-l12" style="margin-top: 10px!important">
         <div class="col-l3">
-            <b>Ticket Number</b>
-            <br>Abcd@123
+            <b>Ticket Number</b><br>{{$projectData['ticketNo']}}
         </div>
         <div class="col-l3">
-            <b>Project Code</b><br>S123
+            <b> Project Code</b><br>{{$projectData['projectCode']}}
         </div>
         <div class="col-l3">
-        <b> Project Name</b><br>sample
+            <b> Project Name</b><br>{{$projectData['projectName']}}
         </div>
         <div class="col-l3">
-        <b>Upload Date</b><br>01-08-2023
+            <b> Upload Date</b><br>{{$projectData['date']}}
         </div>
     </div>
     <div class="col-l12" style="margin-top: 5px;">
         <div class="col-l3">
-        <b>  Document Type</b><br>rr
+            <b> Document Type</b><br>{{$projectData['docName']}}
         </div>
         <div class="col-l3">
-        <b> Workflow Name And Code</b><br>HDMI PORT(SWF2023HDM0001)
+            <b> Workflow Name And Code</b><br>{{$projectData['workflowData']}}
         </div>
         <div class="col-l3">
-        <b>  Department</b><br>Marketing & Proposals Department
+            <b> Department</b><br>{{$projectData['department']}}
         </div>
         <div class="col-l3">
-        <b> Initiator</b><br>Ramya A
+            <b> Initiator</b><br>{{$projectData['initiater']}}
         </div>
     </div>
     <!-- ... Other col-l12 elements ... -->
-    <div class="image-container" align="left">
+    <div class="image-container" align="center">
         <img src="{{ $imagePath }}" alt="Image" />
     </div>
     <div class="rectangle-box1">
-        <div class="col-l12" style="margin-top: 30px!important;margin-left: 5px!important;"  >
-            <div class="col-l2" >
-                <img src="{{ public_path('sign/1.png') }}">
-                <br />
-                <b>Manager</b>
-                <br />
-                <b>Name:</b> Raja
-                <br />
-                <b>Level: </b>1 <b>Date:</b>10-10-2022
-            </div>
-            <div class="col-l2">
-                <img src="{{ public_path('sign/2.png') }}">
-                <br>
-                <b>Staff</b>
-                <br />
-                <b>Name:</b> Ravi
-                <br />
-                <b>Level: </b>2 <b>Date:</b>11-10-2022
-            </div>
-            <div class="col-l2">
-                <img src="{{ public_path('sign/3.jpeg') }}">
-                <br>
-                <b>Staff</b>
-                <br />
-                <b>Name:</b> Mohan
-                <br />
-                <b>Level: </b>3 <b>Date:</b>12-10-2022
-            </div>
-            <div class="col-l2">
-                <img src="{{ public_path('sign/4.png') }}">
-                <br>
-                <b>Staff</b>
-                <br />
-                <b>Name:</b> Selavam
-                <br />
-                <b>Level: </b>4 <b>Date:</b>13-10-2022
-            </div>
-            <div class="col-l2">
-                <img src="{{ public_path('sign/5.png') }}">
-                <br>
-                <b>Supervisor</b>
-                <br />
-                <b>Name:</b> Muthu
-                <br />
-                <b>Level: </b>5 <b>Date:</b>14-10-2022
-            </div>
-            <div class="col-l2">
-                <img src="{{ public_path('sign/6.png') }}">
-                <br>
-                <b>Cashier</b>
-                <br />
-                <b>Name:</b> Rubi
-                <br />
-                <b>Level: </b>6 <b>Date:</b>15-10-2022
-            </div>
-        </div>
-        <div class="col-l12" style="margin-top: 5px!important;margin-left: 5px!important;" >
-            <div class="col-l1" style="">
-                <img src="{{ public_path('sign/7.jpeg') }}">
+        @for($i=0;$i<count($projectApprovers);$i++) @if($i==0 ||$i<12) <div class="col-l2" style="margin-top: 20px!important;font-size: 8px;">
+            <?php
+            $signImage = public_path($projectApprovers[$i]['signImageWithPath']);
+            ?>
+            <img src="{{$signImage}}">
+            <br />
+            <b>{{$projectApprovers[$i]['designation']}}</b>
+            <br />
+            <b>Name:</b> {{$projectApprovers[$i]['appproverName']}}
+            <br />
+            <b>Level: </b>{{$projectApprovers[$i]['level']}}
+            <b>Date:</b>{{$projectApprovers[$i]['updatedate']}}
+    </div>
 
-                <br>
-                <b>Staff</b>
-                <br />
-                <b>Name:</b> Swetha
-                <br />
-                <b>Level: </b>7 <b>Date:</b>16-10-2022
-            </div>
-            <div class="col-l2">
-                <img src="{{ public_path('sign/8.jpeg') }}">
-                <br>
-                <b>Staff</b>
-                <br />
-                <b>Name:</b> Sadham
-                <br />
-                <b>Level: </b>8 <b>Date:</b>17-10-2022
-            </div>
-            <div class="col-l2">
-                <img src="{{ public_path('sign/9.jpeg') }}">
-                <br>
-                <b>Accountant</b>
-                <br />
-                <b>Name:</b> Suman
-                <br />
-                <b>Level: </b>9 <b>Date:</b>18-10-2022
-            </div>
-            <div class="col-l2">
-                <img src="{{ public_path('sign/10.png') }}">
-                <br>
-                <b>Staff</b>
-                <br />
-                <b>Name:</b> Vijay
-                <br />
-                <b>Level: </b>10 <b>Date:</b>19-10-2022
-            </div>
-            <div class="col-l2">
-                <img src="{{ public_path('sign/11.jpeg') }}">
-                <br>
-                <b>Clerk</b>
-                <br />
-                <b>Name:</b> Akash
-                <br />
-                <b>Level: </b>11 <b>Date:</b>20-10-2022
-            </div>
-        </div>
+
+
+
+
+    @endif
+
+
+    @endfor
     </div>
 </body>
 

@@ -5,7 +5,7 @@ use App\Http\Controllers\BasicController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Doclistings;
 use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\File\FileConversionController;
+use App\Http\Controllers\FinalFileConversion\FileConversionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\ProjectController;

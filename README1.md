@@ -78,3 +78,14 @@ ADD COLUMN document_size INT DEFAULT 1,
 ADD COLUMN document_orientation INT DEFAULT 1;
 
 <======================================================>
+ALTER TABLE project_document_status_by_levels
+ADD COLUMN approved_date DATE DEFAULT NULL, 
+ADD COLUMN approver_id INT DEFAULT NULL;
+
+27.09.23 must install
+
+https://www.libreoffice.org/download/download-libreoffice/
+
+"files": [
+        "app/CustomHelper.php" // Add the path to your custom helper file here
+    ],

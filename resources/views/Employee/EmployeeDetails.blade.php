@@ -226,10 +226,10 @@
                                 <!--begin::Col-->
                                 <div class="col-md-3 fv-row">
                                     <!--begin::Label-->
-                                    <label class="fs-6 fw-semibold mb-2">Signature Photo</label>
+                                    <label class="fs-6 fw-semibold mb-2">Signature Photo <p id="signImageAlert" class="notifyAlert signImageAlert" dataAdded=""></p></label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="file" class="form-control form-control-solid" name="sign_image" id="signImageInputField" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept="image/png, image/gif, image/jpeg" />
+                                    <input type="file" class="form-control form-control-solid signImageInputField" name="sign_image" id="signImageInputField" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept="image/png, image/gif, image/jpeg" />
                                     <img id="blah" class="signImageShowDiv" style="display:none;" width="100" height="100" />
                                     <span class="signImageRemoveBtnDiv"></span>
                                     <?php
@@ -291,12 +291,13 @@
     $(document).ready(function() {
         $('.form').submit(function(e) {
             e.preventDefault();
-            var formData = new FormData(this); 
+            var formData = new FormData(this);
             var namevalidation = nameValidation();
             var deptAndDescvalidation = deptAndDescValidation();
             var mobilevalidation = mobileValidation();
             var sapIdvalidation = sapidValidation();
             var emailvalidation = emailValidation();
+            var SignimageValidation = signImageSizeValidation();
             setTimeout(function() {
                 console.log("Executing code after function every 2 seconds");
                 console.log("Second Check");
@@ -305,9 +306,9 @@
                 if (notifyAlert == false) {
 
 
-                   // Prevent normal form submission
+                    // Prevent normal form submission
                     console.log(formData);
-                   
+
                     // Serialize form data
                     // var formData = $(this).serialize();
 
@@ -449,7 +450,7 @@
         $('.reset').on('click', function() {
             $('.deptAndDesg').val("").trigger('change');
             document.getElementById("form").reset();
-        $('.notifyAlert').hide();
+            $('.notifyAlert').hide();
             $("#signImageRemoveBtn").click();
             $("#profileRemoveBtn").click();
             // $('.profilePic').hide();
@@ -605,32 +606,50 @@
     });
 
 
-    function finalValidation() {
+    // function finalValidation() {
 
 
-        var namevalidation = nameValidation();
-        var deptAndDescvalidation = deptAndDescValidation();
-        var mobilevalidation = mobileValidation();
-        var sapIdvalidation = sapidValidation();
-        var emailvalidation = emailValidation();
-        setTimeout(function() {
-            console.log("Executing code after function every 2 seconds");
-            console.log("Second Check");
-            var notifyAlert = $(".notifyAlert").is(":visible");
-            console.log('notifyAlert ' + notifyAlert);
-            if (notifyAlert == false) {
-                return true;
+    //     var namevalidation = nameValidation();
+    //     var deptAndDescvalidation = deptAndDescValidation();
+    //     var mobilevalidation = mobileValidation();
+    //     var sapIdvalidation = sapidValidation();
+    //     var emailvalidation = emailValidation();
+    //     setTimeout(function() {
+    //         console.log("Executing code after function every 2 seconds");
+    //         console.log("Second Check");
+    //         var notifyAlert = $(".notifyAlert").is(":visible");
+    //         console.log('notifyAlert ' + notifyAlert);
+    //         if (notifyAlert == false) {
+    //             return true;
+    //         } else {
+    //             return false;
+    //         }
+
+    //     }, 500);
+
+
+    //     return false;
+
+
+
+    // }
+    function signImageSizeValidation() {
+        var fileInput = $('.signImageInputField')[0]; // Access the first element with the class
+        if (fileInput && fileInput.files.length > 0) {
+            var file = fileInput.files[0]; // Access the file using this.files[0]
+            var fileSize = file.size;
+
+            console.log("File size: " + fileSize);
+
+            if (fileSize > 6 * 1024) {
+                raiseAlert('signImageAlert', 'Sign Image', 'largeSize');
+                $('#signImageAlert').attr('dataAdded', "error");
             } else {
-                return false;
+                // Proceed with other actions if needed
             }
-
-        }, 500);
-
-
-        return false;
-
-
-
+        } else {
+            console.log("No file selected");
+        }
     }
 
     function nameValidation() {
@@ -836,7 +855,7 @@
         document.getElementById('mobileAlert').style.display = "none";
         if (!mobile) {
             raiseAlert('mobileAlert', 'Mobile', 'Mandate');
-        } else if (mobile.length <10) {
+        } else if (mobile.length < 10) {
             document.getElementById('mobileAlert').style.display = "block";
             document.getElementById('mobileAlert').style.color = "red";
             document.getElementById('mobileAlert').innerHTML = 'Mobile No Is Minimum 10 Digit*';
@@ -875,6 +894,8 @@
             document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Mandatory*';
         } else if (alertType == "Incorrect") {
             document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Incorrect Format*';
+        } else if (alertType == "largeSize") {
+            document.getElementById(alertfieldIdName).innerHTML = 'Only Allow 5kb*';
         } else {
             document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Exist*';
         }

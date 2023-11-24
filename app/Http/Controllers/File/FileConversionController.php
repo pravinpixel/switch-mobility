@@ -53,29 +53,29 @@ class FileConversionController extends Controller
 
             return response()->download($pdfContoller, $fname)->deleteFileAfterSend(true);
         } elseif ($extension == "docx") {
-            $pdfCreatedFolderPath = public_path('Temp/DocxToPdf/' . $id);
-            $pdfFileName = $id . ".pdf";
-            $tempPdfFilePath = $pdfCreatedFolderPath . "/" . $pdfFileName;
+            // $pdfCreatedFolderPath = public_path('Temp/DocxToPdf/' . $id);
+            // $pdfFileName = $id . ".pdf";
+            // $tempPdfFilePath = $pdfCreatedFolderPath . "/" . $pdfFileName;
 
-            if (File::exists($pdfCreatedFolderPath)) {
-                File::deleteDirectory($pdfCreatedFolderPath);
-            }
+            // if (File::exists($pdfCreatedFolderPath)) {
+            //     File::deleteDirectory($pdfCreatedFolderPath);
+            // }
 
-            if (!File::exists($pdfCreatedFolderPath)) {
-                File::makeDirectory($pdfCreatedFolderPath, 0755, true);
-            }
+            // if (!File::exists($pdfCreatedFolderPath)) {
+            //     File::makeDirectory($pdfCreatedFolderPath, 0755, true);
+            // }
 
-            $domPdfPath = base_path('vendor/dompdf/dompdf');
-            Settings::setPdfRendererPath($domPdfPath);
-            Settings::setPdfRendererName('DomPDF');
+            // $domPdfPath = base_path('vendor/dompdf/dompdf');
+            // Settings::setPdfRendererPath($domPdfPath);
+            // Settings::setPdfRendererName('DomPDF');
 
-            $content = \PhpOffice\PhpWord\IOFactory::load($filePath);
-            $pdfWriter = \PhpOffice\PhpWord\IOFactory::createWriter($content, 'PDF');
-            $pdfWriter->save($tempPdfFilePath);
-            $pdfToImage = $this->pdfToImageFile($tempPdfFilePath, $projectId);
+            // $content = \PhpOffice\PhpWord\IOFactory::load($filePath);
+            // $pdfWriter = \PhpOffice\PhpWord\IOFactory::createWriter($content, 'PDF');
+            // $pdfWriter->save($tempPdfFilePath);
+            // $pdfToImage = $this->pdfToImageFile($tempPdfFilePath, $projectId);
             $pdfContoller = $this->pdfController->generatePdf($projectId);
 
-            return response()->download($pdfContoller, $fname)->deleteFileAfterSend(true);
+           // return response()->download($pdfContoller, $fname)->deleteFileAfterSend(true);
         } else {
             dd("under construction");
         }
@@ -98,30 +98,30 @@ class FileConversionController extends Controller
         $imageWidth = 800;  // Adjust the width as needed
         $imageHeight = 400; // Adjust the height as needed
         // Create Imagick object
-        // $imagick = new Imagick();
-        // $imagick->readImage($filePath);
+        $imagick = new Imagick();
+        $imagick->readImage($filePath);
 
         // // Iterate through each page and convert it to an image
-        // foreach ($imagick as $pageNumber => $page) {
-        //     $page->setImageFormat('png');
-        //     $outputFile = $imageCreatedFolderPath."/" . 'page_' . ($pageNumber + 1) . '.png';
-        //     $page->writeImage($outputFile);
-        // }
-
-
-        $pdf = new Pdf($filePath);
-        $numPages = $pdf->getNumberOfPages();
-        // dd($numPages);
-        // Set the output directory for the images
-        $outputPath = $imageCreatedFolderPath;
-        // Convert each page of the PDF to an image
-        for ($page = 1; $page <= $numPages; $page++) {
-            $imagePath = $outputPath . '/page_' . $page . '.png';
-
-            $pdf->setPage($page)->saveImage($imagePath);
-            //  $pdf->setPage($page)->setWidth($imageWidth)->setHeight($imageHeight)->saveImage($imagePath);
-            //  exec("convert $imagePath -resize {$imageWidth}x{$imageHeight} $imagePath");
+        foreach ($imagick as $pageNumber => $page) {
+            $page->setImageFormat('png');
+            $outputFile = $imageCreatedFolderPath."/" . 'page_' . ($pageNumber + 1) . '.png';
+            $page->writeImage($outputFile);
         }
+
+
+        // $pdf = new Pdf($filePath);
+        // $numPages = $pdf->getNumberOfPages();
+        // // dd($numPages);
+        // // Set the output directory for the images
+        // $outputPath = $imageCreatedFolderPath;
+        // // Convert each page of the PDF to an image
+        // for ($page = 1; $page <= $numPages; $page++) {
+        //     $imagePath = $outputPath . '/page_' . $page . '.png';
+
+        //     $pdf->setPage($page)->saveImage($imagePath);
+        //     //  $pdf->setPage($page)->setWidth($imageWidth)->setHeight($imageHeight)->saveImage($imagePath);
+        //     //  exec("convert $imagePath -resize {$imageWidth}x{$imageHeight} $imagePath");
+        // }
         return true;
     }
 }
