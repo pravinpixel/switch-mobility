@@ -1,0 +1,116 @@
+/*css file*/
+/* body {
+  margin: 0px;
+  padding: 0px;
+  font-size: 15px;
+} */
+
+.sw_container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  background: url("../media/logos/loginbg1.jpg");
+  background-size: cover;
+}
+
+.my-form {
+  /* background: #fff; */
+  /* background-image: linear-gradient(125deg, #000066 0%, #530066 70%, #ff0000 100%); */
+  padding-right: 15%;
+  /* border-radius: 10px;
+  margin-right: 10%; */
+  text-align: center;
+  height: 100vh;
+  display: table;
+  /* opacity: 0.9; */
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-title h1 {
+  margin: 0px;
+  color: #0cd6a8;
+}
+
+.single-input {
+  width: 100%;
+  border: 1px solid #c1c1c1;
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.single-input i {
+  padding: 8px 16px;
+  color: #ffffff;
+}
+
+.single-input input {
+  border: 0px solid #c1c1c1;
+  width: 100%;
+  outline: none;
+  height: 30px;
+  /* background-color: #7f7f7f; */
+  color: #000000;
+  padding-left: 10px;
+}
+::placeholder {
+  color: #000000;
+  opacity: 1; /* Firefox */
+}
+
+.submit-btn {
+  border: 0px solid #c1c1c1;
+  /* margin-top: 30px; */
+}
+
+.submit-btn input {
+  /* box-shadow: inset 0px 13px 16px -5px #646464; */
+  box-shadow: 0 5px 5px #646464;
+  background-color: #4f5bfd; 
+  color: #fff;
+  cursor: pointer;
+  /* border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px; */
+  border-radius: 8px;
+  /* padding: 15px 0 25px; */
+  margin: 15px 30px 0 30px;
+  font-weight: bold;
+}
+
+form {
+  -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.4));
+}
+
+.form-div {
+  vertical-align: middle;
+  display: table-cell;
+}
+
+.logo {
+  width: 270px;
+  height: auto;
+  border-radius: 15px;
+  margin-bottom: 10px;
+}
+
+.form-back {
+  background-color: #658aaf;
+  border-radius: 15px;
+  padding-bottom: 1px;
+}
+
+.form-input {
+  background-color: #ccccff;
+  border-radius: 15px;
+  padding: 20px 30px;
+  box-shadow: 0px 5px 10px #646464;
+}
+
+.icon-span {
+  background-color: #5a5959;
+}
