@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Spatie\PdfToImage\Pdf;
 
-
+use Imagick;
 class FileConversionController extends Controller
 {
     protected $excelController, $pdfController, $ConvertController;
@@ -112,23 +112,20 @@ class FileConversionController extends Controller
         if (!File::exists($outputDirectory)) {
             File::makeDirectory($outputDirectory, 0755, true);
         }
-        // $pdf = new Pdf($pdfPath);
-        // $pdf->saveImage($storePath);
-        $pdf = new Pdf($inputFile);
+     
+        $pdf = new Imagick($inputFile);
 
-        // Get the total number of pages in the PDF
-        $totalPages = $pdf->getNumberOfPages();
-        // Convert each page of the PDF to an image
-        for ($pageNumber = 1; $pageNumber <= $totalPages; $pageNumber++) {
-            // Generate a unique filename for each image (you can modify this as needed)
-            $imageFilename = $pageNumber . '.png';
-
-            // Set the page number to be converted
-            $pdf->setPage($pageNumber);
-
-            // Save the image
-            $pdf->saveImage($outputDirectory . '/' . $imageFilename);
+        // Loop through each page and convert it to an image
+        foreach ($pdf as $pageNumber => $page) {
+            // Set resolution (optional)
+            $page->setResolution(300, 300); // Adjust the resolution as needed
+        
+            // Convert PDF page to an image
+            $imagePath = $outputDirectory . '/' . ($pageNumber + 1) . '.png'; // Change format if needed
+            $page->setImageFormat('png'); // Change format if needed
+            $page->writeImage($imagePath);
         }
+      
        return true;
     }
     public function pdfToImageFile($filePath, $projectId)
