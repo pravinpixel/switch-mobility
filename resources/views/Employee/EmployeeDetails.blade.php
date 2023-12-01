@@ -46,7 +46,7 @@
         </div>
         <div id="kt_app_content" class="app-content flex-column-fluid">
             <div id="kt_app_content_container" class="app-container container-xxl">
-                <div class="card" style="width:900px;margin:auto;">
+                <div class="card" style="width:100%;margin:auto;">
                     @if (session('success'))
                     <div class="alert alert-success" role="alert">
                         {{ session('success') }}
@@ -72,7 +72,7 @@
 
                             <div class="row g-9 mb-7">
                                 <!--begin::Col-->
-                                <div class="col-md-6 fv-row">
+                                <div class="col-md-4 fv-row">
                                     <!--begin::Label-->
                                     <label class="required fs-6 fw-semibold mb-2">First
                                         Name</label>
@@ -85,7 +85,7 @@
                                 <!--end::Col-->
 
                                 <!--begin::Col-->
-                                <div class="col-md-3 fv-row">
+                                <div class="col-md-4 fv-row">
                                     <!--begin::Label-->
                                     <label class="fs-6 fw-semibold mb-2">Middle Name</label>
                                     <!--end::Label-->
@@ -97,7 +97,7 @@
                                 </div>
                                 <!--end::Col-->
                                 <!--begin::Col-->
-                                <div class="col-md-3 fv-row">
+                                <div class="col-md-4 fv-row">
                                     <!--begin::Label-->
                                     <label class="required fs-6 fw-semibold mb-2">Last Name</label>
                                     <!--end::Label-->
@@ -185,7 +185,7 @@
                                 <!--end::Col-->
 
                                 <!--begin::Col-->
-                                <div class="col-md-6 fv-row">
+                                <div class="col-md-4 fv-row">
                                     <!--begin::Label-->
                                     <label class="required fs-6 fw-semibold mb-2">SAP-ID</label>
                                     <!--end::Label-->
@@ -199,7 +199,7 @@
                                 <input type="hidden" name="IsProfileImage" class="IsProfileImage" value="1">
                                 <input type="hidden" name="IsSignImage" class="IsSignImage" value="1">
                                 <!--begin::Col-->
-                                <div class="col-md-3 fv-row">
+                                <div class="col-md-4 fv-row">
                                     <!--begin::Label-->
                                     <label class="fs-6 fw-semibold mb-2">Profile Photo</label>
                                     <!--end::Label-->
@@ -224,12 +224,12 @@
                                 </div>
                                 <!--end::Col-->
                                 <!--begin::Col-->
-                                <div class="col-md-3 fv-row">
+                                <div class="col-md-4 fv-row">
                                     <!--begin::Label-->
                                     <label class="fs-6 fw-semibold mb-2">Signature Photo <p id="signImageAlert" class="notifyAlert signImageAlert" dataAdded=""></p></label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input type="file" class="form-control form-control-solid signImageInputField" name="sign_image" id="signImageInputField" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept="image/png, image/gif, image/jpeg" />
+                                    <input type="file" class="form-control form-control-solid signImageInputField" name="sign_image" id="signImageInputField" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0]);signImageSizeValidation();" accept="image/png, image/gif, image/jpeg" />
                                     <img id="blah" class="signImageShowDiv" style="display:none;" width="100" height="100" />
                                     <span class="signImageRemoveBtnDiv"></span>
                                     <?php
@@ -641,11 +641,13 @@
 
             console.log("File size: " + fileSize);
 
-            if (fileSize > 6 * 1024) {
+            if (fileSize > 5 * 1024) {
                 raiseAlert('signImageAlert', 'Sign Image', 'largeSize');
                 $('#signImageAlert').attr('dataAdded', "error");
             } else {
                 // Proceed with other actions if needed
+                document.getElementById('signImageAlert').style.display = "none";
+                $('#signImageAlert').attr('dataAdded', "");
             }
         } else {
             console.log("No file selected");

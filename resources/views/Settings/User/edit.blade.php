@@ -72,7 +72,7 @@
                                     <label class="required fs-6 fw-semibold mb-2">Employee Name</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <select disabled class="form-control form-control initiator_id sap_id" name="initiator_id" required>
+                                    <select  class="form-control form-control initiator_id sap_id" name="employeeId" required>
                                         <option value="">Select</option>
                                         @foreach ($employees as $emp)
                                         <?php
@@ -81,7 +81,7 @@
                                         //     $selectEmp = "selected";
                                         //    }
                                         ?>
-                                        <option value="<?php echo $emp['id']; ?>" <?php echo $selectEmp; ?>><?php echo $emp['first_name'] . ' ' . $emp['last_name'] . '(' . $emp['sap_id'] . ')'; ?></option>
+                                        <option value="<?php echo $emp['id']; ?>" <?php echo $selectEmp; ?>><?php echo $emp['first_name'] . ' '.$emp['middle_name'] . ' ' . $emp['last_name'] . '(' . $emp['sap_id'] . ')'; ?></option>
                                         @endforeach
                                     </select>
                                     <p id="employeeAlert" class="notifyAlert"></p>
@@ -213,7 +213,7 @@
                                 $(".sapId,.name,.mobile,.email").val("");
                             } else {
                                 $('.submit').prop('disabled', false);
-                                var name = data.first_name + " " + data.last_name;
+                                var name = data.first_name + " "+data.middle_name+" " + data.last_name;
                                 $(".name").val(name);
 
                                 $(".mobile").val(data.mobile);

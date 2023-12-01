@@ -72,13 +72,13 @@
                                 <a href="{{url('designation/create')}}">
                                     <button type="button" class="btn switchPrimaryBtn" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user">
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
-                                        <span class="svg-icon svg-icon-2">
+                                        {{-- <span class="svg-icon svg-icon-2">
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor" />
                                                 <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
                                             </svg>
-                                        </span>
-                                        <!--end::Svg Icon-->Add</button>
+                                        </span> --}}
+                                        <!--end::Svg Icon-->+ Add</button>
                                 </a>
                                 @endif
                                 <!--end::Add user-->
@@ -112,12 +112,12 @@
                             <!--begin::Table head-->
                             <thead>
                                 <!--begin::Table row-->
-                                <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                <tr class="text-start align-middle text-muted fw-bold fs-7 text-uppercase gs-0">
 
                                     <th class="min-w-125px">Designation</th>
                                     <th class="min-w-125px">Description</th>
-                                    <th class="min-w-125px">Status</th>
-                                    <th class="min-w-120px">Actions</th>
+                                    <th class="min-w-50px">Status</th>
+                                    <th class="min-w-50px">Actions</th>
 
                                 </tr>
                                 <!--end::Table row-->

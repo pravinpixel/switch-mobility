@@ -160,7 +160,7 @@
         /* Hidden by default */
         position: fixed;
         /* Stay in place */
-        z-index: 1;
+        z-index: 2;
         /* Sit on top */
         padding-top: 100px;
         /* Location of the box */
@@ -557,7 +557,7 @@
                                         versionMainDocDiv += '<td>';
                                         if (i == showMainDocAction) {
                                             versionMainDocDiv += '<a class="btn switchPrimaryBtn btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
-                                            versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+                                            versionMainDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="Download"><i class="las la-download"></i></a>';
                                             versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm switchPrimaryBtn " onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionMainDocDiv += '</button>';
                                         }
@@ -632,7 +632,7 @@
                                         versionAuxDocDiv += '<td>';
                                         if (j == showAuxDocAction) {
                                             versionAuxDocDiv += '<a class="btn switchPrimaryBtn  btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docAuxDetailArray[j].id + ',' + level + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
-                                            versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+                                            versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="Download"><i class="las la-download"></i></a>';
                                             versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm switchPrimaryBtn " onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionAuxDocDiv += '</button>';
                                         }

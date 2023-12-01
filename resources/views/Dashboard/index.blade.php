@@ -204,13 +204,13 @@
                                 <br>
 
                                 <div class="col-md-12 " style=" display: flex;justify-content: center;flex-wrap:wrap;">
-                                    <div class="w-auto">
+                                    <div class="col-md-6">
                                         <!-- <h1 class="text-center">Laravel 9 Dynamic Bar Chart Example - Techsolutionstuff</h1> -->
-                                        <div id="barchart_material" style="width: 500px; height: 400px;"></div>
+                                        <div id="barchart_material" style="width: 100%; height: 50vh;"></div>
                                     </div>
-                                    <div class="w-auto">
+                                    <div class="col-md-6">
                                         <!-- <h1 class="text-center">Laravel 9 Dynamic Bar Chart Example - Techsolutionstuff</h1> -->
-                                        <div id="barchart_material1" style="width: 500px; height: 400px;"></div>
+                                        <div id="barchart_material1" style="width: 100%; height: 50vh;"></div>
                                     </div>
                                 </div>
                                
@@ -248,7 +248,7 @@
                                 @endif
                                 @if(count($initiatingProjects))
                                 <br>
-                                <div class="row">
+                                {{-- <div class="row"> --}}
 
                                     <h5 class="section-title h1">New Assigning Projects</h5>
                                     <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
@@ -294,10 +294,10 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                </div>
-                                <br>
+                                {{-- </div> --}}
                                 @endif
                                 @if(count($approvingProjects))
+                                <br>
                                 <div class="row">
 
                                     <h5 class="section-title h1">Approval Pending Projects</h5>
@@ -349,16 +349,16 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <br>
                                 @endif
-                                <div class="row">
+                                <br>
+                                {{-- <div class="row"> --}}
 
                                     <h5 class="section-title h1">Recently Uploaded Documents</h5>
                                     <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table2">
                                         <!--begin::Table head-->
                                         <thead>
                                             <!--begin::Table row-->
-                                            <tr class=" text-muted fw-bold fs-7 text-uppercase gs-0">
+                                            <tr class=" text-muted align-middle fw-bold fs-7 text-uppercase gs-0">
 
                                                 <th>Ticket No</th>
                                                 <th>Project Code & Name</th>
@@ -389,9 +389,9 @@
                                                     {{ $d->ticket_no }}
                                                 </td>
 
-                                                <td>{{ $d->project_name . ' ' . $d->project_code }}</td>
+                                                <td>{{ $d->project_code . ' & ' . $d->project_name }}</td>
                                                 <td>{{ $WorkFlow->workflow_name . ' & ' . $WorkFlow->workflow_code }}</td>
-                                                <td>{{ $initiator->first_name . ' ' . $initiator->last_name }}</td>
+                                                <td>{{ $initiator->first_name . ' '.$initiator->middle_name . ' '  . $initiator->last_name }}</td>
                                                 <td>{{ $department->name }}</td>
                                                 <td><button class="btn btn-sm switchPrimaryBtn editDocument" style="color:white" id="{{ $d->id }}">View</button></td>
 
@@ -399,7 +399,7 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                </div>
+                                {{-- </div> --}}
 
 
 

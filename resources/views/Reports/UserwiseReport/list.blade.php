@@ -62,13 +62,13 @@
                             <div class="card-title col-12">
                                 <div class="row col-12">
                                          
-                                    <div class="col-md-3" id="workflowCodeField">
+                                    <div class="col-md-4" id="workflowCodeField">
                                         <label class=" fs-6 fw-semibold  mb-2">Workflow Name & Code</label>
-                                        <select name="workflowCode" id="workflowCode" class="form-select" data-kt-select2="true" >
-                                            <option value="">Select Workflow </option>
+                                        <select name="workflowCode" id="workflowCode" class="form-select" data-kt-select2="true"  data-placeholder="WorkFlow Name (Code)">
+                                            <option></option>
                                             @foreach ($workflowDatas as $workflowData)
                                                 <option value="{{ $workflowData->id }}">
-                                                    {{ $workflowData->workflow_name }}-{{ $workflowData->workflow_code }}
+                                                    {{ $workflowData->workflow_name }} ({{ $workflowData->workflow_code }})
                                                 </option>
                                             @endforeach
 
@@ -76,16 +76,16 @@
 
 
                                     </div>
-                                    <div class="col-md-3" id="initiatorNameField">
+                                    <div class="col-md-4" id="initiatorNameField">
                                         <!--begin::Label-->
                                         <label class=" fs-6 fw-semibold mb-2">Initiator Name & SAP ID</label>
                                         <!--end::Label-->
                                         <!--begin::Input-->
-                                        <select name="initiatorName" id="initiatorName" class="form-select" data-kt-select2="true" >
-                                            <option value="">Select Initiator </option>
+                                        <select name="initiatorName" id="initiatorName" class="form-select" data-placeholder="Initiator (SAP ID)" data-kt-select2="true" >
+                                            <option></option>
                                             @foreach ($initiatorDatas as $initiatorData)
                                                 <option value="{{ $initiatorData->id }}">
-                                                    {{ $initiatorData->first_name }}{{ $initiatorData->middle_name }}{{ $initiatorData->last_name }}-{{ $initiatorData->sap_id }}
+                                                    {{ $initiatorData->first_name }} {{ $initiatorData->middle_name }} {{ $initiatorData->last_name }} ({{ $initiatorData->sap_id }})
                                                 </option>
                                             @endforeach
                                         </select>
@@ -103,6 +103,7 @@
                         </div>
                             <!--end::Card header-->
                             <!--begin::Card body-->
+                            <hr>
                             <div class="card-body  p-3">
                                 <!--begin::Card title-->
                                 <div class="card-title">
@@ -132,7 +133,7 @@
                                     <!--begin::Table head-->
                                     <thead>
                                         <!--begin::Table row-->
-                                        <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                        <tr class="text-start align-middle text-muted fw-bold fs-7 text-uppercase gs-0">
 
                                           <th class="min-w-100px text-nowrap">Workflow Code</th>
                                             <th class="min-w-100px text-nowrap">Workflow Name</th>
@@ -197,7 +198,7 @@
 
                    
 
-                    $('#initiatorName,.workflowCode').on('change', function() {
+                    $('#initiatorName,#workflowCode').on('change', function() {
                         filterData();
                     });
 
@@ -223,7 +224,7 @@
                                     $("#initiatorName").append(wfOption);
                                     $.each(datas, function(key, val) {
                                         initiatorItems = "<option  value=" + val.id + ">" + val
-                                            .first_name + "(" + val.sap_id + ")</option>";
+                                            .first_name + " (" + val.sap_id + ")</option>";
                                         $("#initiatorName").append(initiatorItems);
                                     });
                                 }
@@ -306,6 +307,7 @@
                     /* add a new records in the array */
                     rows.push(
                         [
+                            column1,
                             column2,
                             column3,
                             column4,
@@ -314,7 +316,7 @@
                             column7,
                             column8,
                             column9,
-                            column10,
+                            column10
                         ]
                     );
 

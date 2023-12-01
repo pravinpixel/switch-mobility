@@ -67,7 +67,7 @@
                                 <!--begin::Col-->
                                 <div class="col-md-3">
                                     <label class=" form-label text-dark "> Department </label>
-                                    <select class="form-select form-select-solid filterDeptAndDes" data-kt-select2="true" data-placeholder="Department" data-allow-clear="true" id="deptFilter">
+                                    <select class="form-select filterDeptAndDes" data-kt-select2="true" data-placeholder="Department" data-allow-clear="true" id="deptFilter">
                                         <option></option>
                                         @foreach ($departments as $department)
                                         <option value="{{ $department['id'] }}">
@@ -79,7 +79,7 @@
 
                                 <div class="col-md-3">
                                     <label class="fs-6 form-label fw-bold text-dark ">Designation </label>
-                                    <select class="form-select form-select-solid filterDeptAndDes" name="project_code_name" data-kt-select2="true" data-placeholder="Designation" data-allow-clear="true" id="designationFilter">
+                                    <select class="form-select filterDeptAndDes" name="project_code_name" data-kt-select2="true" data-placeholder="Designation" data-allow-clear="true" id="designationFilter">
                                         <option></option>
                                         @foreach ($designation as $des)
                                         <option value="{{ $des['id'] }}">
@@ -97,7 +97,7 @@
                                 <div class="w-auto">
                                     <a href="{{url('employees/create')}}">
                                         <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
-                                        <span class="btn switchPrimaryBtn  ">+Add</span>
+                                        <span class="btn switchPrimaryBtn  ">+ Add</span>
                                     </a>
                                 </div>
                                 @endif
@@ -109,22 +109,22 @@
                                 </div>
                             </div>
                         </div>
-
+                        <hr>
                         <!--begin::Table-->
                         <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
                             <!--begin::Table head-->
                             <thead>
                                 <!--begin::Table row-->
-                                <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                <tr class="text-start align-middle text-muted fw-bold fs-7 text-uppercase gs-0">
 
-                                    <th class="min-w-50px">Name</th>
+                                    <th class="min-w-250px">Name</th>
                                     <th class="min-w-50px">SAP-ID</th>
                                     <th class="min-w-50px">Mobile</th>
                                     <th class="min-w-50px">Department</th>
-                                    <th class="min-w-50-px">Designation</th>
+                                    <th class="min-w-50px">Designation</th>
                                     <th class="min-w-50px">Status</th>
 
-                                    <th class="text-center min-w-125px">Actions</th>
+                                    <th class="text-center min-w-50px">Actions</th>
                                 </tr>
                                 <!--end::Table row-->
                             </thead>
@@ -157,7 +157,7 @@
                                             <div class="d-flex flex-column">
                                                 <a href="javascript:void(0);" class="text-gray-900 text-hover-primary fs-6 fw-bold">{{$d['name']}}</a>
 
-                                                <span class="text-gray-400 fw-bold">Email:{{ $d['email'] }}</span>
+                                                <span class="text-gray-400 fw-bold">Email: {{ $d['email'] }}</span>
                                             </div>
                                             <!--end::Info-->
                                         </div>
@@ -454,7 +454,7 @@
                             );
                             var status = val.is_active;
                             var person = pic + "<br>" + firstName + " " + lastName +
-                                "<br>" + "Email:" + email;
+                                "<br>" + "Email: " + email;
                             var result = (
                                 '<label class="switch"><input type="checkbox" data-id="' +
                                 id + '" class="status" ' + activeStatus +
@@ -516,7 +516,7 @@
                             firsttd += '</div>';
                             firsttd += '<div class="d-flex flex-column">';
                             firsttd += '<a href="javascript:void(0);"class="text-gray-800 text-hover-primary mb-1" style="position:relative;left:59px;bottom:43px;">' + firstName + ' ' + lastName + '</a>';
-                            firsttd += ' <span style="position:relative;left:59px;bottom:43px;">Email:' + email + '</span>';
+                            firsttd += ' <span style="position:relative;left:59px;bottom:43px;">Email: ' + email + '</span>';
                             firsttd += ' </div>';
 
                             var editurl = '{{ route("employees.edit", ":id") }}';
@@ -534,7 +534,7 @@
                             );
                             var status = val.is_active;
                             var person = pic + "<br>" + firstName + " " + lastName +
-                                "<br>" + "Email:" + email;
+                                "<br>" + "Email: " + email;
                             var result = (
                                 '<label class="switch"><input type="checkbox" data-id="' +
                                 id + '" class="status" ' + activeStatus +
@@ -565,7 +565,7 @@
         var itsdepend = $(this).closest('tr').attr('itsdepend');
         console.log(itsdepend);
         if (itsdepend ==true) {
-            alertmsg = "This employee already mapped with the workflow,Do You want to want to re-assign to another Employee? ";
+            alertmsg = "This employee already mapped with the workflow. Do You want to want to re-assign to another Employee? ";
         }
 
         Swal.fire({
@@ -575,7 +575,7 @@
             showCancelButton: true,
             confirmButtonColor: '#3565ed',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Yes, Re-assign!'
         }).then(isConfirmed => {
             if (isConfirmed.value) {
                 if (itsdepend ==true) {
@@ -630,7 +630,7 @@
         var itsdepend = $(this).closest('tr').attr('itsdepend');
         var ipType = 1;
         if (itsdepend == true) {
-            alertmsg = "This employee already mapped with the workflow,Do You want to want to re-assign to another Employee? ";
+            alertmsg = "This employee already mapped with the workflow. Do You want to want to re-assign to another Employee? ";
         }
 
 
@@ -752,7 +752,7 @@
                     firsttd += '</div>';
                     firsttd += '<div class="d-flex flex-column">';
                     firsttd += '<a href="javascript:void(0);"class="text-gray-800 text-hover-primary mb-1" style="position:relative;left:59px;bottom:43px;">' + name + '</a>';
-                    firsttd += ' <span style="position:relative;left:59px;bottom:43px;">Email:' + email + '</span>';
+                    firsttd += ' <span style="position:relative;left:59px;bottom:43px;">Email: ' + email + '</span>';
                     firsttd += ' </div>';
 
 

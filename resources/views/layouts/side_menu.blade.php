@@ -174,7 +174,7 @@ $currentRoute = \Route::currentRouteName();
 					</div>
 					<!--end:Menu item-->
 					@endif
-					@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('project-view')||auth()->user()->can('document-listing-view')||auth()->user()->can('approval-listing-view'))
+					@if(auth()->user()->is_super_admin ==1 ||auth()->user()->can('project-view'))
 					<!--begin:Menu item-->
 					<div class="menu-item">
 						<!--begin:Menu link-->

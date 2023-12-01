@@ -150,14 +150,15 @@ class Doclistings extends Controller
         $models1 = $models->get();
 
         $project = $this->projectLooping($models1);
-        $employees = Employee::where(['is_active' => 1])->get();
+
         $departments = Department::where(['is_active' => 1])->get();
         $designation = Designation::where(['is_active' => 1])->get();
         $document_type = DocumentType::where(['is_active' => 1])->get();
         $workflow = Workflow::where(['is_active' => 1])->get();
         $projectList = $project;
+        $getAllEmployees = $this->basicController->getEmployeeemail($projectList);
 
-        return view('Docs/index', ['order_at' => $projectList, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation, 'projects' => $project]);
+        return view('Docs/index', ['order_at' => $projectList, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $getAllEmployees, 'departments' => $departments, 'designation' => $designation, 'projects' => $project]);
     }
     public function projectLooping($models)
     {
@@ -183,40 +184,71 @@ class Doclistings extends Controller
     }
     public function docListingSearch(Request $request)
     {
-        $startDate = $request->start_date;
-        $endDate = $request->end_date;
-        $model = Project::select('projects.id', 'projects.start_date', 'projects.end_date', 'projects.id as projectId', 'projects.ticket_no', 'projects.project_code', 'projects.project_name', 'workflows.workflow_code', 'workflows.workflow_name', 'employees.first_name', 'departments.name as deptName');
-        $model->leftjoin('employees', 'employees.id', '=', 'projects.initiator_id');
-        $model->leftjoin('departments', 'departments.id', '=', 'employees.department_id');
-        $model->leftjoin('designations', 'designations.id', '=', 'employees.designation_id');
-        $model->leftjoin('workflows', 'workflows.id', '=', 'projects.workflow_id');
-        if ($request->ticket_no) {
-            $model->where('projects.id', $request->ticket_no);
-        }
-        if ($request->project_code_name) {
-            $model->where('projects.project_code', $request->project_code_name);
-            $model->orWhere('projects.project_name', $request->project_code_name);
-        }
-        if ($request->workflow_code_name) {
-            $model->where('workflows.workflow_code', $request->workflow_code_name);
-            $model->orWhere('workflows.workflow_name', $request->workflow_code_name);
-        }
         if ($request->users) {
-            $model->where('employees.id', $request->users);
+            $userId = $request->users;
+            $modelsData = Project::select(
+                'projects.id',
+                'projects.start_date',
+                'projects.end_date',
+                'projects.id as projectId',
+                'projects.ticket_no',
+                'projects.project_code',
+                'projects.project_name',
+                'workflows.workflow_code',
+                'workflows.workflow_name',
+                'employees.middle_name',
+                'employees.last_name',
+                'employees.first_name',
+                'departments.name as deptName'
+            )
+                ->leftJoin('employees', 'employees.id', '=', 'projects.initiator_id')
+                ->leftJoin('project_employees', 'project_employees.project_id', '=', 'projects.id')
+                ->leftJoin('departments', 'departments.id', '=', 'employees.department_id')
+                ->leftJoin('designations', 'designations.id', '=', 'employees.designation_id')
+                ->leftJoin('workflows', 'workflows.id', '=', 'projects.workflow_id')
+                ->where('project_employees.employee_id', $request->users)
+                ->get();
+            $data = $modelsData;
+        } else {
+
+
+            $startDate = $request->start_date;
+            $endDate = $request->end_date;
+            $model = Project::select('projects.id', 'projects.start_date', 'projects.end_date', 'projects.id as projectId', 'projects.ticket_no', 'projects.project_code', 'projects.project_name', 'workflows.workflow_code', 'workflows.workflow_name', 'employees.middle_name', 'employees.last_name', 'employees.first_name', 'departments.name as deptName');
+            $model->leftjoin('employees', 'employees.id', '=', 'projects.initiator_id');
+            $model->leftjoin('departments', 'departments.id', '=', 'employees.department_id');
+            $model->leftjoin('designations', 'designations.id', '=', 'employees.designation_id');
+            $model->leftjoin('workflows', 'workflows.id', '=', 'projects.workflow_id');
+
+            if ($request->ticket_no) {
+                $model->where('projects.id', $request->ticket_no);
+            }
+            if ($request->project_code_name) {
+                $model->where('projects.project_code', $request->project_code_name);
+                $model->orWhere('projects.project_name', $request->project_code_name);
+            }
+            if ($request->workflow_code_name) {
+                $model->where('workflows.workflow_code', $request->workflow_code_name);
+                $model->orWhere('workflows.workflow_name', $request->workflow_code_name);
+            }
+            if ($request->users) {
+                $model->where('employees.id', $request->users);
+            }
+            if ($startDate || $endDate) {
+                $model->where(function ($query) use ($startDate, $endDate) {
+                    $query->whereBetween('start_date', [$startDate, $endDate])
+                        ->orWhereBetween('end_date', [$startDate, $endDate]);
+                });
+            }
+            if ($request->department) {
+                $model->where('departments.id', $request->department);
+            }
+            if ($request->designation) {
+                $model->where('designations.id', $request->designation);
+            }
+            $data = $model->get();
         }
-        if ($startDate || $endDate) {
-            $model->where(function ($query) use ($startDate, $endDate) {
-                $query->whereBetween('start_date', [$startDate, $endDate])
-                    ->orWhereBetween('end_date', [$startDate, $endDate]);
-            });
-        }
-        if ($request->department) {
-            $model->where('departments.id', $request->department);
-        }
-        if ($request->designation) {
-            $model->where('designations.id', $request->designation);
-        }
-        $data = $model->get();
+      
         $models = $this->projectLooping($data);
 
         return response()->json($models);
@@ -293,7 +325,7 @@ class Doclistings extends Controller
             ->leftjoin('document_types as doc', 'doc.id', '=', 'p.document_type_id')
             ->leftjoin('designations as des', 'des.id', '=', 'e.designation_id')
             ->where("p.id", '=', $id)
-            ->select('p.ticket_no', 'p.created_at', 'p.id', 'p.project_name', 'p.project_code', 'e.profile_image', 'des.name as designation', 'doc.name as document_type', 'w.workflow_code', 'w.workflow_name', 'e.first_name', 'e.last_name', 'd.name as department', 'p.is_active');
+            ->select('p.ticket_no', 'p.created_at', 'p.id', 'p.project_name', 'p.project_code', 'e.profile_image', 'des.name as designation', 'doc.name as document_type', 'w.workflow_code', 'w.workflow_name', 'e.first_name', 'e.middle_name', 'e.last_name', 'd.name as department', 'p.is_active');
         $details = $project_details->first();
 
         $project_details1 = DB::table('projects as p')
@@ -423,6 +455,7 @@ class Doclistings extends Controller
     public function viewDocListing(Request $request)
     {
         $id = $request->id;
+        $levelId = $request->levelId;
 
         $empId = (Session::get('employeeId')) ? Session::get('employeeId') : "";
         $project_details = DB::table('projects as p')
@@ -433,7 +466,7 @@ class Doclistings extends Controller
             ->leftjoin('document_types as doc', 'doc.id', '=', 'p.document_type_id')
             ->leftjoin('designations as des', 'des.id', '=', 'e.designation_id')
             ->where("p.id", '=', $id)
-            ->select('p.ticket_no', 'p.created_at', 'p.id', 'p.project_name', 'p.project_code', 'e.profile_image', 'des.name as designation', 'doc.name as document_type', 'w.workflow_code', 'w.workflow_name', 'e.first_name', 'e.last_name', 'd.name as department', 'p.is_active');
+            ->select('p.ticket_no', 'p.created_at', 'p.id', 'p.project_name', 'p.project_code', 'e.profile_image', 'des.name as designation', 'doc.name as document_type', 'w.workflow_code', 'w.workflow_name', 'e.first_name', 'e.last_name', 'e.middle_name', 'd.name as department', 'p.is_active');
         $details = $project_details->first();
 
         $project_details1 = DB::table('projects as p')
@@ -524,7 +557,7 @@ class Doclistings extends Controller
 
 
 
-        return view('Docs/viewDocument', ['milestoneDatas' => $milestoneDatas, 'levelsArray' => $getAllLevels, 'levelCount' => count($getAllLevels), 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
+        return view('Docs/viewDocument', ['milestoneDatas' => $milestoneDatas, 'levelsArray' => $getAllLevels, 'levelCount' => count($getAllLevels), 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation, 'levelId' => $levelId]);
     }
     public function getEmployeeInProject($projectId)
     {
@@ -1202,6 +1235,7 @@ class Doclistings extends Controller
             } else {
                 $model->is_latest = 0;
             }
+            $model->updated_by = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
             $model->status = $status;
             $model->remark = $remark;
             $model->save();

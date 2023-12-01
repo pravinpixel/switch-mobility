@@ -123,7 +123,7 @@
                             <!--begin::Table head-->
                             <thead>
                                 <!--begin::Table row-->
-                                <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                <tr class="text-start align-middle text-muted fw-bold fs-7 text-uppercase gs-0">
 
                                  
                                    
@@ -287,6 +287,8 @@
             column5 = row.cells[4].innerText;
             column6 = row.cells[5].innerText;
             column7 = row.cells[6].innerText;
+            column8 = row.cells[7].innerText;
+            column9 = row.cells[8].innerText;
             /* add a new records in the array */
             rows.push(
                 [
@@ -297,6 +299,8 @@
                     column5,
                     column6,
                     column7,
+                    column8,
+                    column9
                 ]
             );
 

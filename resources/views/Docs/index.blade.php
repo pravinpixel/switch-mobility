@@ -167,14 +167,14 @@
                             <div class="row g-8">
 
 
-                                <div class="col-md-3">
-                                    <label class="fs-6 form-label fw-bold text-dark "> WorkFlow Code/Name </label>
+                                <div class="col-md-4">
+                                    <label class="fs-6 form-label fw-bold text-dark "> WorkFlow Name / Code </label>
                                     <!--begin::Select-->
-                                    <select class="form-select form-select-solid workflowFilter" name="workflow_code_name" data-kt-select2="true" data-placeholder="WorkFlow Code/Name" data-allow-clear="false" id="workflow">
+                                    <select class="form-select workflowFilter" name="workflow_code_name" data-kt-select2="true" data-placeholder="WorkFlow Name (Code)" data-allow-clear="false" id="workflow">
                                         <option></option>
                                         @foreach ($workflow as $wf)
                                         <option value="{{ $wf['id'] }}">
-                                            {{ $wf['workflow_name'] }}({{ $wf['workflow_code'] }})
+                                            {{ $wf['workflow_name'] }} ({{ $wf['workflow_code'] }})
                                         </option>
                                         @endforeach
                                     </select>
@@ -182,12 +182,12 @@
                                 </div>
                                 <!--begin::Col-->
                                 <div class="col-md-3">
-                                    <label class="fs-6 form-label fw-bold text-dark ">Project Code / Name </label>
-                                    <select class="form-select form-select-solid projectFilter" name="project_code_name" data-kt-select2="true" data-placeholder="Project Code / Name" data-allow-clear="false" id="projectCode">
+                                    <label class="fs-6 form-label fw-bold text-dark ">Project Name / Code </label>
+                                    <select class="form-select projectFilter" name="project_code_name" data-kt-select2="true" data-placeholder="Project Name (Code)" data-allow-clear="false" id="projectCode">
                                         <option></option>
                                         @foreach ($projects as $project)
                                         <option value="{{ $project['id'] }}">
-                                            {{ $project['project_name'] }}( {{ $project['project_code'] }})
+                                            {{ $project['project_name'] }} ({{ $project['project_code'] }})
                                         </option>
                                         @endforeach
                                     </select>
@@ -195,7 +195,7 @@
                                 <!--begin::Col-->
                                 <div class="col-md-3">
                                     <label class="fs-6 form-label fw-bold text-dark "> Ticket No. </label>
-                                    <select class="form-select form-select-solid doclistFilter ticket_no" name="ticket_no" data-kt-select2="true" data-placeholder="Ticket No" data-allow-clear="false" id="ticketno">
+                                    <select class="form-select doclistFilter ticket_no" name="ticket_no" data-kt-select2="true" data-placeholder="Ticket No" data-allow-clear="false" id="ticketno">
                                         <option></option>
                                         @foreach ($projects as $project)
                                         <option name="ticket_no" value="{{ $project['id'] }}">
@@ -206,10 +206,10 @@
                                 </div>
                                 <!--end::Col-->
 
-                                <div class="col-lg-3">
+                                <div class="col-lg-2">
                                     <label class="fs-6 form-label fw-bold text-dark"> Department </label>
                                     <!--begin::Select-->
-                                    <select class="form-select form-select-solid doclistFilter deptId" name="department" data-kt-select2="true" data-placeholder="Department" data-allow-clear="false" id="deptId">
+                                    <select class="form-select doclistFilter deptId" name="department" data-kt-select2="true" data-placeholder="Department" data-allow-clear="false" id="deptId">
                                         <option></option>
                                         @foreach ($departments as $dept)
                                         <option name="department" value="{{ $dept['id'] }}">{{ $dept['name'] }}
@@ -218,10 +218,10 @@
                                     </select>
                                     <!--end::Select-->
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-2">
                                     <label class="fs-6 form-label fw-bold text-dark"> Designation </label>
                                     <!--begin::Select-->
-                                    <select class="form-select form-select-solid  desgId" name="designation" data-kt-select2="true" data-placeholder="Designation" name="designation" data-allow-clear="false" id="desgId">
+                                    <select class="form-select  desgId" name="designation" data-kt-select2="true" data-placeholder="Designation" name="designation" data-allow-clear="false" id="desgId">
                                         <option></option>
                                         @foreach ($designation as $des)
                                         <option value="{{ $des['id'] }}">{{ $des['name'] }}
@@ -234,10 +234,10 @@
                                 <div class="col-lg-2">
                                     <label class="fs-6 form-label fw-bold text-dark"> Users </label>
                                     <!--begin::Select-->
-                                    <select class="form-select form-select-solid users" name="users" data-kt-select2="true" data-placeholder="Users" id="users">
+                                    <select class="form-select users" name="users" data-kt-select2="true" data-placeholder="Users" id="users">
                                         <option></option>
                                         @foreach ($employee as $emp)
-                                        <option value="<?php echo $emp['id']; ?>"><?php echo $emp['first_name'] . ' ' . $emp['last_name']; ?></option>
+                                        <option value="<?php echo $emp['id']; ?>"><?php echo $emp['fullName']; ?></option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -252,27 +252,26 @@
                                 <div class="w-auto SearchFilter">
                                     <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
                                     <span class="btn btn-success ">Search</span>
-                                </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <div class="col-md-1">
-                                    <label class="fs-6 fw-semibold mb-2">&nbsp;</label>
+                                </div>
+                                <div class="w-auto">
+                                    <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
                                     <span class="btn btn-warning " onclick="reset()">Reset</span>
                                 </div>
-
+                            </div>
                         </form>
 
-
-                        <hr style="">
+                        <hr/>
                         <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
                             <!--begin::Table head-->
                             <thead>
                                 <!--begin::Table row-->
-                                <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                <tr class="text-start align-middle text-muted fw-bold fs-7 text-uppercase gs-0">
 
                                     <th class="min-w-125px">Ticket No</th>
                                     <th class="min-w-125px">Work Flow Name & Code </th>
                                     <th class="min-w-125px">Project Name & Code</th>
-                                    <th class="min-w-125px">start Date </th>
-                                    <th class="min-w-125px">End Date </th>
+                                    <th class="min-w-75px">start Date </th>
+                                    <th class="min-w-75px">End Date </th>
 
                                     <th class="min-w-125px">Initiator</th>
                                     <th class="min-w-125px">Department</th>
@@ -299,7 +298,7 @@
                                         {{ $d->ticket_no }}
                                     </td>
                                     <td>{{ $WorkFlow->workflow_name . ' & ' . $WorkFlow->workflow_code }}</td>
-                                    <td>{{ $d->project_name . '&' . $d->project_code }}</td>
+                                    <td>{{ $d->project_name . ' & ' . $d->project_code }}</td>
                                     <td>{{ date('d-m-Y', strtotime($d->start_date)) }}</td>
                                     <td>{{ date('d-m-Y', strtotime($d->end_date)) }}</td>
                                     <td>{{ $initiator->first_name .' ' . $initiator->middle_name .' ' . $initiator->last_name }}</td>
@@ -627,7 +626,7 @@
                     $.each(data, function(key, val) {
                         var ticketNo = val.ticket_no;
                         var deptName = val.deptName;
-                        var initiator = val.first_name;
+                        var initiator = val.first_name + " " + val.middle_name + " "+ val.last_name;
                         var projectCode = val.project_code;
                         var projectName = val.project_name;
                         var wfCode = val.workflow_code;
@@ -648,7 +647,7 @@
                         if (isSuperAdmin || isAuthorityEdit || isInitiator || isApprover ||
                             isHigherAuthorityPerson == 1) {
                             act += '&nbsp; <div style = "display:inline" id="' + projectId +
-                                '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:blue"></i></div>';
+                                '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:orange"></i></div>';
                         }
                         act += '</span>';
                         table.row.add([ticketNo, wfCode + wfName, projectCode + projectName,pStartDate, pEndDate,

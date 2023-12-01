@@ -60,15 +60,15 @@
                     <div class="card-header border-0 p-3">
                         <div class="col-md-12">
                             <div class="row col-12">
-                                <div class="col-md-3" style="display:inline;" id="workflowCodeField">
+                                <div class="col-md-4" style="display:inline;" id="workflowCodeField">
                                     <!--begin::Label-->
                                     <label class="fs-6 fw-semibold mb-2">Workflow Name & Code</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <select name="workflowCode" id="workflowCode" class="form-select">
-                                        <option value="">Select Workflow</option>
+                                    <select name="workflowCode" id="workflowCode" class="form-select" data-placeholder="WorkFlow Name (Code)" data-kt-select2="true">
+                                        <option></option>
                                         @foreach ($workflowDatas as $workflowData)
-                                        <option value="{{ $workflowData->id }}">{{ $workflowData->workflow_name }}({{ $workflowData->workflow_code }})</option>
+                                        <option value="{{ $workflowData->id }}">{{ $workflowData->workflow_name }} ({{ $workflowData->workflow_code }})</option>
                                         @endforeach
                                     </select>
 
@@ -79,8 +79,8 @@
                                     <label class="fs-6 fw-semibold mb-2">Project Name & Code</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <select name="projectName" id="projectName" class="form-select">
-                                        <option value="">First Select Workflow</option>
+                                    <select name="projectName" id="projectName" class="form-select" data-placeholder="Project Name (Code)" data-kt-select2="true">
+                                        <option></option>
 
                                     </select>
 
@@ -139,6 +139,7 @@
                     </div>
                     <!--end::Card header-->
                     <!--begin::Card body-->
+                    <hr>
                     <div class="card-body  p-3">
                         <!--begin::Card title-->
                         <div class="card-title">
@@ -162,7 +163,7 @@
                             <!--begin::Table head-->
                             <thead>
                                 <!--begin::Table row-->
-                                <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                <tr class="text-start align-middle text-muted fw-bold fs-7 text-uppercase gs-0">
 
 
                                     <th>Project Code</th>
@@ -292,7 +293,7 @@
                                 $.each(workflowData, function(key, val) {
                                     console.log(val);
                                     workflowitems += "<option value=" + val.id + ">" + val
-                                        .workflow_name + "(" + val.workflow_code + ")</option>";
+                                        .workflow_name + " (" + val.workflow_code + ")</option>";
                                 });
                                 $("#workflowCode").append(workflowitems);
                             }
@@ -326,7 +327,7 @@
                                     ' class="btn switchPrimaryBtn viewDocs">View</div>';
 
                                 projectNameOptionItems += "<option value=" + projectId + ">" +
-                                    projectName + "(" + projectCode + ")</option>";
+                                    projectName + " (" + projectCode + ")</option>";
                                 table.row.add([projectCode, projectName, workflowName,
                                     workflowCode, initiater, department, workflowLevel,
                                     dueDate, noOfDays, activeStatus, viewBtn
@@ -387,6 +388,7 @@
             /* add a new records in the array */
             rows.push(
                 [
+                    column1,
                     column2,
                     column3,
                     column4,
@@ -395,7 +397,7 @@
                     column7,
                     column8,
                     column9,
-                    column10,
+                    column10
                 ]
             );
 

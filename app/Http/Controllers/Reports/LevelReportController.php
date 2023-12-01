@@ -83,7 +83,7 @@ class LevelReportController extends Controller
                                     $approverType = "Approved By:";
 
                                 }
-                                    $rowresData = "Approved BY: " . $levelApprover . "<br>Date: " . $convertedLevelDate . "<br><a class='view-button' id='" . $projectId . "'>View</a>";
+                                    $rowresData = "Approved BY: " . $levelApprover . "<br>Date: " . $convertedLevelDate . "<br><a class='view-button' id='" . $projectId . "' data-id='" . $levelId . "'>View</a>";
                                 
                             } else {
                                 $date1 = Carbon::parse($levelDate);

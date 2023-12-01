@@ -59,6 +59,11 @@ class SendMail extends Mailable
             return $this->subject($this->title)
                 ->view('Email.initiatorMail', compact('projectId','empName', 'projectName', 'projectCode'));
         }
+       else if ($type == "newUserAdd") {
+      
+            return $this->subject($this->title)
+                ->view('Email.NewUserAddMail', compact('empName','projectId','projectName'));
+        }
          elseif($type == "newApprovalMail") {
             
             return $this->subject($this->title)

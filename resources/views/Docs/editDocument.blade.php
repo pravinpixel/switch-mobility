@@ -92,6 +92,54 @@ use Carbon\Carbon;
 
     }
 
+    @media only screen and (max-width: 1920px) {
+        .vertical-tabs .tab-content {
+            width: 83%;
+        }
+        .fileNameSpan {
+            font-size: 20px;
+            font-weight: bold;
+            padding-left:10px;
+            max-width:800px!important
+        }
+    }
+
+    @media only screen and (max-width: 1440px) {
+        .vertical-tabs .tab-content {
+            width: 83%;
+        }
+        .fileNameSpan {
+            font-size: 20px;
+            font-weight: bold;
+            padding-left:10px;
+            max-width:750px!important
+        }
+    }
+
+    @media only screen and (max-width: 1366px) {
+        .vertical-tabs .tab-content {
+            width: 83%;
+        }
+        .fileNameSpan {
+            font-size: 20px;
+            font-weight: bold;
+            padding-left:10px;
+            max-width:660px!important
+        }
+    }
+
+    @media only screen and (max-width: 1024px) {
+        .vertical-tabs .tab-content {
+            width: 83%;
+        }
+        .fileNameSpan {
+            font-size: 20px;
+            font-weight: bold;
+            padding-left:10px;
+            max-width:380px!important
+        }
+    }
+
     @media only screen and (max-width: 420px) {
         .titulo {
             font-size: 22px
@@ -164,7 +212,7 @@ use Carbon\Carbon;
         /* Hidden by default */
         position: fixed;
         /* Stay in place */
-        z-index: 1;
+        z-index: 2;
         /* Sit on top */
         padding-top: 100px;
         /* Location of the box */
@@ -245,7 +293,7 @@ use Carbon\Carbon;
                     <label class="required fs-6 fw-semibold mb-2">Documents</label><br>
                     <!--end::Label-->
                     <!--begin::Input-->
-                    <input style="border: 3px solid #ccc;" type="file" name="againestDocument" required class="form-control againestDocument" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                    <input style="border: 3px solid #ccc;" type="file" name="againestDocument" required class="form-control againestDocument" accept=".pdf,.xlsx,.docx">
                     <input type="hidden" value="" class="documentId" name="documentId">
                     <input type="hidden" value="" class="levelId" name="levelId">
                 </div>
@@ -297,7 +345,7 @@ use Carbon\Carbon;
                     <label class="required fs-6 fw-semibold mb-2">Documents</label><br>
                     <!--end::Label-->
                     <!--begin::Input-->
-                    <input style="border: 3px solid #ccc;" type="file" name="againestDocument" required id="againestDocument" class="form-control againestDocument" accept=".csv,.pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                    <input style="border: 3px solid #ccc;" type="file" name="againestDocument" required id="againestDocument" class="form-control againestDocument"   accept=".pdf,.xlsx,.docx">
                     <input type="hidden" value="" class="documentId" name="documentId">
                     <input type="hidden" value="" class="levelId" name="levelId">
                     <div style="color:red;display:none" id="filenotification">Please Upload a File</div>
@@ -364,9 +412,8 @@ use Carbon\Carbon;
             <div class="col-md-6">
                 <h3 class="breadcrumbs">Edit Documents > Ticket No. #{{ $details->ticket_no }}</h3>
             </div>
-            <div class="col-md-2">
-                <label> </label> <label> </label>
-                <a href="{{url('doclisting')}}" class="btn switchPrimaryBtn btn-sm mt-4" style="margin-right:-850px">Back</a>
+            <div class="col-md-6" align="right">
+                <a href="{{url('doclisting')}}" class="btn switchPrimaryBtn btn-sm mt-4" style="margin-right:10px">Back</a>
             </div>
         </div>
         <div class="row top-tap">
@@ -392,7 +439,7 @@ use Carbon\Carbon;
             </div>
             <div class="col-md-3">
                 <h4>WorkFlow Name & Code </h4>
-                <p>{{$details->workflow_name .' '. $details->workflow_code }}</p>
+                <p>{{$details->workflow_name .' & '. $details->workflow_code }}</p>
             </div>
             <div class="col-md-3">
                 <h4>Department </h4>
@@ -400,7 +447,7 @@ use Carbon\Carbon;
             </div>
             <div class="col-md-3">
                 <h4>Initiator </h4>
-                <p>{{ $details->first_name . ' ' . $details->last_name }}</p>
+                <p>{{ $details->first_name .' ' . $details->middle_name. ' ' . $details->last_name }}</p>
             </div>
 
 
@@ -484,7 +531,7 @@ use Carbon\Carbon;
             display: flex;
             justify-content: center;
             align-items: center;
-
+            z-index: 2;
         }
 
         .r-90 {
@@ -508,7 +555,7 @@ use Carbon\Carbon;
             top: 50%;
             transform: translateY(-50%);
             width: 418px;
-
+            z-index: 2;
         }
 
         .right-card-close {
@@ -655,7 +702,8 @@ use Carbon\Carbon;
                         //     month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
                         //     day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
                         //     newDate = day + '-' + month + '-' + yr;
-                        $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row justify-content-between px-5 align-items-center"><div class="w-auto fw-bold">Approvers</div><div class="w-auto image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="w-auto"><span class="fw-bold">Due Date:</span><p class="due_date_' + level + '"></p></div><div class="w-auto"><span class="fw-bold">Priority:</span><p class="priority_' + level + '"></p></div><div class="docsPart"><hr><div style="text-align:left;font-weight:bold;margin-left:10px;margin-bottom:10px;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div style="text-align:left;font-weight:bold;margin-left:10px;margin-top:20px;">&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div><div class="emptyDocsPart" style="display:none"><hr><p>No Documents is assigned For appproval!</p></div></div></div>');
+                        //$("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="row justify-content-between px-5 align-items-center"><div class="w-auto fw-bold">Approvers</div><div class="w-auto image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="w-auto"><span class="fw-bold">Due Date:</span><p class="due_date_' + level + '"></p></div><div class="w-auto"><span class="fw-bold">Priority:</span><p class="priority_' + level + '"></p></div><div class="docsPart"><hr><div style="text-align:left;font-weight:bold;margin-left:10px;margin-bottom:10px;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div><div style="text-align:left;font-weight:bold;margin-left:10px;margin-top:20px;">&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + '" style=" max-height:400px; overflow-y:auto"></div></div><div class="emptyDocsPart" style="display:none"><hr><p>No Documents is assigned For appproval!</p></div></div></div>');
+                        $("#pag" + level).html('<div class="sv-tab-panel" ><div class="jumbotron"><br><div class="s" ><div class="row justify-content-between px-5"><div class="w-auto image_append' + level + '" style="display:flex;flex-wrap:nowrap;overflow-x:auto;"></div><div class="w-auto"><span class="fw-bold">Due Date:</span><div class="due_date_' + level + '"></div></div><div class="w-auto"><span class="fw-bold">Priority</span><p class="priority_' + level + '"></p></div></div><div class="docsPart border-top"><div class="p-0  w-100" style="text-align:left;padding:5px 0;font-weight:bold;margin-left:10px;margin-bottom:10px;margin-top:10px;">&nbsp;&nbsp;Main Document</div><div class="maindoc_append' + level + '" style=" max-height:400px; overflow-y:auto;"></div><div style="text-align:left;padding:5px 0;font-weight:bold;margin-left:10px;margin-bottom:10px;margin-top:10px;" >&nbsp;&nbsp;Auxilary Document</div><div class="auxdoc_append' + level + ' mx-3" style=" max-height:400px; overflow-y:auto"></div></div><div class="emptyDocsPart" style="display:none"><hr><p>No Documents is assigned For appproval!</p></div></div></div>');
                         //if (data.length > 0) {
 
                         $(".image_append" + level).empty();
@@ -663,7 +711,7 @@ use Carbon\Carbon;
 
                             var dueDate = new Date(val.due_date);
                             var todayDate = new Date();
-
+                            todayDate.setTime( todayDate.getTime() + todayDate.getTimezoneOffset()*60*1000 );
                             var millisBetween = dueDate.getTime() - todayDate.getTime();
                             var getdays = millisBetween / (1000 * 3600 * 24);
                             var completionDate = Math.round(Math.abs(getdays));
@@ -709,7 +757,7 @@ use Carbon\Carbon;
                             } else {
                                 var profile = 'icon-5359553_960_720.png';
                             }
-                            $(".image_append" + level).append('<figure><img src="' + baseUrl + '/' + profile + '" class="rounded"  width="50" height="50"><figcaption  style="white-space: normal;width:300px;">[' + val.employee_full_name + ' ,' + val.desName + ']&nbsp;</figcaption></figure>');
+                            $(".image_append" + level).append('<figure><div class="fw-bold">Approvers</div><img src="' + baseUrl + '/' + profile + '" class="rounded"  width="50" height="50"><span style="white-space: normal;width:300px;">[' + val.employee_full_name + ', ' + val.desName + ']&nbsp;</span></figure>');
                         });
                         $.ajax({
                             url: "{{ url('getlevelwiseDocument') }}",
@@ -790,14 +838,14 @@ use Carbon\Carbon;
                                         versionMainDocDiv += '<div class="accordion " style="margin:auto;width:98%;" id="accordionExample' + key + '">';
                                         versionMainDocDiv += '<div class="card p-0"> <div class=" border-0" id="heading' + key + '">';
                                         versionMainDocDiv += '<h5 class="mb-0 w-100">';
-                                        versionMainDocDiv += '<button class="btn  btn-link  p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;width:99%;" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><h3 style = "font-style:bold;padding-left:10px;max-width:650px!important">' + currentFileName + '</h3> <p class="text-right mainlevelStatus-' + level + "-" + key + '"></p> <p class="btn btn-' + statusColour + ' status-accordion" style="margin-right:40px;">' + currentStatusData + '</p></button>';
+                                        versionMainDocDiv += '<button class="btn  btn-link  p-1 m-1 pb-0 btn-block " style="text-align:left;border-bottom:1px solid lightgrey;display: flex;align-items: center;justify-content:space-between;width:99%;" type="button" data-toggle="collapse" data-target="#collapse' + key + '" aria-expanded="false" aria-controls="collapse' + key + '"><span class="fileNameSpan">' + currentFileName + '</span> <span class="text-right mainlevelStatus-' + level + "-" + key + '"></span> <span class="btn btn-' + statusColour + ' status-accordion">' + currentStatusData + '</span></button>';
                                         versionMainDocDiv += '</h5>';
                                         versionMainDocDiv += '</div>';
                                         versionMainDocDiv += '<div id="collapse' + key + '" class="collapse fade" aria-labelledby="heading' + key + '" data-parent="#accordionExample' + key + '">';
                                         versionMainDocDiv += '<div class="card-body">';
                                         versionMainDocDiv += ' <table class="table table-striped documentTable">';
                                         versionMainDocDiv += ' <thead class="documentTableth">';
-                                        versionMainDocDiv += ' <tr> <th scope="col">Version ID </th> <th scope="col">Level</th><th scope="col">Remarks</th> <th scope="col">Status</th><th scope="col">Last Updated</th> <th scope="col">Action</th> </tr>';
+                                        versionMainDocDiv += ' <tr class="align-middle"> <th scope="col">Version ID </th> <th class="min-w-50px" scope="col">Level</th><th scope="col">Remarks</th> <th scope="col">Status</th><th scope="col">Last Updated</th> <th scope="col">Action</th> </tr>';
                                         versionMainDocDiv += '</thead>';
                                         versionMainDocDiv += '<tbody style="">';
                                         //By dhana
@@ -860,17 +908,17 @@ use Carbon\Carbon;
                                                 var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
                                                 var isDownlodedDocs = docMainDetailArray[i].is_downloaded;
                                                 console.log('isDownlodedDocs' + isDownlodedDocs);
-
+console.log("check Status"+docMainDetailArray[i].status);
                                                 // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
-                                                if (docMainDetailArray[i].status != 4 || showLastLevelBtn) {
+                                                if ((docMainDetailArray[i].status != 4 && docMainDetailArray[i].status != 3)|| showLastLevelBtn) {
                                                     if (isSuperAdmin || isDownlodedDocs == 1) {
                                                         if (ApproverExactLevel || isSuperAdmin) {
-                                                            versionMainDocDiv += '<a class="btn switchPrimaryBtn btn-sm" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.doc_id + ')" title="Change Status" readonly > <i class="las la-toggle-on"></i> </a>Change Status &nbsp;';
+                                                            versionMainDocDiv += '<a class="btn btn-sm btn-primary" href="javascript:void(0);" onclick="openStatusModel(' + docMainDetailArray[i].id + ',' + level + ',' + val.doc_id + ')" title="Change Status" readonly ><i class="las la-toggle-on"></i></a> Change Status<br><br>';
                                                         }
                                                     }
                                                 }
                                             }
-                                            versionMainDocDiv += '<a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="download"  onclick="isDownloadDocs(' + ApproverExactLevel + ',' + docMainDetailArray[i].id + ',' + level + ',)"><i class="las la-download"></i> </a>Download';
+                                            versionMainDocDiv += '<a class="btn btn-sm btn-success" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" download title="Download"  onclick="isDownloadDocs(' + ApproverExactLevel + ',' + docMainDetailArray[i].id + ',' + level + ')"><i class="las la-download"></i></a> Download';
                                             // versionMainDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docMainDetailArray[i].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                             versionMainDocDiv += '</button>';
                                             versionMainDocDiv += '</td>';
@@ -903,7 +951,7 @@ use Carbon\Carbon;
                                     $.each(data.aux_docs, function(key, val) {
                                         versionAuxDocDiv1 += '<tr>';
                                         versionAuxDocDiv1 += '<td>' + val.original_name + '</td>';
-                                        versionAuxDocDiv1 += '<td><a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + val.document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a> Download</td>';
+                                        versionAuxDocDiv1 += '<td><a class="btn btn-success btn-sm" href="' + baseUrl + 'projectDocuments/' + val.document_name + '" target="_blank" download title="Download"><i class="las la-download"></i></a> Download</td>';
                                         versionAuxDocDiv1 += '</tr>';
                                     });
                                 }else {
@@ -985,7 +1033,7 @@ use Carbon\Carbon;
                                     //         versionAuxDocDiv += '<td>';
                                     //         //if (j == showAuxDocAction) {
                                     //         // versionAuxDocDiv += '<a class="btn switchPrimaryBtn  btn-xs" href="javascript:void(0);" onclick="openStatusModel(' + docAuxDetailArray[j].id + ',' + level + ',' + val.id + ')" title="Change Status"> <i class="las la-toggle-on"></i></a> &nbsp;';
-                                    //         versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="download"><i class="las la-download"></i></a>';
+                                    //         versionAuxDocDiv += '<a class="btn btn-success btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" download title="Download"><i class="las la-download"></i></a>';
                                     //         // versionAuxDocDiv += ' <a class="btn btn-warning btn-xs" href="' + baseUrl + 'projectDocuments/' + docAuxDetailArray[j].document_name + '" target="_blank" view title="view"><i class="las la-eye"></i></a>&nbsp;<button class="btn btn-sm btn-primary" onclick="openVersionModel(' + val.id + ',' + level + ')"> <i class="las la-upload"></i>';
                                     //         versionAuxDocDiv += '</button>';
                                     //         //}

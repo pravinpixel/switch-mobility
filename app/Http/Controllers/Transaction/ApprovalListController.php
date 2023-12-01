@@ -78,8 +78,9 @@ class ApprovalListController extends Controller
         $models->whereNull('deleted_at');
         $datas = $models->get();
         $projects = $datas;
+        $employees = $this->basic->getEmployeeemail($projects);
 
-        $employees = Employee::where(['is_active' => 1])->get();
+      
         $departments = Department::where(['is_active' => 1])->get();
         $designation = Designation::where(['is_active' => 1])->get();
         $document_type = DocumentType::where(['is_active' => 1])->get();
@@ -104,11 +105,11 @@ class ApprovalListController extends Controller
             ->leftjoin('document_types as doc', 'doc.id', '=', 'p.document_type_id')
             ->leftjoin('designations as des', 'des.id', '=', 'e.designation_id')
             ->where("p.id", '=', $id)
-            ->select('p.ticket_no', 'p.created_at', 'p.id', 'p.project_name', 'p.project_code', 'e.profile_image', 'des.name as designation', 'doc.name as document_type', 'w.workflow_code', 'w.workflow_name', 'e.first_name', 'e.last_name', 'd.name as department', 'p.is_active');
+            ->select('p.ticket_no', 'p.created_at', 'p.id', 'p.project_name', 'p.project_code','e.middle_name',  'e.profile_image', 'des.name as designation', 'doc.name as document_type', 'w.workflow_code', 'w.workflow_name', 'e.first_name', 'e.last_name', 'd.name as department', 'p.is_active');
         $details = $project_details->first();
 
 
-        $models = ProjectDocumentDetail::select('document_name', 'project_documents.original_name', 'project_documents.id', 'project_documents.project_id as projectId')
+        $models = ProjectDocumentDetail::select('document_name', 'project_document_details.document_name as original_name', 'project_documents.id', 'project_documents.project_id as projectId')
             ->leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
             ->where('project_document_details.project_id', $id)
             ->where('project_documents.type', 1)
@@ -118,8 +119,7 @@ class ApprovalListController extends Controller
             ->groupby('project_document_details.id')
             ->get();
 
-
-
+// dd($models);
         $milestoneDatas = ProjectMilestone::where('project_id', $id)->get();
 
         return view('Transaction/approvalList/view', ['models' => $models, 'milestoneDatas' => $milestoneDatas, 'details' => $details]);

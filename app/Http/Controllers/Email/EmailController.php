@@ -194,14 +194,14 @@ class EmailController extends Controller
 
         try {
             $mail = Mail::to($employeeModel->email)->bcc($BccMailIds)->send(new SendMail("finalApprovalMail", $subject, $name, $projectId, $projectName, $projectCode, '', '', '', ''));
-           
+
             Log::info("Email controller -> finalApprovementProject Mail Sended Correctly ");
             return true;
             // $mail = Mail::to($toMail)->cc($ccMail)->send(new SendMail($type,$title, $name,$projectId,$projectName, $projectCode,'','','',''));
         } catch (Exception $e) {
 
-        
-            Log::info("Email controller -> finalApprovementProject Mail Sended Failed ".json_encode($e));
+
+            Log::info("Email controller -> finalApprovementProject Mail Sended Failed " . json_encode($e));
             return false;
         }
     }
@@ -282,6 +282,32 @@ class EmailController extends Controller
 
         $mail = Mail::to($toMail)->cc($ccMail)->send(new SendMail(3, $title, $name, $projectId, $projectName, $projectCode, $level, $cStatus,  $approverData, ''));
         return true;
+    }
+
+    public function userAddMail($employeeId,$password)
+    {
+
+        $ApproverEmployee = Employee::where('id', $employeeId)->first();
+
+        $approvername = $ApproverEmployee->first_name . "" . $ApproverEmployee->middle_name . " " . $ApproverEmployee->last_name;
+        $approverCode = $ApproverEmployee->sap_id;
+        $toMail = $ApproverEmployee->email;
+        $title = "New user Add";
+
+
+
+        try {
+            $mail = Mail::to($toMail)->send(new SendMail("newUserAdd", $title, $approvername, $approverCode, $password, "", "", "",  "", ""));
+
+            Log::info("Email controller -> finalApprovementProject Mail Sended Correctly ");
+            return true;
+            // $mail = Mail::to($toMail)->cc($ccMail)->send(new SendMail($type,$title, $name,$projectId,$projectName, $projectCode,'','','',''));
+        } catch (Exception $e) {
+
+
+            Log::info("Email controller -> finalApprovementProject Mail Sended Failed " . json_encode($e));
+            return false;
+        }
     }
     public function getEmployeeemail($projectId)
     {

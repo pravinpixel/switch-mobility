@@ -299,7 +299,8 @@
         $mainDocumentPath = $mainDocumentPath ?? ''; // Replace with the actual path
         $fileExtension = pathinfo($mainDocumentPath, PATHINFO_EXTENSION);
         $pdf = $excel = $word = $unknown = false;
-        
+
+       
     @endphp
 
     @if (!empty($mainDocumentPath))
@@ -323,6 +324,7 @@
         @endphp
     @endif
 
+   
 
     <!--begin::Modal header-->
     <!--begin::Modal body-->
@@ -369,7 +371,8 @@
                                     <label class="fs-6 fw-semibold">Active</label>
                                     <!--end::Label-->
                                     <input name="isDeletedOldMainDocument" class="isDeletedOldMainDocument" type="hidden"
-                                        value="<?php echo $isDocuments ? '1' : '0'; ?>" />
+                                        value="<?php echo $isDocuments ? '1' : '0'; ?>"
+                                         />
                                 </div>
                                 <!--end::Label-->
                                 <!--begin::Switch-->
@@ -388,6 +391,7 @@
                             <!--begin::Wrapper-->
                         </div>
                         <!--end::Input group-->
+                        <input type="hidden" class="oldAuxDocDeleteId" name="oldAuxDocDeleteId[]"/>
 
                         <div class="row g-9 mb-7">
                             <!--begin::Col-->
@@ -396,7 +400,7 @@
                                 <label class="required fs-6 fw-semibold mb-2">Project Code</label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
-                                <input type="text" class="form-control form-control-solid project_code"
+                                <input type="text" class="form-control project_code"
                                     placeholder="Enter Project Code" name="project_code" required />
                                 <!--end::Input-->
                                 <p id="projectCodeAlert" class="notifyAlert1" style="display: none;"></p>
@@ -413,8 +417,7 @@
                                     onchange="get_employee_details(this.value);" required>
                                     <option value="">Select</option>
                                     @foreach ($employee as $emp)
-                                        <option value="<?php echo $emp['id']; ?>"><?php echo $emp['first_name'] . ' ' . $emp['last_name'] . '(' . $emp['sap_id'] . ')'; ?></option>
-                                    @endforeach
+                                    <option value="<?php echo $emp['id']; ?>"><?php echo $emp['first_name'] . ' '.$emp['middle_name'] . ' ' . $emp['last_name'] . '(' . $emp['sap_id'] . ')'; ?></option>  @endforeach
                                 </select>
                                 <!--end::Input-->
                             </div>
@@ -426,7 +429,7 @@
                                 <label class="required fs-6 fw-semibold mb-2">Project Name</label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
-                                <input type="text" class="form-control form-control-solid project_name"
+                                <input type="text" class="form-control project_name"
                                     placeholder="Enter Project Name" name="project_name" required />
                                 <!--end::Input-->
                                 <p id="projectNameAlert" class="notifyAlert1" style="display: none;"></p>
@@ -459,7 +462,7 @@
                                 <label class="required fs-6 fw-semibold mb-2">Start Date</label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
-                                <input type="date" class="form-control form-control-solid start_date"
+                                <input type="date" class="form-control start_date"
                                     placeholder="Enter Start Date" name="start_date" onchange="set_min(this.value);"
                                     required />
                                 <!--end::Input-->
@@ -473,7 +476,7 @@
                                 <label class="required fs-6 fw-semibold mb-2">End Date</label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
-                                <input type="date" class="form-control form-control-solid end_date"
+                                <input type="date" class="form-control end_date"
                                     placeholder="Enter End Date" name="end_date" required onchange="set_max(this.value);" />
                                 <!--end::Input-->
                             </div>
@@ -496,7 +499,7 @@
                                 <!--end::Label-->
                                 <!--begin::Input-->
                                 <input type="hidden" class="document_type_id" name="document_type_id">
-                                <select class="form-control document_type_id1" name="document_type_id1" disabled
+                                <select class="form-control form-control-solid document_type_id1" name="document_type_id1" disabled
                                     onchange="get_document_workflow(this.value);" required>
                                     <option value="">Select</option>
                                     @foreach ($document_type as $doc)
@@ -596,7 +599,7 @@
                                             <label class="required fs-6 fw-semibold mb-2">Start Date</label>
                                             <!--end::Label-->
                                             <!--begin::Input-->
-                                            <input type="date" class="form-control form-control-solid mile_start_date"
+                                            <input type="date" class="form-control mile_start_date"
                                                 placeholder="Enter Start Date" name="mile_start_date[]" required />
                                             <!--end::Input-->
                                         </div>
@@ -609,7 +612,7 @@
                                             <label class="required fs-6 fw-semibold mb-2">End Date</label>
                                             <!--end::Label-->
                                             <!--begin::Input-->
-                                            <input type="date" class="form-control form-control-solid mile_end_date"
+                                            <input type="date" class="form-control mile_end_date"
                                                 placeholder="Enter End Date" name="mile_end_date[]" required />
                                             <!--end::Input-->
                                         </div>
@@ -619,9 +622,9 @@
                                             <label class="required fs-6 fw-semibold mb-2">Level To Be Crossed</label>
                                             <!--end::Label-->
                                             <!--begin::Input-->
-                                            <select class="form-control levels_to_be_crossed"
-                                                name="level_to_be_crosssed[]" required>
-                                                <option value="">Select</option>
+                                            <select class="form-select levels_to_be_crossed"
+                                                name="level_to_be_crosssed[]" required data-placeholder="Select Level" data-allow-clear="true">
+                                                <option></option>
 
                                             </select>
                                             <!-- <input type="text" class="form-control" name="level_to_be_crosssed" /> -->
@@ -738,7 +741,7 @@
                             @else
                                 <!-- Handle unknown file types here -->
                             @endif
-                            </label> <input type="file" name="main_document[]" id="pdf1" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".pdf,.xlsx,.xls,.doc,.docx" <?php echo($document)?"disabled":""?>>
+                            </label> <input type="file" name="main_document[]" id="pdf1" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".pdf,.xlsx,.docx" <?php echo($document)?"disabled":""?>>
                         </div>
                     </div>
                     <div class="col-md-6 fv-row">
@@ -746,7 +749,47 @@
                         <div class="col-md-12 p-3 pdf_container input-group">
                             <label class="row col-12 m-2 pdf-view row " for="pdf2">
                                 <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div>
-                            </label> <input type="file" name="auxillary_document[]" id="pdf2" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".pdf,.xlsx,.xls,.doc,.docx">
+                               
+                               @foreach($auxDocumentPath as $axkey=>$axvalue)
+                                @if ($axvalue['extension'] == "xlsx"||$axvalue['extension'] == "XLS" )
+                                <div class="pdf" onclick="event.preventDefault()"><img src="{{ asset('Fileicons/excel.png') }}" class="pdf-iframe " scrolling="no">
+                                    @if ($isAllowDeleteMainDocument)
+                                    <button class="btn btn-danger btn-sm pdf_delete_btn axpdf_delete_btn btn-icon" onclick="axdbdeletepdf(this)" projectDocId ="{{ $axvalue['projectDocId']}}" path_name="{{ $axvalue['path']}}"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
+                                    @endif
+                                    <button class="btn btn-primary btn-sm btn-icon pdf-download" path_name="{{  $axvalue['path']}}" onclick="downloadDocs(this)" > 
+                                        <i class="fas fa-download "></i>
+                                    </button>
+                                  
+                                   
+                                </div>
+                            @elseif ($axvalue['extension'] == "pdf")
+                            <div class="pdf" onclick="event.preventDefault()"><img src="{{ asset('Fileicons/pdf.png') }}" class="pdf-iframe "  scrolling="no"></img>
+                                @if ($isAllowDeleteMainDocument)
+                                <button class="btn btn-danger btn-sm pdf_delete_btn  btn-icon" onclick="axdbdeletepdf(this)" projectDocId ="{{ $axvalue['projectDocId']}}"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
+                                @endif
+                                <button class="btn btn-primary btn-sm  btn-icon pdf-download"  path_name="{{  $axvalue['path']}}" onclick="downloadDocs(this)"> 
+                                    <i class="fas fa-download "></i>
+                                </button>
+                                   
+                               
+                            </div>
+                            @elseif ($axvalue['extension'] == "docx"||$axvalue['extension'] == "doc" )
+                            <div class="pdf" onclick="event.preventDefault()"><img src="{{ asset('Fileicons/word.png') }}" class="pdf-iframe "  scrolling="no">
+                                @if ($isAllowDeleteMainDocument)
+                                    
+                            
+                                <button class="btn btn-danger btn-icon w-30px h-30px btn-sm pdf_delete_btn btn-icon " onclick="axdbdeletepdf(this)" projectDocId ="{{ $axvalue['projectDocId']}}"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
+                                @endif
+                                <button class="btn btn-primary btn-sm  btn-icon pdf-download"  path_name="{{  $axvalue['path']}}" onclick="downloadDocs(this)"> 
+                                    <i class="fas fa-download "></i>
+                                </button>
+                            </div>
+                            @else
+                                <!-- Handle unknown file types here -->
+                            @endif
+                            @endforeach
+                           
+                            </label> <input type="file" name="auxillary_document[]" id="pdf2" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".pdf,.xlsx,.docx">
                         </div>
                     </div>
                 </div>
@@ -800,7 +843,7 @@
                         <button type="button" class="btn btn-lg switchPrimaryBtn  btn-tab-switch"
                             data-kt-stepper-action="next" validate="need">Continue
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
-                            <span class="svg-icon svg-icon-3 ms-1 me-0">
+                            <span class="svg-icon svg-icon-white svg-icon-3 ms-1 me-0">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <rect opacity="0.5" x="18" y="13" width="13" height="2"
@@ -973,7 +1016,8 @@
                 var $wrapper = $('.multi-fields', this);
 
                 $(".add-field", $(this)).click(function(e) {
-
+                    let todoSelects = $('.multi-fields').children().find("select");
+                    
                     var length = $(".multi-field").length;
                     var inputAppends = $(".multi-field input[required]");
                     let identity;
@@ -995,6 +1039,10 @@
                             $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper)
                                 .find(
                                     'input').val('').focus();
+                            
+                            for (let j = 0; j < todoSelects.length; j++) {
+                                $('.multi-field:last-child').children().find("select option[value='" + $(todoSelects[j]).val() + "']").remove();
+                            }
                         }
                     }
 
@@ -1418,7 +1466,7 @@
                         //     .remove();
                         for (var i = 0; i < WFLevelBtn.length; i++) {
                             console.log("LevelData " + WFLevelBtn[i].levelId);
-                            var option = '<option selected value="' + +WFLevelBtn[i].levelId + '">Level -' +
+                            var option = '<option value="' + +WFLevelBtn[i].levelId + '">Level -' +
                                 +WFLevelBtn[i].levelId +
                                 '</option>';
                             // $('.levels_to_be_crossed').append(option);
@@ -1646,7 +1694,7 @@
 
                         var selectMileStoneLevel = "";
                         console.log("selectMileStoneLevel >" + selectMileStoneLevel);
-                        var option = '<option  value="' + +WFLevelBtn[i].levelId + '" ' +
+                        var option = '<option value="' + +WFLevelBtn[i].levelId + '" ' +
                             selectMileStoneLevel + '>Level - ' + +WFLevelBtn[i].levelId +
                             '</option>';
                         //$('.levels_to_be_crossed').append(option);
@@ -1842,7 +1890,7 @@
                         val.mile_end_date + '" start-min="' + data.project.start_date +
                         '" start-max="' + data.project.end_date + '" min="' + val.mile_start_date +
                         '"  max="' + data.project.end_date +
-                        '"  required  onchange="mileStone_max_date(this)"/> <!--end::Input--> </div> <!--end::Col--> <div class="col-md-4 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Level To Be Crossed1</label> <!--end::Label--> <!--begin::Input--> <select class="form-control levels_to_be_crossed" name="level_to_be_crosssed[]" required>';
+                        '"  required  onchange="mileStone_max_date(this)"/> <!--end::Input--> </div> <!--end::Col--> <div class="col-md-4 fv-row"> <!--begin::Label--> <label class="required fs-6 fw-semibold mb-2">Level To Be Crossed</label> <!--end::Label--> <!--begin::Input--> <select class="form-select levels_to_be_crossed" name="level_to_be_crosssed[]" required data-placeholder="Select Level" data-allow-clear="true">';
 
                     $.each(data.levelArray, function(key1, val1) {
                         var selectedCrosses = (val.levels_to_be_crossed == val1.levelId) ?
@@ -1954,6 +2002,8 @@
 
     function append_more(e) {
 
+        let todoSelects = $('.multi-fields').children().find("select");
+        
         var length = $(".multi-field").length;
         var inputAppends = $(".multi-field input[required]");
         let identity;
@@ -1977,6 +2027,10 @@
                     }).attr('max', function() {
                     return $(this).attr('start-max');
                 });
+                            
+                for (let j = 0; j < todoSelects.length; j++) {
+                    $('.multi-field:last-child').children().find("select option[value='" + $(todoSelects[j]).val() + "']").remove();
+                }
 
             }
         }
@@ -2022,7 +2076,7 @@
                 '" scrolling="no"></img><button class="btn btn-danger btn-sm pdf_delete_btn btn-icon " onclick="deletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button></div>'
                 );
             $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber +
-                '" accept=".pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;"' +
+                '" accept=".pdf,.xlsx,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;"' +
                 disableCheck + '>');
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
         } else if (pdfFile["name"].endsWith(".doc") || pdfFile["name"].endsWith(".docx")) {
@@ -2034,7 +2088,7 @@
                 '" scrolling="no"></img><button class="btn btn-danger btn-icon w-30px h-30px btn-sm pdf_delete_btn btn-icon " onclick="deletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button></div>'
                 );
             $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber +
-                '" accept=".pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;"' +
+                '" accept=".pdf,.xlsx,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;"' +
                 disableCheck + '>');
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
         } else if (pdfFile["name"].endsWith(".csv") || pdfFile["name"].endsWith(".xlsx") || pdfFile["name"].endsWith(
@@ -2046,7 +2100,7 @@
                 '" scrolling="no"></img><button class="btn btn-danger btn-sm pdf_delete_btn  btn-icon" onclick="deletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button></div>'
                 );
             $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber +
-                '" accept=".pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;"' +
+                '" accept=".pdf,.xlsx,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;"' +
                 disableCheck + '>');
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
         }
@@ -2082,13 +2136,64 @@ function downloadDocs(event){
 }
     function dbdeletepdf(event) {
 
-        $("form").append("<input type='hidden' value='" + $(event).attr("path_name") + "'>");
-        $(event).parent().parent().parent().find("input").prop("disabled", false);
-        $(event).parent().remove();
-        $('.isDeletedOldMainDocument').val(0);
-
+        Swal.fire({
+                title: 'Are you sure?',
+                text: 'This action cannot be undone!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value == true) {
+                    $("form").append("<input type='hidden' value='" + $(event).attr("path_name") + "'>");
+                    $(event).parent().parent().parent().find("input").prop("disabled", false);
+                    $(event).parent().remove();
+                    $('.isDeletedOldMainDocument').val(0);
+                    Swal.fire(
+                                    'Deleted!',
+                                    'The file has been deleted.',
+                                    'success'
+                                );
+                            }
+                        });
+                }
+    
+        function axdbdeletepdf(event) {
+          
+                    Swal.fire({
+                title: 'Are you sure?',
+                text: 'This action cannot be undone!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+               
+                if (result.value == true) {
+                    $("form").append("<input type='hidden' value='" + $(event).attr("path_name") + "'>");
+                    $(event).parent().parent().parent().find("input").prop("disabled", false);            
+                    $(event).parent().remove();
+                
+                    $('.oldAuxDocDeleteId').each(function() {
+                        let currentValue = $(this).val();
+                        var projectDocId = $(event).attr("projectDocId");
+                        let newValue = currentValue ? currentValue + ","+projectDocId : projectDocId;
+                        $(this).val(newValue);
+                    });
+                    console.log( $('.oldAuxDocDeleteId').val());
+                // $('.isDeletedOldMainDocument').val(0);
+                Swal.fire(
+                        'Deleted!',
+                        'The file has been deleted.',
+                        'success'
+                    );
+                }
+            });
     }
 
+ 
     function set_min(start_date) {
         $('.end_date').attr('min', start_date);
         $(".mile_start_date").attr('min', start_date);
@@ -2099,10 +2204,13 @@ function downloadDocs(event){
         var startDate = new Date(start_date);
         var endDate = new Date($('.end_date').val());
 
+        var start_arr = [];
+        var ictr = 0;
         $(".mile_start_date").each(function() {
             var mileDate = new Date($(this).val());
             let mileStoneName = $(this).parent().prev().find("input").val();
             if (mileDate < startDate) {
+                start_arr[ictr++] = this;
                 swal.fire({
                     title: "Date Out of Range",
                     text: mileStoneName + "'s start date is out of range. Do you want to clear it?",
@@ -2112,15 +2220,21 @@ function downloadDocs(event){
                     cancelButtonText: "No, keep it"
                 }).then((result) => {
                     if (result.value === true) {
-                        $(this).val("");
+                        start_arr.forEach(function(start) {
+                            $(start).val("");
+                        });
+                        //$(this).val("");
                     }
                 });
             }
         });
 
+        var end_arr = [];
+        var jctr = 0;
         $(".mile_end_date").each(function() {
             var mileDate = new Date($(this).val());
             if (mileDate > endDate) {
+                end_arr[jctr++] = this;
                 swal.fire({
                     title: "Date Out of Range",
                     text: "Some milestone end dates are out of range. Do you want to clear them?",
@@ -2130,7 +2244,10 @@ function downloadDocs(event){
                     cancelButtonText: "No, keep them"
                 }).then((result) => {
                     if (result.value === true) {
-                        $(this).val("");
+                        end_arr.forEach(function(end) {
+                            $(end).val("");
+                        });
+                        //$(this).val("");
                     }
                 });
             }
@@ -2147,10 +2264,12 @@ function downloadDocs(event){
         var startDate = new Date($('.start_date').val());
         var endDate = new Date(end_date);
 
-
+        var start_arr = [];
+        var ictr = 0;
         $(".mile_start_date").each(function() {
             var mileDate = new Date($(this).val());
             if (mileDate < startDate) {
+                start_arr[ictr++] = this;
                 let mileStoneName = $(this).parent().prev().find("input").val();
                 swal.fire({
                     title: "Date Out of Range",
@@ -2161,15 +2280,21 @@ function downloadDocs(event){
                     cancelButtonText: "No, keep it"
                 }).then((result) => {
                     if (result.value === true) {
-                        $(this).val("");
+                        start_arr.forEach(function(start) {
+                            $(start).val("");
+                        });
+                        //$(this).val("");
                     }
                 });
             }
         });
 
+        var end_arr = [];
+        var jctr = 0;
         $(".mile_end_date").each(function() {
             var mileDate = new Date($(this).val());
             if (mileDate > endDate) {
+                end_arr[jctr++] = this;
                 swal.fire({
                     title: "Date Out of Range",
                     text: "Some milestone end dates are out of range. Do you want to clear them?",
@@ -2179,7 +2304,10 @@ function downloadDocs(event){
                     cancelButtonText: "No, keep them"
                 }).then((result) => {
                     if (result.value === true) {
-                        $(this).val("");
+                        end_arr.forEach(function(end) {
+                            $(end).val("");
+                        });
+                        //$(this).val("");
                     }
                 });
             }

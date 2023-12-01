@@ -73,13 +73,13 @@
 
                     <!--end::Card header-->
                     <!--begin::Card body-->
-                    <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+                    <div class="modal-body mt-10">
 
                         <form id="department_form" class="form" method="post" action="{{url('workflow')}}">
                             @csrf
                             <!--end::Input group-->
 
-                            <div class="row g-9 mb-7">
+                            <div class="row g-9 mb-7 justify-content-around">
                                 <!--begin::Col-->
                                 <div class="col-md-3 fv-row">
                                     <!--begin::Label-->
@@ -131,7 +131,7 @@
                                     <!--begin::Variations-->
                                     <div class="card card-flush py-4">
                                         <!--begin::Card header-->
-                                        <div class="card-header">
+                                        <div class="card-header d-inline-block m-auto">
                                             <div class="card-title">
                                                 <h2>Level Selection</h2>
                                             </div>
@@ -153,7 +153,7 @@
                                                             <!--begin::Form group-->
                                                             <div class="form-group">
                                                                 <div data-repeater-list="kt_ecommerce_add_product_options" class="d-flex flex-column gap-3">
-                                                                    <div data-repeater-item="" class="form-group d-flex flex-wrap align-items-center gap-5">
+                                                                    <div data-repeater-item="" class="form-group d-flex flex-wrap align-items-center justify-content-center gap-5">
                                                                         <!--begin::Select2-->
                                                                         <div class="col-md-4">
                                                                             <select class="form-select product_option2" name="levels[]" data-placeholder="Select a variation" data-kt-ecommerce-catalog-add-product="product_option" disabled>
@@ -164,7 +164,7 @@
                                                                         </div>
                                                                         <!--end::Select2-->
                                                                         <!--begin::Input-->
-                                                                        <div class="col-md-3 fv-row">
+                                                                        <div class="col-md-4 fv-row">
                                                                             <select class="form-select mb-2 designation" levelCheck="{{$k + 1}}" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="fapprover_designation{{$k+1}}[]">
                                                                                 
                                                                                 <?php
@@ -219,14 +219,11 @@
                                     <!--end::Card header-->
                                 </div>
                             </center>
-                            <script>
-
-                            </script>
                             <div class="col-md-12 fv-row partialWorkflow" style="display:none;">
                                 <!--begin::Variations-->
                                 <div class="card card-flush py-4">
                                     <!--begin::Card header-->
-                                    <div class="card-header">
+                                    <div class="card-header d-inline-block m-auto">
                                         <div class="card-title">
                                             <h2>Level Selection</h2>
                                         </div>
@@ -239,7 +236,7 @@
                                             <!--begin::Repeater-->
                                             @for($k=0;$k<count($entities);$k++) 
                                            
-                                            <div id="kt_ecommerce_add_product_options1">
+                                            <div id="kt_ecommerce_add_product_options1" class="Partial-input-container">
                                                 <?php $a = count($entities);
                                                     $b = $a - 1; ?>
                                                 <!--begin::Form group-->
@@ -291,7 +288,7 @@
                                                                         <rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor" /></svg> </span>
                                                                 <!--end::Svg Icon-->Remove</button>
                                                             @else
-                                                            <button type="button" data-repeater-delete="" class="btn btn-sm btn-icon btn-light-danger" style="visibility: ;"  onclick="RemoveFunctionc(this)">
+                                                            <button type="button" data-repeater-delete="" class="btn btn-sm btn-icon btn-light-danger" style="visibility: hidden;"  onclick="RemoveFunctionc(this)">
                                                                 <!--begin::Svg Icon | path: icons/duotune/arrows/arr088.svg-->
                                                                 <span class="svg-icon svg-icon-1">
                                                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

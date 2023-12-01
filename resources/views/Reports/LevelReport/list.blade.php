@@ -102,27 +102,27 @@
                     </div>
                     @endif
                     <div class="card-header border-0 p-3">
-                        <h3>Level Report -As on {{$todayDate}}</h3>
+                        <h3>Level Report - As on {{$todayDate}}</h3>
                         <div class="card-title col-12">
                             <div class="row col-12">
-                                <div class="col-md-3">
-                                    <label class="fs-6 form-label fw-bold text-dark "> WorkFlow Code/Name </label>
+                                <div class="col-md-4">
+                                    <label class="fs-6 form-label fw-bold text-dark "> WorkFlow Name / Code </label>
                                     <!--begin::Select-->
-                                    <select class="form-select workflowFilter" name="workflow_code_name" data-kt-select2="true" data-placeholder="WorkFlow Code/Name" data-allow-clear="false" id="workflow">
+                                    <select class="form-select workflowFilter" name="workflow_code_name" data-kt-select2="true" data-placeholder="WorkFlow Name (Code)" data-allow-clear="false" id="workflow">
                                         <option></option>
                                         @foreach ($workflowModels as $wf)
                                         <option value="{{ $wf['id'] }}">
-                                            {{ $wf['workflow_name'] }}({{ $wf['workflow_code'] }})
+                                            {{ $wf['workflow_name'] }} ({{ $wf['workflow_code'] }})
                                         </option>
                                         @endforeach
                                     </select>
                                     <!--end::Select-->
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="fs-6 form-label fw-bold text-dark "> Project Code/Name </label>
+                                    <label class="fs-6 form-label fw-bold text-dark "> Project Name / Code </label>
                                     <!--begin::Select-->
-                                    <select class="form-select projectFilter" name="project_code_name" data-kt-select2="true" data-placeholder="Project Code/Name" data-allow-clear="false" id="project_code_name">
-                                        <option value="">First Select Workflow</option>
+                                    <select class="form-select projectFilter" name="project_code_name" data-kt-select2="true" data-placeholder="Project Name (Code)" data-allow-clear="false" id="project_code_name">
+                                        <option></option>
 
                                     </select>
                                     <!--end::Select-->
@@ -144,6 +144,7 @@
 
 
                     </div>
+                    <hr/>
                     <!--end::Card header-->
                     <!--begin::Card body-->
                     <div class="card-body  p-3">
@@ -169,7 +170,7 @@
                             <!--begin::Table head-->
                             <thead>
                                 <!--begin::Table row-->
-                                <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                <tr class="text-start align-middle text-muted fw-bold fs-7 text-uppercase gs-0">
 
 
 
@@ -341,10 +342,11 @@
         console.log("well and good");
 
         var id = $(this).attr('id');
+        var levelId = $(this).attr('data-id');
 
         var url = "{{ route('viewDocListing') }}";
         var form = $('<form action="' + url + '" method="post">' +
-            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
+            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" /><input type="hidden" name="levelId" value="' + levelId + '" />' +
             '</form>');
         $('body').append(form);
         form.submit();

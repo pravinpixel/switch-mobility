@@ -326,14 +326,14 @@
 
                             <div class="row">
                                 <!--begin::Col-->
-                                <div class="col-md-3 fv-row">
+                                <div class="w-auto fv-row">
                                     <!--begin::Label-->
-                                    <label class="fs-6 fw-semibold mb-2"></label>
-                                    <a class="btn btn-warning btn-sm" href="{{ asset('/bulk1.xlsx') }}" target="_blank" download title="download">Sample Format <i class="las la-download"></i></a>
+                                    <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
+                                    <a class="btn btn-warning" href="{{ asset('/bulk1.xlsx') }}" target="_blank" download title="Download">Sample Format <i class="las la-download"></i></a>
 
                                     <!--end::Input-->
                                 </div>
-                                <div class="col-md-3 fv-row">
+                                <div class="w-auto fv-row">
                                     <!--begin::Label-->
                                     <label class="required fs-6 fw-semibold mb-2">File(Only Excel File)</label>
                                     <!--end::Label-->

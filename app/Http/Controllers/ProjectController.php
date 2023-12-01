@@ -21,6 +21,7 @@ use App\Models\WorkflowLevelDetail;
 use App\Models\Workflowlevels;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -53,9 +54,8 @@ class ProjectController extends Controller
 
         $models->whereNull('deleted_at');
         $models1 = $models->get();
-
+        $allProjectData = $this->projectLooping($models1);
         // dd($models1[0]['employee']);
-
 
         $employees = Employee::where('is_active', 1)->get()->toArray();
 
@@ -74,8 +74,46 @@ class ProjectController extends Controller
 
 
 
-        return view('Projects/list', ['initiaters' => $initiaters, 'document_type' => $document_type, 'workflow' => $workflow, 'projects_all' => $models1, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
+        return view('Projects/list', ['initiaters' => $initiaters, 'document_type' => $document_type, 'workflow' => $workflow, 'projects_all' => $allProjectData, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
         //return view('Projects/listPageOrg', ['document_type' => $document_type, 'workflow' => $workflow, 'projects_all' => $projects_all, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
+    }
+    public function projectLooping($models)
+    {
+        $allDatas = [];
+        foreach ($models as $key => $model) {
+            $project_code = $model->project_code;
+            $project_name = $model->project_name;
+            $employee = $model->employee;
+            $date1 = Carbon::parse($model->start_date);
+            $start_date = $date1->format('d-m-Y');
+
+            $date2 = Carbon::parse($model->end_date);
+            $end_date = $date2->format('d-m-Y');
+
+            $id = $model->id;
+
+            $getDocDetails = ProjectDocumentDetail::leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
+                ->where('project_documents.project_id', $id)
+                ->where('project_documents.type', 1)
+                ->get();
+            $totDocCount = count($getDocDetails);
+            $isDeleteProject = 0;
+            if ($totDocCount > 1) {
+                $isDeleteProject = 1;
+            }
+            $data = [
+                'id' => $id,
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'employee' => $employee,
+                'project_code' => $project_code,
+                'project_name' => $project_name,
+                'isDeleteProject' => $isDeleteProject
+            ];
+            array_push($allDatas, $data);
+        }
+
+        return $allDatas;
     }
     public function create()
     {
@@ -124,6 +162,7 @@ class ProjectController extends Controller
         $wfLevel = $this->getWorkflowFirstLevel($project->workflow_id);
 
         $mainDocumentPath = "";
+        $auxDocumentPath = [];
 
         if ($isDocuments && $wfLevel) {
             $getFile = ProjectDocumentDetail::leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
@@ -134,6 +173,20 @@ class ProjectController extends Controller
                 ->first();
             if ($getFile) {
                 $mainDocumentPath = "projectDocuments/" . $getFile->document_name;
+            }
+            $getAuxFiles = ProjectDocumentDetail::leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
+                ->where('project_documents.project_id', $id)
+                ->where('project_documents.type', 2)
+                ->get();
+
+            foreach ($getAuxFiles as $getAuxFile) {
+                $projectDocId = $getAuxFile->id;
+                $getauxDocumentPath = "projectDocuments/" . $getAuxFile->document_name;
+                $extension = pathinfo(public_path() . "/" . $getauxDocumentPath, PATHINFO_EXTENSION);
+                $pathArray = ['extension' => $extension, 'path' => $getauxDocumentPath, 'projectDocId' => $projectDocId];
+
+
+                array_push($auxDocumentPath, $pathArray);
             }
         }
 
@@ -159,7 +212,7 @@ class ProjectController extends Controller
             }
         }
 
-        return view('Projects/edit', compact('isAllowDeleteMainDocument', 'mainDocumentPath', 'employee', 'document_type', 'workflow', 'project', 'levelModels', 'isDocuments'));
+        return view('Projects/edit', compact('isAllowDeleteMainDocument', 'auxDocumentPath', 'mainDocumentPath', 'employee', 'document_type', 'workflow', 'project', 'levelModels', 'isDocuments'));
     }
 
     public function getWorkflowFirstLevel($wfId)
@@ -224,7 +277,14 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
-
+        $getoldAuxDocDeleteIds = $request->oldAuxDocDeleteId;
+        $oldAuxDocDeleteIds = [];
+        if($getoldAuxDocDeleteIds){
+        foreach ($getoldAuxDocDeleteIds as $string) {
+            $individualValues = explode(',', $string);
+            $oldAuxDocDeleteIds = array_merge($oldAuxDocDeleteIds, $individualValues);
+        }
+    }
         $MainDocumentCount = (isset($request->main_document)) ? count($request->main_document) : 0;
 
 
@@ -320,7 +380,19 @@ class ProjectController extends Controller
                         Log::info('ProjectController->Store:-get docs docStatusByLevel Edit  Response ' . json_encode($docStatusByLevels));
                         $PE->delete();
                     }
-
+                    if ($oldAuxDocDeleteIds) {
+                        foreach ($oldAuxDocDeleteIds as $oldAuxDocDeleteId) {
+                            $PDoc = projectDocument::where("id", $oldAuxDocDeleteId)->delete();
+                            $PDocDet = ProjectDocumentDetail::where("project_doc_id", $oldAuxDocDeleteId)->first();
+                            if ($PDocDet) {
+                                $fullPath1 =  public_path() . '/projectDocuments/' . $PDocDet->document_name;
+                                if (File::exists($fullPath1)) {
+                                    File::delete($fullPath1);
+                                }
+                                $PDocDet->delete();
+                            }
+                        }
+                    }
 
                     // $PDocDet = ProjectDocumentDetail::leftjoin('project_documents', 'project_documents.id', '=', 'project_document_details.project_doc_id')
                     //     ->leftjoin('projects', 'projects.id', '=', 'project_documents.project_id')
@@ -339,7 +411,7 @@ class ProjectController extends Controller
 
                 $MainDocumentCount = (isset($request->main_document)) ? count($request->main_document) : 0;
 
-              
+
                 foreach ($request->milestone as $key => $miles) {
                     $project_milestone = new ProjectMilestone();
                     $project_milestone->project_id = $project->id;
@@ -388,11 +460,11 @@ class ProjectController extends Controller
                 }
                 Log::info('ProjectController->Store:-Main Document Count ' . $MainDocumentCount);
                 if ($MainDocumentCount) {
-                   // if (isset($request->project_id) == null) {
+                    // if (isset($request->project_id) == null) {
 
-                        $levelApprovermail = $this->emailController->NewApprovalToApprover($project->id, $firstWfLevel);
-                        Log::info('ProjectController->Store:-Approver Mail Response ' . json_encode($levelApprovermail));
-                   // }
+                    $levelApprovermail = $this->emailController->NewApprovalToApprover($project->id, $firstWfLevel);
+                    Log::info('ProjectController->Store:-Approver Mail Response ' . json_encode($levelApprovermail));
+                    // }
                     $halfPath =  $project->ticket_no . '/main_document/';
                     $upload_path = public_path() . '/projectDocuments/' . $halfPath;
                     Log::info('ProjectController->Store:-Main Doc upload Path  ' . $upload_path);
@@ -468,6 +540,7 @@ class ProjectController extends Controller
                         Log::info('ProjectController->Store:-fileOrgName1 ' . $fileOrgName1);
 
                         $fileName = $project->ticket_no . "_" . $filePart1[0] . '_' . $ed . "." . $filePart1[1];
+                        $fileName = str_replace(' ', '', $fileName);
                         //  $fileName = "MainDocument" . ($d + 1) . "." . $filePart[1];
                         Log::info('ProjectController->Store:-filename ' . $fileName);
 
@@ -803,7 +876,7 @@ class ProjectController extends Controller
                 //date('ymdhms');
                 $fileName1 = $expbanner[0] . '_' . $ed . "." . $filePart1;
 
-
+                $fileName1 = str_replace(' ', '', $fileName1);
                 //$fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
                 Log::info('ProjectController->Store:-fileName1' . json_encode($fileName1));
                 $bannerpath = $path . $fileName1;
@@ -908,6 +981,7 @@ class ProjectController extends Controller
         $lastversion  = ProjectDocumentDetail::where('project_doc_id', $request->documentId)->latest('id')->first()->version;
 
         $fileName1 = "MainDocument" . ($lastversion + 1) . "." . $filePart1;
+        $fileName1 = str_replace(' ', '', $fileName1);
         // $fileName1 = $parentModel->ticket_no . $typeOfDocF . $request->levelId . "s" . ($lastversion + 1) . "v" . ($lastversion + 1) . "." . $filePart1;
         Log::info('ProjectController->Store:-fileName1' . json_encode($fileName1));
         $bannerpath = $upload_path1 . $fileName1;
@@ -952,7 +1026,7 @@ class ProjectController extends Controller
         $model->where('id', '!=', $request->id);
         $model->whereNull('deleted_at');
         $getModel = $model->get();
-        
+
 
         $response = (count($getModel)) ? false : true;
 
@@ -1074,9 +1148,9 @@ class ProjectController extends Controller
         }
         $models->whereNull('deleted_at');
         $searchingModels = $models->get();
+        $allDatas = $this->projectLooping($searchingModels);
 
-
-        return response()->json(['datas' => $searchingModels]);
+        return response()->json(['datas' => $allDatas]);
     }
     public function getProjectIdByEmployee()
     {

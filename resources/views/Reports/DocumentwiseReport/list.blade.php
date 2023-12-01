@@ -61,13 +61,13 @@
                         <div class="col-12">
                             <div class="row col-md-12">
 
-                                <div class="col-md-3" id="workflowCodeField">
+                                <div class="col-md-4" id="workflowCodeField">
                                     <label class=" fs-6 fw-semibold mb-2">Workflow Name & Code</label>
-                                    <select name="workflowCode" id="workflowCode" class="form-select workFlow">
-                                        <option value="">Select workflow </option>
+                                    <select name="workflowCode" id="workflowCode" class="form-select workFlow" data-placeholder="WorkFlow Name (Code)" data-kt-select2="true">
+                                        <option></option>
                                         @foreach ($workflowDatas as $workflowData)
                                         <option value="{{ $workflowData->id }}">
-                                            {{ $workflowData->workflow_name }}({{ $workflowData->workflow_code }})
+                                            {{ $workflowData->workflow_name }} ({{ $workflowData->workflow_code }})
                                         </option>
                                         @endforeach
 
@@ -81,8 +81,8 @@
                                     <!--end::Label-->
                                     <!--begin::Input-->
                                     <!--begin::Input-->
-                                    <select name="documentName" id="documentName" class="form-select documentType">
-                                        <option value=""> Select Document Type</option>
+                                    <select name="documentName" id="documentName" class="form-select documentType" data-placeholder="Select Document Type" data-kt-select2="true">
+                                        <option></option>
 
 
                                     </select>
@@ -93,8 +93,8 @@
                                     <label class=" fs-6 fw-semibold mb-2">Project Name & Code</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <select name="projectName" id="projectName" class="form-select projectName">
-                                        <option value=""> Select Project Name</option>
+                                    <select name="projectName" id="projectName" class="form-select projectName" data-placeholder="Project Name (Code)" data-kt-select2="true">
+                                        <option></option>
 
                                     </select>
                                 </div>
@@ -116,6 +116,7 @@
                     </div>
                     <!--end::Card header-->
                     <!--begin::Card body-->
+                    <hr>
                     <div class="card-body  p-3">
                         <!--begin::Card title-->
                         <div class="card-title">
@@ -127,7 +128,7 @@
                             <!--begin::Table head-->
                             <thead>
                                 <!--begin::Table row-->
-                                <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                <tr class="text-start align-middle text-muted fw-bold fs-7 text-uppercase gs-0">
 
 
                                     <th>Workflow Code</th>
@@ -200,7 +201,7 @@
                 var wfOptiondata = '<option value=""> Select Workflow Name</option>';
                 $("#documentName").append(wfOptiondata);
                 $("#projectName").empty();
-                var projectOptiondata = '<option value=""> Select Project Name</option>';
+                var projectOptiondata = '<option></option>';
                 $("#projectName").append(projectOptiondata);
 
             });
@@ -258,7 +259,7 @@
                             table.clear().draw();
                             if (fieldName == 'workflowCode') {
                                 $("#projectName").empty();
-                                var projectOption = '<option value=""> Select Project Name</option>';
+                                var projectOption = '<option></option>';
                                 $("#projectName").append(projectOption);
                             }
                             $.each(entities, function(key, val) {
@@ -280,7 +281,7 @@
                                     ' class="btn switchPrimaryBtn  viewDocs">View</div>';
                                 var projectNameOptionItems = "<option value=" + projectId +
                                     ">" +
-                                    projectName + "(" + projectCode + ")</option>";
+                                    projectName + " (" + projectCode + ")</option>";
                                 if (fieldName == 'workflowCode') {
                                     $("#projectName").append(projectNameOptionItems);
                                 }
@@ -330,8 +331,6 @@
             column6 = row.cells[5].innerText;
             column7 = row.cells[6].innerText;
             column8 = row.cells[7].innerText;
-            column9 = row.cells[8].innerText;
-
 
             /* add a new records in the array */
             rows.push(
@@ -343,8 +342,7 @@
                     column5,
                     column6,
                     column7,
-                    column8,
-                    column9,
+                    column8
 
                 ]
             );

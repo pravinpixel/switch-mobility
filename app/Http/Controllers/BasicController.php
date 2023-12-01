@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\ProjectEmployee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\DB;
 
 class BasicController extends Controller
 {
@@ -15,10 +17,10 @@ class BasicController extends Controller
     {
 
         $apiKey = config('app.PSPDFKIT_API_KEY');
-       
+
         $apiUrl = 'https://api.pspdfkit.com/v1/convert';
         // Create a Guzzle HTTP client instance
-      
+
         // Create a Guzzle HTTP client instance
         $client = new Client([
             'base_uri' => $apiUrl,
@@ -29,18 +31,18 @@ class BasicController extends Controller
             'file' => fopen($file, 'r'),
         ];
         // Make the API request to initiate the conversion
-    $response = $client->request('POST', '', [
-        'headers' => [
-            'Authorization' => 'Token ' . $apiKey,
-        ],
-        'multipart' => [
-            [
-                'name' => 'file',
-                'contents' => fopen($file, 'r'),
-                'filename' => basename($file),
+        $response = $client->request('POST', '', [
+            'headers' => [
+                'Authorization' => 'Token ' . $apiKey,
             ],
-        ],
-    ]);
+            'multipart' => [
+                [
+                    'name' => 'file',
+                    'contents' => fopen($file, 'r'),
+                    'filename' => basename($file),
+                ],
+            ],
+        ]);
         dd($apiKey);
         // Make the API request to initiate the conversion
         $response = $client->request('POST', 'convert', [
@@ -117,5 +119,30 @@ class BasicController extends Controller
             Session()->put('employeeId', "");
         }
         Session()->put('logginedUser', $name);
+    }
+
+    public function getEmployeeemail($projectModels)
+    {
+        $employeeArray = [];
+        foreach ($projectModels as $key => $projectModel) {
+
+            $models = ProjectEmployee::with('employee')
+                ->where('project_id', $projectModel->id)
+                ->where('type', 2)
+                ->groupBy('employee_id')
+                ->get();
+
+
+            foreach ($models as $model) {
+                $employee = $model['employee'];
+
+                array_push($employeeArray, $employee->id);
+            }
+        }
+        $employeeIds = array_unique($employeeArray);
+        $employees = Employee::select('id', DB::raw("CONCAT(first_name, ' ', middle_name, ' ', last_name) AS fullName"))
+            ->whereIn('id', $employeeIds)->get();
+
+        return $employees;
     }
 }

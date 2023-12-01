@@ -358,7 +358,7 @@
                                 <label class="required fs-6 fw-semibold mb-2">Project Code</label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
-                                <input type="text" class="form-control form-control-solid project_code"
+                                <input type="text" class="form-control project_code"
                                     placeholder="Enter Project Code" name="project_code" required />
                                 <!--end::Input-->
                                 <p id="projectCodeAlert" class="notifyAlert1" style="display: none;"></p>
@@ -369,11 +369,11 @@
                                 <label class="required fs-6 fw-semibold mb-2">Initiator</label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
-                                <select class="form-control form-control-solid initiator_id" name="initiator_id"
-                                    onchange="get_employee_details(this.value);" required>
-                                    <option value="">Select</option>
+                                <select class="form-select mainFilters initiator_id" name="initiator_id"
+                                    onchange="get_employee_details(this.value);" required data-kt-select2="true" data-placeholder="Select Initiator">
+                                    <option></option>
                                     @foreach ($employee as $emp)
-                                        <option value="<?php echo $emp['id']; ?>"><?php echo $emp['first_name'] . ' ' . $emp['last_name'] . '(' . $emp['sap_id'] . ')'; ?></option>
+                                        <option value="<?php echo $emp['id']; ?>"><?php echo $emp['first_name'] . ' ' .$emp['middle_name'] . ' '. $emp['last_name'] . '(' . $emp['sap_id'] . ')'; ?></option>
                                     @endforeach
                                 </select>
                                 <!--end::Input-->
@@ -386,7 +386,7 @@
                                 <label class="required fs-6 fw-semibold mb-2">Project Name</label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
-                                <input type="text" class="form-control form-control-solid project_name"
+                                <input type="text" class="form-control project_name"
                                     placeholder="Enter Project Name" name="project_name" required />
                                 <!--end::Input-->
                                 <p id="projectNameAlert" class="notifyAlert1" style="display: none;"></p>
@@ -419,7 +419,7 @@
                                 <label class="required fs-6 fw-semibold mb-2">Start Date</label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
-                                <input type="date" class="form-control form-control-solid start_date"
+                                <input type="date" class="form-control start_date"
                                     placeholder="Enter Start Date" name="start_date" onchange="set_min(this.value);"
                                     required />
                                 <!--end::Input-->
@@ -433,7 +433,7 @@
                                 <label class="required fs-6 fw-semibold mb-2">End Date</label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
-                                <input type="date" class="form-control form-control-solid end_date"
+                                <input type="date" class="form-control end_date"
                                     placeholder="Enter End Date" name="end_date" required  onchange="set_max(this.value);"/>
                                 <!--end::Input-->
                             </div>
@@ -455,9 +455,9 @@
                                 <label class="required fs-6 fw-semibold mb-2">Document Type</label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
-                                <select class="form-control document_type_id" name="document_type_id"
-                                    onchange="get_document_workflow(this.value);" required>
-                                    <option value="">Select</option>
+                                <select class="form-select mainFilters document_type_id" name="document_type_id"
+                                    onchange="get_document_workflow(this.value);" required data-kt-select2="true" data-placeholder="Select Document Type">
+                                    <option></option>
                                     @foreach ($document_type as $doc)
                                         <option value="{{ $doc['id'] }}">{{ $doc['name'] }}</option>
                                     @endforeach
@@ -556,7 +556,7 @@
                                             <label class="required fs-6 fw-semibold mb-2 ">Start Date</label>
                                             <!--end::Label-->
                                             <!--begin::Input-->
-                                            <input type="date" class="form-control form-control-solid mile_start_date"
+                                            <input type="date" class="form-control mile_start_date"
                                                 placeholder="Enter Start Date" name="mile_start_date[]" required onchange="mileStone_min_date(this)" />
                                             <!--end::Input-->
                                         </div>
@@ -569,7 +569,7 @@
                                             <label class="required fs-6 fw-semibold mb-2">End Date</label>
                                             <!--end::Label-->
                                             <!--begin::Input-->
-                                            <input type="date" class="form-control form-control-solid mile_end_date"
+                                            <input type="date" class="form-control mile_end_date"
                                                 placeholder="Enter End Date" name="mile_end_date[]" required />
                                             <!--end::Input-->
                                         </div>
@@ -579,9 +579,9 @@
                                             <label class="required fs-6 fw-semibold mb-2">Level To Be Crossed</label>
                                             <!--end::Label-->
                                             <!--begin::Input-->
-                                            <select class="form-control levels_to_be_crossed"
-                                                name="level_to_be_crosssed[]" required>
-                                                <option value="">Select</option>
+                                            <select class="form-select levels_to_be_crossed"
+                                                name="level_to_be_crosssed[]" required data-placeholder="Select Level" data-allow-clear="true">
+                                                <option></option>
 
                                             </select>
                                             <!-- <input type="text" class="form-control" name="level_to_be_crosssed" /> -->
@@ -661,7 +661,7 @@
                                             here or click to browse</span></div>
                                 </label> <input type="file" name="main_document[]" id="pdf1"
                                     class="form-control border-0" onchange="pdfPreview(this)" style="display:none;"
-                                    accept=".pdf,.xlsx,.xls,.doc,.docx">
+                                    accept=".pdf,.xlsx,.docx">
                             </div>
                         </div>
                         <div class="col-md-6 fv-row">
@@ -672,7 +672,7 @@
                                             here or click to browse</span></div>
                                 </label> <input type="file" name="auxillary_document[]" id="pdf2"
                                     class="form-control border-0" onchange="pdfPreview(this)" style="display:none;"
-                                    accept=".pdf,.xlsx,.xls,.doc,.docx">
+                                    accept=".pdf,.xlsx,.docx">
                             </div>
                         </div>
                     </div>
@@ -727,7 +727,7 @@
                         <button type="button" class="btn btn-lg switchPrimaryBtn  btn-tab-switch"
                             data-kt-stepper-action="next" validate="need">Continue
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
-                            <span class="svg-icon svg-icon-3 ms-1 me-0">
+                            <span class="svg-icon svg-icon-white svg-icon-3 ms-1 me-0">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <rect opacity="0.5" x="18" y="13" width="13" height="2"
@@ -936,6 +936,8 @@ console.log("worked 11");
 
                 $(".add-field", $(this)).click(function(e) {
 
+                    let todoSelects = $('.multi-fields').children().find("select");
+
                     var length = $(".multi-field").length;
                     var inputAppends = $(".multi-field input[required]");
                     let identity;
@@ -957,6 +959,10 @@ console.log("worked 11");
                             $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper)
                                 .find(
                                     'input').val('').focus();
+                            
+                            for (let j = 0; j < todoSelects.length; j++) {
+                                $('.multi-field:last-child').children().find("select option[value='" + $(todoSelects[j]).val() + "']").remove();
+                            }
                         }
                     }
 
@@ -1008,7 +1014,7 @@ console.log("worked 11");
 
     function set_min(start_date) {
         // alert("ok");
-        $('.start_date').attr('min', start_date);
+        //$('.start_date').attr('min', start_date);
         $('.end_date').attr('min', start_date);
         $(".mile_start_date").val("");
         $(".mile_end_date").val("");
@@ -1391,12 +1397,12 @@ function mileStone_min_date(mStartDate) {
 
                             // levelTabContentData += '<div class="col-md-12 fv-row">';
                             // levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Documents</label><br>';
-                            // levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".pdf,.xlsx,.xls,.doc,.docx"> </div>';
+                            // levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".pdf,.xlsx,.docx"> </div>';
                             // levelTabContentData += '</div';
 
                             // levelTabContentData += '<br><br><div class="col-md-12 fv-row">';
                             // levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Auxillary Documents</label><br>';
-                            // levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".pdf,.xlsx,.xls,.doc,.docx"> </div>';
+                            // levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".pdf,.xlsx,.docx"> </div>';
                             // levelTabContentData += '</div';
 
                             levelTabContentData += '</div>';
@@ -1416,7 +1422,7 @@ function mileStone_min_date(mStartDate) {
                             .remove();
                         for (var i = 0; i < WFLevelBtn.length; i++) {
                             console.log("LevelData " + WFLevelBtn[i].levelId);
-                            var option = '<option selected value="' + +WFLevelBtn[i].levelId + '">Level -' +
+                            var option = '<option value="' + +WFLevelBtn[i].levelId + '">Level -' +
                                 +WFLevelBtn[i].levelId +
                                 '</option>';
                             $('.levels_to_be_crossed').append(option);
@@ -1584,12 +1590,12 @@ function mileStone_min_date(mStartDate) {
 
                         // levelTabContentData += '<div class="col-md-12 fv-row">';
                         // levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Documents</label><br>';
-                        // levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".pdf,.xlsx,.xls,.doc,.docx"> </div>';
+                        // levelTabContentData += ' <div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdf' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="main_document' + WFLevelBtn[wfl].levelId + '[]" id="pdf' + WFLevelBtn[wfl].levelId + '" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".pdf,.xlsx,.docx"> </div>';
                         // levelTabContentData += '</div';
 
                         // levelTabContentData += '<br><br><div class="col-md-12 fv-row">';
                         // levelTabContentData += '<label class="fs-6 fw-semibold mb-2">Auxillary Documents</label><br>';
-                        // levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".pdf,.xlsx,.xls,.doc,.docx"> </div>';
+                        // levelTabContentData += '<div class="col-md-12 p-3 pdf_container input-group">  <label class="row col-12 m-2 pdf-view row " for="pdfa1a2' + WFLevelBtn[wfl].levelId + '"> <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div> </label> <input type="file" name="auxillary_document' + WFLevelBtn[wfl].levelId + '[]" id="pdfa1a2' + WFLevelBtn[wfl].levelId + '"class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".pdf,.xlsx,.docx"> </div>';
                         // levelTabContentData += '</div';
 
                         levelTabContentData += '</div>';
@@ -1609,7 +1615,7 @@ function mileStone_min_date(mStartDate) {
                         .remove();
                     for (var i = 0; i < WFLevelBtn.length; i++) {
                         console.log("LevelData " + WFLevelBtn[i].levelId);
-                        var option = '<option selected value="' + +WFLevelBtn[i].levelId + '">Level -' + +
+                        var option = '<option value="' + +WFLevelBtn[i].levelId + '">Level -' + +
                             WFLevelBtn[i].levelId +
                             '</option>';
                         $('.levels_to_be_crossed').append(option);
@@ -1940,7 +1946,7 @@ function mileStone_min_date(mStartDate) {
                 '" scrolling="no"></img><button class="btn btn-icon w-30px h-30px btn-danger btn-sm pdf_delete_btn  " onclick="deletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button></div>'
             );
             $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber +
-                '" accept=".pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" ' +
+                '" accept=".pdf,.xlsx,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" ' +
                 disableCheck + ' >'
             );
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
@@ -1952,7 +1958,7 @@ function mileStone_min_date(mStartDate) {
                 '" scrolling="no"></img><button class="btn btn-danger btn-icon w-30px h-30px btn-sm pdf_delete_btn  " onclick="deletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button></div>'
             );
             $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber +
-                '" accept=".pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" ' +
+                '" accept=".pdf,.xlsx,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" ' +
                 disableCheck + '>'
             );
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);
@@ -1966,7 +1972,7 @@ function mileStone_min_date(mStartDate) {
                 '" scrolling="no"></img><button class="btn btn-danger btn-icon w-30px h-30px btn-sm pdf_delete_btn  " onclick="deletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button></div>'
             );
             $(FileParent).append('<input type="file" name="' + $(file).attr("name") + '" id="' + uniqueNumber +
-                '" accept=".pdf,.xlsx,.xls,.doc,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" ' +
+                '" accept=".pdf,.xlsx,.docx" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" ' +
                 disableCheck + '>'
             );
             $(FileParent).find(".pdf-view").attr("for", uniqueNumber);

@@ -109,14 +109,14 @@
                             <!--begin::Table head-->
                             <thead>
                                 <!--begin::Table row-->
-                                <tr class="fw-bold fs-7 text-uppercase gs-0">
+                                <tr class="fw-bold align-middle fs-7 text-uppercase gs-0">
 
 
-                                    <th class="text-left ">Department Name</th>
-                                    <th class="text-center" >Description</th>
-                                    <th class="text-center" index="1">Status</th>
+                                    <th class="text-left min-w-125px">Department Name</th>
+                                    <th class="text-center min-w-125px" >Description</th>
+                                    <th class="text-center min-w-50px" index="1">Status</th>
 
-                                    <th class="text-center">Actions</th>
+                                    <th class="text-center min-w-50px">Actions</th>
                                 </tr>
                                 <!--end::Table row-->
                             </thead>

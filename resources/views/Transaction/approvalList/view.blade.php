@@ -163,7 +163,7 @@ use Carbon\Carbon;
         /* Hidden by default */
         position: fixed;
         /* Stay in place */
-        z-index: 1;
+        z-index: 2;
         /* Sit on top */
         padding-top: 100px;
         /* Location of the box */
@@ -225,7 +225,10 @@ use Carbon\Carbon;
     .milstoneBody {
     max-height: 300px!important; /* Adjust the height as needed */
     overflow-y: scroll!important;
-}
+    }
+    .marg-top-10 {
+        margin-top: 10px;
+    }
 </style>
 <title>VERTICAL TABS</title>
 </head>
@@ -370,7 +373,7 @@ use Carbon\Carbon;
             </div>
             <div class="col-md-3">
                 <h4>Initiator </h4>
-                <p>{{ $details->first_name . ' ' . $details->last_name }}</p>
+                <p>{{ $details->first_name .' ' . $details->middle_name. ' ' . $details->last_name }}</p>
             </div>
 
 
@@ -402,11 +405,11 @@ use Carbon\Carbon;
                             @foreach($models as $model)
 
                             <tr>
-                                <td>{{$model->original_name}}</td>
+                                <td style="max-width: 50%; overflow-wrap: anywhere">{{basename($model->original_name)}}</td>
                                 <td>
-                                <a target="_blank" class="btn switchPrimaryBtn  viewDocument btn-xs" title="View Document" id="{{$model->projectId}}"><i class="fas fa-eye text-white"></i> </a> View Document
-                                <a download="OriginalDocs" href="{{ asset('/projectDocuments/') }}<?php echo "/".$model->document_name; ?>" class="btn btn-warning btn-xs" title="Orginal Document Download" id="{{$model->id}}"><i class="las la-download" style=""></i></a> Download Orginal Document
-                                <a target="_blank" class="btn btn-success btn-xs actionDocs" title="Approved Document Download" id="{{$model->id}}"><i class="las la-download"></i> </a> Download</td>
+                                <a class="btn btn-sm btn-primary viewDocument" target="_blank" title="View Document" id="{{$model->projectId}}"><i class="fas fa-eye"></i></a> View Document<br/>
+                                <a class="btn btn-sm btn-success marg-top-10" download="{{basename($model->original_name)}}" href="{{ asset('/projectDocuments/') }}<?php echo "/".$model->original_name; ?>" title="Download Orginal Document" id="{{$model->id}}"><i class="las la-download"></i></a> Download Orginal Document<br/>
+                                <a class="btn btn-sm btn-warning actionDocs marg-top-10" target="_blank" title="Download Approved Document" id="{{$model->id}}"><i class="las la-download"></i></a> Download Approved Document</td>
                             </tr>
                             @endforeach
 
@@ -457,9 +460,9 @@ use Carbon\Carbon;
             width: 40px;
             height: 100px;
             display: flex;
-    justify-content: center;
-    align-items: center;
-          
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
         }
 .r-90{
     position: relative;
@@ -481,7 +484,7 @@ use Carbon\Carbon;
             top: 50%;
             transform: translateY(-50%);
             width: 418px;
-
+            z-index: 2;
         }
 
         .right-card-close {

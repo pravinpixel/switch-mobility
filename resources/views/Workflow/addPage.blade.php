@@ -160,7 +160,7 @@
                             <center>
                                 <div class="col-md-12 fv-row fullWorkflow">
                                     <!--begin::Variations-->
-                                    <div class="card card-flush ">
+                                    <div class="card card-flush py-4">
                                         <!--begin::Card header-->
                                         <div class="card-header d-inline-block m-auto">
                                             <div class="card-title">
@@ -222,7 +222,7 @@
                     </center>
                     <div class="col-md-12 fv-row partialWorkflow" style="display:none;">
                         <!--begin::Variations-->
-                        <div class="card card-flush ">
+                        <div class="card card-flush py-4">
                             <!--begin::Card header-->
                             <div class="card-header d-inline-block m-auto">
                                 <div class="card-title">
