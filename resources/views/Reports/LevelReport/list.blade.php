@@ -352,11 +352,13 @@
         form.submit();
     });
     $('.resetBtn').on('click', function() {
-
-        location.reload();
-        // $("#service_table").load(location.href + " #service_table");
+        $('#workflow,#project_code_name').val("").trigger('change');
+        //location.reload();
+        $("#tableContent").load(location.href + " #tableContent>*", function () {
+            // $('#service_table').DataTable().clear().draw();
+            // $('#service_table').DataTable();
+        });
     });
-
 
     function filterData() {
         console.log("well");

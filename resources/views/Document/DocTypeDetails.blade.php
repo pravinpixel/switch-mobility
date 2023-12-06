@@ -229,7 +229,7 @@
 
                     document.getElementById(alertName).style.display = "block";
                     document.getElementById(alertName).style.color = "red";
-                    document.getElementById(alertName).innerHTML = 'Document Type is Exists*';
+                    document.getElementById(alertName).innerHTML = 'Document Type is exists*';
                     $('.submitBtn').attr('disabled', 'true');
                     return false;
                 }
@@ -313,7 +313,7 @@
 
                     document.getElementById(alertName).style.display = "block";
                     document.getElementById(alertName).style.color = "red";
-                    document.getElementById(alertName).innerHTML = 'Document Type is Exists*';
+                    document.getElementById(alertName).innerHTML = 'Document Type is exists*';
                     return false;
                 }
                 document.getElementById(alertName).style.display = "none";

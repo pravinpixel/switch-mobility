@@ -121,14 +121,14 @@ class BasicController extends Controller
         Session()->put('logginedUser', $name);
     }
 
-    public function getEmployeeemail($projectModels)
+    public function getAllEmployeByProject($projectModels)
     {
         $employeeArray = [];
         foreach ($projectModels as $key => $projectModel) {
 
             $models = ProjectEmployee::with('employee')
                 ->where('project_id', $projectModel->id)
-                ->where('type', 2)
+               // ->where('type', 2)
                 ->groupBy('employee_id')
                 ->get();
 
@@ -140,7 +140,7 @@ class BasicController extends Controller
             }
         }
         $employeeIds = array_unique($employeeArray);
-        $employees = Employee::select('id', DB::raw("CONCAT(first_name, ' ', middle_name, ' ', last_name) AS fullName"))
+        $employees = Employee::select('id', DB::raw("CONCAT(first_name, ' ', COALESCE(middle_name, ''), ' ', last_name) AS fullName"))
             ->whereIn('id', $employeeIds)->get();
 
         return $employees;

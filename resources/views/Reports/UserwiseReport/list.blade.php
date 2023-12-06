@@ -83,11 +83,16 @@
                                         <!--begin::Input-->
                                         <select name="initiatorName" id="initiatorName" class="form-select" data-placeholder="Initiator (SAP ID)" data-kt-select2="true" >
                                             <option></option>
-                                            @foreach ($initiatorDatas as $initiatorData)
-                                                <option value="{{ $initiatorData->id }}">
-                                                    {{ $initiatorData->first_name }} {{ $initiatorData->middle_name }} {{ $initiatorData->last_name }} ({{ $initiatorData->sap_id }})
-                                                </option>
-                                            @endforeach
+                                            @foreach ($initiatorDatas as $employee)
+                                        <?php
+
+                                        $initiater = $employee['first_name'] . " " . $employee['middle_name'] . " " . $employee['last_name']." (" . $employee['sap_id'].")";
+
+                                        ?>
+                                        <option value="{{ $employee['id']}}">
+                                            {{ $initiater }}
+                                        </option>
+                                        @endforeach
                                         </select>
                                     </div>
                                     <div class="w-auto">
@@ -224,7 +229,7 @@
                                     $("#initiatorName").append(wfOption);
                                     $.each(datas, function(key, val) {
                                         initiatorItems = "<option  value=" + val.id + ">" + val
-                                            .first_name + " (" + val.sap_id + ")</option>";
+                                            .fullName +" (" + val.sap_id + ")</option>";
                                         $("#initiatorName").append(initiatorItems);
                                     });
                                 }
@@ -265,22 +270,25 @@
                     }
                 });
             $('.resetBtn').on('click', function() {
-                console.log("well");
-                $('#workflowCode,#initiatorName').val("").trigger('change');
-                location.reload();
+                //console.log("well");
+                $('#workflowCode').val(null).trigger('change');
+                $("#initiatorName").load(location.href + " #initiatorName>*",  function () {
+                    $('#initiatorName').val(null).trigger('change');
+                });
+                //location.reload();
             });
             $(document).on('click', '.viewDocs', function () {
-    console.log("well and good");
-    var id = $(this).attr('id');
+                //console.log("well and good");
+                var id = $(this).attr('id');
 
 
-    var url = "{{route('viewDocListing')}}";
-    var form = $('<form action="' + url + '" method="post">' +
-        ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
-        '</form>');
-    $('body').append(form);
-    form.submit();
-});
+                var url = "{{route('viewDocListing')}}";
+                var form = $('<form action="' + url + '" method="post">' +
+                    ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
+                    '</form>');
+                $('body').append(form);
+                form.submit();
+            });
 
             function exportData() {
                 /* Get the HTML data using Element by Id */

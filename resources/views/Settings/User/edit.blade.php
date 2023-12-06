@@ -206,7 +206,7 @@
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: 'This Sap-Id AllReady In Users!',
+                                    text: 'This Sap-Id already in Users!',
                                     footer: ''
                                 });
                                 $('.submit').prop('disabled', true);
@@ -314,7 +314,7 @@
         if (fieldValue == "" || fieldValue == null) {
             document.getElementById(alertName).style.display = "block";
             document.getElementById(alertName).style.color = "red";
-            document.getElementById(alertName).innerHTML = fieldname + ' Is Mandatory*';
+            document.getElementById(alertName).innerHTML = fieldname + ' is mandatory*';
             return false;
         }
 

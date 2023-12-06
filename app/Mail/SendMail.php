@@ -78,6 +78,10 @@ class SendMail extends Mailable
             
             return $this->subject($this->title)
             ->view('Email.finalApprovalMail', compact('projectId','empName', 'projectName', 'projectCode'));
+        }elseif($type == "reAssignMail") {
+            
+            return $this->subject($this->title)
+            ->view('Email.reAssignMail', compact('projectId','empName', 'projectName', 'projectCode'));
         }
         else{
          

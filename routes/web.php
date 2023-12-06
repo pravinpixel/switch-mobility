@@ -56,6 +56,8 @@ Route::group([
     Route::get('getWorkflowListData', [WorkflowController::class, 'getWorkflowListData']);
     Route::get('getDocumentTypeListData', [DocumentTypeController::class, 'getDocumentTypeListData']);
 
+    Route::get('getDocumentListData', [Doclistings::class, 'getDocumentListData'])->name('getDocumentListData');
+
 
     Route::post('getProjectByWorkflow', [Doclistings::class, 'getProjectByWorkflow'])->name('getProjectByWorkflow');
     Route::post('getProjectById', [Doclistings::class, 'getProjectById'])->name('getProjectById');

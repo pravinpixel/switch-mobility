@@ -156,9 +156,38 @@ class Doclistings extends Controller
         $document_type = DocumentType::where(['is_active' => 1])->get();
         $workflow = Workflow::where(['is_active' => 1])->get();
         $projectList = $project;
-        $getAllEmployees = $this->basicController->getEmployeeemail($projectList);
+        $getAllEmployees = $this->basicController->getAllEmployeByProject($projectList);
 
         return view('Docs/index', ['order_at' => $projectList, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $getAllEmployees, 'departments' => $departments, 'designation' => $designation, 'projects' => $project]);
+    }
+
+    public function getDocumentListData()
+    {
+       
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+
+        $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+        if ($empId) {
+            $models->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
+        }
+
+        $models->whereNull('deleted_at');
+        $models1 = $models->get();
+
+        $project = $this->projectLooping($models1);
+
+        $departments = Department::where(['is_active' => 1])->get();
+        $designation = Designation::where(['is_active' => 1])->get();
+        $document_type = DocumentType::where(['is_active' => 1])->get();
+        $workflow = Workflow::where(['is_active' => 1])->get();
+        $projectList = $project;
+        $getAllEmployees = $this->basicController->getAllEmployeByProject($projectList);
+        $returnData = ["data" => $projectList];
+        return response()->json($returnData);
     }
     public function projectLooping($models)
     {
@@ -185,6 +214,25 @@ class Doclistings extends Controller
     public function docListingSearch(Request $request)
     {
         if ($request->users) {
+
+            $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+
+            $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+            if ($empId) {
+                $models->whereHas('projectEmployees', function ($q) use ($empId) {
+                    if ($empId != "") {
+                        $q->where('employee_id', '=', $empId);
+                    }
+                });
+            }
+
+            $models->whereNull('deleted_at');
+            $models1 = $models->get();
+            $projectIds = [];
+            foreach ($models1 as $key => $modelsDatas) {
+                array_push($projectIds, $modelsDatas->id);
+            }
+
             $userId = $request->users;
             $modelsData = Project::select(
                 'projects.id',
@@ -207,6 +255,8 @@ class Doclistings extends Controller
                 ->leftJoin('designations', 'designations.id', '=', 'employees.designation_id')
                 ->leftJoin('workflows', 'workflows.id', '=', 'projects.workflow_id')
                 ->where('project_employees.employee_id', $request->users)
+                ->whereIn('projects.id', $projectIds)
+                ->groupBy('projects.id')
                 ->get();
             $data = $modelsData;
         } else {
@@ -248,7 +298,7 @@ class Doclistings extends Controller
             }
             $data = $model->get();
         }
-      
+
         $models = $this->projectLooping($data);
 
         return response()->json($models);
@@ -1235,7 +1285,6 @@ class Doclistings extends Controller
             } else {
                 $model->is_latest = 0;
             }
-            $model->updated_by = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
             $model->status = $status;
             $model->remark = $remark;
             $model->save();

@@ -256,8 +256,62 @@
             });
             $('.resetBtn').on('click', function() {
                 $('#department').val("").trigger('change');
-                location.reload();
-                // $("#service_table").load(location.href + " #service_table");
+                $('#projectName').val("");
+                $('#workflowCode').val("").trigger('change');
+                //location.reload();
+                //$("#tableContent").load(location.href + " #tableContent>*");
+                $.ajax({
+                    url: "{{ route('projectwiseReportSearchFilter') }}",
+                    type: 'ajax',
+                    method: 'post',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        // department: department,
+                        projectId: '',
+                        workflowId: '',
+                    },
+                    success: function(data) {
+                        var table = $('#service_table').DataTable();
+
+                        var entities = data.entities;
+                        var workflowData = data.workflowDatas;
+
+                        table.clear().draw();
+                        var projectNameOptionItems = "";
+                        $.each(entities, function(key, val) {
+                            var sNo = key + 1;
+                            var projectCode = val.projectCode;
+                            var projectName = val.projectName;
+                            var workflowId = val.workflowId;
+                            var workflowName = val.workflowName;
+                            var workflowCode = val.workflowCode;
+                            var workflowLevel = val.workflowLevel;
+                            var dueDate = val.dueDate;
+                            var noOfDays = val.noOfDays;
+
+                            var initiater = val.initiater;
+                            var department = val.department;
+                            var projectId = val.projectId;
+                            var activeStatus =val.status;
+
+                            var viewBtn = '<div id=' + projectId +
+                                ' class="btn switchPrimaryBtn viewDocs">View</div>';
+
+                            projectNameOptionItems += "<option value=" + projectId + ">" +
+                                projectName + " (" + projectCode + ")</option>";
+                            table.row.add([projectCode, projectName, workflowName,
+                                workflowCode, initiater, department, workflowLevel,
+                                dueDate, noOfDays, activeStatus, viewBtn
+                            ]).draw();
+                        });
+                        //console.log(projectNameOptionItems);
+                        // $("#workflowCode").html("");
+                    },
+                    error: function() {
+                        $("#otp_error").text("Update Error");
+                    }
+
+                });
             });
 
             function filterData(fieldName) {

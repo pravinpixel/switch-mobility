@@ -289,7 +289,7 @@
                         if (result.message == "Failed") {
                             Swal.fire(
                                 'Deleted!',
-                                'Reference Datas Are Found,deleted Failed.',
+                                'Reference datas are found, deleted failed.',
                                 'error'
                             );
                         } else {

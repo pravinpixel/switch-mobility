@@ -378,7 +378,7 @@
 
                 document.getElementById('fileAlert').style.display = "block";
                 document.getElementById('fileAlert').style.color = "red";
-                document.getElementById('fileAlert').innerHTML = 'File Is Mandatory*';
+                document.getElementById('fileAlert').innerHTML = 'File is mandatory*';
 
                 event.preventDefault();
                 return false;

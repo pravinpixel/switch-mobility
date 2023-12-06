@@ -460,11 +460,11 @@
 
                         document.getElementById(alertName).style.display = "block";
                         document.getElementById(alertName).style.color = "red";
-                        document.getElementById(alertName).innerHTML = 'Role Is Exists*';
+                        document.getElementById(alertName).innerHTML = 'Role is exists*';
 
                         // document.getElementById('roleNameAddAlert').style.display = "block";
                         // document.getElementById('roleNameAddAlert').style.color = "red";
-                        // document.getElementById('roleNameAddAlert').innerHTML = 'Role Is Exists*';
+                        // document.getElementById('roleNameAddAlert').innerHTML = 'Role is exists*';
                         return false;
                     }
                     document.getElementById(alertName).style.display = "none";

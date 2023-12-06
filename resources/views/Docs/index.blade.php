@@ -255,12 +255,12 @@
                                 </div>
                                 <div class="w-auto">
                                     <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
-                                    <span class="btn btn-warning " onclick="reset()">Reset</span>
+                                    <span class="btn btn-warning reset">Reset</span>
                                 </div>
                             </div>
                         </form>
 
-                        <hr/>
+                        <hr />
                         <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
                             <!--begin::Table head-->
                             <thead>
@@ -471,7 +471,7 @@
                     console.log("If part 1 start Date");
                     Swal.fire(
                         'Warning!',
-                        'End date should not be Lessthen than Start date.',
+                        'End date should not be Lesser than Start date.',
                         'error'
                     );
 
@@ -626,7 +626,7 @@
                     $.each(data, function(key, val) {
                         var ticketNo = val.ticket_no;
                         var deptName = val.deptName;
-                        var initiator = val.first_name + " " + val.middle_name + " "+ val.last_name;
+                        var initiator = val.first_name + " " + val.middle_name + " " + val.last_name;
                         var projectCode = val.project_code;
                         var projectName = val.project_name;
                         var wfCode = val.workflow_code;
@@ -639,7 +639,7 @@
 
                         var pStartDate = formatedDate(val.start_date);
                         var pEndDate = formatedDate(val.end_date);
-                     
+
 
                         var act = '<span>';
                         act += '<div style = "display:inline" id="' + projectId +
@@ -650,7 +650,7 @@
                                 '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:orange"></i></div>';
                         }
                         act += '</span>';
-                        table.row.add([ticketNo, wfCode + wfName, projectCode + projectName,pStartDate, pEndDate,
+                        table.row.add([ticketNo, wfCode + wfName, projectCode + projectName, pStartDate, pEndDate,
                             initiator, deptName, act
                         ]).draw();
                     });
@@ -665,7 +665,7 @@
         function formatedDate(date) {
             const inputDate = date;
             const parts = inputDate.split("-");
-            const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;  
+            const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
 
             return formattedDate;
             // Output: "1-8-23"
@@ -805,7 +805,73 @@
 
             }
         });
+        $(document).on('click', '.reset', function() {
+            // location.reload();
+            // $('.doclistFilter').val("").trigger('change');
+            // $("input[type=date]").val("");
+            $('#deptId').val(null).trigger('change');
+            $('#desgId').val(null).trigger('change');
+            $('#users').val(null).trigger('change');
+            $('.ticket_no').val(null).trigger('change');
+            $('.workflowFilter').val(null).trigger('change');
+            $('.projectFilter').val(null).trigger('change');
+            $('.start_date').val(null);
+            $('.to_date').val('');
+            var table = $('#service_table').DataTable();
+            $.ajax({
+                url: "{{ route('getDocumentListData') }}",
+                type: 'ajax',
+                method: 'get',
+                data: {
+                    "_token": "{{ csrf_token() }}",
 
+                },
+                success: function(resData) {
+                    var data = resData.data;
+
+                    table.clear().draw();
+                    $.each(data, function(key, val) {
+                        console.log(val);
+                        var ticketNo = val.ticket_no;
+                        var employee = val.employee;
+                        var department = employee.department;
+                        var deptName = department.name;
+
+                        var initiator = employee.first_name + " " + employee.middle_name + " " + employee.last_name;
+                        var projectCode = val.project_code;
+                        var projectName = val.project_name;
+                        var workflow = val.workflow;
+                        var wfNameAndCode = workflow.workflow_name + " & " + workflow.workflow_code;
+                        var projectId = val.projectId;
+                        var isInitiator = (val.initiatorStatus == "yes") ? 1 : 0;
+                        var isApprover = (val.approverStatus == "yes") ? 1 : 0;
+                        console.log("isInitiator" + isInitiator);
+                        console.log("isApprover" + isApprover);
+
+                        var pStartDate = formatedDate(val.start_date);
+                        var pEndDate = formatedDate(val.end_date);
+
+
+                        var act = '<span>';
+                        act += '<div style = "display:inline" id="' + projectId +
+                            '" class="viewDocument" title="View Document"><i class="fa-solid fa-eye" style="color:blue"></i></div>';
+                        if (isSuperAdmin || isAuthorityEdit || isInitiator || isApprover ||
+                            isHigherAuthorityPerson == 1) {
+                            act += '&nbsp; <div style = "display:inline" id="' + projectId +
+                                '" class="editDocument"  title="Edit Document"><i class="fa-solid fa-pen"  style="color:orange"></i></div>';
+                        }
+                        act += '</span>';
+                        table.row.add([ticketNo, wfNameAndCode, projectName + " & " + projectCode, pStartDate, pEndDate,
+                            initiator, deptName, act
+                        ]).draw();
+                    });
+                    //$('.doclistFilter option:selected').prop("selected", false);
+                },
+                error: function() {
+                    $("#otp_error").text("Update Error");
+                }
+            });
+        });
     });
     $(document).on('click', '.viewDocument', function() {
         console.log("well and good");
@@ -834,47 +900,8 @@
     });
 
 
-    function openCity(evt, cityName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(cityName).style.display = "block";
-        evt.currentTarget.className += " active";
-    }
-    $(function() {
-
-        for (i = 0; i <= 10; i++) {
-            $(".main_document" + i).hide();
-            $(".auxillary_document" + i).hide();
-        }
-    });
 
 
-    $(function() {
-        $('.multi-field-wrapper').each(function() {
-            var $wrapper = $('.multi-fields', this);
-
-            $(".add-field", $(this)).click(function(e) {
-                var length = $(".multi-field").length;
-                if (length <= 11) {
-                    $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper).find(
-                        'input').val('').focus();
-                }
-            });
-
-
-            $('.multi-field .remove-field', $wrapper).click(function() {
-                if ($('.multi-field', $wrapper).length > 1)
-                    $(this).parent('.multi-field').remove();
-            });
-        });
-    });
 
 
     function get_document_workflow(document_type_id) {
@@ -906,25 +933,6 @@
 
 
 
-    function get_workflow_type(workflow_id) {
-        $.ajax({
-            url: "{{ url('getWorkflowById') }}",
-            type: 'ajax',
-            method: 'post',
-            data: {
-                "_token": "{{ csrf_token() }}",
-                workflow_id: workflow_id,
-            },
-            success: function(result) {
-                var data = JSON.parse(result);
-                if (data) {
-                    $(".total_levels").val(data.total_levels);
-                } else {
-                    $(".total_levels").val(0);
-                }
-            }
-        });
-    }
 
 
     function clear_form() {
@@ -948,134 +956,4 @@
         function() {
 
         });
-
-
-
-    function delete_item(id) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3565ed',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then(isConfirmed => {
-            if (isConfirmed.value) {
-                $.ajax({
-                    url: "{{ url('projects') }}" + "/" + id,
-                    type: 'ajax',
-                    method: 'delete',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        id: id,
-                    },
-                    success: function(result) {
-                        if (result) {
-                            window.location.reload();
-                        }
-                    }
-                });
-                if (isConfirmed.value) {
-                    Swal.fire(
-                        'Deleted!',
-                        'Project has been deleted.',
-                        'success'
-                    );
-
-                }
-            }
-        });
-    }
-
-    function get_employee_details(emp_id) {
-        var workflow_id = $(".workflow_id").find(":selected").val();
-        if (workflow_id) {
-            get_workflow_type(workflow_id);
-        }
-
-        $.ajax({
-            url: "{{ route('getDetailsById') }}",
-            type: 'ajax',
-            method: 'post',
-            data: {
-                "_token": "{{ csrf_token() }}",
-                emp_id: emp_id,
-            },
-            success: function(result) {
-                var data = JSON.parse(result);
-                $(".sap_id").val(data[0].sap_id);
-                $(".department").val(data[0].department_name);
-                $(".designation").val(data[0].designation_name);
-            }
-        });
-    }
-
-
-    function get_edit_details(project_id) {
-        $.ajax({
-            url: "{{ route('getProjectDetailsById') }}",
-            type: 'ajax',
-            method: 'post',
-            data: {
-                "_token": "{{ csrf_token() }}",
-                project_id: project_id,
-            },
-            success: function(result) {
-                var data = JSON.parse(result);
-                $(".project_id").prop('disabled', false);
-                $(".project_id").val(data.project.id);
-                $(".project_name").val(data.project.project_name);
-                $(".project_code").val(data.project.project_code);
-                $(".start_date").val(data.project.start_date);
-                $(".end_date").val(data.project.end_date);
-                $(".initiator_id").val(data.project.initiator_id);
-                $(".document_type_id").val(data.project.document_type_id);
-                // $(".total_levels").val(data.project);
-                $(".workflow_id").val(data.project.workflow_id);
-                get_workflow_type(data.project.workflow_id);
-                get_employee_details(data.project.initiator_id);
-                $(".multi-fields").html("");
-                $.each(data.milestone, function(key, val) {
-                    $(".multi-fields").append(
-                        '<div class="multi-field"><div class="row"><div class="col-md-4 fv-row"><label class="required fs-6 fw-semibold mb-2">Mile Stone</label><input type="text" class="form-control" name="milestone[]" value="' +
-                        val.milestone +
-                        '"></div><div class="col-md-4 fv-row"><label class="required fs-6 fw-semibold mb-2">Planned Date</label><input type="date" class="form-control" name="planned_date[]" value="' +
-                        val.planned_date +
-                        '"></div><div class="col-md-4 fv-row"><label class="required fs-6 fw-semibold mb-2">Level To Be Crossed</label><select class="form-control levels_to_be_crossed" name="level_to_be_crosssed[]"><option value="">Select</option>@for ($i = 1; $i <= 11; $i++)<option <?php echo "'+val.levels_to_be_crossed+'=={{$i}}" ? 'selected' : ''; ?> value="{{ $i }}">{{ $i }}</option>@endfor</select></div></div><br><button type="button" class="btn btn-sm btn-danger remove-field1" onclick="remove_more();">Remove</button><button type="button" class="btn btn-sm btn-success add-field1" onclick="append_more();">Add field</button></div>'
-                    );
-                });
-                $.each(data.levels, function(key, val1) {
-                    $(".project_level" + key).val(val1.project_level);
-                    $(".due_date" + key).val(val1.due_date);
-                    $(".priority" + val1.priority + key).attr('checked', 'checked');
-                    $(".staff" + key).val(val1.staff);
-                    $(".hod" + key).val(val1.hod);
-                    $(".main_document" + key).attr("href", "{{ URL::to('/') }}/main_document/" +
-                        val1.main_document);
-                    $(".auxillary_document" + key).attr("href",
-                        "{{ URL::to('/') }}/auxillary_document/" + val1.auxillary_document);
-                    $(".main_document" + key).show();
-                    $(".auxillary_document" + key).show();
-                });
-            }
-        });
-    }
-
-    function append_more() {
-        $('<div class="multi-field"><div class="row"><div class="col-md-4 fv-row"><label class="required fs-6 fw-semibold mb-2">Mile Stone</label><input type="text" class="form-control" name="milestone[]"></div><div class="col-md-4 fv-row"><label class="required fs-6 fw-semibold mb-2">Planned Date</label><input type="date" class="form-control" name="planned_date[]"></div><div class="col-md-4 fv-row"><label class="required fs-6 fw-semibold mb-2">Level To Be Crossed</label><select class="form-control levels_to_be_crossed" name="level_to_be_crosssed[]"><option value="">Select</option>@for ($i = 1; $i <= 11; $i++)<option value="{{ $i }}">{{ $i }}</option>@endfor</select></div></div><br><button type="button" class="btn btn-sm btn-danger remove-field1" onclick="remove_more();">Remove</button><button type="button" class="btn btn-sm btn-success add-field1" onclick="append_more();">Add field</button></div>')
-            .appendTo(".multi-fields").find('input').val('').end()
-        focus();
-    }
-
-    function remove_more() {
-        $(".multi-fields").children("div[class=multi-field]:last").remove()
-        // $(".multi-fields .multi-field:last-child").remove();
-    }
-
-    function reset() {
-        location.reload();
-        $('.doclistFilter').val("").trigger('change');
-        $("input[type=date]").val("");
-    }
 </script>

@@ -570,7 +570,7 @@
                                             <!--end::Label-->
                                             <!--begin::Input-->
                                             <input type="date" class="form-control mile_end_date"
-                                                placeholder="Enter End Date" name="mile_end_date[]" required />
+                                                placeholder="Enter End Date" name="mile_end_date[]" required onchange="mileStone_max_date(this)" />
                                             <!--end::Input-->
                                         </div>
                                         <!--end::Col-->
@@ -874,7 +874,7 @@ console.log("worked 11");
                     if (data.response == false) {
                         document.getElementById(alertName).style.display = "block";
                         document.getElementById(alertName).style.color = "red";
-                        document.getElementById(alertName).innerHTML = 'Code Is Exists*';
+                        document.getElementById(alertName).innerHTML = 'Code is exists*';
 
                     } else {
                         document.getElementById(alertName).style.display = "none";
@@ -914,7 +914,7 @@ console.log("worked 11");
 
                         document.getElementById(alertName).style.display = "block";
                         document.getElementById(alertName).style.color = "red";
-                        document.getElementById(alertName).innerHTML = 'Name Is Exists*';
+                        document.getElementById(alertName).innerHTML = 'Name is exists*';
 
                     }
 
@@ -950,7 +950,7 @@ console.log("worked 11");
                             identity = $(inputAppend).prev().html();
                             $(inputAppend).parent().append(
                                 `<p class="notifyAlert" style="display: block; color: red;">` +
-                                identity + ` Is Mandatory*</p> `);
+                                identity + ` is mandatory*</p> `);
                         }
 
                     });
@@ -1020,6 +1020,8 @@ console.log("worked 11");
         $(".mile_end_date").val("");
         $(".mile_start_date").attr('min', start_date);
         $(".mile_end_date").attr('min', start_date);
+        $(".mile_start_date").attr('start-min', start_date);
+        $(".mile_end_date").attr('start-min', start_date);
     }
     function set_max(end_date) {
         // alert("ok");
@@ -1028,14 +1030,26 @@ console.log("worked 11");
         $(".mile_start_date").val("");
         $(".mile_start_date").attr('max', end_date);
         $(".mile_end_date").attr('max', end_date);
+        $(".mile_start_date").attr('start-max', end_date);
+        $(".mile_end_date").attr('start-max', end_date);
     }
-function mileStone_min_date(mStartDate) {
-    const closestMileEndDate = $(mStartDate).parent().next().find(".mile_end_date");
-    console.log(closestMileEndDate);
-    const startDateValue = $(mStartDate).val();
+    function mileStone_min_date(mStartDate) {
+        const closestMileEndDate = $(mStartDate).parent().next().find(".mile_end_date");
+        console.log(closestMileEndDate);
+        const startDateValue = $(mStartDate).val();
 
-    closestMileEndDate.attr("min", startDateValue);
-}
+        closestMileEndDate.attr("min", startDateValue);
+    }
+
+    function mileStone_max_date(mEndDate) {
+        // alert(mStartDate);
+        const closestMileStartDate = $(mEndDate).parent().prev().find(".mile_start_date");
+        console.log(closestMileStartDate);
+
+        const endDateValue = $(mEndDate).val();
+        console.log(endDateValue);
+        closestMileStartDate.attr("max", endDateValue);
+    }
     function set_min_max_value() {
         var start_date = $('.start_date').val();
         var end_date = $('.end_date').val();

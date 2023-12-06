@@ -714,7 +714,7 @@
 
                     document.getElementById(alertName).style.display = "block";
                     document.getElementById(alertName).style.color = "red";
-                    document.getElementById(alertName).innerHTML = 'Code Is Exists*';
+                    document.getElementById(alertName).innerHTML = 'Code is exists*';
                     return false;
                 }
                 document.getElementById(alertName).style.display = "none";
@@ -756,7 +756,7 @@
 
                     document.getElementById(alertName).style.display = "block";
                     document.getElementById(alertName).style.color = "red";
-                    document.getElementById(alertName).innerHTML = 'Name Is Exists*';
+                    document.getElementById(alertName).innerHTML = 'Name is exists*';
                     return false;
                 }
                 document.getElementById(alertName).style.display = "none";
@@ -789,7 +789,7 @@
                     // Do something with the input value in each iteration, such as calling a function
                     if (inputValue == "") {
                         identity = $(inputAppend).prev().html();
-                        $(inputAppend).parent().append(`<p class="notifyAlert" style="display: block; color: red;">` + identity + ` Is Mandatory*</p> `);
+                        $(inputAppend).parent().append(`<p class="notifyAlert" style="display: block; color: red;">` + identity + ` is mandatory*</p> `);
                     }
 
                 });

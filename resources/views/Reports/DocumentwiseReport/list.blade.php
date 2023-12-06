@@ -185,7 +185,7 @@
     $(document).ready(
         function() {
 
-            console.log("well");
+            //console.log("well");
             $("#projectName").select2({
                 dropdownParent: $("#projectNameField")
             });
@@ -212,7 +212,7 @@
                 filterData('projectName');
             });
             $(document).on('click', '.viewDocs', function() {
-                console.log("well and good");
+                //console.log("well and good");
                 var id = $(this).attr('id');
 
 
@@ -243,7 +243,7 @@
                         success: function(data) {
                             var table = $('#service_table').DataTable();
                             var entities = data.entities;
-                            console.log(entities);
+                            //console.log(entities);
                             var documents = data.document;
                             if (workflow && docuName == '') {
                                 $("#documentName").empty();
@@ -263,7 +263,7 @@
                                 $("#projectName").append(projectOption);
                             }
                             $.each(entities, function(key, val) {
-                                console.log(entities);
+                                //console.log(entities);
                                 var sNo = key + 1;
                                 var projectCode = val.projectCode;
                                 var projectName = val.projectName;
@@ -305,11 +305,53 @@
 
     function reset() {
         $('#documentName,#projectName,#workflowCode').val("").trigger('change');
-        location.reload();
+        // location.reload();
         // $("#service_table").load(location.href + " #service_table").abort();
+        $.ajax({
+            url: "{{ route('documnetWiseReportSearchFilter') }}",
+            type: 'ajax',
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                workflowCode: '',
+                docuName: '',
+                projectName: '',
+            },
+            success: function(data) {
+                var table = $('#service_table').DataTable();
+                var entities = data.entities;
+                //console.log(entities);
+                var documents = data.document;
+                table.clear().draw();
+                $.each(entities, function(key, val) {
+                    //console.log(entities);
+                    var sNo = key + 1;
+                    var projectCode = val.projectCode;
+                    var projectName = val.projectName;
+                    var workflowName = val.workflowName;
+                    var workflowCode = val.workflowCode;
+                    var workflowLevel = val.workflowLevel;
+                    var dueDate = val.dueDate;
+                    var noOfDays = val.noOfDays;
+                    var initiater = val.initiater;
+                    var department = val.department;
+                    var projectId = val.projectId;
+                    var activeStatus =val.status;
 
+                    var viewBtn = '<div id=' + projectId +
+                        ' class="btn switchPrimaryBtn  viewDocs">View</div>';
+                    table.row.add([workflowCode, workflowName, initiater,
+                        department, workflowLevel, dueDate, noOfDays,
+                        activeStatus, viewBtn
+                    ]).draw();
 
+                });
 
+            },
+            error: function() {
+                $("#otp_error").text("Update Error");
+            }
+        });
     }
 
     function exportData() {

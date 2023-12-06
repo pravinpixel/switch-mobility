@@ -400,7 +400,7 @@
 
                     document.getElementById(alertName).style.display = "block";
                     document.getElementById(alertName).style.color = "red";
-                    document.getElementById(alertName).innerHTML = 'Code Is Exists*';
+                    document.getElementById(alertName).innerHTML = 'Code is exists*';
                     return false;
                 }
                 document.getElementById(alertName).style.display = "none";
@@ -1279,7 +1279,7 @@
 
                         document.getElementById(alertName).style.display = "block";
                         document.getElementById(alertName).style.color = "red";
-                        document.getElementById(alertName).innerHTML = 'Name Is Exists*';
+                        document.getElementById(alertName).innerHTML = 'Name is exists*';
                         return false;
                     }
 

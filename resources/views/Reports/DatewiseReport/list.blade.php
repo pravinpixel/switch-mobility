@@ -196,10 +196,21 @@
 
         });
         $('.resetBtn').on('click', function() {
-               
-                location.reload();
-                // $("#service_table").load(location.href + " #service_table");
-            });
+            $('.startDate').val("");
+            $('.endDate').val("");
+            // location.reload();
+            // $("#service_table").load(location.href + " #service_table");
+            var todayDate = new Date();
+            var today = todayDate.toISOString().substr(0, 10);
+
+
+
+            todayDate.setDate(todayDate.getDate() - 6); //number  of days to add, e.x. 15 days
+            var nextSixDay = todayDate.toISOString().substr(0, 10);
+
+           
+            filterData(nextSixDay,today);
+        });
         $(document).on('change click', '.endDate', function() {
             $('.startDate').attr("max",$(this).val());            
         });

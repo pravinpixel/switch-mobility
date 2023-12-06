@@ -251,7 +251,7 @@
                             </div>
                             <div class="w-auto">
                                 <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
-                                <span class="btn btn-warning " onclick="reset()">Reset</span>
+                                <span class="btn btn-warning reset" >Reset</span>
                             </div>
                         </div>
 
@@ -561,7 +561,66 @@
             });
         }
 
+        $(document).on('click', '.reset', function() {
+            // location.reload();
+            // $('.doclistFilter').val("").trigger('change');
+            // $("input[type=date]").val("");
+            $('#deptId').val(null).trigger('change');
+            $('#desgId').val(null).trigger('change');
+            $('#users').val(null).trigger('change');
+            $('.ticket_no').val(null).trigger('change');
+            $('.workflowFilter').val(null).trigger('change');
+            $('.projectFilter').val(null).trigger('change');
+            $('.start_date').val(null);
+            $('.to_date').val('');
+            var table = $('#service_table').DataTable();
+            $.ajax({
+                url: "{{ route('getDocumentListData') }}",
+                type: 'ajax',
+                method: 'get',
+                data: {
+                    "_token": "{{ csrf_token() }}",
 
+                },
+                success: function(resData) {
+                    var data = resData.data;
+
+                    table.clear().draw();
+                    $.each(data, function(key, val) {
+                        console.log(val);
+                        var ticketNo = val.ticket_no;
+                        var employee = val.employee;
+                        var department = employee.department;
+                        var deptName = department.name;
+
+                        var initiator = employee.first_name + " " + employee.middle_name + " " + employee.last_name;
+                        var projectCode = val.project_code;
+                        var projectName = val.project_name;
+                        var workflow = val.workflow;
+                        var wfNameAndCode = workflow.workflow_name + " & " + workflow.workflow_code;
+                        var projectId = val.id;
+                        console.log(projectId);
+                        var isInitiator = (val.initiatorStatus == "yes") ? 1 : 0;
+                        var isApprover = (val.approverStatus == "yes") ? 1 : 0;
+                        console.log("isInitiator" + isInitiator);
+                        console.log("isApprover" + isApprover);
+
+                        var pStartDate = formatedDate(val.start_date);
+                        var pEndDate = formatedDate(val.end_date);
+
+
+                        var act = '<a id="' + projectId + '" screen="view" class="actionDocs badge switchPrimaryBtn" style=";cursor: pointer;">View Approved Docs</a>';
+                        table.row.add([ticketNo, wfNameAndCode, projectName + " & " + projectCode, pStartDate, pEndDate,
+                            initiator, deptName, act
+                        ]).draw();
+                    });
+                    //$('.doclistFilter option:selected').prop("selected", false);
+                },
+                error: function() {
+                    $("#otp_error").text("Update Error");
+                }
+            });
+        });
 
 
     });

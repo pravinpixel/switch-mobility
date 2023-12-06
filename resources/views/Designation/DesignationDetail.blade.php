@@ -170,7 +170,7 @@
 
                         document.getElementById(alertName).style.display = "block";
                         document.getElementById(alertName).style.color = "red";
-                        document.getElementById(alertName).innerHTML = 'Name is Allready Exists*';
+                        document.getElementById(alertName).innerHTML = 'Name is already exists*';
                         return false;
                     }
                     document.getElementById(alertName).style.display = "none";

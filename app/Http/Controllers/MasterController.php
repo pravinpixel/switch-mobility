@@ -93,7 +93,7 @@ class MasterController extends Controller
                 return redirect()->back()->withErrors(['error' => ['Insert Error']]);
             }
         } else {
-            return redirect('documentType')->with('error', "Document Type Already Exists.");
+            return redirect('documentType')->with('error', "Document Type already exists.");
         }
     }
 

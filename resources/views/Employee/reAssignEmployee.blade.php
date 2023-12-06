@@ -269,7 +269,7 @@
 
             document.getElementById(alertName).style.display = "block";
             document.getElementById(alertName).style.color = "red";
-            document.getElementById(alertName).innerHTML = 'Reassign Employee is Mandatory*';
+            document.getElementById(alertName).innerHTML = 'Reassign Employee is mandatory*';
             return false;
         }
     }

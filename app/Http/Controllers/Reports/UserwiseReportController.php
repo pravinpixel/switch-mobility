@@ -9,6 +9,7 @@ use App\Models\Project;
 use App\Models\Workflow;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserwiseReportController extends Controller
 {
@@ -21,25 +22,35 @@ class UserwiseReportController extends Controller
     public function index()
     {
 
-       // $models = Project::with('workflow', 'employee', 'employee.department')->whereNull('deleted_at')->get();
-       $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
+        // $models = Project::with('workflow', 'employee', 'employee.department')->whereNull('deleted_at')->get();
+        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
 
-       $modeldatas = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
+        $modeldatas = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
 
-      
-       if ($empId) {
-           $modeldatas->whereHas('projectEmployees', function ($q) use ($empId) {
-               if ($empId != "") {
-                   $q->where('employee_id', '=', $empId);
-               }
-           });
-       }
-       $modeldatas->whereNull('deleted_at');
-       $models= $modeldatas->get();
+
+        if ($empId) {
+            $modeldatas->whereHas('projectEmployees', function ($q) use ($empId) {
+                if ($empId != "") {
+                    $q->where('employee_id', '=', $empId);
+                }
+            });
+        }
+        $modeldatas->whereNull('deleted_at');
+        $models = $modeldatas->get();
         $entities = $this->projectController->ReportDataLooping($models);
 
-        $initiatorDatas = Employee::where('is_active',1)->whereNull('deleted_at')->get();
-        $workflowDatas = Workflow::where('is_active',1)->whereNull('deleted_at')->get();
+
+        $workflowDatas = Workflow::where('is_active', 1)->whereNull('deleted_at')->get();
+
+
+        $initiaterDatas = array();
+        $initiaterEntities = collect($models)->map(function ($initiaterModel) {
+            return  $initiaterModel['employee']->id;
+        });
+        $initiaterIds = ($initiaterEntities->unique())->toArray();
+        $initiatorDatas = Employee::whereIn('id', $initiaterIds)->where('is_active', 1)->whereNull('deleted_at')->get()->toArray();
+       // dd($initiatorDatas);
+
         return view('Reports/UserwiseReport/list', compact(['entities', 'initiatorDatas', 'workflowDatas']));
     }
     public function filterSearch(Request $request)
@@ -49,7 +60,7 @@ class UserwiseReportController extends Controller
         $employeeId = $request->Employee;
         $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
 
-        $modelDatas = Project::with('workflow', 'employee', 'employee.department','projectEmployees');
+        $modelDatas = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
         if ($empId) {
             $modelDatas->whereHas('projectEmployees', function ($q) use ($empId) {
                 if ($empId != "") {
@@ -72,16 +83,25 @@ class UserwiseReportController extends Controller
 
 
         $entities = $this->projectController->ReportDataLooping($models);
-        
-        if(isset($workflowId)){
-         $datas = Project::select('employees.first_name','employees.id','employees.sap_id')
-            ->leftjoin('employees', 'employees.id', '=', 'projects.initiator_id')
-            ->leftjoin('workflows', 'workflows.id', '=', 'projects.workflow_id')
-            ->where('workflow_id', $workflowId)
-            ->get();
-        }else{
-            $datas='';
+
+        if (isset($workflowId)) {
+         
+        $initiaterDatas = array();
+        $initiaterEntities = collect($models)->map(function ($initiaterModel) {
+            return  $initiaterModel['employee']->id;
+        });
+        $initiaterIds = ($initiaterEntities->unique())->toArray();
+        $datas = Employee::select('id', 'sap_id', DB::raw("CONCAT(first_name, ' ', COALESCE(middle_name, ''), ' ', last_name) AS fullName"))
+        ->whereIn('id', $initiaterIds)
+        ->where('is_active', 1)
+        ->whereNull('deleted_at')
+        ->get()
+        ->toArray();
+    
+        } else {
+            $datas = '';
         }
-        return response()->json(['entities' => $entities,'datas'=>$datas]);
+       
+        return response()->json(['entities' => $entities, 'datas' => $datas]);
     }
 }

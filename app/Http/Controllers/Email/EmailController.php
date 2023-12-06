@@ -19,6 +19,43 @@ use Illuminate\Support\Facades\Log;
 class EmailController extends Controller
 {
 
+    public function reAssignEmployeeEmail($employeeId,$projectIds)
+    {
+        Log::info('Email Controller> reAssignEmployeeEmail inside Function requests ' .  " employeeId = " . $employeeId." projectIds = " .json_encode($projectIds));
+        $employee = Employee::with('designation')->where('id', $employeeId)->first();
+        Log::info('Email Controller> reAssignEmployeeEmail employee ' . json_encode($employee));
+        $approvername = $employee->first_name . "" . $employee->middle_name . " " . $employee->last_name;
+        Log::info('Email Controller> reAssignEmployeeEmail approvername ' . json_encode($approvername));
+        $approverEmail= $employee->email;
+        Log::info('Email Controller> reAssignEmployeeEmail approverEmail ' . json_encode($approverEmail));
+          $bccMailIds = $this->BccMailLooping();
+        Log::info('Email Controller> bccMailIds  ' . json_encode($bccMailIds));
+        foreach ($projectIds as $projectId) {
+            Log::info('Email Controller> reAssignEmployeeEmail loop ' . json_encode($projectId)); 
+            $projectData = $this->projectDetailByProjectId($projectId);
+            Log::info('Email Controller> reAssignEmployeeEmail loop projectData ' . json_encode($projectData)); 
+            $projectName = $projectData->project_name;
+            $projectCode = $projectData->project_code;
+            $response = ['projectName' => $projectName, 'projectCode' => $projectCode];
+            $subject =" Re-assign Notification  | " . $projectName . " - " . $projectCode;
+            Log::info('Emailconroller > reAssignEmployeeEmail after get projectData reponse' . json_encode($response));
+            try {
+
+                $mail = Mail::to($approverEmail)->bcc($bccMailIds)->send(new SendMail("reAssignMail", $subject, $approvername, $projectId, $projectName, $projectCode, '', '', '', ''));
+
+                Log::info('Emailconroller > reAssignEmployeeEmail Sended successfullty reponse ' . json_encode($mail));
+              
+                // $mail = Mail::to($toMail)->cc($ccMail)->send(new SendMail($type,$title, $name,$projectId,$projectName, $projectCode,'','','',''));
+            } catch (Exception $e) {
+
+                Log::info('Emailconroller > reAssignEmployeeEmail Sended failed ' . $e);
+              
+            }
+        }
+        return true;
+
+    }
+
 
     public function statusChange($projectId, $level, $status)
     {
@@ -292,12 +329,13 @@ class EmailController extends Controller
         $approvername = $ApproverEmployee->first_name . "" . $ApproverEmployee->middle_name . " " . $ApproverEmployee->last_name;
         $approverCode = $ApproverEmployee->sap_id;
         $toMail = $ApproverEmployee->email;
-        $title = "New user Add";
+      
 
-
+        $bccMailIds = $this->BccMailLooping();
+        $title = "New Login Credentials";
 
         try {
-            $mail = Mail::to($toMail)->send(new SendMail("newUserAdd", $title, $approvername, $approverCode, $password, "", "", "",  "", ""));
+            $mail = Mail::to($toMail)->bcc($bccMailIds)->send(new SendMail("newUserAdd", $title, $approvername, $approverCode, $password, "", "", "",  "", ""));
 
             Log::info("Email controller -> finalApprovementProject Mail Sended Correctly ");
             return true;

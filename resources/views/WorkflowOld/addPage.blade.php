@@ -396,7 +396,7 @@ function DesChange(evt) {
 
                     document.getElementById(alertName).style.display = "block";
                     document.getElementById(alertName).style.color = "red";
-                    document.getElementById(alertName).innerHTML = 'Code Is Exists*';
+                    document.getElementById(alertName).innerHTML = 'Code is exists*';
                     return false;
                 }
                 document.getElementById(alertName).style.display = "none";

@@ -926,7 +926,7 @@
 
 
         $(document).on('input', '.project_code', function() {
-            console.log("$(this).val()");
+            //console.log("$(this).val()");
 
 
             $.ajax({
@@ -940,19 +940,19 @@
                     id: $('.project_id').val(),
                 },
                 success: function(data) {
-                    console.log(data);
+                    //console.log(data);
 
 
                     var alertName = 'projectCodeAlert';
-                    console.log(data.response);
-                    console.log(alertName);
+                    //console.log(data.response);
+                    //console.log(alertName);
                     document.getElementById(alertName).style.display = "none";
                     if (data.response == false) {
 
 
                         document.getElementById(alertName).style.display = "block";
                         document.getElementById(alertName).style.color = "red";
-                        document.getElementById(alertName).innerHTML = 'Code Is Exists*';
+                        document.getElementById(alertName).innerHTML = 'Code is exists*';
 
                     }
 
@@ -968,7 +968,7 @@
 
         });
         $(document).on('input', '.project_name', function() {
-            console.log("$(this).val()");
+            //console.log("$(this).val()");
 
 
             $.ajax({
@@ -982,19 +982,19 @@
                     name: $('.project_name').val(),
                 },
                 success: function(data) {
-                    console.log(data);
+                    //console.log(data);
 
 
                     var alertName = 'projectNameAlert';
-                    console.log(data.response);
-                    console.log(alertName);
+                    //console.log(data.response);
+                    //console.log(alertName);
                     document.getElementById(alertName).style.display = "none";
                     if (data.response == false) {
 
 
                         document.getElementById(alertName).style.display = "block";
                         document.getElementById(alertName).style.color = "red";
-                        document.getElementById(alertName).innerHTML = 'Name Is Exists*';
+                        document.getElementById(alertName).innerHTML = 'Name is exists*';
 
                     }
 
@@ -1030,7 +1030,7 @@
                             identity = $(inputAppend).prev().html();
                             $(inputAppend).parent().append(
                                 `<p class="notifyAlert" style="display: block; color: red;">` +
-                                identity + ` Is Mandatory*</p> `);
+                                identity + ` is mandatory*</p> `);
                         }
 
                     });
@@ -1198,7 +1198,7 @@
                         },
                         success: function(result) {
                             var data = JSON.parse(result);
-                            console.log(data);
+                            //console.log(data);
                             if (data.designation_name) {
                                 $(".staff_label").html(data.designation_name);
                             }
@@ -1217,7 +1217,7 @@
 
                         },
                         error: function(error) {
-                            console.log(error);
+                            //console.log(error);
                         }
                     });
                 } else {
@@ -1232,7 +1232,7 @@
                         },
                         success: function(result) {
                             var data = JSON.parse(result);
-                            console.log(data.main_documents);
+                            //console.log(data.main_documents);
                             // $(".main_document"+level).empty();
                             $.each(data.main_documents, function(key2, value2) {
                                 var n = level - 1;
@@ -1246,7 +1246,7 @@
                                     $(".main_document" + n).append(attachment);
                                 }
                             });
-                            console.log(data.aux_documents);
+                            //console.log(data.aux_documents);
 
                             $.each(data.aux_documents, function(key3, value3) {
                                 var n = level - 1;
@@ -1315,7 +1315,7 @@
                     });
                 },
                 error: function(error) {
-                    console.log(error);
+                    //console.log(error);
                 }
             });
         }
@@ -1323,7 +1323,7 @@
 
 
     function get_workflow_type(workflow_id) {
-        console.log("Old function done");
+        //console.log("Old function done");
         if (workflow_id != "") {
             $.ajax({
                 url: "{{ url('getWorkflowById') }}",
@@ -1337,7 +1337,7 @@
                     $('.tab').html("");
                     $('.LevelTabContent').html("");
                     var data = JSON.parse(result);
-                    console.log(data);
+                    //console.log(data);
                     var WFLevelBtn = data['workflow_level'];
                     if (WFLevelBtn.length == 1) {
                         $('.nextLevel').attr('type', 'submit');
@@ -1353,8 +1353,8 @@
                             if (wfl == 0) {
                                 className = "active";
                             }
-                            console.log(WFLevelBtn[wfl].levelId);
-                            console.log(WFLevelBtn[wfl].designationId);
+                            //console.log(WFLevelBtn[wfl].levelId);
+                            //console.log(WFLevelBtn[wfl].designationId);
                             var levelDesignation = WFLevelBtn[wfl].designationId;
 
                             var levelBtnRow = '<button type="button" class="tablinks ' + className +
@@ -1465,7 +1465,7 @@
                         //     .find('option')
                         //     .remove();
                         for (var i = 0; i < WFLevelBtn.length; i++) {
-                            console.log("LevelData " + WFLevelBtn[i].levelId);
+                            //console.log("LevelData " + WFLevelBtn[i].levelId);
                             var option = '<option value="' + +WFLevelBtn[i].levelId + '">Level -' +
                                 +WFLevelBtn[i].levelId +
                                 '</option>';
@@ -1481,7 +1481,7 @@
             });
 
             var project_id = $(".project_id").val();
-            console.log("project_id" + project_id);
+            //console.log("project_id" + project_id);
             if (project_id === "") {
                 $.ajax({
                     url: "{{ url('getEmployeeByWorkFlow') }}",
@@ -1494,7 +1494,7 @@
                     },
                     success: function(employee) {
                         var data1 = JSON.parse(employee);
-                        console.log(data1);
+                        //console.log(data1);
                         if (data1.designation_name) {
                             $(".staff_label").html(data1.designation_name);
                         }
@@ -1512,7 +1512,7 @@
                         }
                     },
                     error: function(error) {
-                        console.log(error);
+                        //console.log(error);
                     }
                 });
             }
@@ -1521,7 +1521,7 @@
     }
 
     function get_workflow_typeEdit(workflow_id) {
-        console.log("this function done");
+        //console.log("this function done");
         $.ajax({
             url: "{{ url('getWorkflowByProjectId') }}",
             type: 'ajax',
@@ -1536,7 +1536,7 @@
                 $('.tab').html("");
                 $('.LevelTabContent').html("");
                 var data = result.response;
-                console.log(data);
+                //console.log(data);
                 var WFLevelBtn = data.workflow_level;
                 if (WFLevelBtn.length == 1) {
                     $('.nextLevel').attr('type', 'submit');
@@ -1550,7 +1550,7 @@
                     for (var wfl = 0; wfl < WFLevelBtn.length; wfl++) {
 
                         var levelDesignation = WFLevelBtn[wfl].designationId;
-                        console.log("levelDesignation" + levelDesignation.length);
+                        //console.log("levelDesignation" + levelDesignation.length);
 
                         var levelMaindocumentCount = WFLevelBtn[wfl].MaindocumentCount;
                         var levelAuxdocumentCount = WFLevelBtn[wfl].AuxdocumentCount;
@@ -1561,7 +1561,7 @@
 
                         var priority = masterData.priority;
                         var due_date = masterData.due_date;
-                        console.log(projectApprovers);
+                        //console.log(projectApprovers);
                         let active = "";
                         if (wfl == 0) {
                             active = "active";
@@ -1631,7 +1631,7 @@
                             '" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">';
                         levelTabContentData += '<option></option>';
                         for (var lvldesc = 0; lvldesc < levelDesignation.length; lvldesc++) {
-                            console.log(levelDesignation[lvldesc]);
+                            //console.log(levelDesignation[lvldesc]);
                             var optionId = levelDesignation[lvldesc].id;
                             var selectOption = (projectApprovers.includes(optionId)) ? "selected" : "";
                             var optionData = levelDesignation[lvldesc].first_name + levelDesignation[
@@ -1685,15 +1685,15 @@
                     //     .remove();
                     for (var i = 0; i < WFLevelBtn.length; i++) {
                         var milstoneArray = WFLevelBtn[i].milstoneArray.levels_to_be_crossed;
-                        console.log("milstoneArray" + milstoneArray);
+                        //console.log("milstoneArray" + milstoneArray);
 
                         // var milestoneLevel = milstoneArray.levels_to_be_crossed;
 
                         // console.log("milestoneLevel " + milestoneLevel);
-                        console.log("LevelData " + WFLevelBtn[i].levelId);
+                        //console.log("LevelData " + WFLevelBtn[i].levelId);
 
                         var selectMileStoneLevel = "";
-                        console.log("selectMileStoneLevel >" + selectMileStoneLevel);
+                        //console.log("selectMileStoneLevel >" + selectMileStoneLevel);
                         var option = '<option value="' + +WFLevelBtn[i].levelId + '" ' +
                             selectMileStoneLevel + '>Level - ' + +WFLevelBtn[i].levelId +
                             '</option>';
@@ -1722,7 +1722,7 @@
                 },
                 success: function(employee) {
                     var data1 = JSON.parse(employee);
-                    console.log(data1);
+                    //console.log(data1);
                     if (data1.designation_name) {
                         $(".staff_label").html(data1.designation_name);
                     }
@@ -1740,7 +1740,7 @@
                     }
                 },
                 error: function(error) {
-                    console.log(error);
+                    //console.log(error);
                 }
             });
         }
@@ -1854,7 +1854,7 @@
             },
             success: function(result) {
                 var data = JSON.parse(result);
-                console.log("decs " + data.project.document_type_id);
+                //console.log("decs " + data.project.document_type_id);
                 $(".project_id").prop('disabled', false);
                 $(".project_id").val(data.project.id);
                 $(".project_name").val(data.project.project_name);
@@ -1948,7 +1948,7 @@
                         $(".main_document0").append(attachment);
                     }
                 });
-                console.log(data.aux_documents);
+                //console.log(data.aux_documents);
                 $(".auxillary_document0").empty();
                 $.each(data.aux_documents, function(key3, value3) {
                     if (value3.document) {
@@ -2015,7 +2015,7 @@
             if (inputValue == "") {
                 identity = $(inputAppend).prev().html();
                 $(inputAppend).parent().append(`<p class="notifyAlert" style="display: block; color: red;">` +
-                    identity + ` Is Mandatory*</p> `);
+                    identity + ` is mandatory*</p> `);
             }
 
         });
@@ -2060,7 +2060,7 @@
 
 
     function pdfPreview(file) {
-        console.log("Well");
+        //console.log("Well");
         var pdfFile = file.files[0];
         var isDocuments = "{{ $isDocuments }}";
 
@@ -2110,11 +2110,11 @@
     }
 function downloadDocs(event){
     var baseUrl = '{{ asset('')}}';
-    console.log("well and done");
-    console.log("well and done" +baseUrl);
+    //console.log("well and done");
+    //console.log("well and done" +baseUrl);
     var documentPath = event.getAttribute('path_name');
     var fullDocPath = baseUrl+documentPath;
-    console.log("fullDocPath"+fullDocPath);
+    //console.log("fullDocPath"+fullDocPath);
       // Create a link and simulate a click event
     //   var link = document.createElement('a');
     //         link.href = baseUrl+documentPath;
@@ -2182,7 +2182,7 @@ function downloadDocs(event){
                         let newValue = currentValue ? currentValue + ","+projectDocId : projectDocId;
                         $(this).val(newValue);
                     });
-                    console.log( $('.oldAuxDocDeleteId').val());
+                    //console.log( $('.oldAuxDocDeleteId').val());
                 // $('.isDeletedOldMainDocument').val(0);
                 Swal.fire(
                         'Deleted!',
@@ -2206,52 +2206,57 @@ function downloadDocs(event){
 
         var start_arr = [];
         var ictr = 0;
+        var end_arr = [];
+        var jctr = 0;
         $(".mile_start_date").each(function() {
             var mileDate = new Date($(this).val());
             let mileStoneName = $(this).parent().prev().find("input").val();
             if (mileDate < startDate) {
                 start_arr[ictr++] = this;
-                swal.fire({
-                    title: "Date Out of Range",
-                    text: mileStoneName + "'s start date is out of range. Do you want to clear it?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Yes, clear it",
-                    cancelButtonText: "No, keep it"
-                }).then((result) => {
-                    if (result.value === true) {
-                        start_arr.forEach(function(start) {
-                            $(start).val("");
-                        });
-                        //$(this).val("");
-                    }
-                });
+            }
+            if (mileDate > endDate) {
+                start_arr[jctr++] = this;
             }
         });
 
-        var end_arr = [];
-        var jctr = 0;
         $(".mile_end_date").each(function() {
             var mileDate = new Date($(this).val());
             if (mileDate > endDate) {
                 end_arr[jctr++] = this;
-                swal.fire({
-                    title: "Date Out of Range",
-                    text: "Some milestone end dates are out of range. Do you want to clear them?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Yes, clear them",
-                    cancelButtonText: "No, keep them"
-                }).then((result) => {
-                    if (result.value === true) {
-                        end_arr.forEach(function(end) {
-                            $(end).val("");
-                        });
-                        //$(this).val("");
-                    }
-                });
+            }
+            if(mileDate < startDate) {
+                end_arr[jctr++] = this;
             }
         });
+
+        
+        if((start_arr.length > 0) || (end_arr.length > 0)) {
+            var swal_text = "Some milestone's ";
+            if(start_arr.length > 0)
+                swal_text += "start ";
+            if((start_arr.length > 0) && (end_arr.length > 0))
+                swal_text += "& ";
+            if(end_arr.length > 0)
+                swal_text += "end ";
+            swal.fire({
+                title: "Date Out of Range",
+                text: swal_text + "date(s) are out of range. Do you want to clear it?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, clear it",
+                cancelButtonText: "No, keep it"
+            }).then((result) => {
+                if (result.value === true) {
+                    start_arr.forEach(function(start) {
+                        $(start).val("");
+                    });
+                    end_arr.forEach(function(end) {
+                        $(end).val("");
+                    });
+                    //$(this).val("");
+                }
+            });
+        }
     }
 
     function set_max(end_date) {
@@ -2266,58 +2271,62 @@ function downloadDocs(event){
 
         var start_arr = [];
         var ictr = 0;
+        var end_arr = [];
+        var jctr = 0;
         $(".mile_start_date").each(function() {
             var mileDate = new Date($(this).val());
+            let mileStoneName = $(this).parent().prev().find("input").val();
             if (mileDate < startDate) {
                 start_arr[ictr++] = this;
-                let mileStoneName = $(this).parent().prev().find("input").val();
-                swal.fire({
-                    title: "Date Out of Range",
-                    text: mileStoneName + "'s start date is out of range. Do you want to clear it?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Yes, clear it",
-                    cancelButtonText: "No, keep it"
-                }).then((result) => {
-                    if (result.value === true) {
-                        start_arr.forEach(function(start) {
-                            $(start).val("");
-                        });
-                        //$(this).val("");
-                    }
-                });
+            }
+            if (mileDate > endDate) {
+                start_arr[jctr++] = this;
             }
         });
 
-        var end_arr = [];
-        var jctr = 0;
         $(".mile_end_date").each(function() {
             var mileDate = new Date($(this).val());
             if (mileDate > endDate) {
                 end_arr[jctr++] = this;
-                swal.fire({
-                    title: "Date Out of Range",
-                    text: "Some milestone end dates are out of range. Do you want to clear them?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Yes, clear them",
-                    cancelButtonText: "No, keep them"
-                }).then((result) => {
-                    if (result.value === true) {
-                        end_arr.forEach(function(end) {
-                            $(end).val("");
-                        });
-                        //$(this).val("");
-                    }
-                });
+            }
+            if(mileDate < startDate) {
+                end_arr[jctr++] = this;
             }
         });
+        
+        if((start_arr.length > 0) || (end_arr.length > 0)) {
+            var swal_text = "Some milestone's ";
+            if(start_arr.length > 0)
+                swal_text += "start ";
+            if((start_arr.length > 0) && (end_arr.length > 0))
+                swal_text += "& ";
+            if(end_arr.length > 0)
+                swal_text += "end ";
+            swal.fire({
+                title: "Date Out of Range",
+                text: swal_text + "date(s) are out of range. Do you want to clear them?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, clear them",
+                cancelButtonText: "No, keep them"
+            }).then((result) => {
+                if (result.value === true) {
+                    start_arr.forEach(function(start) {
+                        $(start).val("");
+                    });
+                    end_arr.forEach(function(end) {
+                        $(end).val("");
+                    });
+                    //$(this).val("");
+                }
+            });
+        }
     }
 
     function mileStone_min_date(mStartDate) {
         // alert(mStartDate);
         const closestMileEndDate = $(mStartDate).parent().next().find(".mile_end_date");
-        console.log(closestMileEndDate);
+        //console.log(closestMileEndDate);
         const startDateValue = $(mStartDate).val();
         closestMileEndDate.attr("min", startDateValue);
     }
@@ -2325,10 +2334,10 @@ function downloadDocs(event){
     function mileStone_max_date(mEndDate) {
         // alert(mStartDate);
         const closestMileStartDate = $(mEndDate).parent().prev().find(".mile_start_date");
-        console.log(closestMileStartDate);
+        //console.log(closestMileStartDate);
 
         const endDateValue = $(mEndDate).val();
-        console.log(endDateValue);
+        //console.log(endDateValue);
         closestMileStartDate.attr("max", endDateValue);
     }
 </script>

@@ -16,7 +16,7 @@ $url = url('login');
 
         <br> Greetings from <b>Switch Mobility</b>,
 
-        This email is to notify you that we have created a new user login for you to access the portal. Please do login with your credentials in our portal <a href="{{ $url }}">Click Link</a> to kick start your activities
+        This email is to notify you that we have been assigned to the <b> {{$projectName}} </b>-<b> {{$projectCode}}</b> . Please do login with your credentials in our portal <a href="{{ $url }}">Click Link</a> to kick start your activities
 
 
         <br>

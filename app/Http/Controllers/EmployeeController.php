@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Email\EmailController;
 use App\Imports\EmployeeImport;
 use App\Imports\EmployeesImport;
 use App\Models\Department;
@@ -22,11 +23,12 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeController extends Controller
 {
-    protected $ProjectController, $workflowController;
-    public function __construct(ProjectController $ProjectController, WorkflowController $workflowController)
+    protected $ProjectController, $workflowController,$email;
+    public function __construct(ProjectController $ProjectController, WorkflowController $workflowController,EmailController $email)
     {
         $this->ProjectController = $ProjectController;
         $this->workflowController = $workflowController;
+        $this->email = $email;
     }
 
     public function create()
@@ -60,7 +62,7 @@ class EmployeeController extends Controller
     }
     public function store(Request $request)
     {
-       
+
         $row = $request->all();
 
         $errors = array();
@@ -368,13 +370,13 @@ class EmployeeController extends Controller
                         return redirect()->back()->withErrors(['error' => ['Insert Error']]);
                     }
                 } else {
-                    return redirect('employees')->with('error', "SAP-ID Already Exists.");
+                    return redirect('employees')->with('error', "SAP-ID already exists.");
                 }
             } else {
-                return redirect('employees')->with('error', "Mobile Already Exists.");
+                return redirect('employees')->with('error', "Mobile already exists.");
             }
         } else {
-            return redirect('employees')->with('error', "Email Already Exists.");
+            return redirect('employees')->with('error', "Email already exists.");
         }
     }
 
@@ -441,7 +443,7 @@ class EmployeeController extends Controller
     {
 
         $employeeImport = new EmployeesImport;
-        Log::info("Employee Import".json_encode($employeeImport));
+        Log::info("Employee Import" . json_encode($employeeImport));
         $sheet = Excel::import($employeeImport, $request->file('bulkupload')->store('temp'));
         $rows = $employeeImport->data;
         $errors = array();
@@ -495,12 +497,12 @@ class EmployeeController extends Controller
         $errors = array();
         $mobileCheck = $this->mobileCheckFunction($row['mobile'], $id);
         if ($mobileCheck) {
-            $error = "Row:" . $rowNo . "  Error: Mobile Number Allready Exist!(" . $row['mobile'] . ").";
+            $error = "Row:" . $rowNo . "  Error: Mobile Number already Exist!(" . $row['mobile'] . ").";
             array_push($errors, $error);
         }
         $emailCheck = $this->emailCheckFunction($row['email'], $id);
         if ($emailCheck) {
-            $error = "Row:" . $rowNo . " Error: Email Allready Exist!(" . $row['email'] . ").";
+            $error = "Row:" . $rowNo . " Error: Email already Exist!(" . $row['email'] . ").";
             array_push($errors, $error);
         }
         $department = $this->departemntCheckFunction($row['department']);
@@ -680,16 +682,16 @@ class EmployeeController extends Controller
         }
         $projectWiseEmployees = $this->ProjectController->getRunningProjectsEmployeesByEmpId($oldEmployeeId);
         Log::info("Get projectWiseEmployees  By Emp id " . json_encode($projectWiseEmployees));
-
+        $projectIdArrays = [];
         foreach ($projectWiseEmployees as $projectWiseEmployee) {
             $projectModel = $this->ProjectController->getProjectDetailsByPrimaryId($projectWiseEmployee->project_id);
             $wfId = "";
             $level = $projectWiseEmployee->level;
             $projectId = $projectWiseEmployee->project_id;
-
+            array_push($projectIdArrays, $projectId);
             if ($projectModel) {
                 $wfId = $projectModel->workflow_id;
-                if($projectModel->initiator_id == $oldEmployeeId){
+                if ($projectModel->initiator_id == $oldEmployeeId) {
                     $projectModel->initiator_id = $oldEmployeeId;
                     $projectModel->save();
                 }
@@ -719,7 +721,7 @@ class EmployeeController extends Controller
             }
             $reAssignedEmployeeModel = $this->convertToModelReAssignedEmployee($wfId, $projectId, $level, $type, $oldEmployeeId, $NewEmployeeId);
         }
-
+        $sendEmail = $this->reAssignEmployeeSendmail($NewEmployeeId, $projectIdArrays);
         $employeeModel = Employee::findOrFail($oldEmployeeId);
         Log::info("Get employeeModel  By Emp id " . json_encode($employeeModel));
         if ($employeeModel) {
@@ -731,8 +733,19 @@ class EmployeeController extends Controller
                 $employeeModel->save();
             }
         }
-
+        Log::info("Get projectIdArrays " . json_encode($projectIdArrays));
+        Log::info("Get NewEmployeeId " . json_encode($NewEmployeeId));
+       
         return redirect()->route('employees.index')->with('success', 'Re-Assigned Employee has been updating.');
+    }
+
+    public function reAssignEmployeeSendmail($employeeId, $allProjectIds)
+    {
+        Log::info("Get reAssignEmployeeSendmail allProjectIds" . json_encode($allProjectIds));
+        Log::info("Get reAssignEmployeeSendmail employeeId" . json_encode($employeeId));
+        $projectIds = array_unique($allProjectIds);
+        $email = $this->email->reAssignEmployeeEmail($employeeId,$projectIds);
+        return $email;
     }
 
     public function updateProjectEmployees($id, $newEmployeeId)
@@ -773,7 +786,8 @@ class EmployeeController extends Controller
         return $model;
     }
 
-    public function getEmployeeAllDataByEmpid($empId){
+    public function getEmployeeAllDataByEmpid($empId)
+    {
         return Employee::select(DB::raw("CONCAT(first_name, ' ', COALESCE(middle_name, ''), ' ', last_name) AS employee_name"))->where('id', $empId)->first();
     }
 }

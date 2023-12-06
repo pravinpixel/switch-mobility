@@ -893,7 +893,7 @@
         document.getElementById(alertfieldIdName).style.display = "block";
         document.getElementById(alertfieldIdName).style.color = "red";
         if (alertType == "Mandate") {
-            document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Mandatory*';
+            document.getElementById(alertfieldIdName).innerHTML = alertField + ' is mandatory*';
         } else if (alertType == "Incorrect") {
             document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Incorrect Format*';
         } else if (alertType == "largeSize") {
@@ -998,7 +998,7 @@
         if (fieldValue == "" || fieldValue == null) {
             document.getElementById(alertName).style.display = "block";
             document.getElementById(alertName).style.color = "red";
-            document.getElementById(alertName).innerHTML = fieldname + ' Is Mandatory*';
+            document.getElementById(alertName).innerHTML = fieldname + ' is mandatory*';
             return false;
         }
         if (fieldname == "Mobile") {
@@ -1053,7 +1053,7 @@
 
                     document.getElementById(alertName).style.display = "block";
                     document.getElementById(alertName).style.color = "red";
-                    document.getElementById(alertName).innerHTML = 'Name is Allready Exists*';
+                    document.getElementById(alertName).innerHTML = 'Name is already exists*';
                     return false;
                 }
                 document.getElementById(alertName).style.display = "none";

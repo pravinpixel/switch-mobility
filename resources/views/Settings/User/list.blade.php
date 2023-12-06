@@ -192,7 +192,7 @@
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: 'This Sap-Id AllReady In Users!',
+                                    text: 'This Sap-Id already in Users!',
                                     footer: ''
                                 });
                                 $('.submit').prop('disabled', true);

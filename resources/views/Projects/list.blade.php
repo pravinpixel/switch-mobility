@@ -490,11 +490,18 @@
     });
 
     function reset() {
-
+        $('.projectId').val(null).trigger('change');
+        $('.initiatorId').val(null).trigger('change');
+        $('.startDate').val(null).trigger('change');
+        $('.endDate').val(null).trigger('change');
 
         // location.reload();
         // $("#service_table").load(location.href + " #service_table").abort();
 
+        var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
+        var isAuthorityEdit = "{{ auth()->user()->can('project-edit') }}";
+        var isAuthorityDelete = "{{ auth()->user()->can('project-delete') }}";
+        var table = $('#service_table').DataTable();
         $.ajax({
             url: "{{ route('projectListFilters') }}",
             type: 'ajax',
@@ -723,7 +730,7 @@
 
                     document.getElementById(alertName).style.display = "block";
                     document.getElementById(alertName).style.color = "red";
-                    document.getElementById(alertName).innerHTML = 'Name Is Exists*';
+                    document.getElementById(alertName).innerHTML = 'Name is exists*';
                     return false;
                 }
                 document.getElementById(alertName).style.display = "none";
@@ -738,6 +745,43 @@
 
         });
 
+    });
+
+    $(function() {
+        $('.multi-field-wrapper').each(function() {
+            var $wrapper = $('.multi-fields', this);
+
+            $(".add-field", $(this)).click(function(e) {
+
+                var length = $(".multi-field").length;
+                var inputAppends = $(".multi-field input[required]");
+                let identity;
+                $(".notifyAlert").remove();
+
+                $.each(inputAppends, function(index, inputAppend) {
+                    var inputValue = inputAppend.value;
+                    // Do something with the input value in each iteration, such as calling a function
+                    if (inputValue == "") {
+                        identity = $(inputAppend).prev().html();
+                        $(inputAppend).parent().append(`<p class="notifyAlert" style="display: block; color: red;">` + identity + ` Is Mandatory*</p> `);
+                    }
+
+                });
+                if ($(".notifyAlert").length == 0) {
+                    if (length <= 11) {
+                        $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper).find(
+                            'input').val('').focus();
+                    }
+                }
+
+            });
+
+
+            $('.multi-field .remove-field', $wrapper).click(function() {
+                if ($('.multi-field', $wrapper).length > 1)
+                    $(this).parent('.multi-field').remove();
+            });
+        });
     });
 </script>
 
@@ -885,10 +929,176 @@
         });
     }
 
+    function get_employee_details(emp_id) {
+        var workflow_id = $(".workflow_edit").find(":selected").val();
+        if (workflow_id) {
+            // get_workflow_typeEdit(workflow_id);
+        }
+
+        $.ajax({
+            url: "{{ route('getDetailsById') }}",
+            type: 'ajax',
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                emp_id: emp_id,
+            },
+            success: function(result) {
+                var data = JSON.parse(result);
+                $(".sap_id").val(data[0].sap_id);
+                $(".department").val(data[0].department_name);
+                $(".designation").val(data[0].designation_name);
+            }
+        });
+    }
+
+
+    function get_edit_details(project_id) {
+
+        $.ajax({
+            url: "{{ route('getProjectDetailsById') }}",
+            type: 'ajax',
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                project_id: project_id,
+            },
+            success: function(result) {
+                var data = JSON.parse(result);
+                console.log(data);
+                $(".project_id").prop('disabled', false);
+                $(".project_id").val(data.project.id);
+                $(".project_name").val(data.project.project_name);
+                $(".project_code").val(data.project.project_code);
+                $(".start_date").val(data.project.start_date);
+                $(".end_date").val(data.project.end_date);
+                $(".role").val(data.project.role);
+                $(".initiator_id").val(data.project.initiator_id).trigger('change')
+                $(".document_type_id").val(data.project.document_type_id);
+                // $(".total_levels").val(data.project);
+                //get_document_workflow(data.project.document_type_id);
+                $(".workflow_id").val(data.project.workflow_id).prop("selected", true);
+                $(".workflow_hidden").val(data.project.workflow_id);
+                set_min(data.project.start_date);
+                get_workflow_typeEdit(data.project.workflow_id);
+                get_employee_details(data.project.initiator_id);
+
+                $(".multi-fields").html("");
+                $.each(data.milestone, function(key, val) {
+                    $(".multi-fields").append('<div class="multi-field"><div class="row"><div class="col-md-4 fv-row"><label class="required fs-6 fw-semibold mb-2">Mile Stone</label><input type="text" class="form-control" name="milestone[]" value="' + val.milestone + '"></div><div class="col-md-2 fv-row"><label class="required fs-6 fw-semibold mb-2">Start Date</label><input type="date" class="form-control form-control-solid mile_start_date" placeholder="Enter Start Date" name="mile_start_date[]" value="' + val.mile_start_date + '" required></div><div class="col-md-2 fv-row"><label class="required fs-6 fw-semibold mb-2">End Date</label><input type="date" class="form-control form-control-solid mile_end_date" placeholder="Enter End Date" name="mile_end_date[]" value="' + val.mile_end_date + '" required></div><div class="col-md-4 fv-row"><label class="required fs-6 fw-semibold mb-2">Level To Be Crossed</label><select class="form-control levels_to_be_crossed" name="level_to_be_crosssed[]"><option value="">Select</option>@for($i=1; $i<=11; $i++)<option <?php echo "'+val.levels_to_be_crossed+'=={{$i}}" ? "selected" : ''; ?> value="{{$i}}">{{$i}}</option>@endfor</select></div></div><br><button type="button" class="btn btn-sm btn-danger remove-field1" onclick="remove_more();">Remove</button><button type="button" class="btn btn-sm btn-success add-field1" onclick="append_more();">Add field</button></div>');
+                });
+
+                $.each(data.levels, function(key, val1) {
+                    var input = '<input type="hidden" name=project_level_edit[] value="' + val1.project_level + '">';
+                    $('.project_level_edit').append(input);
+
+                    $('.staff' + key)
+                        .find('option')
+                        .remove();
+                    $.each(data.employees, function(key1, value1) {
+
+                        if (jQuery.inArray(value1.id, data.emp[key]) !== -1) {
+                            var selected = "selected";
+                        } else {
+                            var selected = "";
+                        }
+                        var option = '<option ' + selected + ' value="' + value1.id + '">' + value1.first_name + " " + value1.last_name +
+                            '</option>';
+                        $('.staff' + key).append(option);
+                    });
 
 
 
+                    $(".project_level" + key).val(val1.project_level);
+                    $(".due_date" + key).val(val1.due_date);
+                    $(".priority" + val1.priority + key).attr('checked', 'checked');
+                    // $(".staff" + key).val(val1.staff);
 
+                    $(".auxillary_document" + key).attr("href", "{{ URL::to('/') }}/auxillary_document/" + val1.auxillary_document);
+                    $(".main_document" + key).show();
+                    $(".auxillary_document" + key).show();
+                });
+                $(".main_document0").empty();
+                $.each(data.main_documents, function(key2, value2) {
+                    if (value2.document) {
+                        var file = "{{ URL::to('/') }}" + value2.document;
+                        var attachment = '<a href="' + file + '" target="_blank" class="main_document" style="">Click to Open</a>&nbsp;<a href="javascript:void(0);" onclick="delete_document(' + value2.id + ');"><i style="color: red;" class="fas fa-trash"></i></a><br>';
+                        $(".main_document0").append(attachment);
+                    }
+                });
+                console.log(data.aux_documents);
+                $(".auxillary_document0").empty();
+                $.each(data.aux_documents, function(key3, value3) {
+                    if (value3.document) {
+                        var file = "{{ URL::to('/') }}" + value3.document;
+                        var attachment = '<a href="' + file + '" target="_blank" class="main_document" style="">Click to Open</a>&nbsp;<a href="javascript:void(0);" onclick="delete_document(' + value3.id + ');"><i style="color: red;" class="fas fa-trash"></i></a><br>';
+                        $(".auxillary_document0").append(attachment);
+                    }
+                });
+
+            }
+        });
+    }
+
+    function delete_document(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3565ed',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(isConfirmed => {
+            if (isConfirmed.value) {
+                $.ajax({
+                    url: "{{url('projects')}}" + "/" + id,
+                    method: "delete",
+                    data: {
+                        id: id,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    success: function(result) {
+                        return false;
+                        if (result.message == "Failed") {
+                            Swal.fire(
+                                'Deleted!',
+                                'Reference Datas Are Found, Deleted Failed.',
+                                'error'
+                            );
+                        } else {
+                            Swal.fire(
+                                'Deleted!',
+                                'Project has been deleted.',
+                                'success'
+                            );
+                            window.location.reload();
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    function append_more() {
+
+        $('<div class="multi-field"><div class="row"><div class="col-md-4 fv-row"><label class="required fs-6 fw-semibold mb-2">Mile Stone</label><input type="text" class="form-control" name="milestone[]"></div><div class="col-md-2 fv-row"><label class="required fs-6 fw-semibold mb-2">Start Date</label><input type="date" class="form-control form-control-solid mile_start_date" placeholder="Enter Start Date" name="mile_start_date[]" required></div><div class="col-md-2 fv-row"><label class="required fs-6 fw-semibold mb-2">End Date</label><input type="date" class="form-control form-control-solid mile_end_date" placeholder="Enter End Date" name="mile_end_date[]" required></div><div class="col-md-4 fv-row"><label class="required fs-6 fw-semibold mb-2">Level To Be Crossed</label><select class="form-control levels_to_be_crossed" name="level_to_be_crosssed[]"><option value="">Select</option>@for($i=1; $i<=11; $i++)<option value="{{$i}}">{{$i}}</option>@endfor</select></div></div><br><button type="button" class="btn btn-sm btn-danger remove-field1" onclick="remove_more();">Remove</button><button type="button" class="btn btn-sm btn-success add-field1" onclick="append_more();">Add field</button></div>').appendTo(".multi-fields").find('input').val('').end()
+        focus();
+    }
+
+    function remove_more() {
+        $(".multi-fields").children("div[class=multi-field]:last").remove()
+        // $(".multi-fields .multi-field:last-child").remove();
+    }
+
+    function deletepdf(event) {
+
+        var connect = $(event).prev().attr('connect_id');
+        $("input").filter("[connect_id='" + connect + "']").remove();
+        $("iframe , img").filter("[connect_id='" + connect + "']").parent().remove();
+
+    }
 
 
 
