@@ -405,10 +405,10 @@ use Carbon\Carbon;
                             @foreach($models as $model)
 
                             <tr>
-                                <td style="max-width: 50%; overflow-wrap: anywhere">{{$model->original_name}}</td>
+                                <td style="max-width: 50%; overflow-wrap: anywhere">{{basename($model->document_name)}}</td>
                                 <td>
                                 <a class="btn btn-sm btn-primary viewDocument" target="_blank" title="View Document" id="{{$model->projectId}}"><i class="fas fa-eye"></i></a> View Document<br/>
-                                <a class="btn btn-sm btn-success marg-top-10" download="OriginalDocs" href="{{ asset('/projectDocuments/') }}<?php echo "/".$model->document_name; ?>" title="Download Orginal Document" id="{{$model->id}}"><i class="las la-download"></i></a> Download Orginal Document<br/>
+                                <a class="btn btn-sm btn-success marg-top-10" download="{{basename($model->document_name)}}" href="{{ asset('/projectDocuments/') }}<?php echo "/".$model->document_name; ?>" title="Download Orginal Document" id="{{$model->id}}"><i class="las la-download"></i></a> Download Orginal Document<br/>
                                 <a class="btn btn-sm btn-warning actionDocs marg-top-10" target="_blank" title="Download Approved Document" id="{{$model->id}}"><i class="las la-download"></i></a> Download Approved Document</td>
                             </tr>
                             @endforeach

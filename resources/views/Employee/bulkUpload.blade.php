@@ -349,7 +349,7 @@
                             <div class="text-center pt-15">
                                 <a href="{{ route('employees.index') }}">
                                     <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
-                                <button type="submit" class="btn switchPrimaryBtn  submit" value="Save">save</button>
+                                <button type="submit" class="btn switchPrimaryBtn  submit" value="Save">Save</button>
                             </div>
 
 

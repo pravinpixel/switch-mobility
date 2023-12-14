@@ -53,6 +53,7 @@ class ProjectController extends Controller
         }
 
         $models->whereNull('deleted_at');
+        $models->orderBy('id', 'desc');
         $models1 = $models->get();
         $allProjectData = $this->projectLooping($models1);
         // dd($models1[0]['employee']);

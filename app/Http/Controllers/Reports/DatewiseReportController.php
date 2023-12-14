@@ -31,7 +31,7 @@ class DatewiseReportController extends Controller
 
         $modeldatas->where(function ($query) use ($startDate, $endDate) {
             $query->whereBetween('start_date', [$startDate, $endDate])
-                ->orWhereBetween('end_date', [$startDate, $endDate]);
+                ->WhereBetween('end_date', [$startDate, $endDate]);
         });
         if ($empId) {
             $modeldatas->whereHas('projectEmployees', function ($q) use ($empId) {
@@ -41,6 +41,7 @@ class DatewiseReportController extends Controller
             });
         }
         $modeldatas->whereNull('deleted_at');
+        $modeldatas->orderBy('id', 'desc');
         $models= $modeldatas->get();
 
 

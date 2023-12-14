@@ -38,6 +38,7 @@ class DocumentwiseReportController extends Controller
             });
         }
         $modeldatas->whereNull('deleted_at');
+        $modeldatas->orderBy('id', 'desc');
         $models= $modeldatas->get();
       
         $entities = $this->projectController->ReportDataLooping($models);

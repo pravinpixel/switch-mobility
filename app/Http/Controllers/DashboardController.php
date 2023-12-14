@@ -60,6 +60,7 @@ class DashboardController extends Controller
     }
 
     $models->whereNull('deleted_at');
+    $models->orderBy('id', 'desc');
     $models1 = $models->get();
 
     $totalAppprovedmodels = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
@@ -113,6 +114,7 @@ class DashboardController extends Controller
     }
 
     $totalOverDuemodels->whereNull('deleted_at');
+    $totalOverDuemodels->orderBy('id', 'desc');
     $totalOverDuemodels->where('current_status', '!=', 4);
     $totalOverDueProjectsModels = $totalOverDuemodels->get();
     $totalOverDueProjects = 0;
@@ -148,7 +150,9 @@ class DashboardController extends Controller
     $approvingProjects = array();
     if ($empId) {
 
-      $initiaterProjectModels = Project::with('workflow', 'employee', 'employee.department')->where('initiator_id', $empId)->get();
+      $initiaterProjectModels = Project::with('workflow', 'employee', 'employee.department')
+      ->where('initiator_id', $empId)
+      ->orderBy('id', 'desc')->get();
 
       foreach ($initiaterProjectModels as $initiaterProjectModel) {
         $projectId = $initiaterProjectModel->id;
@@ -170,6 +174,7 @@ class DashboardController extends Controller
       }
 
       $myAprovingProjectModels->whereNull('deleted_at');
+      $myAprovingProjectModels->orderBy('id', 'desc');
       $myAprovingProjects = $myAprovingProjectModels->get();
 
       foreach ($myAprovingProjects as $myApprovingProject) {
@@ -192,10 +197,13 @@ class DashboardController extends Controller
 
           $getProjectLevelModel = ProjectLevels::where('project_id', $projectId)->where('project_level', $level)->first();
 
-          $DocsModel2 = ProjectDocumentDetail::where('project_id', $projectId)->where('upload_level', $level)->count();
-
-          // dd($getProjectLevelModel,$DocsModel2);
-          if (!$DocsModel2) {
+          $DocsModel2 = ProjectDocumentDetail::where('project_id', $projectId)
+          ->where('upload_level', $level)
+          ->where('is_latest', 1)
+          ->where('status','!=', 4)      
+          ->count();
+         // dd($DocsModel2)     ;  
+          if ($DocsModel2) {
             $newDatas = [
               'projectId' => $myApprovingProject->id,
               'ticketNo' => $myApprovingProject->ticket_no,
@@ -358,10 +366,13 @@ class DashboardController extends Controller
     }
 
     $activeModels->whereNull('deleted_at');
+    $activeModels->orderBy('id', 'desc');
+    if (($startDate != "") || ($endDate != "")) {
     $activeModels->where(function ($query) use ($startDate, $endDate) {
       $query->whereBetween('start_date', [$startDate, $endDate])
         ->orWhereBetween('end_date', [$startDate, $endDate]);
     });
+    }
     $activatedProjectModels = $activeModels->get();
     $allProjectsentities = $this->projectwiseController->ReportDataLooping($activatedProjectModels);
 
@@ -371,10 +382,13 @@ class DashboardController extends Controller
 
       $initiaterAllProjectModels = Project::with('workflow', 'employee', 'employee.department')
         ->where('initiator_id', $empId);
+      if (($startDate != "") || ($endDate != "")) {
       $initiaterAllProjectModels->where(function ($query) use ($startDate, $endDate) {
         $query->whereBetween('start_date', [$startDate, $endDate])
           ->orWhereBetween('end_date', [$startDate, $endDate]);
       });
+      }
+      $initiaterAllProjectModels->orderBy('id', 'desc');
       $initiaterProjectModels = $initiaterAllProjectModels->get();
 
       foreach ($initiaterProjectModels as $initiaterProjectModel) {
@@ -426,11 +440,14 @@ $initiatingProjectsModels1=[];
           }
         });
       }
+      if (($startDate != "") || ($endDate != "")) {
       $myAprovingProjectModels->where(function ($query) use ($startDate, $endDate) {
         $query->whereBetween('start_date', [$startDate, $endDate])
           ->orWhereBetween('end_date', [$startDate, $endDate]);
       });
+      }
       $myAprovingProjectModels->whereNull('deleted_at');
+      $myAprovingProjectModels->orderBy('id', 'desc');
       $myAprovingProjects = $myAprovingProjectModels->get();
 
       foreach ($myAprovingProjects as $myApprovingProject) {
@@ -446,8 +463,12 @@ $initiatingProjectsModels1=[];
           $level = $getMyApproverLevel->level;
           $getProjectLevelModel = ProjectLevels::where('project_id', $projectId)->where('project_level', $level)->first();
 
-          $DocsModel2 = ProjectDocumentDetail::where('project_id', $projectId)->where('upload_level', $level)->count();
-          if (!$DocsModel2) {
+          $DocsModel2 = ProjectDocumentDetail::where('project_id', $projectId)
+          ->where('upload_level', $level)
+          ->where('is_latest', 1)
+          ->where('status','!=', 4)
+          ->count();
+          if ($DocsModel2) {
             $newDatas = [
               'projectId' => $myApprovingProject->id,
               'ticketNo' => $myApprovingProject->ticket_no,

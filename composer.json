@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
@@ -15,6 +18,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
         "laravelcollective/html": "^6.3",
+        "maatwebsite/excel": "^3.1",
         "mpdf/mpdf": "^8.1",
         "phpoffice/phpspreadsheet": "^1.25",
         "spatie/laravel-permission": "^5.9",
@@ -29,14 +33,16 @@
         "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
-	         "psr-4": {
+        "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-			"Spatie\\PdfToImage\\": "path/to/Spatie/PdfToImage/src",
-			 "Barryvdh\\DomPDF\\": "path/to/barryvdh/laravel-dompdf/src",
-			  "Intervention\\Image\\": "path/to/intervention/image/src"
-        }
+            "Spatie\\PdfToImage\\": "path/to/Spatie/PdfToImage/src",
+            "Barryvdh\\DomPDF\\": "path/to/barryvdh/laravel-dompdf/src",
+            "Intervention\\Image\\": "path/to/intervention/image/src"
+        }, "files": [
+            "app/CustomHelper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

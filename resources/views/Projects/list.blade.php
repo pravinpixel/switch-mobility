@@ -501,7 +501,24 @@
         var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
         var isAuthorityEdit = "{{ auth()->user()->can('project-edit') }}";
         var isAuthorityDelete = "{{ auth()->user()->can('project-delete') }}";
-        var table = $('#service_table').DataTable();
+        $('#service_table').DataTable().destroy();
+        var table = $("#service_table").DataTable({
+            "aaSorting": [],
+            "language": {
+                "lengthMenu": "Show _MENU_",
+            },
+            "dom": "<'row header-row'" +
+                "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                ">" +
+
+                "<'table-responsive'tr>" +
+
+                "<'row'" +
+                "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                ">"
+        });
         $.ajax({
             url: "{{ route('projectListFilters') }}",
             type: 'ajax',
@@ -586,7 +603,18 @@
             }
 
         });
-
+        if ($('.add-button-datatable').length) {
+            
+            // $('.add-button-datatable').find('[data-kt-user-table-toolbar]').find("a").addClass("");
+            const toolbarHtml ="<div class='d-flex align-items-center justify-content-end col-sm-4'>"+ $('.add-button-datatable').find('[data-kt-user-table-toolbar]').html()+"</div>";
+            if (toolbarHtml) {
+                $('.dataTables_wrapper .header-row').children().addClass("col-sm-4");
+                $('.dataTables_wrapper .header-row').children().removeClass("col-sm-6");
+               
+              $('.dataTables_wrapper .header-row').append(toolbarHtml);
+            }
+           
+          }
 
     }
     $(document).on('click', '.SearchFilter', function() {
@@ -595,7 +623,24 @@
         var isAuthorityDelete = "{{ auth()->user()->can('project-delete') }}";
 
         console.log("well");
-        var table = $('#service_table').DataTable();
+        $('#service_table').DataTable().destroy();
+        var table = $("#service_table").DataTable({
+            "aaSorting": [],
+            "language": {
+                "lengthMenu": "Show _MENU_",
+            },
+            "dom": "<'row header-row'" +
+                "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                ">" +
+
+                "<'table-responsive'tr>" +
+
+                "<'row'" +
+                "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                ">"
+        });
         var projectId = $('.projectId').val();
         var initiatorId = $('.initiatorId').val();
         var startDate = $('.startDate').val();
@@ -703,6 +748,18 @@
 
             });
         }
+        if ($('.add-button-datatable').length) {
+            
+            // $('.add-button-datatable').find('[data-kt-user-table-toolbar]').find("a").addClass("");
+            const toolbarHtml ="<div class='d-flex align-items-center justify-content-end col-sm-4'>"+ $('.add-button-datatable').find('[data-kt-user-table-toolbar]').html()+"</div>";
+            if (toolbarHtml) {
+                $('.dataTables_wrapper .header-row').children().addClass("col-sm-4");
+                $('.dataTables_wrapper .header-row').children().removeClass("col-sm-6");
+               
+              $('.dataTables_wrapper .header-row').append(toolbarHtml);
+            }
+           
+          }
     });
     $(document).on('blur', '.project_name', function() {
         console.log("$(this).val()");

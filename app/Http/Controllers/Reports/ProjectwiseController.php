@@ -34,6 +34,7 @@ class ProjectwiseController extends Controller
             });
         }
         $modeldatas->whereNull('deleted_at');
+        $modeldatas->orderBy('id', 'desc');
         $models = $modeldatas->get();
 
         $departmentDatas = Department::where('is_active', 1)->whereNull('deleted_at')->get();

@@ -220,7 +220,7 @@ class EmployeeController extends Controller
     }
     public function get_all_employee()
     {
-        $models = Employee::with('department', 'designation')->whereNull('deleted_at')->get();
+        $models = Employee::with('department', 'designation')->whereNull('deleted_at')->orderBy('id', 'desc')->get();
         $datas = array();
         foreach ($models as $model) {
             $departmentModel = $model->department;

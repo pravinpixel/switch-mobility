@@ -147,6 +147,7 @@ class Doclistings extends Controller
         }
 
         $models->whereNull('deleted_at');
+        $models->orderBy('id', 'desc');
         $models1 = $models->get();
 
         $project = $this->projectLooping($models1);
@@ -353,6 +354,7 @@ class Doclistings extends Controller
         }
 
         $id = $request->id;
+        $levelId = $request->levelId;
         $empId = Session::get('employeeId');
         if ($empId) {
             $includeEmployees = $this->getEmployeeInProject($id);
@@ -499,7 +501,7 @@ class Doclistings extends Controller
         }
 
 
-        return view('Docs/editDocument', ['milestoneDatas' => $milestoneDatas, 'levelsArray' => $getAllLevels, 'levelCount' => $levelCount, 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
+        return view('Docs/editDocument', ['milestoneDatas' => $milestoneDatas, 'levelsArray' => $getAllLevels, 'levelCount' => $levelCount, 'maindocument' => $maindocument, 'auxdocument' => $auxdocument, 'details' => $details, 'details1' => $details1, 'document_type' => $document_type, 'workflow' => $workflow, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation, 'levelId' => $levelId]);
     }
 
     public function viewDocListing(Request $request)
@@ -551,8 +553,6 @@ class Doclistings extends Controller
         $projectModel  = Project::where('id', $id)->first();
 
         $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $projectModel->workflow_id)->get();
-
-
 
 
         $milestoneDatas = ProjectMilestone::where('project_id', $id)->get();

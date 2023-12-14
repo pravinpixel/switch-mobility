@@ -337,7 +337,7 @@ class EmailController extends Controller
         try {
             $mail = Mail::to($toMail)->bcc($bccMailIds)->send(new SendMail("newUserAdd", $title, $approvername, $approverCode, $password, "", "", "",  "", ""));
 
-            Log::info("Email controller -> finalApprovementProject Mail Sended Correctly ");
+            Log::info("Email controller -> userAddMail Mail Sended Correctly ");
             return true;
             // $mail = Mail::to($toMail)->cc($ccMail)->send(new SendMail($type,$title, $name,$projectId,$projectName, $projectCode,'','','',''));
         } catch (Exception $e) {

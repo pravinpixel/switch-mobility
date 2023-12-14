@@ -76,6 +76,7 @@ class ApprovalListController extends Controller
         }
 
         $models->whereNull('deleted_at');
+        $models->orderBy('id', 'desc');
         $datas = $models->get();
         $projects = $datas;
         $employees = $this->basic->getAllEmployeByProject($projects);

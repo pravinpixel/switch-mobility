@@ -341,7 +341,7 @@
                                                 <td style="width: 70px;">{{ $d['endDate'] }}</td>
                                                 <td style="width: 80px;">{{ $d['dueDate'] }}</td>
                                                 <td style="width: 40px;">{{ $d['level'] }}</td>
-                                                <td><button class="btn btn-sm switchPrimaryBtn editDocument" style="color:white" id="{{ $d['projectId'] }}">View</button></td>
+                                                <td><button class="btn btn-sm switchPrimaryBtn editDocument" style="color:white" id="{{ $d['projectId'] }}" data-id="{{ $d['level'] }}">View</button></td>
 
 
                                             </tr>
@@ -382,7 +382,6 @@
                                             ?>
                                             <tr>
                                                 <!--begin::Checkbox-->
-
                                                 <!--end::Checkbox-->
                                                 <!--begin::User=-->
                                                 <td class="">
@@ -448,8 +447,16 @@
             });
             $('.resetBtn').on('click', function() {
 
-                location.reload();
+                // location.reload();
                 // $("#service_table").load(location.href + " #service_table");
+                $('.fromDate,.toDate').val("").trigger('change');
+                $('#service_table').DataTable().destroy();
+                datatTableDescription();
+                $('#service_table1').DataTable().destroy();
+                datatTableDescription1();
+                $('#service_table2').DataTable().destroy();
+                datatTableDescription2();
+                search();
             });
 
         });
@@ -561,10 +568,11 @@
     $(document).on('click', '.editDocument', function() {
 
         var id = $(this).attr('id');
-
+        var levelId = $(this).attr('data-id');
+        
         var url = "{{ route('editDocument') }}";
         var form = $('<form action="' + url + '" method="post">' +
-            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
+            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" /><input type="hidden" name="levelId" value="' + levelId + '" />' +
             '</form>');
         $('body').append(form);
         form.submit();
@@ -619,11 +627,11 @@
                 //initiating projects
                 $.each(initiatingProjectArray, function(key, val) {
                     var ticketNo = val.ticketNo;
-                    var projectNameAndCode = val.projectName + "&" + val.projectCode;
+                    var projectNameAndCode = val.projectName + " & " + val.projectCode;
 
-                    var workflowNameAndCode = val.workflowName + "&" + val.workflowCode;
+                    var workflowNameAndCode = val.wfname + " & " + val.wfCode;
 
-                    var initiater = val.initiater;
+                    //var initiater = val.initiater;
                     var department = val.department;
                     var projectId = val.projectId;
                     var activeStatus = "";
@@ -633,7 +641,7 @@
                     var viewBtn = '<button id=' + projectId +
                         ' class="btn switchPrimaryBtn editDocument" style="color:white" >View</button>';
 
-                    initiatingProjectTable.row.add([ticketNo, projectNameAndCode, workflowNameAndCode, initiater, department, viewBtn]).draw();
+                    initiatingProjectTable.row.add([ticketNo, projectNameAndCode, workflowNameAndCode, department, viewBtn]).draw();
                 });
                 //approving Projects
                 $.each(approvingProjectArray, function(key, val) {
@@ -651,7 +659,7 @@
                     var projectId = val.projectId;
                     var activeStatus = "";
 
-                    var viewBtn = '<button id=' + projectId +
+                    var viewBtn = '<button id=' + projectId + ' data-id=' + level +
                         ' class="btn switchPrimaryBtn editDocument" style="color:white" >View</button>';
 
                     approvingProjectTable.row.add([ticketNo, projectName, projectCode, workflowName, workflowCode, department, startDate, endDate, dueDate, level, viewBtn]).draw();
@@ -659,9 +667,9 @@
                 //active Projects
                 $.each(activeProjects, function(key, val) {
                     var ticketNo = val.ticketNo;
-                    var projectNameAndCode = val.projectName + "&" + val.projectCode;
+                    var projectNameAndCode = val.projectName + " & " + val.projectCode;
 
-                    var workflowNameAndCode = val.workflowName + "&" + val.workflowCode;
+                    var workflowNameAndCode = val.workflowName + " & " + val.workflowCode;
 
                     var initiater = val.initiater;
                     var department = val.department;

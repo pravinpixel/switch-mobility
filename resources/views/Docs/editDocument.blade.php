@@ -471,14 +471,14 @@ use Carbon\Carbon;
 
 
 
-                                        if ($i == 0) {
+                                        if (((intval($levelId) == 0) && ($i == 0)) || ($levelsArray[$i]['levelId'] == intval($levelId))) {
                                             echo 'active';
                                         } ?>" data-toggle="tab" href="#pag<?php echo $levelsArray[$i]['levelId']; ?>" role="tab" aria-controls="home" onclick="get_level_data(<?php echo $levelsArray[$i]['levelId']; ?>,<?php echo $details->id; ?>);">Level <?php echo $levelsArray[$i]['levelId']; ?></a>
                     </li>
                     @endfor
             </ul>
             <div class="tab-content">
-                @for ($i = 0; $i < count($levelsArray); $i++) <div class="tab-pane <?php if ($i == 0) {
+                @for ($i = 0; $i < count($levelsArray); $i++) <div class="tab-pane <?php if (((intval($levelId) == 0) && ($i == 0)) || ($levelsArray[$i]['levelId'] == intval($levelId))) {
                                                                                         echo 'active';
                                                                                     } ?>" id="pag<?php echo $levelsArray[$i]['levelId']; ?>" role="tabpanel">
 
@@ -486,7 +486,6 @@ use Carbon\Carbon;
             @endfor
             <!-- <a href="{{url('doclisting')}}"> <button class="btn switchPrimaryBtn"style="margin-left:-1250px!important">Back</button></a> -->
         </div>
-
 
     </div>
 
@@ -626,9 +625,14 @@ use Carbon\Carbon;
         $(document).ready(function() {
             var ProjectId = "{{ $details->id }}";
             var firstLevel = "{{$levelsArray[0]['levelId']}}";
+            var showLevel = "{{ $levelId }}";
             var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
-            console.log("isSuperAdmin " + isSuperAdmin);
-            get_level_data(firstLevel, ProjectId);
+
+            if (showLevel > 0) {
+                get_level_data(showLevel, ProjectId);
+            } else {
+                get_level_data(firstLevel, ProjectId);
+            }
             // Get the modal
             var modal = document.getElementById("myModal");
             var statusChangeModal = document.getElementById("statusChangeModal");
@@ -691,7 +695,7 @@ use Carbon\Carbon;
                 },
                 success: function(result) {
                     var data1 = JSON.parse(result);
-                    console.log("dahna");
+                    //console.log("dahna");
                     console.log(data1);
                     if (data1.length) {
 
@@ -728,7 +732,7 @@ use Carbon\Carbon;
                             var dateAr = val.due_date.split('-');
                             var cnewDate = dateAr[2] + '-' + dateAr[1] + '-' + dateAr[0].slice(-4);
                             var duDateAppend = cnewDate;
-                            console.log("new date Format" + duDateAppend);
+                            //console.log("new date Format" + duDateAppend);
 
                             var badgeType = (dateSign == '-') ? "danger" : "success";
                             duDateAppend += ' <span class="menu-badge"><span class="badge badge-' + badgeType + '">' + dateSign + completionDate + daylebel + '</span></span>';
@@ -773,15 +777,15 @@ use Carbon\Carbon;
                                 var lastLevelProject = data.lastLevel;
                                 var approverLevels = data.approverLevels;
                                 var ApproverExactLevel = data.ApproverExactLevel;
-                                console.log("approverLevels " + approverLevels);
-                                console.log("level " + level);
-                                console.log("ApproverExactLevel " + ApproverExactLevel);
+                                //console.log("approverLevels " + approverLevels);
+                                //console.log("level " + level);
+                                //console.log("ApproverExactLevel " + ApproverExactLevel);
 
                                 var showLastLevelBtn = false;
                                 if (lastLevelProject == level) {
                                     showLastLevelBtn = true;
                                 }
-                                console.log('lastLevelProject ' + lastLevelProject);
+                                //console.log('lastLevelProject ' + lastLevelProject);
 
 
                                 var baseUrl = "{{ asset('/') }}";
@@ -822,7 +826,7 @@ use Carbon\Carbon;
                                             currentStatusData = "Approved";
                                             statusColour = "success";
                                         }
-                                        console.log("statusColour" + statusColour);
+                                        //console.log("statusColour" + statusColour);
                                         var docMainDetailArray = val.get_doc_detail;
 
 
@@ -854,7 +858,7 @@ use Carbon\Carbon;
 
 
                                         for (var i = docMainDetailArray.length - 1; i >= 0; --i) {
-                                            console.log('Current Docs Level ' + docMainDetailArray[i].is_downloaded);
+                                            //console.log('Current Docs Level ' + docMainDetailArray[i].is_downloaded);
                                             var remarkData = (docMainDetailArray[i].remark) ? docMainDetailArray[i].remark : "";
                                             var updatedBy = docMainDetailArray[i].employee;
                                             var updatedPerson = "";
@@ -894,7 +898,7 @@ use Carbon\Carbon;
                                             versionMainDocDiv += '<td>' + statusData + '</td>';
                                             versionMainDocDiv += '<td>' + updatedPerson + "(" + lastUpdate + ')</td>';
                                             versionMainDocDiv += '<td>';
-                                            console.log(".mainlevelStatus-" + level + "-" + i);
+                                            //console.log(".mainlevelStatus-" + level + "-" + i);
 
                                             if (i == showMainDocAction) {
                                                 var classData = "mainlevelStatus-" + level + "-" + key;
@@ -907,8 +911,8 @@ use Carbon\Carbon;
                                                 levelstageStatus.push(state);
                                                 var isSuperAdmin = "{{ auth()->user()->is_super_admin }}";
                                                 var isDownlodedDocs = docMainDetailArray[i].is_downloaded;
-                                                console.log('isDownlodedDocs' + isDownlodedDocs);
-console.log("check Status"+docMainDetailArray[i].status);
+                                                //console.log('isDownlodedDocs' + isDownlodedDocs);
+//console.log("check Status"+docMainDetailArray[i].status);
                                                 // $(".mainlevelStatus-" + level + "-" + i).append(statusData);
                                                 if ((docMainDetailArray[i].status != 4 && docMainDetailArray[i].status != 3)|| showLastLevelBtn) {
                                                     if (isSuperAdmin || isDownlodedDocs == 1) {
@@ -934,7 +938,7 @@ console.log("check Status"+docMainDetailArray[i].status);
 
                                         $(".maindoc_append" + level).append(versionMainDocDiv);
                                     });
-                                    console.log("levelstageStatus" + levelstageStatus);
+                                    //console.log("levelstageStatus" + levelstageStatus);
                                 }
                                 if (data.aux_docs) {
                                     var versionAuxDocDiv1 = '<div class="card-body">';

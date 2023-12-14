@@ -22,6 +22,7 @@ class DocumentTypeController extends Controller
         $document = DocumentType::select('document_types.*', 'workflows.workflow_code', 'workflows.workflow_name', 'workflows.total_levels')
             ->leftjoin('workflows', 'workflows.id', '=', 'document_types.workflow_id')
             ->whereNull('document_types.deleted_at')
+            ->orderBy('document_types.id', 'desc')
             ->get();
         $work_flow = Workflow::where('is_active', 1)->get()->toArray();
         $designation_edit = Designation::where('is_active', 1)->get();

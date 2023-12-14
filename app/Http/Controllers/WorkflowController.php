@@ -94,7 +94,7 @@ class WorkflowController extends Controller
     public function getRunningWorkflowInProject()
     {
         //  dd("wel");
-        $models = Workflow::whereNull('deleted_at')->get();
+        $models = Workflow::whereNull('deleted_at')->orderBy('id', 'desc')->get();
         $responseDatas = [];
         foreach ($models as $model) {
             // dd($model);

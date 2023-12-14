@@ -352,12 +352,32 @@
         form.submit();
     });
     $('.resetBtn').on('click', function() {
-        $('#workflow,#project_code_name').val("").trigger('change');
         //location.reload();
-        $("#tableContent").load(location.href + " #tableContent>*", function () {
-            // $('#service_table').DataTable().clear().draw();
-            // $('#service_table').DataTable();
+        $('#service_table').DataTable().destroy();
+        var table = $("#service_table").DataTable({
+            "aaSorting": [],
+            "language": {
+                "lengthMenu": "Show _MENU_",
+            },
+            "dom": "<'row header-row'" +
+                "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                ">" +
+
+                "<'table-responsive'tr>" +
+
+                "<'row'" +
+                "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                ">"
         });
+        
+        $('#workflow,#project_code_name').val("").trigger('change');
+        // $("#tableContent").load(location.href + " #tableContent>*", function () {
+        //     // $('#service_table').DataTable().clear().draw();
+        //     // $('#service_table').DataTable();
+        // });
+        
     });
 
     function filterData() {
@@ -366,7 +386,7 @@
         var wfId = $('.workflowFilter').val();
         console.log(projectId);
         console.log(wfId);
-        if (projectId || wfId) {
+        //if (projectId || wfId) {
             $.ajax({
                 url: "{{ route('levelwiseReportSearchFilter') }}",
                 type: 'ajax',
@@ -502,7 +522,7 @@
                 }
 
             });
-        }
+        //}
     }
 </script>
 @endsection

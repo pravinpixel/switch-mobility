@@ -470,14 +470,14 @@ use Carbon\Carbon;
                 <h4>Approval Status</h4>
 
                 @for ($i = 0; $i < count($levelsArray); $i++) <li class="nav-item">
-                    <a class="nav-link <?php if ((empty($levelId) && ($i == 0)) || ($levelsArray[$i]['levelId'] == $levelId)) {
+                    <a class="nav-link <?php if (((intval($levelId) == 0) && ($i == 0)) || ($levelsArray[$i]['levelId'] == intval($levelId))) {
                                             echo 'active';
                                         } ?>" data-toggle="tab" href="#pag<?php echo $levelsArray[$i]['levelId']; ?>" role="tab" aria-controls="home" onclick="get_level_data(<?php echo $levelsArray[$i]['levelId']; ?>,<?php echo $details->id; ?>);">Level <?php echo $levelsArray[$i]['levelId']; ?></a>
                     </li>
                     @endfor
             </ul>
             <div class="tab-content">
-                @for ($i = 0; $i < count($levelsArray); $i++) <div class="tab-pane <?php if ((empty($levelId) && ($i == 0)) || ($levelsArray[$i]['levelId'] == $levelId)) {
+                @for ($i = 0; $i < count($levelsArray); $i++) <div class="tab-pane <?php if (((intval($levelId) == 0) && ($i == 0)) || ($levelsArray[$i]['levelId'] == intval($levelId))) {
                                                                                         echo 'active';
                                                                                     } ?>" id="pag<?php echo $levelsArray[$i]['levelId']; ?>" role="tabpanel">
 
@@ -638,7 +638,7 @@ use Carbon\Carbon;
         var firstLevel = "{{$levelsArray[0]['levelId']}}";
         var showLevel = "{{ $levelId }}";
 
-        if (showLevel) {
+        if (showLevel > 0) {
             get_level_data(showLevel, ProjectId);
         } else {
             get_level_data(firstLevel, ProjectId);
