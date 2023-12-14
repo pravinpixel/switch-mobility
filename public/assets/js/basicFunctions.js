@@ -37,6 +37,7 @@ $(document).ready(
 function datatTableDescription() {
 
     var Servicetable1 = $("#service_table").DataTable({
+        "aaSorting": [],
         "language": {
             "lengthMenu": "Show _MENU_",
         },
@@ -59,6 +60,7 @@ function datatTableDescription() {
 function datatTableDescription1() {
 
     var Servicetable2 = $("#service_table1").DataTable({
+        "aaSorting": [],
         "language": {
             "lengthMenu": "Show _MENU_",
         },
@@ -79,6 +81,7 @@ function datatTableDescription1() {
 function datatTableDescription2() {
 
     var Servicetable3 = $("#service_table2").DataTable({
+        "aaSorting": [],
         "language": {
             "lengthMenu": "Show _MENU_",
         },

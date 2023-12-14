@@ -96,3 +96,31 @@ input[type=number]::-webkit-outer-spin-button {
     padding-top: 8px !important;
     padding-bottom: 8px !important;
 }
+
+.table th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1; /* Ensure the first column stays above other columns */
+    background-color: rgba(53,101,237);
+}
+.table > tbody >tr > td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1; /* Ensure the first column stays above other columns */
+    background-color: #ffffff;
+}
+
+/* Style for the last column */
+.table th:last-child {
+    position: sticky;
+    right: 0;
+    z-index: 1; /* Ensure the last column stays above other columns */
+    background-color: rgba(53,101,237);
+    padding-right: 0;
+}
+.table > tbody >tr > td:last-child {
+    position: sticky;
+    right: 0;
+    z-index: 1; /* Ensure the last column stays above other columns */
+    background-color: #ffffff;
+}
