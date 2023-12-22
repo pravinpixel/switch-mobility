@@ -22,6 +22,12 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\SessionTimeoutRedirect::class,
+        //new changes
+        \App\Http\Middleware\FrameGuard::class,
+        \App\Http\Middleware\ContentTypeOptions::class,
+        \App\Http\Middleware\RemovePoweredByHeader::class,
+        \App\Http\Middleware\AddPermissionsPolicyHeader::class,
+      //  \App\Http\Middleware\ContentSecurityPolicy::class,
     ];
 
     /**
@@ -38,6 +44,9 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            //new
+            \App\Http\Middleware\AddSecurityHeaders::class,
+            \App\Http\Middleware\ValidateRedirects::class,
         ],
 
         'api' => [
