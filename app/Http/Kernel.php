@@ -46,7 +46,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             //new
             \App\Http\Middleware\AddSecurityHeaders::class,
-            \App\Http\Middleware\ValidateRedirects::class,
+           // \App\Http\Middleware\ValidateRedirects::class,
         ],
 
         'api' => [
