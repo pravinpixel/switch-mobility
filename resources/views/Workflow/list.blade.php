@@ -183,14 +183,14 @@
                                         @if($d['runningStatus'])
                                         <span class="badge badge-success">Workflow Assigned</span>
                                         @else
-                                     
+
                                         <div class="d-flex my-3 ms-9">
                                             <!--begin::Edit-->
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('workflow-edit'))
                                             <a class = "editWf" style="display:inline;cursor: pointer;" id="{{ $d['id'] }}" title="Edit workflow"><i class="fa-solid fa-pen" style="color:orange"></i></a>
 
-                                      
+
                                             @endif
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('workflow-delete'))
@@ -219,15 +219,22 @@
 
 @endsection
 
-<script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+<!-- <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script> -->
+
+
+<script data-require="jquery@*" data-semver="3.0.0" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+{{-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> --}}
+
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script type="text/javascript">
-   
+
     $(document).ready(function() {
-        $('select').selectpicker();
+
+        // $('select').selectpicker();
 
         $("select").change(function() {
 
@@ -260,7 +267,7 @@
     // Edit
 
 
-  
+
 
     $(document).on('click', '.editWf', function() {
         var id = $(this).attr('id');
@@ -309,7 +316,7 @@
                         }
                     }
                 });
-              
+
             }
         });
     }
@@ -379,7 +386,7 @@
                         }
                     }
                 });
-              
+
             } else {
                 if (status == 1) {
                     chk.prop('checked', false);
@@ -407,12 +414,12 @@
                 "_token": "{{ csrf_token() }}"
             },
             success: function(result) {
-                console.log(result); 
+                console.log(result);
                 table.clear().draw();
 
             $.each(result, function(key, val) {
                 console.log(val);
-            
+
                 var id = val.id;
                 var runningStatus = val.runningStatus;
                 var wfname = val.wfName;
@@ -441,7 +448,7 @@
                 }else{
                     var actionBtn ='<span class="badge badge-success">Workflow Assigned</span>';
                 }
-               
+
 
                 table.row.add([wfname, wfcode, wfLevel,wfType,statusBtn, actionBtn]).draw();
             });

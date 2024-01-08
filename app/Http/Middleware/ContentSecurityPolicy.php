@@ -11,7 +11,8 @@ class ContentSecurityPolicy
     {
         $response = $next($request);
 
-        $response->headers->set('Content-Security-Policy', "default-src 'self'");
+        // $response->headers->set('Content-Security-Policy', "default-src 'self'");
+        // $response->header('Content-Security-Policy', "script-src 'self'");
 
         return $response;
     }

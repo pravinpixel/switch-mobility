@@ -15,10 +15,21 @@
     <meta property="og:title" content="Metronic - Bootstrap 5 HTML, VueJS, React, Angular. Laravel, Asp.Net Core, Ruby on Rails, Spring Boot, Blazor, Django, Express Node.js & Flask Admin Dashboard Theme" />
     <meta property="og:url" content="https://keenthemes.com/metronic" />
     <meta property="og:site_name" content="Keenthemes | Metronic" />
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/ https://cdn.datatables.net/ https://ajax.googleapis.com/;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/css https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/ 'unsafe-inline' 'self';
+    img-src 'self' data: https://images/;
+    connect-src 'self';
+    font-src 'self' https://fonts.gstatic.com/ data:;
+    frame-src 'none';
+    object-src 'none';
+" />
     <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
     <link rel="shortcut icon" href="{{ asset('assets/media/logos/limage.png') }}" />
     <!--begin::Fonts(mandatory for all pages)-->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+    <!-- //dhana changed -->
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" /> -->
     <!--end::Fonts-->
     <!--begin::Vendor Stylesheets(used for this page only)-->
     <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
@@ -28,9 +39,15 @@
     <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
     <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
     </script>
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <link href="{{ asset('assets/css/basicStyle.css') }}" rel="stylesheet" type="text/css" />
+    {{-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> --}}
+
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<link href="{{ asset('assets/css/basicStyle.css') }}" rel="stylesheet" type="text/css" />
     <script src="{{ asset('assets/js/basicFunctions.js') }}"></script>
     <script>
         var hostUrl = "assets/";
@@ -169,7 +186,7 @@
                         </div>
                         <div class="app-navbar-item ms-1 ms-md-3" id="kt_header_user_menu_toggle">
                             <!--begin::Menu wrapper-->
-                          
+
                             <button type="button" onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();" class="btn btn-sm btn-icon btn-light btn-active-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Logout">
                                 <i class="fas fa-sign-out-alt"></i>
@@ -178,7 +195,7 @@
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>
-                           
+
 
                             <!--end::Menu wrapper-->
                         </div>

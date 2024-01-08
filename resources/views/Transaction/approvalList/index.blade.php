@@ -291,7 +291,7 @@
                                     <td>{{ $project['project_name'] . ' & '. $project['project_code'] }}</td>
                                     <td>{{ date('d-m-Y', strtotime($project['start_date'])) }}</td>
                                     <td>{{ date('d-m-Y', strtotime($project['end_date'])) }}</td>
-                                   
+
                                     <td>{{ $initiator['first_name'] . ' ' . $initiator['middle_name'] . ' ' .$initiator['last_name'] }}</td>
                                     <td>{{ $department['name'] }}</td>
                                     <td>
@@ -318,8 +318,14 @@
 @endsection
 <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
 </script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+{{-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> --}}
+
+
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
 <script>
     $(document).ready(function() {
@@ -438,9 +444,9 @@
 
         });
         $(document).on('click', '.SearchFilter', function() {
-            var ticketNo = $('#ticketno').val();     
-            var deptValue = $('#deptId').val();       
-            var desgValue = $('#desgId').val();       
+            var ticketNo = $('#ticketno').val();
+            var deptValue = $('#deptId').val();
+            var desgValue = $('#desgId').val();
             var UserValue = $('#users').val();
 
             var startdate = $('#startDate').val();
@@ -459,7 +465,7 @@
         });
         $(document).on('change click', '.to_date', function() {
             console.log("To Date");
-            $('.start_date').attr("max",$(this).val()); 
+            $('.start_date').attr("max",$(this).val());
             var startDate = $('.start_date').val().trim();
             var endDate = $('.endDate').val().trim();
 
@@ -480,7 +486,7 @@
         });
         $(document).on('change click', '.start_date', function() {
             console.log("Start Date");
-            $('.to_date').attr("min",$(this).val()); 
+            $('.to_date').attr("min",$(this).val());
             var startDate = $('.start_date').val().trim();
             var endDate = $('.to_date').val().trim();
 
@@ -545,7 +551,7 @@
                         var isApprover = (val.approverStatus == "yes") ? 1 : 0;
                         var pStartDate = formatedDate(val.start_date);
                         var pEndDate = formatedDate(val.end_date);
-                     
+
 
                         var act = '<a id="' + projectId + '" screen="view" class="actionDocs badge switchPrimaryBtn" style=";cursor: pointer;">View Approved Docs</a>';
 
@@ -645,7 +651,7 @@
     function formatedDate(date) {
             const inputDate = date;
             const parts = inputDate.split("-");
-            const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;  
+            const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
 
             return formattedDate;
             // Output: "1-8-23"

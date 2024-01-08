@@ -9,16 +9,16 @@
   width: 100%;
   height: 100vh;
   display: flex;
-  justify-content: right;
+  justify-content: center;
   align-items: center;
-  background: url("../media/logos/loginbg1.jpg");
+  background: url("../media/logos/loginbg1.jpg") bottom center;
   background-size: cover;
 }
 
 .my-form {
   /* background: #fff; */
   /* background-image: linear-gradient(125deg, #000066 0%, #530066 70%, #ff0000 100%); */
-  padding-right: 15%;
+  /* padding-right: 15%; */
   /* border-radius: 10px;
   margin-right: 10%; */
   text-align: center;
@@ -70,7 +70,7 @@
 
 .submit-btn input {
   /* box-shadow: inset 0px 13px 16px -5px #646464; */
-  box-shadow: 0 5px 5px #646464;
+  box-shadow: none;
   background-color: #4f5bfd; 
   color: #fff;
   cursor: pointer;
@@ -82,9 +82,9 @@
   font-weight: bold;
 }
 
-form {
+/* form {
   -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.4));
-}
+} */
 
 .form-div {
   vertical-align: middle;

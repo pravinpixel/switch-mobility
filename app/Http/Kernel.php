@@ -27,7 +27,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\ContentTypeOptions::class,
         \App\Http\Middleware\RemovePoweredByHeader::class,
         \App\Http\Middleware\AddPermissionsPolicyHeader::class,
-      //  \App\Http\Middleware\ContentSecurityPolicy::class,
+        // \App\Http\Middleware\ContentSecurityPolicy::class,
     ];
 
     /**
