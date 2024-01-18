@@ -168,11 +168,12 @@
                                     <td>{{ $d['departmentName'] }}</td>
                                     <td>{{ $d['designationName'] }}</td>
                                     <td>
+                                    @if($d['deleted_flag'] != 1)
                                         <label class="switch">
                                             <input type="checkbox" data-id="{{ $d['id'] }}" value="" class="status" <?php echo $d['is_active'] == 1 ? 'checked' : ''; ?>>
                                             <span class="slider round"></span>
                                         </label>
-
+                                    @endif
                                     </td>
                                     <td>
                                         <div class="d-flex my-3 ms-9">
@@ -184,7 +185,11 @@
                                             <!--end::Edit-->
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('employee-delete'))
+                                            @if($d['deleted_flag'] == 1)
+                                            <div style="display:inline; margin-left: 10px;"> <span class="badge badge-danger">Employee Reassigned</span></div>
+                                            @else
                                             <div style="display:inline;cursor: pointer; margin-left: 10px;" id="{{$d['id'] }}" class="deleteEmployee" title="Delete Employee"><i class="fa-solid fa-trash" style="color:red"></i></div>
+                                            @endif
                                             @endif
                                             <!--end::Delete-->
                                             <!--begin::More-->
@@ -211,7 +216,10 @@
 @endsection
 <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
 </script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+{{-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> --}}
+
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
         $(".designation_id").select2({
@@ -223,7 +231,7 @@
         // on form submit
         $("#designation_form1").on('submit', function() {
 
-            // to each unchecked checkbox          
+            // to each unchecked checkbox
             return validateFormCreate();
             $(this).find('input[type=checkbox]:not(:checked)').prop('checked', true).val(0);
         });
@@ -454,6 +462,7 @@
                             var email = val.email;
                             var firstName = val.first_name;
                             var lastName = val.last_name;
+                            var delete_flag = val.delete_flag;
                             var activeStatus = (val.is_active == 1) ? "checked" : "";
                             console.log(activeStatus);
                             var pic = val.profile_image;
@@ -463,10 +472,22 @@
                             var editBtn = (
                                 '<a class="editPage" id="' + id + '" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i>></a>'
                             );
+
+                            var result = (
+                                '<label class="switch"><input type="checkbox" data-id="' +
+                                id + '" class="status" ' + activeStatus +
+                                '>  <span class="slider round"></span></label>');
+
+                            if(delete_flag ==1){
+                                    var deleteBtn = '<div style="display:inline; margin-left: 10px;"> <span class="badgebadge-danger">Employee Reassigned</span></div>';
+                                    var result = "";
+                                }else{
+
+
                             var deleteBtn = (
                                 '<div  id="' + id + '"  class="deleteEmployee" style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i>></div>'
                             );
-
+                        }
 
                             var Action = (editBtn +
                                 deleteBtn
@@ -474,10 +495,7 @@
                             var status = val.is_active;
                             var person = pic + "<br>" + firstName + " " + lastName +
                                 "<br>" + "Email: " + email;
-                            var result = (
-                                '<label class="switch"><input type="checkbox" data-id="' +
-                                id + '" class="status" ' + activeStatus +
-                                '>  <span class="slider round"></span></label>');
+
 
                             table.row.add([person, sapId, mobile, dept, desg, result,
                                 Action
@@ -519,7 +537,7 @@
                             var firstName = val.first_name;
                             var lastName = val.last_name;
                             var activeStatus = (val.is_active == 1) ? "checked" : "";
-
+                            var delete_flag = val.delete_flag;
                             var pic = (val.profile_image) ? val.profile_image : 'noimage.png';
                             var folder = "images/Employee/";
                             folder += pic;
@@ -540,24 +558,29 @@
 
                             var editurl = '{{ route("employees.edit", ":id") }}';
                             editurl = editurl.replace(':id', id);
+                            var result = (
+                                '<label class="switch"><input type="checkbox" data-id="' +
+                                id + '" class="status" ' + activeStatus +
+                                '>  <span class="slider round"></span></label>');
                             var editBtn = (
                                 '<a class="editPage" id="' + id + '" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i></a>'
                             );
+                            if(delete_flag ==1){
+                        var deleteBtn = '<div style="display:inline; margin-left: 10px;"> <span class="badge badge-danger">Employee Reassigned</span></div>';
+                        var result = "";
+                    }else{
                             var deleteBtn = (
                                 '<div id="' + id + '"  class="deleteEmployee"  style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i></div>'
                             );
 
-
+                        }
                             var Action = (editBtn +
                                 deleteBtn
                             );
                             var status = val.is_active;
                             var person = pic + "<br>" + firstName + " " + lastName +
                                 "<br>" + "Email: " + email;
-                            var result = (
-                                '<label class="switch"><input type="checkbox" data-id="' +
-                                id + '" class="status" ' + activeStatus +
-                                '>  <span class="slider round"></span></label>');
+
 
                             table.row.add([firsttd, sapId, mobile, dept, desg, result,
                                 Action
@@ -747,9 +770,9 @@
 
                 $.each(result, function(key, val) {
                     console.log(val);
-                                 
+
                     var itsDepend = (val.itsDepend)?1:0;
-                    var name = val.name ;                   
+                    var name = val.name ;
                     var id = val.id;
                     var sapId = val.sapId;
                     var mobile = val.mobile;
@@ -757,9 +780,9 @@
                     var desg = val.designationName;
                     var email = val.email;
                     var pic = (val.profileImage) ? val.profileImage : 'noimage.png';
-                    var folder = "{{ asset('images/Employee') }}"+"/";                             
+                    var folder = "{{ asset('images/Employee') }}"+"/";
                     folder += pic;
-               
+
                     var firsttd =
                         '<div class="symbol symbol-circle symbol-50px overflow-hidden me-3">';
                     firsttd += '<a href="javascript:void(0);">';

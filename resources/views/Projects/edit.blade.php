@@ -185,7 +185,7 @@
             top: 0px !important;
             right: -33px !important;
             /* border-radius: 50%; */
-         
+
 
         }
         .pdf-download{
@@ -196,7 +196,7 @@
         }
 
         .pdf_delete_btn span {
-        
+
             margin-right: 0 !important;
         }
 
@@ -300,14 +300,14 @@
         $fileExtension = pathinfo($mainDocumentPath, PATHINFO_EXTENSION);
         $pdf = $excel = $word = $unknown = false;
 
-       
+
     @endphp
 
     @if (!empty($mainDocumentPath))
         @php
             $document = true;
             $pdf = $excel = $word = $unknown = false;
-            
+
             if (in_array($fileExtension, ['xlsx', 'xls','XLS'])) {
                 $excel = true;
             } elseif ($fileExtension === 'pdf') {
@@ -324,7 +324,7 @@
         @endphp
     @endif
 
-   
+
 
     <!--begin::Modal header-->
     <!--begin::Modal body-->
@@ -446,11 +446,11 @@
                             <!--end::Col-->
                             <!--begin::Col-->
                             <!-- <div class="col-md-6 fv-row">
-                              
+
                                 <label class="required fs-6 fw-semibold mb-2">SAP-id</label>
-                              
+
                                 <input type="text" class="form-control form-control-solid sap_id" placeholder="Enter SAP-id" name="sap_id" readonly required />
-                              
+
                             </div> -->
                             <!--end::Col-->
 
@@ -587,11 +587,11 @@
                                             <!--end::Input-->
                                         </div>
                                         <!-- <div class="col-md-4 fv-row">
-                                        
+
                                             <label class="required fs-6 fw-semibold mb-2">Planned Date</label>
-                                          
+
                                             <input type="date" class="form-control planned_date" name="planned_date[]" onclick="set_min_max_value();" required />
-                                          
+
                                         </div> -->
                                         <!--begin::Col-->
                                         <div class="col-md-2 fv-row">
@@ -710,31 +710,31 @@
                                     @if ($isAllowDeleteMainDocument)
                                     <button class="btn btn-danger btn-sm pdf_delete_btn btn-icon" path_name="{{ $mainDocumentPath}}" onclick="dbdeletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
                                     @endif
-                                    <button class="btn btn-primary btn-sm btn-icon pdf-download" path_name="{{ $mainDocumentPath}}" onclick="downloadDocs(this)" > 
+                                    <button class="btn btn-primary btn-sm btn-icon pdf-download" path_name="{{ $mainDocumentPath}}" onclick="downloadDocs(this)" >
                                         <i class="fas fa-download "></i>
                                     </button>
-                                  
-                                   
+
+
                                 </div>
                             @elseif ($pdf)
                             <div class="pdf" onclick="event.preventDefault()"><img src="{{ asset('Fileicons/pdf.png') }}" class="pdf-iframe "  scrolling="no"></img>
                                 @if ($isAllowDeleteMainDocument)
                                 <button class="btn btn-danger btn-sm pdf_delete_btn  btn-icon" onclick="dbdeletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
                                 @endif
-                                <button class="btn btn-primary btn-sm  btn-icon pdf-download"  path_name="{{ $mainDocumentPath}}" onclick="downloadDocs(this)"> 
+                                <button class="btn btn-primary btn-sm  btn-icon pdf-download"  path_name="{{ $mainDocumentPath}}" onclick="downloadDocs(this)">
                                     <i class="fas fa-download "></i>
                                 </button>
-                                   
-                               
+
+
                             </div>
                             @elseif ($word)
                             <div class="pdf" onclick="event.preventDefault()"><img src="{{ asset('Fileicons/word.png') }}" class="pdf-iframe "  scrolling="no">
                                 @if ($isAllowDeleteMainDocument)
-                                    
-                            
+
+
                                 <button class="btn btn-danger btn-icon w-30px h-30px btn-sm pdf_delete_btn btn-icon " onclick="dbdeletepdf(this)"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
                                 @endif
-                                <button class="btn btn-primary btn-sm  btn-icon pdf-download"  path_name="{{ $mainDocumentPath}}" onclick="downloadDocs(this)"> 
+                                <button class="btn btn-primary btn-sm  btn-icon pdf-download"  path_name="{{ $mainDocumentPath}}" onclick="downloadDocs(this)">
                                     <i class="fas fa-download "></i>
                                 </button>
                             </div>
@@ -749,38 +749,38 @@
                         <div class="col-md-12 p-3 pdf_container input-group">
                             <label class="row col-12 m-2 pdf-view row " for="pdf2">
                                 <div class="upload-text"><i class="fa fa-cloud-upload"></i><span>Drag &amp; Drop files here or click to browse</span></div>
-                               
+
                                @foreach($auxDocumentPath as $axkey=>$axvalue)
                                 @if ($axvalue['extension'] == "xlsx"||$axvalue['extension'] == "XLS" )
                                 <div class="pdf" onclick="event.preventDefault()"><img src="{{ asset('Fileicons/excel.png') }}" class="pdf-iframe " scrolling="no">
                                     @if ($isAllowDeleteMainDocument)
                                     <button class="btn btn-danger btn-sm pdf_delete_btn axpdf_delete_btn btn-icon" onclick="axdbdeletepdf(this)" projectDocId ="{{ $axvalue['projectDocId']}}" path_name="{{ $axvalue['path']}}"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
                                     @endif
-                                    <button class="btn btn-primary btn-sm btn-icon pdf-download" path_name="{{  $axvalue['path']}}" onclick="downloadDocs(this)" > 
+                                    <button class="btn btn-primary btn-sm btn-icon pdf-download" path_name="{{  $axvalue['path']}}" onclick="downloadDocs(this)" >
                                         <i class="fas fa-download "></i>
                                     </button>
-                                  
-                                   
+
+
                                 </div>
                             @elseif ($axvalue['extension'] == "pdf")
                             <div class="pdf" onclick="event.preventDefault()"><img src="{{ asset('Fileicons/pdf.png') }}" class="pdf-iframe "  scrolling="no"></img>
                                 @if ($isAllowDeleteMainDocument)
                                 <button class="btn btn-danger btn-sm pdf_delete_btn  btn-icon" onclick="axdbdeletepdf(this)" projectDocId ="{{ $axvalue['projectDocId']}}"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
                                 @endif
-                                <button class="btn btn-primary btn-sm  btn-icon pdf-download"  path_name="{{  $axvalue['path']}}" onclick="downloadDocs(this)"> 
+                                <button class="btn btn-primary btn-sm  btn-icon pdf-download"  path_name="{{  $axvalue['path']}}" onclick="downloadDocs(this)">
                                     <i class="fas fa-download "></i>
                                 </button>
-                                   
-                               
+
+
                             </div>
                             @elseif ($axvalue['extension'] == "docx"||$axvalue['extension'] == "doc" )
                             <div class="pdf" onclick="event.preventDefault()"><img src="{{ asset('Fileicons/word.png') }}" class="pdf-iframe "  scrolling="no">
                                 @if ($isAllowDeleteMainDocument)
-                                    
-                            
+
+
                                 <button class="btn btn-danger btn-icon w-30px h-30px btn-sm pdf_delete_btn btn-icon " onclick="axdbdeletepdf(this)" projectDocId ="{{ $axvalue['projectDocId']}}"><span class="svg-icon svg-icon-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="currentColor"></path> <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="currentColor"></path> <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="currentColor"></path> </svg> </span></button>
                                 @endif
-                                <button class="btn btn-primary btn-sm  btn-icon pdf-download"  path_name="{{  $axvalue['path']}}" onclick="downloadDocs(this)"> 
+                                <button class="btn btn-primary btn-sm  btn-icon pdf-download"  path_name="{{  $axvalue['path']}}" onclick="downloadDocs(this)">
                                     <i class="fas fa-download "></i>
                                 </button>
                             </div>
@@ -788,7 +788,7 @@
                                 <!-- Handle unknown file types here -->
                             @endif
                             @endforeach
-                           
+
                             </label> <input type="file" name="auxillary_document[]" id="pdf2" class="form-control border-0" onchange="pdfPreview(this)" style="display:none;" accept=".pdf,.xlsx,.docx">
                         </div>
                     </div>
@@ -1017,7 +1017,7 @@
 
                 $(".add-field", $(this)).click(function(e) {
                     let todoSelects = $('.multi-fields').children().find("select");
-                    
+
                     var length = $(".multi-field").length;
                     var inputAppends = $(".multi-field input[required]");
                     let identity;
@@ -1039,7 +1039,7 @@
                             $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper)
                                 .find(
                                     'input').val('').focus();
-                            
+
                             for (let j = 0; j < todoSelects.length; j++) {
                                 $('.multi-field:last-child').children().find("select option[value='" + $(todoSelects[j]).val() + "']").remove();
                             }
@@ -1065,9 +1065,13 @@
 @endsection
 <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
 </script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script>
+{{-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> --}}
+
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><script>
     $(document).ready(function() {
 
         // $(".initiator_id").select2();
@@ -2003,7 +2007,7 @@
     function append_more(e) {
 
         let todoSelects = $('.multi-fields').children().find("select");
-        
+
         var length = $(".multi-field").length;
         var inputAppends = $(".multi-field input[required]");
         let identity;
@@ -2027,7 +2031,7 @@
                     }).attr('max', function() {
                     return $(this).attr('start-max');
                 });
-                            
+
                 for (let j = 0; j < todoSelects.length; j++) {
                     $('.multi-field:last-child').children().find("select option[value='" + $(todoSelects[j]).val() + "']").remove();
                 }
@@ -2158,9 +2162,9 @@ function downloadDocs(event){
                             }
                         });
                 }
-    
+
         function axdbdeletepdf(event) {
-          
+
                     Swal.fire({
                 title: 'Are you sure?',
                 text: 'This action cannot be undone!',
@@ -2170,12 +2174,12 @@ function downloadDocs(event){
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
-               
+
                 if (result.value == true) {
                     $("form").append("<input type='hidden' value='" + $(event).attr("path_name") + "'>");
-                    $(event).parent().parent().parent().find("input").prop("disabled", false);            
+                    $(event).parent().parent().parent().find("input").prop("disabled", false);
                     $(event).parent().remove();
-                
+
                     $('.oldAuxDocDeleteId').each(function() {
                         let currentValue = $(this).val();
                         var projectDocId = $(event).attr("projectDocId");
@@ -2193,7 +2197,7 @@ function downloadDocs(event){
             });
     }
 
- 
+
     function set_min(start_date) {
         $('.end_date').attr('min', start_date);
         $(".mile_start_date").attr('min', start_date);
@@ -2229,7 +2233,7 @@ function downloadDocs(event){
             }
         });
 
-        
+
         if((start_arr.length > 0) || (end_arr.length > 0)) {
             var swal_text = "Some milestone's ";
             if(start_arr.length > 0)
@@ -2293,7 +2297,7 @@ function downloadDocs(event){
                 end_arr[jctr++] = this;
             }
         });
-        
+
         if((start_arr.length > 0) || (end_arr.length > 0)) {
             var swal_text = "Some milestone's ";
             if(start_arr.length > 0)

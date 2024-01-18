@@ -238,7 +238,7 @@
                                                                                         @endfor
                                                                                 </select>
 
-                                                                              
+
                                                                                 <!-- <label>Level-<span class="level_name">1</span></label> -->
                                                                                 <input type="hidden" name="levels[]" class="levels" value="1">
                                                                             </td>
@@ -564,8 +564,14 @@
 
 @endsection
 
-<script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+<!-- <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script> -->
+
+
+<script data-require="jquery@*" data-semver="3.0.0" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<!-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> -->
+
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
@@ -579,12 +585,12 @@ $(document).ready(function() {
         $(this).next('.levels').val(this.value);
         $(this).parent().next().find('.designation').attr("name","approver_designation"+this.value+"[]").end();
         // $(this).parent().next().find('.select2').select2("destroy").select2();
-        // $('.select2').select2(); 
+        // $('.select2').select2();
         // $('.designation').attr("id","page_navigation1");
         // $(this).parent().find('.levels').val($(this).val());
     });
 
-    
+
     $(document).on("change",'.select_level1', function(){
         $('.select_level1 option[value=' + $(this).val() + ']').css('color','red').attr('disabled', 'disabled');
         $(this).next('.levels1').val(this.value);
@@ -673,7 +679,7 @@ $(document).ready(function() {
                     $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper).find('input','select').val('').end()
                         .find(".level_name").html(length + 1).end()
                         .find(".levels").select2("destroy").select2();
-                        
+
                         // .find(".levels").val(length + 1).end();
                     focus();
                 }
@@ -826,7 +832,7 @@ $(document).ready(function() {
                                     for(var i = 1; i <= data.workflow.total_levels; i++){
                                         //var level = key + 1;
                                         $(".append_div_partial").append('<tr><td> <select class="form-control select_level1 lev'+data.workflow_levels[i-1]+'" name="levels[]"> <option value="0">Select</option></select> <input type="hidden" name="levels[]" class="levels1" value="1"> </td><td class="text-center"> <select class="form-control designation1 select2 des'+data.workflow_levels[i-1]+'" name="approver_designation[]" multiple required> <option value="">Select</option></select> </td></tr>');
-                                        
+
                                         for (var j = 1; j <= 11; j++)
                                         {
                                             if (data.workflow_levels[i-1] == j) {
@@ -838,7 +844,7 @@ $(document).ready(function() {
                                             var option = '<option '+selected1+' value="' + j + '">' + j +'</option>';
                                             $('.lev'+data.workflow_levels[i-1]).append(option);
                                         }
-                                        
+
                                         $.each(data.designation, function(key, value) {
                                             if(jQuery.inArray(value.id, data.approver[i-1]) !== -1) {
                                                 var selected = "selected";
@@ -856,7 +862,7 @@ $(document).ready(function() {
                                         var level = key + 1;
 
                                         $(".append_div_full").append('<tr><td><label>Level-<span class="level_name1">' + level + '</span></label><input type="hidden" name="levels[]" class="full_work1" value="' + key + 1 + '"></td><td class="text-center"><select class="des1' + level + ' form-control full_work1" name="approver_designation'+level+'[]" multiple required><option value="">Select</option></select></td></tr>');
-                                        
+
                                         $.each(data.designation, function(key1, value) {
                                             console.log(data.approver[key]);
                                             if(jQuery.inArray(value.id, data.approver[key]) !== -1) {

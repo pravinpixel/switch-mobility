@@ -160,7 +160,7 @@
                             <thead>
                                 <!--begin::Table row-->
                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                                
+
                                     <th class="min-w-125px">Name</th>
                                     <th class="min-w-125px">Auth Type</th>
                                     <th class="min-w-125px">Actions</th>
@@ -177,7 +177,7 @@
 
                                     <!--end::Checkbox-->
                                     <!--begin::User=-->
-                                
+
 
                                     <td>{{$d['name']}}</td>
                                     @if($d['authority_type'] == 1)
@@ -190,15 +190,15 @@
                                             <!--begin::Edit-->
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('role-edit'))
-                                            <a  class="editPage" style="display:inline;cursor: pointer;" id="{{ $d['id'] }}" title="Edit Privilage"><i class="fa-solid fa-pen" style="color:orange"></i></a>         
-                                           
-                                          
+                                            <a  class="editPage" style="display:inline;cursor: pointer;" id="{{ $d['id'] }}" title="Edit Privilage"><i class="fa-solid fa-pen" style="color:orange"></i></a>
+
+
                                             @endif
                                             @if (auth()->user()->is_super_admin == 1 ||
                                             auth()->user()->can('role-delete'))
-                                            <div  onclick="delete_item(<?php echo $d['id']; ?>);" style="display:inline;cursor: pointer; margin-left: 10px;" id="{{ $d['id'] }}" class="" title="Delete Privilage"><i class="fa-solid fa-trash" style="color:red"></i></div>                        
-                                          
-                                           
+                                            <div  onclick="delete_item(<?php echo $d['id']; ?>);" style="display:inline;cursor: pointer; margin-left: 10px;" id="{{ $d['id'] }}" class="" title="Delete Privilage"><i class="fa-solid fa-trash" style="color:red"></i></div>
+
+
                                             @endif
 
                                             <!--end::More-->
@@ -220,8 +220,14 @@
 
 
 @endsection
-<script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+<!-- <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script> -->
+
+
+<script data-require="jquery@*" data-semver="3.0.0" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+{{-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> --}}
+
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
         var acc = document.getElementsByClassName("accordion");

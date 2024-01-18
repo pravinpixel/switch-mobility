@@ -7,6 +7,7 @@ use App\Http\Controllers\Email\EmailController;
 use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
@@ -24,14 +25,18 @@ class UserController extends Controller
      */
     public function index()
     {
+      
+        return view('Settings/User/list');
+    }
+    public function userIndex()
+    {
+        
         $models = User::leftjoin('employees', 'employees.id', '=', 'users.emp_id')
             ->whereNull('employees.deleted_at')->whereNull('is_super_admin')->orderBy('users.id', 'DESC')->get();
 
-        $roles = Role::select('name', 'id')->get();
-        $employees = Employee::doesntHave('user')->get();
-        return view('Settings/User/list', ['models' => $models, 'roles' => $roles, 'employees' => $employees]);
+     
+       return response()->json($models);
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -53,6 +58,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+       
         if ($request->password) {
             $sendMail = $this->EmailController->userAddMail($request->employeeId, $request->password);
         }
@@ -131,13 +137,13 @@ class UserController extends Controller
         $id = $request->id;
 
         $roles = Role::select('name', 'id')->get();
-        $userDetails = User::select('employees.id as empId', 'employees.mobile', 'employees.email', 'users.emp_id')
+        $userDetails = User::select('employees.id as empId', 'employees.mobile', 'employees.email', 'users.id as userId',DB::raw("CONCAT(first_name, ' ', COALESCE(middle_name, ''), ' ', last_name, ' (', sap_id ,')') AS fullName"))
             ->leftjoin('employees', 'employees.id', '=', 'users.emp_id')
             ->where('users.emp_id', $id)->first();
 
         $employees = Employee::where('id', $userDetails->emp_id)->get();
 
-        $userModel = User::with('roles', 'employee')->where('id', $id)->first();
+        $userModel = User::with('roles', 'employee')->where('id',  $userDetails->userId)->first();
 
         $roleId = $userModel->roles->pluck("id")->first();
 
@@ -164,8 +170,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $users = User::where("id", $id)->delete();
-        echo json_encode($users);
+    
+        $users = User::where("emp_id", $id)->delete();
+        return response()->json($users);
     }
     public function search(Request $request)
     {

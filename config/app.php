@@ -15,7 +15,8 @@ return [
 
     "BCCEMail"  => env('BCCEMail'),
     "PSPDFKIT_API_KEY"  => env('PSPDFKIT_API_KEY'),
-    'name' => env('APP_NAME', 'SwitchMobility'),
+    'name' => env('APP_NAME', 'Laravel'),
+    "LibreOfficePath"  => env('LibreOfficePath'),
 
     /*
     |--------------------------------------------------------------------------
@@ -41,7 +42,8 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    // 'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -54,7 +56,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://localhost'),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -83,7 +85,10 @@ return [
     */
 
     'locale' => 'en',
-
+    'dompdf' => [
+        'temp_dir' => public_path('tmp'),
+        'output_format' => 'PDF',
+    ],
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale
@@ -176,8 +181,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Spatie\Permission\PermissionServiceProvider::class,      
-      
+        Spatie\Permission\PermissionServiceProvider::class,
+
         //  Barryvdh\DomPDF\ServiceProvider::class,
         //  Intervention\Image\ImageServiceProvider::class,
 
@@ -234,10 +239,10 @@ return [
         'Str' => Illuminate\Support\Str::class,
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
-        'View' => Illuminate\Support\Facades\View::class,       
+        'View' => Illuminate\Support\Facades\View::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Excel' => 'Maatwebsite\Excel\Facades\Excel',
-     
+        'Browsershot' => Spatie\Browsershot\Facades\Browsershot::class,
     ],
 
 ];

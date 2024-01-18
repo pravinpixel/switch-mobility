@@ -69,21 +69,11 @@
                                 <!--begin::Col-->
                                 <div class="col-md-12 fv-row">
                                     <!--begin::Label-->
-                                    <label class="required fs-6 fw-semibold mb-2">Employee Name</label>
+                                    <label class="required fs-6 fw-semibold mb-2">Employee Name </label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <select  class="form-control form-control initiator_id sap_id" name="employeeId" required>
-                                        <option value="">Select</option>
-                                        @foreach ($employees as $emp)
-                                        <?php
-                                        $selectEmp = "selected";
-                                        //    if($usermodel){
-                                        //     $selectEmp = "selected";
-                                        //    }
-                                        ?>
-                                        <option value="<?php echo $emp['id']; ?>" <?php echo $selectEmp; ?>><?php echo $emp['first_name'] . ' '.$emp['middle_name'] . ' ' . $emp['last_name'] . '(' . $emp['sap_id'] . ')'; ?></option>
-                                        @endforeach
-                                    </select>
+                                    <input class="form-control " name="employeeName" disabled value="{{$userDetails->fullName}}" />
+                                  
                                     <p id="employeeAlert" class="notifyAlert"></p>
                                     <!--end::Input-->
                                 </div>
@@ -265,12 +255,11 @@
 
 
     function rolesValidation() {
-        var sap_id = $('.sap_id').val().trim();
+      
         var roles = $('.Privillage').val();
         var password = $('.password').val().trim();
         var cpassword = $('.cpassword').val().trim();
 
-        var sapIdError = validateField('employeeAlert', 'Employee', sap_id);
         var roleError = validateField('roleAlert', 'Privilage', roles);
         var passwordError = true;
         var cpasswordError = true;
@@ -279,8 +268,6 @@
             var cpasswordError = validateField('cpasswordAlert', 'Confirm Password', cpassword);
         }
 
-
-        console.log(sapIdError);
         console.log(roleError);
         console.log(passwordError);
         console.log(cpasswordError);
@@ -298,7 +285,7 @@
             }
         }
 
-        if (sapIdError && roleError && passwordError && cpasswordError && cpasswordMissmatch) {
+        if (roleError && passwordError && cpasswordError && cpasswordMissmatch) {
 
             $(".form").submit();
             return true;

@@ -38,6 +38,7 @@ Route::group([
 ], function () {
     Route::get('home', [HomeController::class, 'adminHome'])->name('home');
     Route::get('doclistingIndex/{type}', [Doclistings::class, 'filterindex'])->name('doclistingIndex');
+    Route::post('userIndex', [UserController::class, 'userIndex'])->name('userIndex');
 
     Route::resource('roles', RolesController::class);
     //Dept
@@ -134,14 +135,14 @@ Route::group([
     Route::get('datewiseReportIndex', [DatewiseReportController::class, 'index'])->name('datewiseReportIndex');
     Route::post('dateWiseReportSearchFilter', [DatewiseReportController::class, 'filterSearch'])->name('dateWiseReportSearchFilter');
 
-    //projectwiseReport 
+    //projectwiseReport
     Route::get('projectwiseReportIndex', [ProjectwiseController::class, 'index'])->name('projectwiseReportIndex');
     Route::post('projectwiseReportSearchFilter', [ProjectwiseController::class, 'filterSearch'])->name('projectwiseReportSearchFilter');
 
-    //docuWiseReport 
+    //docuWiseReport
     Route::get('documentWiseReportIndex', [DocumentwiseReportController::class, 'index'])->name('documentWiseReportIndex');
     Route::post('documnetWiseReportSearchFilter', [DocumentwiseReportController::class, 'filterSearch'])->name('documnetWiseReportSearchFilter');
-    //userwiseReport 
+    //userwiseReport
     Route::get('userWiseReportIndex', [UserwiseReportController::class, 'index'])->name('userWiseReportIndex');
     Route::post('userWiseReportSearchFilter', [UserwiseReportController::class, 'filterSearch'])->name('userWiseReportSearchFilter');
     //by dhana
@@ -167,7 +168,13 @@ Route::group([
     Route::post('userEdit', [UserController::class, 'userEdit'])->name('userEdit');
 
 // Custom Logout Route
+// Route::get('/', [LoginController::class, 'showLoginIndex'])->name('login');
+// Route::get('/', function(){
+//     dd('1');
+// });
+
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
 Route::post('/logout',  [LoginController::class, 'logout']);
 
 
@@ -176,10 +183,28 @@ Route::post('/logout',  [LoginController::class, 'logout']);
     Route::post('approvedDocsView', [ApprovalListController::class, 'approvedDocsView'])->name('approvedDocsView');
     Route::post('approvedDocsDownload', [FileConversionController::class, 'approvedDocsDownload'])->name('approvedDocsDownload');
 });
-Route::get('/', function () {
-    return redirect(route('login'));
-});
 
+// Route::get('/', function () {
+
+//     $allowedRedirects = [
+//         route('login'),
+//     ];
+
+//     $requestedRedirect = request('redirect');
+
+//     if (in_array($requestedRedirect, $allowedRedirects)) {
+//         return redirect($requestedRedirect);
+//     } else {
+//         return redirect(route('login'));
+//     }
+// });
+Route::get('/', [LoginController::class, 'showLoginIndex'])->name('login');
+
+// Route::get('/', function () {
+//     return redirect()->route('login');
+// });
+
+Route::post('/login',  [LoginController::class, 'login']);
 // Auth::routes();
-Auth::routes(['reset' => false,'logout' => false]);
+//  Auth::routes(['reset' => false,'logout' => false]);
 Route::get('tempOpen/{id}', [BasicController::class, 'tempOpen'])->name('tempOpen');

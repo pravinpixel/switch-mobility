@@ -30,9 +30,7 @@ return [
     | to immediately expire on the browser closing, set that option.
     |
     */
-
     'lifetime' => env('SESSION_LIFETIME', 120),
-
     'expire_on_close' => false,
 
     /*
@@ -71,9 +69,7 @@ return [
     | correspond to a connection in your database configuration options.
     |
     */
-
-    'connection' => env('SESSION_CONNECTION', null),
-
+    'connection' => env('SESSION_CONNECTION'),
     /*
     |--------------------------------------------------------------------------
     | Session Database Table
@@ -100,7 +96,7 @@ return [
     |
     */
 
-    'store' => env('SESSION_STORE', null),
+    'store' => env('SESSION_STORE'),
 
     /*
     |--------------------------------------------------------------------------
@@ -154,9 +150,7 @@ return [
     | available to in your application. A sensible default has been set.
     |
     */
-
-    'domain' => env('SESSION_DOMAIN', null),
-
+    'domain' => env('SESSION_DOMAIN'),
     /*
     |--------------------------------------------------------------------------
     | HTTPS Only Cookies
@@ -167,9 +161,7 @@ return [
     | the cookie from being sent to you when it can't be done securely.
     |
     */
-
     'secure' => env('SESSION_SECURE_COOKIE'),
-
     /*
     |--------------------------------------------------------------------------
     | HTTP Access Only

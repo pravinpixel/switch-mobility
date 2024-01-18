@@ -141,7 +141,7 @@
                                 <!--begin::Filter-->
 
                                 <!--begin::Add user-->
-                                
+
                                <a href="{{ route('workflow.create') }}"><button type="button" class="btn switchPrimaryBtn  ">
                                     <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                                     <span class="svg-icon svg-icon-2">
@@ -189,7 +189,7 @@
                                             <!--end::Close-->
                                         </div>
                                         <!--end::Modal header-->
-                                     
+
 
                                     </div>
                                 </div>
@@ -228,7 +228,7 @@
                                     <th class="min-w-125px">Approval Type</th>
                                     <th>Status</th>
                                     <th class="min-w-100px">Actions</th>
-                                   
+
                                 </tr>
                                 <!--end::Table row-->
                             </thead>
@@ -290,7 +290,7 @@
                                             <!--end::More-->
                                         </div>
                                     </td>
-                                   
+
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -307,8 +307,14 @@
 
 @endsection
 
-<script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+<!-- <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script> -->
+
+
+<script data-require="jquery@*" data-semver="3.0.0" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+{{-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> --}}
+
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
@@ -322,13 +328,13 @@ $(document).ready(function() {
         $(this).next('.levels').val(this.value);
         $(this).parent().next().find('.designation').attr("name","approver_designation"+this.value+"[]").end();
         // $(this).parent().next().find('.select2').select2("destroy").select2();
-        // $('.select2').select2(); 
+        // $('.select2').select2();
         // $('.designation').attr("id","page_navigation1");
         // $(this).parent().find('.levels').val($(this).val());
     });
-    
 
-    
+
+
     $(document).on("change",'.select_level1', function(){
         $('.select_level1 option[value=' + $(this).val() + ']').css('color','red').attr('disabled', 'disabled');
         $(this).next('.levels1').val(this.value);
@@ -354,12 +360,12 @@ $(document).ready(function() {
 
             $("select option").filter(function() {
 
-                return $.inArray($(this).val(), arr) > -1;        
+                return $.inArray($(this).val(), arr) > -1;
             }).attr("disabled", "disabled");
 
         });
 
-       
+
     });
 </script>
 <script>
@@ -406,7 +412,7 @@ $(document).ready(function() {
     });
     $(function() {
         $('.multi-field-wrapper').each(function() {
-           
+
             var $wrapper = $('.multi-fields', this);
 
             $(".add-field", $(this)).click(function(e) {
@@ -415,7 +421,7 @@ $(document).ready(function() {
                     $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper).find('input','select').val('').end()
                         .find(".level_name").html(length + 1).end()
                         .find(".levels").select2("destroy").select2();
-                        
+
                         // .find(".levels").val(length + 1).end();
                     focus();
                 }
@@ -455,7 +461,7 @@ $(document).ready(function() {
                 // $(".append_div_partial").empty();
                 // $(".append_div_partial").append('<tr><td><label>Level-<span class="level_name1">1</span></label><input type="hidden" name="levels[]" class="levels1" value="1"></td><td class="text-center"><select class="form-control levels1" name="approver_designation[]" required><option value="">Select</option>@foreach($designation_edit as $desi)<option  value="{{$desi->id}}">{{$desi->name}}</option>@endforeach</select></td></tr>');
                 var length = $('table.edittable tr:last').index() + 1;
-               
+
                 if (length + 1 <= 11) {
                     $('<tr><td> <select class="form-control select_level1" name="levels[]"> <option value="0">Select</option> @for($i=1;$i<=11;$i++) <option value="<?php echo $i; ?>"><?php echo $i; ?></option> @endfor </select> <input type="hidden" name="levels[]" class="levels1" value="1"> </td><td class="text-center"> <select class="form-control designation1 select2" name="approver_designation[]" multiple required> <option value="">Select</option> @foreach($designation as $desi) <option value="{{$desi['id']}}">{{$desi['name']}}</option> @endforeach </select> </td></tr>').appendTo(".append_div_partial").find('input').val('').end()
                         .find(".level_name1").html("").end();
@@ -473,7 +479,7 @@ $(document).ready(function() {
     });
 
 
-  
+
     function delete_item(id) {
         Swal.fire({
             title: 'Are you sure?',
@@ -522,7 +528,7 @@ $(document).ready(function() {
         });
     }
 
-   
+
     $(document).on('change', '.status', function() {
         var chk = $(this);
         var id = $(this).attr('data-id');
@@ -533,7 +539,7 @@ $(document).ready(function() {
         } else {
             activeStatus = "InActive";
         }
-      
+
 
         Swal.fire({
             title: 'Change Status',
@@ -568,12 +574,12 @@ $(document).ready(function() {
                     );
 
                 }
-            }else {             
+            }else {
                 if (status ==1) {
                     chk.prop('checked', false);
-                  
+
                 } else {
-                   
+
                     chk.prop('checked', true).attr('checked', 'checked');
                 }
             }
@@ -587,7 +593,7 @@ $(document).ready(function() {
                     [10, 25, 50, "All"]
                 ]
             });
-       
+
     $(document).on('input','.search', function() {
             var searchData = $('.search').val();
             $.ajax({
@@ -599,8 +605,8 @@ $(document).ready(function() {
                     searchData: searchData,
                 },
                 success: function(data) {
-                  
-                   
+
+
                    table.clear().draw();
                     $.each(data, function(key, val) {
                         var sNo = key + 1;

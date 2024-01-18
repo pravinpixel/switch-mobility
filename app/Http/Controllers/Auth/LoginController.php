@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
+    public function showLoginIndex()
+    {
+        return view('auth.login');
+    }
+
+
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -31,7 +37,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/login';
+    // protected $redirectTo = '/login';
 
     /**
      * Create a new controller instance.
@@ -43,49 +49,86 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         $this->docController = $docController;
-    }
+            }
+
+    // public function login(Request $request)
+    // {
+    //     $input = $request->all();
+
+    //     $this->validate($request, [
+    //         'username' => 'required',
+    //         'password' => 'required',
+    //     ]);
+
+    //     $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+    //     if (auth()->attempt(array($fieldType => $input['username'], 'password' => $input['password']))) {
+
+
+    //         if (auth()->user()->is_admin == 1) {
+    //             if (Session::get('tempProject')) {
+
+    //                 $content = new Request(['id' => Session::get('tempProject')]);
+
+    //                 $transactionController = app()->make(Doclistings::class);
+    //                 return $transactionController->editDocument($content);
+    //             } else {
+    //                 return redirect()->route('dashboard.index');
+    //             }
+    //         } else {
+    //             if (Session::get('tempProject')) {
+
+    //                 $content = new Request(['id' => Session::get('tempProject')]);
+    //                 $this->docController->editDocument($content);
+    //             } else {
+    //                 return redirect()->route('dashboard.index');
+    //             }
+    //         }
+    //     } else {
+
+    //         // return redirect()->route('dashboard.index');
+    //         //     ->with('error','Email-Address And Password Are Wrong.');
+    //         return redirect()->back()->withErrors('SAP-ID or Password Wrong.');
+    //     }
+    // }
 
     public function login(Request $request)
     {
-
         $input = $request->all();
-
         $this->validate($request, [
             'username' => 'required',
             'password' => 'required',
         ]);
-
         $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-        if (auth()->attempt(array($fieldType => $input['username'], 'password' => $input['password']))) {
-        
 
+        if (auth()->attempt([$fieldType => $input['username'], 'password' => $input['password']])) {
             if (auth()->user()->is_admin == 1) {
-                if (Session::get('tempProject')) {
-                   
-                    $content = new Request(['id' => Session::get('tempProject')]);
-
-                    $transactionController = app()->make(Doclistings::class);
-                    return $transactionController->editDocument($content);
-                    
-                } else {
-                  
-
-                    return redirect()->route('dashboard.index');
-                }
+                return $this->handleAdminLogin();
             } else {
-                if (Session::get('tempProject')) {
-                 
-                    $content = new Request(['id' => Session::get('tempProject')]);
-                    $this->docController->editDocument($content);
-                } else {
-                 
-                    return redirect()->route('dashboard.index');
-                }
+                return $this->handleNonAdminLogin();
             }
         } else {
-            // return redirect()->route('login')
-            //     ->with('error','Email-Address And Password Are Wrong.');
-            return Redirect::back()->withErrors('SAP-ID or Password Wrong.');
+
+            return view('auth.login', ['message' => 'SAP-ID or Password Wrong.']);
+            // return redirect()back()->withErrors('SAP-ID or Password Wrong.');
+        }
+    }
+    protected function handleAdminLogin()
+    {
+        if (Session::get('tempProject')) {
+            $content = new Request(['id' => Session::get('tempProject')]);
+            $transactionController = app()->make(Doclistings::class);
+            return $transactionController->editDocument($content);
+        } else {
+            return redirect()->route('dashboard.index');
+        }
+    }
+    protected function handleNonAdminLogin()
+    {
+        if (Session::get('tempProject')) {
+            $content = new Request(['id' => Session::get('tempProject')]);
+            $this->docController->editDocument($content);
+        } else {
+            return redirect()->route('dashboard.index');
         }
     }
 }

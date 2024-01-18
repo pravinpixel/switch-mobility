@@ -604,16 +604,16 @@
 
         });
         if ($('.add-button-datatable').length) {
-            
+
             // $('.add-button-datatable').find('[data-kt-user-table-toolbar]').find("a").addClass("");
             const toolbarHtml ="<div class='d-flex align-items-center justify-content-end col-sm-4'>"+ $('.add-button-datatable').find('[data-kt-user-table-toolbar]').html()+"</div>";
             if (toolbarHtml) {
                 $('.dataTables_wrapper .header-row').children().addClass("col-sm-4");
                 $('.dataTables_wrapper .header-row').children().removeClass("col-sm-6");
-               
+
               $('.dataTables_wrapper .header-row').append(toolbarHtml);
             }
-           
+
           }
 
     }
@@ -749,16 +749,16 @@
             });
         }
         if ($('.add-button-datatable').length) {
-            
+
             // $('.add-button-datatable').find('[data-kt-user-table-toolbar]').find("a").addClass("");
             const toolbarHtml ="<div class='d-flex align-items-center justify-content-end col-sm-4'>"+ $('.add-button-datatable').find('[data-kt-user-table-toolbar]').html()+"</div>";
             if (toolbarHtml) {
                 $('.dataTables_wrapper .header-row').children().addClass("col-sm-4");
                 $('.dataTables_wrapper .header-row').children().removeClass("col-sm-6");
-               
+
               $('.dataTables_wrapper .header-row').append(toolbarHtml);
             }
-           
+
           }
     });
     $(document).on('blur', '.project_name', function() {
@@ -846,9 +846,13 @@
 @endsection
 <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
 </script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script>
+{{-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> --}}
+
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><script>
     $(document).ready(function() {
         $(".initiator_id").select2({
             dropdownParent: $("#kt_modal_create_campaign")

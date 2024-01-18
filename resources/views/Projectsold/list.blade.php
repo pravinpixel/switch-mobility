@@ -559,9 +559,13 @@
 @endsection
 <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
 </script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script>
+{{-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> --}}
+
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><script>
     $(document).ready(function() {
         $(".initiator_id").select2({
             dropdownParent: $("#kt_modal_create_campaign")
@@ -940,12 +944,12 @@
                 if (WFLevelBtn) {
 
                     for (var wfl = 0; wfl < WFLevelBtn.length; wfl++) {
-                       
+
                         var levelDesignation = WFLevelBtn[wfl].designationId;
 
                         var masterData = WFLevelBtn[wfl].projectMasterData;
                         var projectApprovers = WFLevelBtn[wfl].projectApprovers;
-                     
+
                         var priority = masterData.priority;
                         var due_date = masterData.due_date;
                         console.log(projectApprovers);

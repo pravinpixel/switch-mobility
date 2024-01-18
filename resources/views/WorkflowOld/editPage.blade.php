@@ -146,7 +146,7 @@
                                                 $arrayN=0;
                                                 ?>
                                                 @for($k=0;$k<11;$k++)
-                                                
+
                                                         <div id="kt_ecommerce_add_product_options1">
                                                             <?php $a = 11;
                                                                 $b = $a - 1; ?>
@@ -166,31 +166,31 @@
                                                                         <!--begin::Input-->
                                                                         <div class="col-md-3 fv-row">
                                                                             <select class="form-select mb-2 designation" levelCheck="{{$k + 1}}" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" name="fapprover_designation{{$k+1}}[]">
-                                                                                
+
                                                                                 <?php
                                                                                 // $arrayN=0;
                                                                                 $designLoops=[];
                                                                                 $arrayLength = count($entities);
                                                                                 if ($k+1 == $entities[$arrayN]["levelId"] ) {
-                                                                                    
-                                                                                   
+
+
                                                                                    $designLoops=$entities[$arrayN]["designationId"];
                                                                                    $arrayN = $arrayN + 1;
                                                                                    if ($arrayN == $arrayLength) {
                                                                                        $arrayN=0;
                                                                                     }
-                                                                                  
-                                                                                    
-                                                                                
+
+
+
                                                                                 }
                                                                                 // $option = ['designationId'];
                                                                                 // $selectedAttribute = '';      ?>
-                                                                                
+
                                                                                 @foreach($designationDatas as $designationData)
 
-                                                                               
-                                                                             
-                                        
+
+
+
                                                                                 <option value="{{$designationData->id}}" <?php if (in_array($designationData->id, $designLoops)) {
                                                                                     echo "selected ";
                                                                                 } ?>    >{{$designationData->name}}</option>
@@ -237,8 +237,8 @@
                                         <!--begin::Input group-->
                                         <div class="partialLevelFlow" data-kt-ecommerce-catalog-add-product="auto-options">
                                             <!--begin::Repeater-->
-                                            @for($k=0;$k<count($entities);$k++) 
-                                           
+                                            @for($k=0;$k<count($entities);$k++)
+
                                             <div id="kt_ecommerce_add_product_options1">
                                                 <?php $a = count($entities);
                                                     $b = $a - 1; ?>
@@ -501,28 +501,28 @@ if (checkOption.length != 1) {
     </script>
     <script>
         function DesChange(evt) {
-           
+
           let nameAttr = $(evt).attr("name").match(/\d+/)[0]; //get numbers only here
           let evtValue = $(evt).find('option:selected');
           let evtValueAll = evtValue.map(function() {
             return $(this).val();
           }).get();
-        
+
           let Options = $(`select[levelCheck=${nameAttr}]`).find('option');
-        
+
           $.each(Options, function(i, option) {
             let optionValue = $(option).val();
-        
+
             if (evtValueAll.includes(optionValue)) {
               $(option).attr('selected', true);
-            
+
             } else {
               $(option).removeAttr('selected');
             }
           });
          $(`select[levelCheck=${nameAttr}]`).select2();
         }
-        
+
         </script>
     @endsection
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
@@ -536,8 +536,14 @@ if (checkOption.length != 1) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
 
-    <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script>
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+    <!-- <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script> -->
+
+
+<script data-require="jquery@*" data-semver="3.0.0" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    {{-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> --}}
+
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function() {
             // on form submit
@@ -568,12 +574,12 @@ $(".partialWorkflow select").attr("required");
             console.log("removeLevelRow");
             if ($(this).val()) {
                 $('.addLevel').removeAttr('disabled');
-                
+
             }
 
         });
 
-       
+
         var partialLevelSelect;
         var selectedOptions;
 
@@ -590,17 +596,17 @@ $(".partialWorkflow select").attr("required");
     if (isNaN(evtSetNum)) {
         evtSetNum = false;
     }
-    
+
     if (evtSetNum != false) {
         let emptySelects = $(`select[levelCheck=${evtSetNum}]`).find('option');
 
 $.each(emptySelects, function(i, option) {
 
     $(option).removeAttr('selected');
-  
+
 });
 $(`select[levelCheck=${evtSetNum}]`).select2();
-    }                
+    }
                 $(this).parent().next().find('.designation').attr("name", "approver_designation" + this.value + "[]").end();
             }
 
@@ -618,7 +624,7 @@ $(`select[levelCheck=${evtSetNum}]`).select2();
 
     if (evtValueAll.includes(optionValue)) {
       $(option).attr('selected', true);
-    
+
     } else {
       $(option).removeAttr('selected');
     }
@@ -1096,7 +1102,7 @@ $(`select[levelCheck=${evtSetNum}]`).select2();
             $(".removeBtn").last().remove();
 
             $(e).parent().parent().parent().parent().remove();
-           
+
             $(".Partial-input-container").first().find(".removeBtnsm").css("visibility", "hidden").css("pointer-events", "none");
 
 
@@ -1353,5 +1359,5 @@ $(`select[levelCheck=${evtSetNum}]`).select2();
                 }
             }
         }
-        
+
     </script>

@@ -322,7 +322,7 @@
 
                                     <!--end::Checkbox-->
                                     <!--begin::User=-->
-                                   
+
 
                                     <td class="">
                                         <!--begin:: Avatar -->
@@ -411,7 +411,7 @@
             <!--begin::Modal body-->
             <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
 
-               
+
                 <form id="designation_form" class="form" method="post" enctype="multipart/form-data" action="{{url('employees')}}">
                     @csrf
                     <div class="fv-row mb-7">
@@ -591,8 +591,14 @@
 @endforeach
 
 @endsection
-<script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+<!-- <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script> -->
+
+
+<script data-require="jquery@*" data-semver="3.0.0" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+{{-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> --}}
+
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
         // on form submit

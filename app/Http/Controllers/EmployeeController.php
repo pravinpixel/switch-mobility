@@ -15,6 +15,7 @@ use App\Models\ProjectLevels;
 use App\Models\ReAssignedEmployee;
 use App\Models\User;
 use App\Models\WorkflowLevelDetail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -23,8 +24,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeController extends Controller
 {
-    protected $ProjectController, $workflowController,$email;
-    public function __construct(ProjectController $ProjectController, WorkflowController $workflowController,EmailController $email)
+    protected $ProjectController, $workflowController, $email;
+    public function __construct(ProjectController $ProjectController, WorkflowController $workflowController, EmailController $email)
     {
         $this->ProjectController = $ProjectController;
         $this->workflowController = $workflowController;
@@ -179,7 +180,10 @@ class EmployeeController extends Controller
                     ->orWhere('designations.name', 'LIKE', '%' . $searchData . '%')
                     ->orWhere('departments.name', 'LIKE', '%' . $searchData . '%');
             })
-            ->whereNull('employees.deleted_at')
+            ->where(function ($query) {
+                $query->whereNull('deleted_at')
+                    ->orWhere('delete_flag', 1);
+            })
             ->get();
 
         return response()->json($model);
@@ -187,7 +191,11 @@ class EmployeeController extends Controller
     public function getEmployeeDetailByParams(Request $request)
     {
 
-        $model = Employee::with('user')->where('id', '!=', $request->pkey)->whereNull('employees.deleted_at');
+        $model = Employee::with('user')->where('id', '!=', $request->pkey)
+        ->where(function ($query) {
+            $query->whereNull('deleted_at')
+                ->orWhere('delete_flag', 1);
+        });
         if ($request->fieldname == "sapId") {
             $model->where('sap_id', $request->fieldData);
         }
@@ -220,7 +228,15 @@ class EmployeeController extends Controller
     }
     public function get_all_employee()
     {
-        $models = Employee::with('department', 'designation')->whereNull('deleted_at')->orderBy('id', 'desc')->get();
+        $models = Employee::with('department', 'designation')
+       
+        ->where(function ($query) {
+            $query->whereNull('deleted_at')
+                ->orWhere('delete_flag', 1);
+        })
+        ->orderBy('id', 'desc')
+        ->get();
+   
         $datas = array();
         foreach ($models as $model) {
             $departmentModel = $model->department;
@@ -236,6 +252,7 @@ class EmployeeController extends Controller
             $designationName = $designationModel->name;
             $departmentName = $departmentModel->name;
             $is_active = $model->is_active;
+            $delete_flag = $model->delete_flag;
             $itsDepend = false;
 
 
@@ -248,20 +265,14 @@ class EmployeeController extends Controller
                 $itsDepend = true;
             }
 
-            $response = ['itsDepend' => $itsDepend, 'id' => $id, 'name' => $name, 'profileImage' => $profileImage, 'email' => $email, 'sapId' => $sapId, 'mobile' => $mobile, 'designationName' => $designationName, 'departmentName' => $departmentName, 'is_active' => $is_active];
+            $response = ["deleted_flag"=>$delete_flag,'itsDepend' => $itsDepend, 'id' => $id, 'name' => $name, 'profileImage' => $profileImage, 'email' => $email, 'sapId' => $sapId, 'mobile' => $mobile, 'designationName' => $designationName, 'departmentName' => $departmentName, 'is_active' => $is_active];
 
             Log::info('getemployee response for empId' . $id . " " . json_encode($response));
             array_push($datas, $response);
         }
 
-        $employees = DB::table('employees as e')
-            ->select('e.*', 'd.id as department_id', 'd.name as department_name', 'de.id as designation_id', 'de.name as designation_name', 'e.is_active as employee_status')
-            ->join('departments as d', 'd.id', '=', 'e.department_id')
-            ->join('designations as de', 'de.id', '=', 'e.designation_id')
-            ->whereNull('e.deleted_at')
-
-
-            ->get();
+    
+          
         return  $datas;
     }
 
@@ -277,7 +288,7 @@ class EmployeeController extends Controller
     }
     public function employeeDetailByDesDept(Request $request)
     {
-        $model = Employee::select('employees.id', 'employees.first_name', 'employees.email', 'employees.last_name', 'employees.profile_image', 'employees.mobile', 'employees.is_active', 'employees.sap_id', 'departments.name as deptName', 'designations.name as desgName');
+        $model = Employee::select('employees.id','employees.delete_flag', 'employees.first_name', 'employees.email', 'employees.last_name', 'employees.profile_image', 'employees.mobile', 'employees.is_active', 'employees.sap_id', 'departments.name as deptName', 'designations.name as desgName');
         $model->leftjoin('departments', 'departments.id', '=', 'employees.department_id');
         $model->leftjoin('designations', 'designations.id', '=', 'employees.designation_id');
         if ($request->deptId) {
@@ -286,7 +297,10 @@ class EmployeeController extends Controller
         if ($request->descId) {
             $model->where('designation_id', $request->descId);
         }
-        $model->whereNull('employees.deleted_at');
+        $model->where(function ($query) {
+            $query->whereNull('employees.deleted_at')
+                ->orWhere('delete_flag', 1);
+        });
         $data = $model->get();
         return response()->json($data);
     }
@@ -311,13 +325,19 @@ class EmployeeController extends Controller
         }
 
         if ($request->id == "") {
-            $check_mobile = Employee::where('mobile', $request->mobile)->whereNull('employees.deleted_at')->pluck('id')->first();
+            $check_mobile = Employee::where('mobile', $request->mobile)
+            ->whereNull('employees.deleted_at')
+            ->pluck('id')
+            ->first();
         } else {
             $check_mobile = null;
         }
 
         if ($request->id == "") {
-            $check_sap = Employee::where('sap_id', $request->sap_id)->whereNull('employees.deleted_at')->pluck('id')->first();
+            $check_sap = Employee::where('sap_id', $request->sap_id)
+            ->whereNull('employees.deleted_at')
+            ->pluck('id')
+            ->first();
         } else {
             $check_sap = null;
         }
@@ -395,7 +415,15 @@ class EmployeeController extends Controller
                 "data" => "Reference Data exists, Can’t delete."
             ];
         } else {
-            $model = Employee::where("id", $id)->delete();
+            $model = Employee::where("id", $id)->first();
+            if ($model) {
+                // Update the deleted_at field with the current timestamp
+                $model->deleted_at = Carbon::now();
+                $model->save();
+            
+                // If you want to permanently delete the record, you can use: $model->forceDelete();
+                // $model->forceDelete();
+            }
             $data = [
                 "message" => "Success",
                 "data" => "Employee Deleted Successfully."
@@ -405,8 +433,7 @@ class EmployeeController extends Controller
         return response()->json($data);
 
 
-        $employee_update = Employee::where("id", $id)->delete();
-        echo json_encode($employee_update);
+    
     }
 
     public function changeActiveStatus(Request $request)
@@ -681,13 +708,20 @@ class EmployeeController extends Controller
             $reAssignedEmployeeModel = $this->convertToModelReAssignedEmployee($wfId, $projectId, $level, $type, $oldEmployeeId, $NewEmployeeId);
         }
         $projectWiseEmployees = $this->ProjectController->getRunningProjectsEmployeesByEmpId($oldEmployeeId);
+       // dd($projectWiseEmployees);
         Log::info("Get projectWiseEmployees  By Emp id " . json_encode($projectWiseEmployees));
         $projectIdArrays = [];
         foreach ($projectWiseEmployees as $projectWiseEmployee) {
+
             $projectModel = $this->ProjectController->getProjectDetailsByPrimaryId($projectWiseEmployee->project_id);
+
+            Log::info("reAssignEmployeeUpdate  By get projectModel " . json_encode($projectModel));
+
+
             $wfId = "";
             $level = $projectWiseEmployee->level;
             $projectId = $projectWiseEmployee->project_id;
+            Log::info("reAssignEmployeeUpdate  By projectId " . json_encode($projectId) . " And level " . $level);
             array_push($projectIdArrays, $projectId);
             if ($projectModel) {
                 $wfId = $projectModel->workflow_id;
@@ -698,13 +732,19 @@ class EmployeeController extends Controller
             }
 
             if ($projectWiseEmployee->type == 1) {
+                if ($projectModel->initiator_id |= $NewEmployeeId) {
+                    $projectModel->initiator_id = $NewEmployeeId;
+                    $projectModel->save();
+                }
                 $type = "Initiator";
+                Log::info("reAssignEmployeeUpdate  By get type  " . json_encode($type));
 
                 $updateProjectEmployee =  $this->updateProjectEmployees($projectWiseEmployee->id, $NewEmployeeId);
                 $updateProjectApprover =  $this->updateProjectApprovers($projectWiseEmployee->project_id, $projectWiseEmployee->level, $NewEmployeeId);
             }
             if ($projectWiseEmployee->type == 2) {
                 $type = "Approver";
+                Log::info("reAssignEmployeeUpdate  By get type  " . json_encode($type));
                 if ($toAllowType == 2) {
                     $updateProjectEmployee =  $this->updateProjectEmployees($projectWiseEmployee->id, $NewEmployeeId);
                     $updateProjectApprover =  $this->updateProjectApprovers($projectWiseEmployee->project_id, $projectWiseEmployee->level, $NewEmployeeId);
@@ -726,7 +766,10 @@ class EmployeeController extends Controller
         Log::info("Get employeeModel  By Emp id " . json_encode($employeeModel));
         if ($employeeModel) {
             if ($actionType == "delete") {
-                $employeeModel->delete();
+                $employeeModel->deleted_at = Carbon::now();
+                $employeeModel->deleted_flag =1;
+                $employeeModel->save();
+               
             }
             if ($actionType == "status") {
                 $employeeModel->is_active = 0;
@@ -735,7 +778,7 @@ class EmployeeController extends Controller
         }
         Log::info("Get projectIdArrays " . json_encode($projectIdArrays));
         Log::info("Get NewEmployeeId " . json_encode($NewEmployeeId));
-       
+
         return redirect()->route('employees.index')->with('success', 'Re-Assigned Employee has been updating.');
     }
 
@@ -744,7 +787,7 @@ class EmployeeController extends Controller
         Log::info("Get reAssignEmployeeSendmail allProjectIds" . json_encode($allProjectIds));
         Log::info("Get reAssignEmployeeSendmail employeeId" . json_encode($employeeId));
         $projectIds = array_unique($allProjectIds);
-        $email = $this->email->reAssignEmployeeEmail($employeeId,$projectIds);
+        $email = $this->email->reAssignEmployeeEmail($employeeId, $projectIds);
         return $email;
     }
 

@@ -128,15 +128,16 @@ class BasicController extends Controller
 
             $models = ProjectEmployee::with('employee')
                 ->where('project_id', $projectModel->id)
-               // ->where('type', 2)
+                // ->where('type', 2)
                 ->groupBy('employee_id')
                 ->get();
 
 
             foreach ($models as $model) {
                 $employee = $model['employee'];
-
-                array_push($employeeArray, $employee->id);
+                if ($employee) {
+                    array_push($employeeArray, $employee->id);
+                }
             }
         }
         $employeeIds = array_unique($employeeArray);

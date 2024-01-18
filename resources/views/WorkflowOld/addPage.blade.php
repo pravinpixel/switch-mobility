@@ -329,7 +329,7 @@ function DesChange(evt) {
 
     if (evtValueAll.includes(optionValue)) {
       $(option).attr('selected', true);
-    
+
     } else {
       $(option).removeAttr('selected');
     }
@@ -350,8 +350,14 @@ function DesChange(evt) {
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
 
-<script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+<!-- <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script> -->
+
+
+<script data-require="jquery@*" data-semver="3.0.0" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+{{-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> --}}
+
+
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script>
     function resetForm() {
         console.log("wrt");
@@ -359,13 +365,13 @@ function DesChange(evt) {
        $('.workflow_name').val('');
         $('.designation').val('').trigger('change');
        let remo= $('.partial-input-container').not(':first');
-         $.each(remo, function (indexInArray, reo) { 
+         $.each(remo, function (indexInArray, reo) {
              $(reo).remove();
          });
         $(".partialWorkflow select option").removeAttr('selected');
         $(".partialWorkflow select option:first-child").attr('selected','true');
         $(".partialWorkflow select option").show();
-      
+
     }
     $(document).ready(function() {
         // on form submit
@@ -451,21 +457,21 @@ $(".partialWorkflow select").attr("required");
     if (isNaN(evtSetNum)) {
         evtSetNum = false;
     }
-    
+
     if (evtSetNum != false) {
         let emptySelects = $(`select[levelCheck=${evtSetNum}]`).find('option');
 
 $.each(emptySelects, function(i, option) {
 
     $(option).removeAttr('selected');
-  
+
 });
 $(`select[levelCheck=${evtSetNum}]`).select2();
     }
             $(this).parent().next().find('.designation').attr("name", "approver_designation" + this.value + "[]").end();
         }
 
-       
+
     let evt=$(this).parent().next().find('.designation');
         let nameAttr = $(evt).attr("name").match(/\d+/)[0]; //get numbers only here
   let evtValue = $(evt).find('option:selected');
@@ -480,7 +486,7 @@ $(`select[levelCheck=${evtSetNum}]`).select2();
 
     if (evtValueAll.includes(optionValue)) {
       $(option).attr('selected', true);
-    
+
     } else {
       $(option).removeAttr('selected');
     }

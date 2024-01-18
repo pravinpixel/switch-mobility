@@ -14,6 +14,7 @@ class Kernel extends HttpKernel
      * @var array<int, class-string|string>
      */
     protected $middleware = [
+        \App\Http\Middleware\ContentTypeOptions::class,
         // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
         \Fruitcake\Cors\HandleCors::class,
@@ -24,9 +25,8 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\SessionTimeoutRedirect::class,
         //new changes
         \App\Http\Middleware\FrameGuard::class,
-        \App\Http\Middleware\ContentTypeOptions::class,
         \App\Http\Middleware\RemovePoweredByHeader::class,
-        \App\Http\Middleware\AddPermissionsPolicyHeader::class,
+        //\App\Http\Middleware\AddPermissionsPolicyHeader::class,
         // \App\Http\Middleware\ContentSecurityPolicy::class,
     ];
 
@@ -77,5 +77,6 @@ class Kernel extends HttpKernel
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
+        // 'force_login' => \App\Http\Middleware\ForceLoginMiddleware::class,
     ];
 }

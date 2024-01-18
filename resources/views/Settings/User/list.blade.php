@@ -116,29 +116,7 @@
                             <!--begin::Table body-->
                             <tbody class="text-gray-600 fw-semibold">
                                 <!--begin::Table row-->
-                                @foreach ($models as $key => $d)
-                                <tr>
-                                    <!--begin::Checkbox-->
 
-                                    <!--end::Checkbox-->
-                                    <!--begin::User=-->
-
-
-                                    <td>{{ $d['name'] }} </td>
-                                    <td class="text-end">
-                                        @if (auth()->user()->is_super_admin == 1 ||auth()->user()->can('user-edit'))
-                                        <a class="editPage" style="display:inline;cursor: pointer;" id="{{ $d['id'] }}" title="Edit User"><i class="fa-solid fa-pen" style="color:orange"></i></a>
-
-
-                                        @endif
-                                        @if (auth()->user()->is_super_admin == 1 || auth()->user()->can('user-delete'))
-                                        <div onclick="delete_item(<?php echo $d['id']; ?>);" style="display:inline;cursor: pointer; margin-left: 10px;" id="{{ $d['id'] }}" class="" title="Delete User"><i class="fa-solid fa-trash" style="color:red"></i></div>
-
-
-                                        @endif
-                                    </td>
-                                </tr>
-                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -153,9 +131,15 @@
 @endsection
 <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
 </script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
+{{-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> --}}
+
+
+{{-- <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+ --}}
+
 <script>
     $(document).ready(function() {
+        userList();
         // on form submit
         $(".initiator_id").select2({
             dropdownParent: $("#kt_modal_add_user")
@@ -199,7 +183,7 @@
                                 $(".sapId,.name,.mobile,.email").val("");
                             } else {
                                 $('.submit').prop('disabled', false);
-                                var name = data.first_name + " "+data.middle_name+ " " + data.last_name;
+                                var name = data.first_name + " " + data.middle_name + " " + data.last_name;
                                 $(".name").val(name);
 
                                 $(".mobile").val(data.mobile);
@@ -290,7 +274,61 @@
 
     });
 
+    function userList() {
+        // return false;
+ var table = $('#service_table').DataTable();
 
+    // Destroy the existing DataTable instance
+    if ($.fn.DataTable.isDataTable('#service_table')) {
+        table.destroy();
+    }
+
+    // Reinitialize DataTable
+    table = $('#service_table').DataTable({
+        "paging": true, // Change as needed
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+    });
+        $.ajax({
+            url: "{{ url('userIndex') }}",
+            type: 'ajax',
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+
+            },
+            success: function(result) {
+                var data = result;
+                table.clear().draw();
+                $.each(data, function(key, val) {
+
+
+                    var sNo = key + 1;
+                    var id = val.id;
+                    var name = val.name;
+                    var editurl = '{{ route("users.edit", ":id") }}';
+                    editurl = editurl.replace(':id', id);
+                    var editBtn = ('<a class="editPage" style="display:inline;cursor: pointer;" id="' + id + '" title="Edit User"><i class="fa-solid fa-pen" style="color:orange"></i></a>');
+                    var deleteBtn = (
+                        '<div id="' + id + '"  class="deleteEmployee"  style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete User"><i class="fa-solid fa-trash" style="color:red"></i></div>'
+                    );
+                    var Action = (editBtn + deleteBtn);
+                    table.row.add([name, Action]).draw();
+                });
+                // if (result) {
+                //     window.location.reload();
+                // }
+            }
+        });
+
+    }
+    $(document).on('click', '.deleteEmployee', function() {
+        var id = $(this).attr('id');
+        delete_item(id);
+    });
 
     function delete_item(id) {
         Swal.fire({
