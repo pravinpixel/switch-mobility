@@ -57,7 +57,7 @@
                         {{ session('error') }}
                     </div>
                     @endif
-                    <div class="card-header border-0 pt-6 add-button-datatable">
+                    <div class="card-header border-0 pt-6">
 
                         <div class="card-title">
 
