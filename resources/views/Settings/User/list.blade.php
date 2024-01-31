@@ -57,7 +57,7 @@
                         {{ session('error') }}
                     </div>
                     @endif
-                    <div class="card-header border-0 pt-6">
+                    <div class="card-header border-0 pt-6 add-button-datatable">
 
                         <div class="card-title">
 
@@ -129,13 +129,14 @@
 
 
 @endsection
-<script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
-</script>
+{{-- <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
+</script> --}}
+<script data-require="jquery@*" data-semver="3.0.0" src="https://code.jquery.com/jquery-3.7.1.js"></script>
 {{-- <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script> --}}
 
 
-{{-- <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
- --}}
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
 
 <script>
     $(document).ready(function() {
@@ -279,19 +280,19 @@
  var table = $('#service_table').DataTable();
 
     // Destroy the existing DataTable instance
-    if ($.fn.DataTable.isDataTable('#service_table')) {
-        table.destroy();
-    }
+    // if ($.fn.DataTable.isDataTable('#service_table')) {
+    //     table.destroy();
+    // }
 
-    // Reinitialize DataTable
-    table = $('#service_table').DataTable({
-        "paging": true, // Change as needed
-        "lengthChange": true,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-    });
+    // // Reinitialize DataTable
+    // table = $('#service_table').DataTable({
+    //     "paging": true, // Change as needed
+    //     "lengthChange": true,
+    //     "searching": true,
+    //     "ordering": true,
+    //     "info": true,
+    //     "autoWidth": false,
+    // });
         $.ajax({
             url: "{{ url('userIndex') }}",
             type: 'ajax',
