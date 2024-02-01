@@ -641,7 +641,7 @@
 
             console.log("File size: " + fileSize);
 
-            if (fileSize > 5 * 1024) {
+            if (fileSize > 100 * 1024) {
                 raiseAlert('signImageAlert', 'Sign Image', 'largeSize');
                 $('#signImageAlert').attr('dataAdded', "error");
             } else {
@@ -897,7 +897,7 @@
         } else if (alertType == "Incorrect") {
             document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Incorrect Format*';
         } else if (alertType == "largeSize") {
-            document.getElementById(alertfieldIdName).innerHTML = 'Only Allow 5kb*';
+            document.getElementById(alertfieldIdName).innerHTML = 'Only Allow 100kb*';
         } else {
             document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Exist*';
         }
