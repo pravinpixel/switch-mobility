@@ -102,7 +102,7 @@ class BasicController extends Controller
             return $transactionController->editDocument($content);
         } else {
 
-            return redirect()->route('login',);
+            return redirect()->to('/');
         }
     }
 

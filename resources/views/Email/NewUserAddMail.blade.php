@@ -9,7 +9,7 @@
     
 </head>
 @php
-$url = url('login');
+$url = url('/');
 @endphp
 <body>
     <div>Hello <b> {{$empName}}</b>,
