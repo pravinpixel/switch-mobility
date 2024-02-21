@@ -26,8 +26,9 @@ class Kernel extends HttpKernel
         //new changes
         \App\Http\Middleware\FrameGuard::class,
         \App\Http\Middleware\RemovePoweredByHeader::class,
-        //\App\Http\Middleware\AddPermissionsPolicyHeader::class,
+        // \App\Http\Middleware\AddPermissionsPolicyHeader::class,
         // \App\Http\Middleware\ContentSecurityPolicy::class,
+        \Spatie\Csp\AddCspHeaders::class,
     ];
 
     /**

@@ -19,17 +19,17 @@
     <meta property="og:url" content="https://keenthemes.com/metronic" />
     <meta property="og:site_name" content="Keenthemes | Metronic" />
     <!-- img-src 'self' data: https://images/;  default-src 'self'; -->
-    <meta http-equiv="Content-Security-Policy"
-        content="
-  
-    script-src 'self' 'unsafe-inline'  https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/ https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js https://code.jquery.com/jquery-3.3.1.slim.min.js https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js https://cdn.datatables.net/ https://ajax.googleapis.com/ https://unpkg.com;
+    {{-- <meta http-equiv="Content-Security-Policy"
+        content=" --}}
+
+    {{-- script-src 'self' 'unsafe-inline'  https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/ https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js https://code.jquery.com/jquery-3.3.1.slim.min.js https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js https://cdn.datatables.net/ https://ajax.googleapis.com/ https://unpkg.com; --}}
     {{-- script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/ https://cdn.datatables.net/ https://ajax.googleapis.com/ https://unpkg.com; --}}
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/css https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/ 'unsafe-inline' 'self';
+    {{-- style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/css https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/ 'unsafe-inline' 'self';
     connect-src 'self';
     font-src 'self' https://fonts.gstatic.com/ data:;
     frame-src 'none';
     object-src 'none';
-" />
+" /> --}}
     <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
     <link rel="shortcut icon" href="{{ asset('assets/media/logos/limage.png') }}" />
     <!--begin::Fonts(mandatory for all pages)-->

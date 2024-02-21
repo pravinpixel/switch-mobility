@@ -63,7 +63,7 @@
                       <div class="card-body py-4">
                           <form id="department_form" class="form" method="post" action="{{ url('users') }}">
                               @csrf
-                          
+
                               <!-- <input type="hidden" value="" name='id' class="id"> -->
                               <div class="row g-9 mb-7">
                                   <!--begin::Col-->
@@ -138,8 +138,7 @@
                                       <label class="required fs-6 fw-semibold mb-2">Password</label>
                                       <!--end::Label-->
                                       <!--begin::Input-->
-                                      <input class="form-control form-control password" placeholder="Enter Password" name="password" required />
-                                      <!--end::Input-->
+                                      <input class="form-control form-control password" id="password" placeholder="Enter Password" name="password" required />
                                       <p id="passwordAlert" class="notifyAlert"></p>
                                   </div>
                                   <!--end::Col-->
@@ -356,7 +355,7 @@
           console.log(roleError);
           console.log(passwordError);
           console.log(cpasswordError);
-       
+
           var cpasswordMissmatch = true;
           if (cpassword) {
               if (password != cpassword) {
@@ -393,5 +392,21 @@
           document.getElementById(alertName).style.display = "none";
           return true;
       }
+      $(document).on('input', '.password', function() {
+        validatePassword($(this).val().trim());
+    });
+
+    function validatePassword(password) {
+        var passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+        if (passwordRegex.test(password)) {
+            $('#passwordAlert').hide();
+            $('.submitBtn').removeAttr('disabled');
+        } else {
+            $('#passwordAlert').show().text('Password must be 8 characters long and contain at least 1 uppercase letter, 1 number, and 1 special character');
+            $('#passwordAlert').css('color', 'red');
+            $('.submitBtn').attr('disabled', 'true');
+        }
+    }
   </script>
   @endsection
