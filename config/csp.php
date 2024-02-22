@@ -7,43 +7,43 @@ return [
      * any class that extends `Spatie\Csp\Policies\Policy`
      */
     'policy' => [
-        'default-src' => [
-            'self',
-            // Add other allowed sources here
-        ],
-        'script-src' => [
-            'self',
-            'unsafe-inline',
-            'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/',
-            'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js',
-            'https://code.jquery.com/jquery-3.3.1.slim.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js',
-            'https://cdn.datatables.net/',
-            'https://ajax.googleapis.com/',
-            'https://unpkg.com',
-        ],
-        'style-src' => [
-            'self',
-            'unsafe-inline',
-            'https://fonts.googleapis.com/css',
-            'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/',
-            'unsafe-inline',
-            'self',
-        ],
-        'connect-src' => [
-            'self',
-        ],
-        'font-src' => [
-            'self',
-            'https://fonts.gstatic.com/',
-            'data:',
-        ],
-        'frame-src' => [
-            'none',
-        ],
-        'object-src' => [
-            'none',
-        ],
+        // 'default-src' => [
+        //     'self',
+        //     // Add other allowed sources here
+        // ],
+        // 'script-src' => [
+        //     'self',
+        //     'unsafe-inline',
+        //     'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/',
+        //     'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js',
+        //     'https://code.jquery.com/jquery-3.3.1.slim.min.js',
+        //     'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js',
+        //     'https://cdn.datatables.net/',
+        //     'https://ajax.googleapis.com/',
+        //     'https://unpkg.com',
+        // ],
+        // 'style-src' => [
+        //     'self',
+        //     'unsafe-inline',
+        //     'https://fonts.googleapis.com/css',
+        //     'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/',
+        //     'unsafe-inline',
+        //     'self',
+        // ],
+        // 'connect-src' => [
+        //     'self',
+        // ],
+        // 'font-src' => [
+        //     'self',
+        //     'https://fonts.gstatic.com/',
+        //     'data:',
+        // ],
+        // 'frame-src' => [
+        //     'none',
+        // ],
+        // 'object-src' => [
+        //     'none',
+        // ],
         // Add other directives as needed
     ],
 
