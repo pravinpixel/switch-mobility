@@ -93,14 +93,20 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+        $encryptedUsername = $request->input('username');
+        $encryptedUserPassword = $request->input('password');
+        $decodedUserName = base64_decode($encryptedUsername);
+        $decodedUserPassword = base64_decode($encryptedUserPassword);
+    
         $input = $request->all();
         $this->validate($request, [
             'username' => 'required',
             'password' => 'required',
         ]);
+
         $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        if (auth()->attempt([$fieldType => $input['username'], 'password' => $input['password']])) {
+        if (auth()->attempt([$fieldType => $decodedUserName, 'password' =>  $decodedUserPassword])) {
             if (auth()->user()->is_admin == 1) {
                 return $this->handleAdminLogin();
             } else {
