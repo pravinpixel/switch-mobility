@@ -7,13 +7,57 @@
 
 .sw_container {
   width: 100%;
-  height: 100vh;
+  height: auto;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
-  background: url("../media/logos/loginbg1.jpg") bottom center;
+  background: url("../media/logos/loginbg1.jpg") top center;
   background-size: cover;
+  
 }
+
+.app-blank .my-form { 
+  padding-left: 10%;
+}
+
+.app-blank .form-back { 
+  background-color:transparent;
+}
+
+.app-blank .form-input{ 
+  background-color:transparent;box-shadow: none;padding:0px;
+}
+
+.app-blank .single-input input{ 
+  height:40px;
+}
+
+.app-blank .single-input{ 
+  border:0px;
+}
+
+.main-frm {
+  background: #4f5bfd;border-radius:30px;
+  padding: 50px; 
+}
+
+.app-blank .submit-btn input {
+  background-color: #00c389;
+  margin: 20px 30px 0 30px;
+  font-weight: 600;
+  font-family: Inter, Helvetica, sans-serif;
+  font-size: 17px;
+  letter-spacing: 1px;
+  padding: 8px;
+transition:all 0.5s ease; 
+}
+
+.app-blank .submit-btn input:hover {
+  background-color: #000;
+transition:all 0.5s ease;  
+}
+
+.main-dtls{}
 
 .my-form {
   /* background: #fff; */
@@ -95,7 +139,7 @@
   width: 270px;
   height: auto;
   border-radius: 15px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .form-back {
