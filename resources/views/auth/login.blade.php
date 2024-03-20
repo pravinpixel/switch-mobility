@@ -5,7 +5,7 @@
         <div class="form-div">
         <div class="main-frm">
             <a href="{{  url('/') }}" class="mb-7">
-                <img src="http://192.168.0.56/switchmobility/public/assets/media/logos/logo.jpg" class="logo" alt="Switch">
+                <img src="https://onlineapproval.switchmobilityev.com/assets/media/logos/logo.jpg" class="logo" alt="Switch">
             </a>
             <form class="form w-100" method="POST" action="{{ url('login') }}" onsubmit="encryptUsername(); encryptPassword();">
                 @csrf
