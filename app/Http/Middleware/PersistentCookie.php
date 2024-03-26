@@ -7,7 +7,7 @@ class PersistentCookie
     public function handle($request, Closure $next)
     {
         // Set a persistent cookie expiring in one week
-        $cookie = Cookie::make('example_cookie', 'cookie_value', 60 * 24 * 7);
+        $cookie = Cookie::make('example_cookie', 'cookie_value', 60 * 24 * 7, '/', null, true, true);
         // Attach the cookie to the response
         return $next($request)->withCookie($cookie);
     }
