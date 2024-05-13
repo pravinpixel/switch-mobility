@@ -57,14 +57,16 @@ class WorkflowController extends Controller
     }
     public function changeWorkflowActiveStatus(Request $request)
     {
-        $model = DocumentType::where('workflow_id', $request->id)->where('is_active', 1)->first();
+        $id = $request->id;
+        $status = $request->status;
+        $model = DocumentType::where('workflow_id', $id)->where('is_active', 1)->first();
         if ($model) {
             $data = [
                 "message" => "Failed",
                 "data" => "Reference Data exists, Can’t delete."
             ];
         } else {
-            $model = Workflow::where("id", $request->id)->update(["is_active" => $request->status]);
+            $model = Workflow::where("id", $id)->update(["is_active" => $status]);
 
             $workflow = Workflow::whereNull('deleted_at')->get()->toArray();
             $data = [
@@ -239,37 +241,111 @@ class WorkflowController extends Controller
         });
         return view('Workflow/editPage', compact('designationDatas', 'entities', 'modelWorkflow', 'employeeDatas'));
     }
-    public function get_all_workflow()
-    {
-        $workflow = DB::table('workflows as w')
-            ->select('*', 'wl.id as work_level_id', 'd.name as designation')
-            ->join('workflow_levels as wl', 'wl.workflow_id', '=', 'w.id')
-            ->join('designations as d', 'd.id', '=', 'wl.approver_designation')
-            ->get();
+    // public function get_all_workflow()
+    // {
+    //     $workflow = DB::table('workflows as w')
+    //         ->select('*', 'wl.id as work_level_id', 'd.name as designation')
+    //         ->join('workflow_levels as wl', 'wl.workflow_id', '=', 'w.id')
+    //         ->join('designations as d', 'd.id', '=', 'wl.approver_designation')
+    //         ->get();
+    //     return $workflow;
+    // }
 
-        return $workflow;
-    }
+    // public function store(Request $request)
+    // {
+
+    //     $input = $request->all();
+
+
+    //     if (!$request->workflow_id) {
+    //         if ($input['workflow_type'] == 1) {
+    //             $levels = array();
+    //             for ($i = 1; $i < 12; $i++) {
+    //                 array_push($levels, $i);
+    //             }
+    //             $input['levels'] = $levels;
+    //         }
+    //     }
+    //     if ($request->workflow_id) {
+    //         $id = $request->workflow_id;
+    //         Workflowlevels::where('workflow_id', $request->workflow_id)->delete();
+    //         WorkflowLevelDetail::where('workflow_id', $request->workflow_id)->delete();
+    //         Workflow::where('id', $id)->update(['workflow_code' => $input['workflow_code'], 'workflow_name' => $input['workflow_name'], 'workflow_type' => $input['workflow_type'] ? 1 : 0, 'total_levels' => count($input['levels'])]);
+    //     } else {
+    //         $workflow = new Workflow();
+    //         $workflow->workflow_code = $input['workflow_code'];
+    //         $workflow->workflow_name = $input['workflow_name'];
+    //         $workflow->workflow_type = $input['workflow_type'] ? 1 : 0;
+    //         $workflow->total_levels = count($input['levels']);
+    //         $workflow->is_active = 1;
+    //         $workflow->save();
+    //         $id = $workflow->id;
+    //     }
+    //     if ($id) {
+    //         foreach ($input['levels'] as $levels) {
+    //             if ($levels != 0) {
+    //                 $workflow_levels = new Workflowlevels();
+    //                 $workflow_levels->workflow_id = $id;
+    //                 $workflow_levels->levels = $levels;
+    //                 $workflow_levels->is_active = 1;
+    //                 $workflow_levels->save();
+    //                 if ($input['workflow_type'] == 1) {
+    //                     $totDesignation = $input['fapprover_designation' . $levels];
+    //                 } else {
+    //                     $totDesignation = $input['approver_designation' . $levels];
+    //                 }
+    //                 for ($j = 0; $j < count($totDesignation); $j++) {
+    //                     Log::info('WorkflowController->Store:-level ' . json_encode($levels));
+    //                     if ($input['workflow_type'] == 1) {
+    //                         Log::info('WorkflowController->Store:-Level With fApprover designation  ' . json_encode($input['fapprover_designation' . $levels][$j]));
+    //                     } else {
+    //                         Log::info('WorkflowController->Store:-Level With Approver designation  ' . json_encode($input['approver_designation' . $levels][$j]));
+    //                     }
+
+
+
+    //                     $workflow_level_details = new WorkflowLevelDetail();
+    //                     $workflow_level_details->workflow_id = $id;
+    //                     $workflow_level_details->workflow_level_id = $workflow_levels->id;
+    //                     if ($input['workflow_type'] == 1) {
+    //                         $workflow_level_details->employee_id = $input['fapprover_designation' . $levels][$j];
+    //                     } else {
+    //                         $workflow_level_details->employee_id = $input['approver_designation' . $levels][$j];
+    //                     }
+
+
+    //                     $workflow_level_details->save();
+    //                 }
+    //             }
+    //         }
+    //         return redirect('workflow')->with('success', "Work Flow Stored successfully.");
+    //     } else {
+    //         return redirect()->back()->withErrors(['error' => ['Insert Error']]);
+    //     }
+    // }
 
     public function store(Request $request)
     {
-
         $input = $request->all();
-        //  dd($input);
-
+       
         if (!$request->workflow_id) {
             if ($input['workflow_type'] == 1) {
-                $levels = array();
-                for ($i = 1; $i < 12; $i++) {
-                    array_push($levels, $i);
-                }
+                $levels = range(1, 11);
                 $input['levels'] = $levels;
             }
         }
         if ($request->workflow_id) {
             $id = $request->workflow_id;
-            Workflowlevels::where('workflow_id', $request->workflow_id)->delete();
-            WorkflowLevelDetail::where('workflow_id', $request->workflow_id)->delete();
-            Workflow::where('id', $id)->update(['workflow_code' => $input['workflow_code'], 'workflow_name' => $input['workflow_name'], 'workflow_type' => $input['workflow_type'] ? 1 : 0, 'total_levels' => count($input['levels'])]);
+            DB::transaction(function () use ($id, $input) {
+                Workflowlevels::where('workflow_id', $id)->delete();
+                WorkflowLevelDetail::where('workflow_id', $id)->delete();
+                Workflow::where('id', $id)->update([
+                    'workflow_code' => $input['workflow_code'],
+                    'workflow_name' => $input['workflow_name'],
+                    'workflow_type' => $input['workflow_type'] ? 1 : 0,
+                    'total_levels' => count($input['levels'])
+                ]);
+            });
         } else {
             $workflow = new Workflow();
             $workflow->workflow_code = $input['workflow_code'];
@@ -281,44 +357,25 @@ class WorkflowController extends Controller
             $id = $workflow->id;
         }
         if ($id) {
-            foreach ($input['levels'] as $levels) {
-                if ($levels != 0) {
+            foreach ($input['levels'] as $level) {
+                if ($level != 0) {
                     $workflow_levels = new Workflowlevels();
                     $workflow_levels->workflow_id = $id;
-                    $workflow_levels->levels = $levels;
+                    $workflow_levels->levels = $level;
                     $workflow_levels->is_active = 1;
                     $workflow_levels->save();
-                    if ($input['workflow_type'] == 1) {
-                        $totDesignation = $input['fapprover_designation' . $levels];
-                    } else {
-                        $totDesignation = $input['approver_designation' . $levels];
-                    }
-                    for ($j = 0; $j < count($totDesignation); $j++) {
-                        Log::info('WorkflowController->Store:-level ' . json_encode($levels));
-                        if ($input['workflow_type'] == 1) {
-                            Log::info('WorkflowController->Store:-Level With fApprover designation  ' . json_encode($input['fapprover_designation' . $levels][$j]));
-                        } else {
-                            Log::info('WorkflowController->Store:-Level With Approver designation  ' . json_encode($input['approver_designation' . $levels][$j]));
-                        }
-
-
-
+                    $designationKey = ($input['workflow_type'] == 1) ? 'fapprover_designation' : 'approver_designation';
+                    foreach ($input[$designationKey . $level] as $employeeId) {
                         $workflow_level_details = new WorkflowLevelDetail();
                         $workflow_level_details->workflow_id = $id;
                         $workflow_level_details->workflow_level_id = $workflow_levels->id;
-                        if ($input['workflow_type'] == 1) {
-                            $workflow_level_details->employee_id = $input['fapprover_designation' . $levels][$j];
-                        } else {
-                            $workflow_level_details->employee_id = $input['approver_designation' . $levels][$j];
-                        }
-
-
+                        $workflow_level_details->employee_id = $employeeId;
                         $workflow_level_details->save();
                     }
                 }
             }
             return redirect('workflow')->with('success', "Work Flow Stored successfully.");
-        } else {
+        } else { 
             return redirect()->back()->withErrors(['error' => ['Insert Error']]);
         }
     }

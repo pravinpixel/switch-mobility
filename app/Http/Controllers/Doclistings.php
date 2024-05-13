@@ -164,7 +164,7 @@ class Doclistings extends Controller
 
     public function getDocumentListData()
     {
-       
+
         $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
 
         $models = Project::with('workflow', 'employee', 'employee.department', 'projectEmployees');
@@ -1530,46 +1530,59 @@ class Doclistings extends Controller
         return $model;
     }
     public function getProjectByWorkflow(Request $request)
-    {
-        $wfId = $request->workflow;
-
-        $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
-
-
-        $models = Project::with('employee', 'employee.department', 'projectEmployees', 'workflow');
-        if ($empId) {
-            $models->whereHas('projectEmployees', function ($q) use ($empId) {
-                if ($empId != "") {
-                    $q->where('employee_id', '=', $empId);
-                }
-            });
-        }
-        if ($wfId) {
-            $models->whereHas('workflow', function ($q1) use ($wfId) {
-
-                $q1->where('workflow_id', '=', $wfId);
-            });
-        }
-        $models->whereNull('deleted_at');
-        $models1 = $models->get();
-
-        $entities = collect($models1)->map(function ($model) {
-
-            $ticket_no = $model->ticket_no;
-            $projectName = $model->project_name . ' & ' . $model->project_code;
-            $workflowModel = $model->workflow;
-            $workflowName = $workflowModel->workflow_name . ' & ' . $workflowModel->workflow_code;
-            $employeeModel = $model->employee;
-            $initiaterName = $employeeModel->first_name . ' ' . $employeeModel->middle_name . ' ' . $employeeModel->last_name;
-            $departmentModel = $employeeModel->department;
-            $department = $departmentModel->name;
-            $projectStartDate = formatDateInActualView($model->start_date);
-            $projectEndDate = formatDateInActualView($model->end_date);
-
-            $response = ['startDate' => $projectStartDate, 'endDate' => $projectEndDate, 'projectId' => $model->id, 'department' => $department, 'ticketNo' => $ticket_no, 'projectName' => $projectName, 'workflowName' => $workflowName, 'initiaterName' => $initiaterName];
-            return $response;
+{
+    // Extract request parameters
+    $wfId = $request->input('workflow');
+    // Get authenticated employee ID
+    $empId = Auth::user()->emp_id ?? '';
+    // Initialize query builder
+    $models = Project::with('employee', 'employee.department', 'projectEmployees', 'workflow');
+    // Apply filters based on employee ID
+    if ($empId) {
+        $models->whereHas('projectEmployees', function ($q) use ($empId) {
+            $q->where('employee_id', '=', $empId);
         });
-        return response()->json(['datas' => $entities]);
+    }
+    // Apply filter based on workflow ID
+    if ($wfId) {
+        $models->whereHas('workflow', function ($q1) use ($wfId) {
+            $q1->where('workflow_id', '=', $wfId);
+        });
+    }
+   
+    $projects = $models->whereNull('deleted_at')->get();
+  
+    $entities = collect($projects)->map(function ($project) {
+        $ticketNo = $project->ticket_no;
+        $projectName = $project->project_name . ' & ' . $project->project_code;
+        $workflowModel = $project->workflow;
+        $workflowName = $workflowModel->workflow_name . ' & ' . $workflowModel->workflow_code;
+        $employeeModel = $project->employee;
+        $initiaterName = $employeeModel->first_name . ' ' . $employeeModel->middle_name . ' ' . $employeeModel->last_name;
+        $departmentModel = $employeeModel->department;
+        $department = $departmentModel->name;
+        $projectStartDate = $this->formatDateInActualView($project->start_date);
+        $projectEndDate =  $this->formatDateInActualView($project->end_date);
+        return [
+            'startDate' => $projectStartDate,
+            'endDate' => $projectEndDate,
+            'projectId' => $project->id,
+            'department' => $department,
+            'ticketNo' => $ticketNo,
+            'projectName' => $projectName,
+            'workflowName' => $workflowName,
+            'initiaterName' => $initiaterName
+        ];
+    });
+    // Return JSON response with formatted data
+    return response()->json(['datas' => $entities]);
+}
+    public  function formatDateInActualView($date)
+    {       
+       
+        $carbonDate = Carbon::parse($date);
+        $formattedDate = $carbonDate->format('d-m-Y');
+        return $formattedDate;
     }
 
     public function getProjectById(Request $request)
@@ -1603,8 +1616,8 @@ class Doclistings extends Controller
             $initiaterName = $employeeModel->first_name . ' ' . $employeeModel->middle_name . ' ' . $employeeModel->last_name;
             $departmentModel = $employeeModel->department;
             $department = $departmentModel->name;
-            $projectStartDate = formatDateInActualView($model->start_date);
-            $projectEndDate = formatDateInActualView($model->end_date);
+            $projectStartDate =$this->formatDateInActualView($model->start_date);
+            $projectEndDate = $this->formatDateInActualView($model->end_date);
 
             $response = ['startDate' => $projectStartDate, "endDate" => $projectEndDate, 'projectId' => $model->id, 'department' => $department, 'ticketNo' => $ticket_no, 'projectName' => $projectName, 'workflowName' => $workflowName, 'initiaterName' => $initiaterName];
             return $response;

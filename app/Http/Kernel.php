@@ -22,13 +22,13 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \App\Http\Middleware\SessionTimeoutRedirect::class,
+        \App\Http\Middleware\SessionTimeoutRedirect::class, 
         //new changes
         \App\Http\Middleware\FrameGuard::class,
         \App\Http\Middleware\RemovePoweredByHeader::class,
         // \App\Http\Middleware\AddPermissionsPolicyHeader::class,
         // \App\Http\Middleware\ContentSecurityPolicy::class,
-        \Spatie\Csp\AddCspHeaders::class,
+        // \Spatie\Csp\AddCspHeaders::class,
     ];
 
     /**
@@ -48,6 +48,7 @@ class Kernel extends HttpKernel
             //new
             \App\Http\Middleware\AddSecurityHeaders::class,
             \App\Http\Middleware\PersistentCookie::class,
+            \App\Http\Middleware\XssCleanInput::class,
            // \App\Http\Middleware\ValidateRedirects::class,
         ],
 
