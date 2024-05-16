@@ -21,7 +21,7 @@
 .four_zero_four_bg{
  
  background-image: url(https://sitechecker.pro/wp-content/uploads/2023/06/404-status-code.png);
-    height: 400px;
+    height: 600px;
     background-position: center;
  }
  
