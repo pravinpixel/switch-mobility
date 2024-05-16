@@ -25,17 +25,17 @@ class UserController extends Controller
      */
     public function index()
     {
-      
+
         return view('Settings/User/list');
     }
     public function userIndex()
     {
-        
+
         $models = User::leftjoin('employees', 'employees.id', '=', 'users.emp_id')
             ->whereNull('employees.deleted_at')->whereNull('is_super_admin')->orderBy('users.id', 'DESC')->get();
 
-     
-       return response()->json($models);
+
+        return response()->json($models);
     }
     /**
      * Show the form for creating a new resource.
@@ -58,10 +58,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-       
-        if ($request->password) {
-            $sendMail = $this->EmailController->userAddMail($request->employeeId, $request->password);
-        }
+
+
         // dd($request->all());
         $empModel = Employee::find($request->employeeId);
 
@@ -80,6 +78,19 @@ class UserController extends Controller
             $user->password = Hash::make($request->password);
         }
         $user->save();
+        
+        if ($request->password && $request->id) {
+
+            $sendMail = $this->EmailController->userPasswordChange($user->emp_id, $request->password);
+        }
+
+        if (!$request->id) {
+
+            $sendMail = $this->EmailController->userAddMail($user->emp_id, $request->password);
+
+        }
+
+
         $roleModel = Role::where('id', $request->roles)->first();
         if ($request->id) {
             if (isset($roleModel)) {
@@ -137,7 +148,7 @@ class UserController extends Controller
         $id = $request->id;
 
         $roles = Role::select('name', 'id')->get();
-        $userDetails = User::select('employees.id as empId', 'employees.mobile', 'employees.email', 'users.id as userId',DB::raw("CONCAT(first_name, ' ', COALESCE(middle_name, ''), ' ', last_name, ' (', sap_id ,')') AS fullName"))
+        $userDetails = User::select('employees.id as empId', 'employees.mobile', 'employees.email', 'users.id as userId', DB::raw("CONCAT(first_name, ' ', COALESCE(middle_name, ''), ' ', last_name, ' (', sap_id ,')') AS fullName"))
             ->leftjoin('employees', 'employees.id', '=', 'users.emp_id')
             ->where('users.emp_id', $id)->first();
 
@@ -170,7 +181,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-    
+
         $users = User::where("emp_id", $id)->delete();
         return response()->json($users);
     }

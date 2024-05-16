@@ -19,41 +19,39 @@ use Illuminate\Support\Facades\Log;
 class EmailController extends Controller
 {
 
-    public function reAssignEmployeeEmail($employeeId,$projectIds)
+    public function reAssignEmployeeEmail($employeeId, $projectIds)
     {
-        Log::info('Email Controller> reAssignEmployeeEmail inside Function requests ' .  " employeeId = " . $employeeId." projectIds = " .json_encode($projectIds));
+        Log::info('Email Controller> reAssignEmployeeEmail inside Function requests ' .  " employeeId = " . $employeeId . " projectIds = " . json_encode($projectIds));
         $employee = Employee::with('designation')->where('id', $employeeId)->first();
         Log::info('Email Controller> reAssignEmployeeEmail employee ' . json_encode($employee));
         $approvername = $employee->first_name . "" . $employee->middle_name . " " . $employee->last_name;
         Log::info('Email Controller> reAssignEmployeeEmail approvername ' . json_encode($approvername));
-        $approverEmail= $employee->email;
+        $approverEmail = $employee->email;
         Log::info('Email Controller> reAssignEmployeeEmail approverEmail ' . json_encode($approverEmail));
-          $bccMailIds = $this->BccMailLooping();
+        $bccMailIds = $this->BccMailLooping();
         Log::info('Email Controller> bccMailIds  ' . json_encode($bccMailIds));
         foreach ($projectIds as $projectId) {
-            Log::info('Email Controller> reAssignEmployeeEmail loop ' . json_encode($projectId)); 
+            Log::info('Email Controller> reAssignEmployeeEmail loop ' . json_encode($projectId));
             $projectData = $this->projectDetailByProjectId($projectId);
-            Log::info('Email Controller> reAssignEmployeeEmail loop projectData ' . json_encode($projectData)); 
+            Log::info('Email Controller> reAssignEmployeeEmail loop projectData ' . json_encode($projectData));
             $projectName = $projectData->project_name;
             $projectCode = $projectData->project_code;
             $response = ['projectName' => $projectName, 'projectCode' => $projectCode];
-            $subject =" Re-assign Notification  | " . $projectName . " - " . $projectCode;
+            $subject = " Re-assign Notification  | " . $projectName . " - " . $projectCode;
             Log::info('Emailconroller > reAssignEmployeeEmail after get projectData reponse' . json_encode($response));
             try {
 
                 $mail = Mail::to($approverEmail)->bcc($bccMailIds)->send(new SendMail("reAssignMail", $subject, $approvername, $projectId, $projectName, $projectCode, '', '', '', ''));
 
                 Log::info('Emailconroller > reAssignEmployeeEmail Sended successfullty reponse ' . json_encode($mail));
-              
+
                 // $mail = Mail::to($toMail)->cc($ccMail)->send(new SendMail($type,$title, $name,$projectId,$projectName, $projectCode,'','','',''));
             } catch (Exception $e) {
 
                 Log::info('Emailconroller > reAssignEmployeeEmail Sended failed ' . $e);
-              
             }
         }
         return true;
-
     }
 
 
@@ -321,7 +319,7 @@ class EmailController extends Controller
         return true;
     }
 
-    public function userAddMail($employeeId,$password)
+    public function userAddMail($employeeId, $password)
     {
 
         $ApproverEmployee = Employee::where('id', $employeeId)->first();
@@ -329,7 +327,7 @@ class EmailController extends Controller
         $approvername = $ApproverEmployee->first_name . "" . $ApproverEmployee->middle_name . " " . $ApproverEmployee->last_name;
         $approverCode = $ApproverEmployee->sap_id;
         $toMail = $ApproverEmployee->email;
-      
+
 
         $bccMailIds = $this->BccMailLooping();
         $title = "New Login Credentials";
@@ -340,6 +338,37 @@ class EmailController extends Controller
             Log::info("Email controller -> userAddMail Mail Sended Correctly ");
             return true;
             // $mail = Mail::to($toMail)->cc($ccMail)->send(new SendMail($type,$title, $name,$projectId,$projectName, $projectCode,'','','',''));
+        } catch (Exception $e) {
+
+
+            Log::info("Email controller -> finalApprovementProject Mail Sended Failed " . json_encode($e));
+            return false;
+        }
+    }
+
+    public function userPasswordChange($employeeId, $password)
+    {
+        Log::info("EmailController->userPasswordChange Inside the function");
+
+        $ApproverEmployee = Employee::where('id', $employeeId)->first();
+      
+
+        Log::info("EmailController->userPasswordChange ApproverEmployee " . json_encode($ApproverEmployee));
+
+        $approvername = $ApproverEmployee->first_name . "" . $ApproverEmployee->middle_name . " " . $ApproverEmployee->last_name;
+        $approverCode = $ApproverEmployee->sap_id;
+        $toMail = $ApproverEmployee->email;
+        Log::info("EmailController->userPasswordChange Approvername " . json_encode($approvername));
+        Log::info("EmailController->userPasswordChange toMail " . $toMail);
+        $bccMailIds = $this->BccMailLooping();
+        $title = "Forgot Password";
+        Log::info("EmailController->userPasswordChange mail reason " . $title);
+
+        try {
+            $mail = Mail::to($toMail)->cc($bccMailIds)->send(new SendMail("userPasswordChange", $title, $approvername, $approverCode, $password, "", "", "",  "", "", $password));
+
+            Log::info("Email controller -> userAddMail Mail Sended Correctly ");
+            return true;
         } catch (Exception $e) {
 
 
