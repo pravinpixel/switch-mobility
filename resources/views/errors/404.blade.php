@@ -44,7 +44,7 @@
     </style>
 </head>
 <body>
-    <section class="page_404">
+    <section style="display:none;" class="page_404">
         <div class="container">
             <div class="row">	
             <div class="col-sm-12 ">
