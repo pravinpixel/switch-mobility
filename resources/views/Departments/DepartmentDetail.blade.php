@@ -36,13 +36,12 @@
                         </li>
                         <!--end::Item-->
                         <!--begin::Item-->
-                        <li class="breadcrumb-item text-muted"><?php echo $model ? 'Edit' : 'Add'; ?></li>
+                        <li class="breadcrumb-item text-muted">{{ $model ? 'Edit' : 'Add' }}</li>
                         <!--end::Item-->
                     </ul>
                     <!--end::Breadcrumb-->
                 </div>
                 <!--end::Page title-->
-
             </div>
         </div>
         <div id="kt_app_content" class="app-content flex-column-fluid">
@@ -59,16 +58,12 @@
                     </div>
                     @endif
 
-                    <!--end::Card header-->
                     <!--begin::Card body-->
                     <div class="card-body py-4">
                         <!--begin::Card title-->
-
-                        <!--begin::Card title-->
-                        <!--begin::Table-->
                         <form class="form" method="post" action="{{url('department')}}">
                             @csrf
-                            <input type="hidden" value="<?php echo $model ? $model->id : ''; ?>" name='id' class="id">
+                            <input type="hidden" value="{{ $model ? $model->id : '' }}" name='id' class="id">
                             <!--end::Input group-->
 
                             <div class="row g-9 mb-7">
@@ -78,7 +73,7 @@
                                     <label class="required fs-6 fw-semibold mb-2">Department</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input class="form-control form-control-solid department" value="<?php echo $model ? $model->name : ''; ?>" placeholder="Enter Department" name="name" required autocomplete="off" />
+                                    <input class="form-control form-control-solid department" value="{{ $model ? $model->name : '' }}" placeholder="Enter Department" name="name" required autocomplete="off" />
                                     <!--end::Input-->
                                     <p id="nameAlert" class="notifyAlert"></p>
                                 </div>
@@ -91,18 +86,14 @@
                                     <label class="fs-6 fw-semibold mb-2">Description</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <textarea class="form-control form-control-solid" name="description" rows="4" cols="50"> <?php echo $model ? $model->description : ''; ?></textarea>
-
+                                    <textarea class="form-control form-control-solid" name="description" rows="4" cols="50">{{ $model ? $model->description : '' }}</textarea>
                                     <!--end::Input-->
                                 </div>
                                 <!--end::Col-->
                             </div>
 
-                            {{-- FORM --}}
                             <div class="text-center pt-15">
-
                                 <button type="reset" class="btn btn-light me-3 reset ">Reset</button>
-
                                 <a href="{{route('department.index')}}">
                                     <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
                                 <button type="button" class="btn switchPrimaryBtn submitBtn" onclick="deptValidation();" data-kt-users-modal-action="submit">
@@ -111,21 +102,18 @@
                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                 </button>
                             </div>
-
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 @endsection
 <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
 </script>
 <script>
     $(document).ready(function() {
-
         $('.submitBtn').attr('disabled', 'true');
         if ($('.id').val()) {
             $('.submitBtn').removeAttr('disabled');
@@ -145,14 +133,9 @@
         }
     });
 
-
     function deptValidation() {
         $('.submitBtn').attr('disabled', true);
-        console.log("well good");
-       
-        //  Swal.fire('Any fool can use a computer');
         var name = $('.department').val().trim();
-
         var id = $('.id').val();
         if (name) {
             $.ajax({
@@ -165,21 +148,13 @@
                     id: id
                 },
                 success: function(result) {
-
                     var alertName = 'nameAlert';
-
-
-
                     if (result.response == false) {
                         $('.submitBtn').attr('disabled', true);
-
-                        document.getElementById(alertName).style.display = "block";
-                        document.getElementById(alertName).style.color = "red";
-                        document.getElementById(alertName).innerHTML = 'Name is already exists*';
+                        $('#' + alertName).text('Name is already exists*').css('color', 'red').show();
                         return false;
                     }
-                    document.getElementById(alertName).style.display = "none";
-                    // $('.submitBtn').removeAttr('disabled');
+                    $('#' + alertName).hide();
                     $(".form").submit();
                     return true;
                 }

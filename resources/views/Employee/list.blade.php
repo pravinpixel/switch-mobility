@@ -1,218 +1,227 @@
 @extends('layouts.app')
 
 @section('content')
+    <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+        <!--begin::Content wrapper-->
+        <div class="d-flex flex-column flex-column-fluid">
+            <!--begin::Toolbar-->
+            <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
+                <!--begin::Toolbar container-->
+                <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
+                    <!--begin::Page title-->
+                    <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+                        <!--begin::Title-->
+                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                            Employee</h1>
+                        <!--end::Title-->
+                        <!--begin::Breadcrumb-->
+                        <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">
+                                <a href="#" class="text-muted text-hover-primary">Home</a>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item">
+                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">Employee</li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item">
+                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">List</li>
+                            <!--end::Item-->
+                        </ul>
+                        <!--end::Breadcrumb-->
+                    </div>
+                    <!--end::Page title-->
 
-<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
-    <!--begin::Content wrapper-->
-    <div class="d-flex flex-column flex-column-fluid">
-        <!--begin::Toolbar-->
-        <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
-            <!--begin::Toolbar container-->
-            <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
-                <!--begin::Page title-->
-                <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                    <!--begin::Title-->
-                    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                        Employee</h1>
-                    <!--end::Title-->
-                    <!--begin::Breadcrumb-->
-                    <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-                        <!--begin::Item-->
-                        <li class="breadcrumb-item text-muted">
-                            <a href="#" class="text-muted text-hover-primary">Home</a>
-                        </li>
-                        <!--end::Item-->
-                        <!--begin::Item-->
-                        <li class="breadcrumb-item">
-                            <span class="bullet bg-gray-400 w-5px h-2px"></span>
-                        </li>
-                        <!--end::Item-->
-                        <!--begin::Item-->
-                        <li class="breadcrumb-item text-muted">Employee</li>
-                        <!--end::Item-->
-                        <!--begin::Item-->
-                        <li class="breadcrumb-item">
-                            <span class="bullet bg-gray-400 w-5px h-2px"></span>
-                        </li>
-                        <!--end::Item-->
-                        <!--begin::Item-->
-                        <li class="breadcrumb-item text-muted">List</li>
-                        <!--end::Item-->
-                    </ul>
-                    <!--end::Breadcrumb-->
                 </div>
-                <!--end::Page title-->
-
             </div>
-        </div>
-        <div id="kt_app_content" class="app-content flex-column-fluid">
-            <div id="kt_app_content_container" class="app-container container-xxl">
-                <div class="card">
-                    @if (session('success'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('success') }}
-                    </div>
-                    @endif
-                    @if (session('error'))
-                    <div class="alert alert-danger" role="alert">
-                        {{ session('error') }}
-                    </div>
-                    @endif
+            <div id="kt_app_content" class="app-content flex-column-fluid">
+                <div id="kt_app_content_container" class="app-container container-xxl">
+                    <div class="card">
+                        @if (session('success'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ session('error') }}
+                            </div>
+                        @endif
 
-                    <!--end::Card header-->
-                    <!--begin::Card body-->
-                    <div class="card-body  p-3">
-                        <div class="" style="">
-                            <div class="row g-8">
-                                <!--begin::Col-->
-                                <div class="col-md-3">
-                                    <label class=" form-label text-dark "> Department </label>
-                                    <select class="form-select filterDeptAndDes" data-kt-select2="true" data-placeholder="Department" data-allow-clear="true" id="deptFilter">
-                                        <option></option>
-                                        @foreach ($departments as $department)
-                                        <option value="{{ $department['id'] }}">
-                                            {{ $department['name'] }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                        <!--end::Card header-->
+                        <!--begin::Card body-->
+                        <div class="card-body  p-3">
+                            <div class="" style="">
+                                <div class="row g-8">
+                                    <!--begin::Col-->
+                                    <div class="col-md-3">
+                                        <label class=" form-label text-dark "> Department </label>
+                                        <select class="form-select filterDeptAndDes" data-kt-select2="true"
+                                            data-placeholder="Department" data-allow-clear="true" id="deptFilter">
+                                            <option></option>
+                                            @foreach ($departments as $department)
+                                                <option value="{{ $department['id'] }}">
+                                                    {{ $department['name'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-                                <div class="col-md-3">
-                                    <label class="fs-6 form-label fw-bold text-dark ">Designation </label>
-                                    <select class="form-select filterDeptAndDes" name="project_code_name" data-kt-select2="true" data-placeholder="Designation" data-allow-clear="true" id="designationFilter">
-                                        <option></option>
-                                        @foreach ($designation as $des)
-                                        <option value="{{ $des['id'] }}">
-                                            {{ $des['name'] }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="w-auto">
-                                    <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
-                                    <span class="btn btn-warning " onclick="resetFilter()">Reset</span>
-                                </div>
-                                @if (auth()->user()->is_super_admin == 1 ||
-                                auth()->user()->can('employee-create'))
-                                <div class="w-auto">
-                                    <a href="{{url('employees/create')}}">
+                                    <div class="col-md-3">
+                                        <label class="fs-6 form-label fw-bold text-dark ">Designation </label>
+                                        <select class="form-select filterDeptAndDes" name="project_code_name"
+                                            data-kt-select2="true" data-placeholder="Designation" data-allow-clear="true"
+                                            id="designationFilter">
+                                            <option></option>
+                                            @foreach ($designation as $des)
+                                                <option value="{{ $des['id'] }}">
+                                                    {{ $des['name'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="w-auto">
                                         <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
-                                        <span class="btn switchPrimaryBtn  ">+ Add</span>
-                                    </a>
-                                </div>
-                                @endif
-                                <div class="w-auto">
-                                    <a href="{{url('bulkUploadCreate')}}">
-                                        <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
-                                        <span class="btn btn-success ">Import</span>
-                                    </a>
+                                        <span class="btn btn-warning " onclick="resetFilter()">Reset</span>
+                                    </div>
+                                    @if (auth()->user()->is_super_admin == 1 || auth()->user()->can('employee-create'))
+                                        <div class="w-auto">
+                                            <a href="{{ url('employees/create') }}">
+                                                <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
+                                                <span class="btn switchPrimaryBtn  ">+ Add</span>
+                                            </a>
+                                        </div>
+                                    @endif
+                                    <div class="w-auto">
+                                        <a href="{{ url('bulkUploadCreate') }}">
+                                            <label class="fs-6 fw-semibold mb-2 d-block">&nbsp;</label>
+                                            <span class="btn btn-success ">Import</span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
+                            <hr>
+                            <!--begin::Table-->
+                            <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
+                                <!--begin::Table head-->
+                                <thead>
+                                    <!--begin::Table row-->
+                                    <tr class="text-start align-middle text-muted fw-bold fs-7 text-uppercase gs-0">
+
+                                        <th class="min-w-250px">Name</th>
+                                        <th class="min-w-50px">SAP-ID</th>
+                                        <th class="min-w-50px">Mobile</th>
+                                        <th class="min-w-50px">Department</th>
+                                        <th class="min-w-50px">Designation</th>
+                                        <th class="min-w-50px">Status</th>
+
+                                        <th class="text-center min-w-50px">Actions</th>
+                                    </tr>
+                                    <!--end::Table row-->
+                                </thead>
+                                <!--end::Table head-->
+                                <!--begin::Table body-->
+                                <tbody class="text-gray-600 fw-semibold">
+                                    <!--begin::Table row-->
+                                    @foreach ($employee_all as $key => $d)
+                                        <tr itsDepend="{{ $d['itsDepend'] }}">
+                                            <!--begin::Checkbox-->
+
+                                            <!--end::Checkbox-->
+                                            <!--begin::User=-->
+
+                                            <?php if ($d['profileImage']) {
+                                                $pImage = $d['profileImage'];
+                                            } else {
+                                                $pImage = 'noimage.png';
+                                            } ?>
+
+                                            <td class="">
+                                                <div class="d-flex align-items-center flex-grow-1">
+                                                    <!--begin::Avatar-->
+                                                    <div class="symbol symbol-45px me-5">
+                                                        <img src="{{ asset('images/Employee/' . $pImage) }}" alt=""
+                                                            style="width: auto;">
+                                                    </div>
+                                                    <!--end::Avatar-->
+
+                                                    <!--begin::Info-->
+                                                    <div class="d-flex flex-column">
+                                                        <a href="javascript:void(0);"
+                                                            class="text-gray-900 text-hover-primary fs-6 fw-bold">{{ $d['name'] }}</a>
+
+                                                        <span class="text-gray-400 fw-bold">Email:
+                                                            {{ $d['email'] }}</span>
+                                                    </div>
+                                                    <!--end::Info-->
+                                                </div>
+
+                                            </td>
+                                            <td>{{ $d['sapId'] }}</td>
+                                            <td>{{ $d['mobile'] }}</td>
+                                            <td>{{ $d['departmentName'] }}</td>
+                                            <td>{{ $d['designationName'] }}</td>
+                                            <td>
+                                                @if ($d['deleted_flag'] != 1)
+                                                    <label class="switch">
+                                                        <input type="checkbox" data-id="{{ $d['id'] }}" value=""
+                                                            class="status" {{ $d['is_active'] == 1 ? 'checked' : '' }}>
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <div class="d-flex my-3 ms-9">
+                                                    <!--begin::Edit-->
+                                                    @if (auth()->user()->is_super_admin == 1 || auth()->user()->can('employee-edit'))
+                                                        <a class="editPage" style="display:inline;cursor: pointer;"
+                                                            id="{{ $d['id'] }}" title="Edit Employee"><i
+                                                                class="fa-solid fa-pen" style="color:orange"></i></a>
+                                                    @endif
+                                                    <!--end::Edit-->
+                                                    @if (auth()->user()->is_super_admin == 1 || auth()->user()->can('employee-delete'))
+                                                        @if ($d['deleted_flag'] == 1)
+                                                            <div style="display:inline; margin-left: 10px;"> <span
+                                                                    class="badge badge-danger">Employee Reassigned</span>
+                                                            </div>
+                                                        @else
+                                                            <div style="display:inline;cursor: pointer; margin-left: 10px;"
+                                                                id="{{ $d['id'] }}" class="deleteEmployee"
+                                                                title="Delete Employee"><i class="fa-solid fa-trash"
+                                                                    style="color:red"></i></div>
+                                                        @endif
+                                                    @endif
+                                                    <!--end::Delete-->
+                                                    <!--begin::More-->
+
+
+                                                    <!--end::More-->
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                        <hr>
-                        <!--begin::Table-->
-                        <table class="table align-middle table-row-bordered fs-6 gy-5" id="service_table">
-                            <!--begin::Table head-->
-                            <thead>
-                                <!--begin::Table row-->
-                                <tr class="text-start align-middle text-muted fw-bold fs-7 text-uppercase gs-0">
-
-                                    <th class="min-w-250px">Name</th>
-                                    <th class="min-w-50px">SAP-ID</th>
-                                    <th class="min-w-50px">Mobile</th>
-                                    <th class="min-w-50px">Department</th>
-                                    <th class="min-w-50px">Designation</th>
-                                    <th class="min-w-50px">Status</th>
-
-                                    <th class="text-center min-w-50px">Actions</th>
-                                </tr>
-                                <!--end::Table row-->
-                            </thead>
-                            <!--end::Table head-->
-                            <!--begin::Table body-->
-                            <tbody class="text-gray-600 fw-semibold">
-                                <!--begin::Table row-->
-                                @foreach ($employee_all as $key => $d)
-                                <tr itsDepend="{{$d['itsDepend']}}">
-                                    <!--begin::Checkbox-->
-
-                                    <!--end::Checkbox-->
-                                    <!--begin::User=-->
-
-                                    <?php if ($d['profileImage']) {
-                                        $pImage = $d['profileImage'];
-                                    } else {
-                                        $pImage = "noimage.png";
-                                    } ?>
-
-                                    <td class="">
-                                        <div class="d-flex align-items-center flex-grow-1">
-                                            <!--begin::Avatar-->
-                                            <div class="symbol symbol-45px me-5">
-                                                <img src="{{ asset('images/Employee/' . $pImage) }}" alt="" style="width: auto;">
-                                            </div>
-                                            <!--end::Avatar-->
-
-                                            <!--begin::Info-->
-                                            <div class="d-flex flex-column">
-                                                <a href="javascript:void(0);" class="text-gray-900 text-hover-primary fs-6 fw-bold">{{$d['name']}}</a>
-
-                                                <span class="text-gray-400 fw-bold">Email: {{ $d['email'] }}</span>
-                                            </div>
-                                            <!--end::Info-->
-                                        </div>
-
-                                    </td>
-                                    <td>{{ $d['sapId'] }}</td>
-                                    <td>{{ $d['mobile']}}</td>
-                                    <td>{{ $d['departmentName'] }}</td>
-                                    <td>{{ $d['designationName'] }}</td>
-                                    <td>
-                                    @if($d['deleted_flag'] != 1)
-                                        <label class="switch">
-                                            <input type="checkbox" data-id="{{ $d['id'] }}" value="" class="status" <?php echo $d['is_active'] == 1 ? 'checked' : ''; ?>>
-                                            <span class="slider round"></span>
-                                        </label>
-                                    @endif
-                                    </td>
-                                    <td>
-                                        <div class="d-flex my-3 ms-9">
-                                            <!--begin::Edit-->
-                                            @if (auth()->user()->is_super_admin == 1 ||
-                                            auth()->user()->can('employee-edit'))
-                                            <a class="editPage" style="display:inline;cursor: pointer;" id="{{ $d['id'] }}" title="Edit Employee"><i class="fa-solid fa-pen" style="color:orange"></i></a>
-                                            @endif
-                                            <!--end::Edit-->
-                                            @if (auth()->user()->is_super_admin == 1 ||
-                                            auth()->user()->can('employee-delete'))
-                                            @if($d['deleted_flag'] == 1)
-                                            <div style="display:inline; margin-left: 10px;"> <span class="badge badge-danger">Employee Reassigned</span></div>
-                                            @else
-                                            <div style="display:inline;cursor: pointer; margin-left: 10px;" id="{{$d['id'] }}" class="deleteEmployee" title="Delete Employee"><i class="fa-solid fa-trash" style="color:red"></i></div>
-                                            @endif
-                                            @endif
-                                            <!--end::Delete-->
-                                            <!--begin::More-->
-
-
-                                            <!--end::More-->
-                                        </div>
-                                    </td>
-
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
-</div>
-
-<!-- Edit Model -->
-
+    <!-- Edit Model -->
 @endsection
 <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
 </script>
@@ -332,7 +341,7 @@
     }
     $(document).on('click', '.editPage', function() {
         var id = $(this).attr('id');
-        var url = "{{route('employeeEdit')}}";
+        var url = "{{ route('employeeEdit') }}";
         var form = $('<form action="' + url + '" method="post">' +
             ' {{ csrf_field() }} <input type="hidden" name="id" value="' + id + '" />' +
             '</form>');
@@ -466,11 +475,12 @@
                             var activeStatus = (val.is_active == 1) ? "checked" : "";
                             console.log(activeStatus);
                             var pic = val.profile_image;
-                            var editurl = '{{ route("employees.edit", ":id") }}';
+                            var editurl = '{{ route('employees.edit', ':id') }}';
                             editurl = editurl.replace(':id', id);
 
                             var editBtn = (
-                                '<a class="editPage" id="' + id + '" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i>></a>'
+                                '<a class="editPage" id="' + id +
+                                '" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i>></a>'
                             );
 
                             var result = (
@@ -478,16 +488,18 @@
                                 id + '" class="status" ' + activeStatus +
                                 '>  <span class="slider round"></span></label>');
 
-                            if(delete_flag ==1){
-                                    var deleteBtn = '<div style="display:inline; margin-left: 10px;"> <span class="badgebadge-danger">Employee Reassigned</span></div>';
-                                    var result = "";
-                                }else{
+                            if (delete_flag == 1) {
+                                var deleteBtn =
+                                    '<div style="display:inline; margin-left: 10px;"> <span class="badgebadge-danger">Employee Reassigned</span></div>';
+                                var result = "";
+                            } else {
 
 
-                            var deleteBtn = (
-                                '<div  id="' + id + '"  class="deleteEmployee" style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i>></div>'
-                            );
-                        }
+                                var deleteBtn = (
+                                    '<div  id="' + id +
+                                    '"  class="deleteEmployee" style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i>></div>'
+                                );
+                            }
 
                             var Action = (editBtn +
                                 deleteBtn
@@ -538,7 +550,8 @@
                             var lastName = val.last_name;
                             var activeStatus = (val.is_active == 1) ? "checked" : "";
                             var delete_flag = val.delete_flag;
-                            var pic = (val.profile_image) ? val.profile_image : 'noimage.png';
+                            var pic = (val.profile_image) ? val.profile_image :
+                                'noimage.png';
                             var folder = "images/Employee/";
                             folder += pic;
 
@@ -546,34 +559,44 @@
                                 '<div class="symbol symbol-circle symbol-50px overflow-hidden me-3">';
                             firsttd += '<a href="javascript:void(0);">';
                             firsttd += '<div class="symbol-label">';
-                            firsttd +=
-                                '<img src=' + folder + ' alt="' + firstName + '" width="50" height="50" class="w-100" />';
+                            firsttd += '<img src=' + folder + ' alt="' + escapeHtml(
+                                    firstName) +
+                                '" width="50" height="50" class="w-100" />';
                             firsttd += ' </div>';
                             firsttd += '</a>';
                             firsttd += '</div>';
                             firsttd += '<div class="d-flex flex-column">';
-                            firsttd += '<a href="javascript:void(0);"class="text-gray-800 text-hover-primary mb-1" style="position:relative;left:59px;bottom:43px;">' + firstName + ' ' + lastName + '</a>';
-                            firsttd += ' <span style="position:relative;left:59px;bottom:43px;">Email: ' + email + '</span>';
+                            firsttd +=
+                                '<a href="javascript:void(0);"class="text-gray-800 text-hover-primary mb-1" style="position:relative;left:59px;bottom:43px;">' +
+                                escapeHtml(firstName) + ' ' + escapeHtml(lastName) +
+                                '</a>';
+                            firsttd +=
+                                ' <span style="position:relative;left:59px;bottom:43px;">Email: ' +
+                                escapeHtml(email) + '</span>';
                             firsttd += ' </div>';
 
-                            var editurl = '{{ route("employees.edit", ":id") }}';
+
+                            var editurl = '{{ route('employees.edit', ':id') }}';
                             editurl = editurl.replace(':id', id);
                             var result = (
                                 '<label class="switch"><input type="checkbox" data-id="' +
                                 id + '" class="status" ' + activeStatus +
                                 '>  <span class="slider round"></span></label>');
                             var editBtn = (
-                                '<a class="editPage" id="' + id + '" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i></a>'
+                                '<a class="editPage" id="' + id +
+                                '" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i></a>'
                             );
-                            if(delete_flag ==1){
-                        var deleteBtn = '<div style="display:inline; margin-left: 10px;"> <span class="badge badge-danger">Employee Reassigned</span></div>';
-                        var result = "";
-                    }else{
-                            var deleteBtn = (
-                                '<div id="' + id + '"  class="deleteEmployee"  style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i></div>'
-                            );
+                            if (delete_flag == 1) {
+                                var deleteBtn =
+                                    '<div style="display:inline; margin-left: 10px;"> <span class="badge badge-danger">Employee Reassigned</span></div>';
+                                var result = "";
+                            } else {
+                                var deleteBtn = (
+                                    '<div id="' + id +
+                                    '"  class="deleteEmployee"  style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i></div>'
+                                );
 
-                        }
+                            }
                             var Action = (editBtn +
                                 deleteBtn
                             );
@@ -599,6 +622,14 @@
 
         });
 
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
 
 
     $(document).on('click', '.deleteEmployee', function() {
@@ -606,8 +637,9 @@
         var alertmsg = "You won't be able to revert this!";
         var itsdepend = $(this).closest('tr').attr('itsdepend');
         console.log(itsdepend);
-        if (itsdepend ==true) {
-            alertmsg = "This employee already mapped with the workflow. Do You want to want to re-assign to another Employee? ";
+        if (itsdepend == true) {
+            alertmsg =
+                "This employee already mapped with the workflow. Do You want to want to re-assign to another Employee? ";
         }
 
         Swal.fire({
@@ -620,7 +652,7 @@
             confirmButtonText: 'Yes, Re-assign!'
         }).then(isConfirmed => {
             if (isConfirmed.value) {
-                if (itsdepend ==true) {
+                if (itsdepend == true) {
                     reAssignEmployee(id, "delete");
                 } else {
                     $.ajax({
@@ -672,7 +704,8 @@
         var itsdepend = $(this).closest('tr').attr('itsdepend');
         var ipType = 1;
         if (itsdepend == true) {
-            alertmsg = "This employee already mapped with the workflow. Do You want to want to re-assign to another Employee? ";
+            alertmsg =
+                "This employee already mapped with the workflow. Do You want to want to re-assign to another Employee? ";
         }
 
 
@@ -686,7 +719,7 @@
             confirmButtonText: 'Yes, Change it!'
         }).then(isConfirmed => {
             if (isConfirmed.value) {
-                if (itsdepend ==true) {
+                if (itsdepend == true) {
                     reAssignEmployee(id, "status");
                 } else {
 
@@ -743,9 +776,10 @@
 
     function reAssignEmployee(empId, status) {
 
-        var url = "{{route('reAssignEmployee')}}";
+        var url = "{{ route('reAssignEmployee') }}";
         var form = $('<form action="' + url + '" method="post">' +
-            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + empId + '" /> <input type="hidden" name="actionType" value="' + status + '" />' +
+            ' {{ csrf_field() }} <input type="hidden" name="id" value="' + empId +
+            '" /> <input type="hidden" name="actionType" value="' + status + '" />' +
             '</form>');
         $('body').append(form);
         form.submit();
@@ -771,8 +805,8 @@
                 $.each(result, function(key, val) {
                     console.log(val);
 
-                    var itsDepend = (val.itsDepend)?1:0;
-                    var name = val.name ;
+                    var itsDepend = (val.itsDepend) ? 1 : 0;
+                    var name = val.name;
                     var id = val.id;
                     var sapId = val.sapId;
                     var mobile = val.mobile;
@@ -780,7 +814,7 @@
                     var desg = val.designationName;
                     var email = val.email;
                     var pic = (val.profileImage) ? val.profileImage : 'noimage.png';
-                    var folder = "{{ asset('images/Employee') }}"+"/";
+                    var folder = "{{ asset('images/Employee') }}" + "/";
                     folder += pic;
 
                     var firsttd =
@@ -788,32 +822,39 @@
                     firsttd += '<a href="javascript:void(0);">';
                     firsttd += '<div class="symbol-label">';
                     firsttd +=
-                        '<img src=' + folder + ' alt="' + name + '" width="50" height="50" class="w-100 testd" />';
+                        '<img src=' + folder + ' alt="' + name +
+                        '" width="50" height="50" class="w-100 testd" />';
                     firsttd += ' </div>';
                     firsttd += '</a>';
                     firsttd += '</div>';
                     firsttd += '<div class="d-flex flex-column">';
-                    firsttd += '<a href="javascript:void(0);"class="text-gray-800 text-hover-primary mb-1" style="position:relative;left:59px;bottom:43px;">' + name + '</a>';
-                    firsttd += ' <span style="position:relative;left:59px;bottom:43px;">Email: ' + email + '</span>';
+                    firsttd +=
+                        '<a href="javascript:void(0);"class="text-gray-800 text-hover-primary mb-1" style="position:relative;left:59px;bottom:43px;">' +
+                        name + '</a>';
+                    firsttd += ' <span style="position:relative;left:59px;bottom:43px;">Email: ' +
+                        email + '</span>';
                     firsttd += ' </div>';
 
 
                     var statusRes = (val.is_active == 1) ? "checked" : "";
                     var statusBtn = '<label class="switch">';
-                    statusBtn += '<input type="checkbox" data-id="' + id + '" value="" class="status" ' + statusRes + '>';
+                    statusBtn += '<input type="checkbox" data-id="' + id +
+                        '" value="" class="status" ' + statusRes + '>';
                     statusBtn += '<span class="slider round"></span></label>';
-                    var editurl = '{{ route("employees.edit", ":id") }}';
+                    var editurl = '{{ route('employees.edit', ':id') }}';
                     editurl = editurl.replace(':id', id);
 
                     if (isSuperAdmin || isAuthorityEdit) {
                         var editBtn = (
-                            '<a class="editPage" id="' + id + '" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i></a>'
+                            '<a class="editPage" id="' + id +
+                            '" style="display:inline;cursor: pointer;" title="Edit Employeee"><i class="fa-solid fa-pen" style="color:orange"></i></a>'
                         );
                     }
 
                     if (isSuperAdmin || isAuthorityDelete) {
                         var deleteBtn = (
-                            '<div  id="' + id + '"  class="deleteEmployee"  style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i></div>'
+                            '<div  id="' + id +
+                            '"  class="deleteEmployee"  style="display:inline;cursor: pointer;margin-left: 10px;" title="Delete Employeee"><i class="fa-solid fa-trash" style="color:red"></i></div>'
                         );
                     }
 
@@ -822,7 +863,9 @@
                         deleteBtn
                     );
 
-                    var newRow = table.row.add([firsttd, sapId, mobile, dept, desg, statusBtn, actionBtn]).node();
+                    var newRow = table.row.add([firsttd, sapId, mobile, dept, desg, statusBtn,
+                        actionBtn
+                    ]).node();
                     newRow.setAttribute('itsDepend', itsDepend);
                     table.draw();
                 });
