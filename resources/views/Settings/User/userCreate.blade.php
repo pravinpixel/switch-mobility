@@ -138,7 +138,7 @@
                                       <label class="required fs-6 fw-semibold mb-2">Password</label>
                                       <!--end::Label-->
                                       <!--begin::Input-->
-                                      <input class="form-control form-control password" id="password" placeholder="Enter Password" name="password" required />
+                                      <input class="form-control form-control password" type="password" id="password" placeholder="Enter Password" name="password" required />
                                       <p id="passwordAlert" class="notifyAlert"></p>
                                   </div>
                                   <!--end::Col-->
@@ -151,7 +151,7 @@
                                       <label class="required fs-6 fw-semibold mb-2">Confirm Password</label>
                                       <!--end::Label-->
                                       <!--begin::Input-->
-                                      <input class="form-control form-control cpassword" placeholder="Enter confirm password" name="cpassword" required />
+                                      <input class="form-control form-control cpassword"  type="password" placeholder="Enter confirm password" name="cpassword" required />
                                       <p id="cpasswordAlert" class="notifyAlert"></p>
                                       <p id="cpasswordmissmatchAlert" class="notifyAlert"></p>
                                       <!--end::Input-->

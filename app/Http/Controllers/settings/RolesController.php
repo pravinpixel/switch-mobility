@@ -123,7 +123,7 @@ class RolesController extends Controller
      */
     public function show($id)
     {
-        //
+       abort(404);
     }
 
     /**

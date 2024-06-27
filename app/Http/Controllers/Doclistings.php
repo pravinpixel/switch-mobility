@@ -37,6 +37,13 @@ class Doclistings extends Controller
     public function filterindex($type = null)
     {
 
+        $type_array = ['approved', 'declined', 'pending', 'overdue'];
+
+        if(!$type) {
+            if (!in_array($type, $type_array)) {
+                abort(404);
+            }
+        }
 
         $empId = (Auth::user()->emp_id != null) ? Auth::user()->emp_id : "";
 
@@ -408,9 +415,12 @@ class Doclistings extends Controller
         $document_type = DocumentType::where('is_active', 1)->get()->toArray();
         $workflow = Workflow::where('is_active', 1)->get()->toArray();
         $levelCount = Workflow::leftjoin('projects', 'projects.workflow_id', '=', 'workflows.id')
-            ->where('projects.id', $id)->first()->total_levels;
+            ->where('projects.id', $id)->first()->total_levels ?? null;
 
         $projectModel  = Project::where('id', $id)->first();
+        if(!$projectModel){
+            abort(404);
+        }
 
         $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $projectModel->workflow_id)->get();
 
@@ -548,9 +558,13 @@ class Doclistings extends Controller
         $designation = Designation::where('is_active', 1)->get()->toArray();
         $document_type = DocumentType::where('is_active', 1)->get()->toArray();
         $workflow = Workflow::where('is_active', 1)->get()->toArray();
-        $levelCount = Workflow::leftjoin('projects', 'projects.workflow_id', '=', 'workflows.id')->where('projects.id', $id)->first()->total_levels;
+        $levelCount = Workflow::leftjoin('projects', 'projects.workflow_id', '=', 'workflows.id')->where('projects.id', $id)->first()->total_levels ?? null;
 
         $projectModel  = Project::where('id', $id)->first();
+        if(!$projectModel){
+            abort(404);
+        }
+
 
         $models = Workflowlevels::with('workflowLevelDetail')->where('workflow_id', $projectModel->workflow_id)->get();
 
@@ -1549,9 +1563,9 @@ class Doclistings extends Controller
             $q1->where('workflow_id', '=', $wfId);
         });
     }
-   
+
     $projects = $models->whereNull('deleted_at')->get();
-  
+
     $entities = collect($projects)->map(function ($project) {
         $ticketNo = $project->ticket_no;
         $projectName = $project->project_name . ' & ' . $project->project_code;
@@ -1578,8 +1592,8 @@ class Doclistings extends Controller
     return response()->json(['datas' => $entities]);
 }
     public  function formatDateInActualView($date)
-    {       
-       
+    {
+
         $carbonDate = Carbon::parse($date);
         $formattedDate = $carbonDate->format('d-m-Y');
         return $formattedDate;

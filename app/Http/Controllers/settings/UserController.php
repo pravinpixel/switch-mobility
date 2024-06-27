@@ -78,7 +78,7 @@ class UserController extends Controller
             $user->password = Hash::make($request->password);
         }
         $user->save();
-        
+
         if ($request->password && $request->id) {
 
             $sendMail = $this->EmailController->userPasswordChange($user->emp_id, $request->password);
@@ -118,7 +118,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -130,12 +130,17 @@ class UserController extends Controller
     public function edit($id)
     {
 
+
         $roles = Role::select('name', 'id')->get();
         $userDetails = User::select('employees.id as empId', 'employees.mobile', 'employees.email', 'users.emp_id')
             ->leftjoin('employees', 'employees.id', '=', 'users.emp_id')
             ->where('users.id', $id)->first();
+
+        if(!$userDetails) {
+            abort(404);
+        }
+
         $employees = Employee::where('id', $userDetails->emp_id)->first();
-        dd($employees);
         $userModel = User::with('roles', 'employee')->where('id', $id)->first();
 
         $roleId = $userModel->roles->pluck("id")->first();

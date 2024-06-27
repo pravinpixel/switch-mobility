@@ -73,7 +73,7 @@
                                     <!--end::Label-->
                                     <!--begin::Input-->
                                     <input class="form-control " name="employeeName" disabled value="{{$userDetails->fullName}}" />
-                                  
+
                                     <p id="employeeAlert" class="notifyAlert"></p>
                                     <!--end::Input-->
                                 </div>
@@ -110,7 +110,7 @@
                                     <label class="required fs-6 fw-semibold mb-2">Password</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input class="form-control form-control password" placeholder="Enter Password" name="password" required />
+                                    <input class="form-control form-control password" type="password" placeholder="Enter Password" name="password" required />
                                     <!--end::Input-->
                                     <p id="passwordAlert" class="notifyAlert"></p>
                                 </div>
@@ -124,7 +124,7 @@
                                     <label class="required fs-6 fw-semibold mb-2">Confirm Password</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <input class="form-control form-control cpassword" placeholder="Enter confirm password" name="cpassword" required />
+                                    <input class="form-control form-control cpassword" type="password" placeholder="Enter confirm password" name="cpassword" required />
                                     <p id="cpasswordAlert" class="notifyAlert"></p>
                                     <p id="cpasswordmissmatchAlert" class="notifyAlert"></p>
                                     <!--end::Input-->
@@ -134,7 +134,7 @@
                             </div>
 
                             {{-- FORM --}}
-                            <div class="text-center pt-15"> 
+                            <div class="text-center pt-15">
                                 <button type="reset" class="btn btn-light me-3 reset" data-kt-users-modal-action="cancel">Reset</button>
                                 <a href="{{route('users.index')}}">
                                     <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
@@ -255,7 +255,7 @@
 
 
     function rolesValidation() {
-      
+
         var roles = $('.Privillage').val();
         var password = $('.password').val().trim();
         var cpassword = $('.cpassword').val().trim();

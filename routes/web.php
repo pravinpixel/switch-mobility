@@ -25,6 +25,7 @@ use App\Models\DocumentType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\SessionTimeoutRedirect;
+
 /*
 | Here is where you can register web routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
@@ -34,7 +35,7 @@ use App\Http\Middleware\SessionTimeoutRedirect;
 
 // Department
 Route::group([
-    'middleware' => ['auth', 'is_admin', 'web','App\Http\Middleware\SessionTimeoutRedirect']
+    'middleware' => ['auth', 'is_admin', 'web', 'App\Http\Middleware\SessionTimeoutRedirect']
 ], function () {
     Route::get('home', [HomeController::class, 'adminHome'])->name('home');
     Route::get('doclistingIndex/{type}', [Doclistings::class, 'filterindex'])->name('doclistingIndex');
@@ -42,14 +43,18 @@ Route::group([
 
     Route::resource('roles', RolesController::class);
     //Dept
-    Route::resource('dashboard', DashboardController::class);
+    Route::resource('dashboard', DashboardController::class, [
+        'except' => ['show']
+    ]);
     Route::post('dashboardSearch', [DashboardController::class, 'dashboardSearch'])->name('dashboardSearch');
 
     Route::resource('doclisting', Doclistings::class);
 
     Route::post('docListingSearch', [Doclistings::class, 'docListingSearch'])->name('docListingSearch');
     Route::post('Search', [Doclistings::class, 'Search'])->name('Search')->middleware('is_admin');
-    Route::resource('department', DepartmentController::class);
+    Route::resource('department', DepartmentController::class, [
+        'except' => ['show']
+    ]);
 
     Route::get('getDepartmentListData', [DepartmentController::class, 'getDepartmentListData'])->name('getDepartmentListData');
     Route::get('getDesignationListData', [DesignationController::class, 'getDesignationListData']);
@@ -73,13 +78,19 @@ Route::group([
     Route::post('changedesignationActiveStatus', [DesignationController::class, 'changedesignationActiveStatus'])->name('changedesignationActiveStatus');
     Route::post('deptSearch', [DepartmentController::class, 'deptSearch'])->name('deptSearch');
     Route::post('doctypeSearch', [DocumentTypeController::class, 'doctypeSearch'])->name('doctypeSearch');
-    Route::resource('designation', DesignationController::class);
+    Route::resource('designation', DesignationController::class, [
+        'except' => ['show']
+    ]);
     Route::post('changedDocumentTypeActiveStatus', [DocumentTypeController::class, 'changedDocumentTypeActiveStatus'])->name('changedDocumentTypeActiveStatus');
     Route::get('docTypeDetails', [DocumentTypeController::class, 'docTypeDetails'])->name('docTypeDetails');
     // Route::get('documentTypeEdit/{id}', [DocumentTypeController::class, 'documentTypeEdit'])->name('documentTypeEdit');
 
-    Route::resource('documentType', DocumentTypeController::class);
-    Route::resource('employees', EmployeeController::class);
+    Route::resource('documentType', DocumentTypeController::class, [
+        'except' => ['show']
+    ]);
+    Route::resource('employees', EmployeeController::class, [
+        'except' => ['show']
+    ]);
     Route::get('bulkUploadCreate', [EmployeeController::class, 'bulkUploadCreate'])->name('bulkUploadCreate');
     Route::post('bulkUploadStore', [EmployeeController::class, 'bulkUploadStore'])->name('bulkUploadStore');
     Route::post('reAssignEmployee', [EmployeeController::class, 'reAssignEmployee'])->name('reAssignEmployee');
@@ -111,7 +122,9 @@ Route::group([
     Route::post('getProjectLevel', [ProjectController::class, 'getProjectLevel'])->name('getProjectLevel')->middleware('is_admin');
     Route::post('getProjectDocs', [ProjectController::class, 'getProjectDocs'])->name('getProjectDocs')->middleware('is_admin');
     Route::post('docStatus', [ProjectController::class, 'docStatus'])->name('docStatus')->middleware('is_admin');
-    Route::resource('workflow', WorkflowController::class);
+    Route::resource('workflow', WorkflowController::class, [
+        'except' => ['show']
+    ]);
     Route::post('workflowSearch', [WorkflowController::class, 'search'])->name('workflowSearch');
     Route::post('getWorkflowCodeFormat', [WorkflowController::class, 'getWorkflowCodeFormat'])->name('getWorkflowCodeFormat');
 
@@ -173,9 +186,9 @@ Route::group([
 //     dd('1');
 // });
 
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::post('/logout',  [LoginController::class, 'logout']);
+    Route::post('/logout', [LoginController::class, 'logout']);
 
 
     //Approval List
@@ -204,7 +217,7 @@ Route::get('/', [LoginController::class, 'showLoginIndex'])->name('login');
 //     return redirect()->route('login');
 // });
 
-Route::post('/login',  [LoginController::class, 'login']);
+Route::post('/login', [LoginController::class, 'login']);
 // Auth::routes();
 //  Auth::routes(['reset' => false,'logout' => false]);
 Route::get('tempOpen/{id}', [BasicController::class, 'tempOpen'])->name('tempOpen');

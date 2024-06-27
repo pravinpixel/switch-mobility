@@ -65,10 +65,10 @@
                             <!--begin::Card title-->
                             <!--begin::Table-->
                             <form name="createForm" id="form" class="form" method="post"
-                                enctype="multipart/form-data">
+                                  enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" value="{{ $model ? e($model->id) : '' }}" name='id'
-                                    class="id">
+                                       class="id">
                                 <!--end::Input group-->
 
                                 <div class="row g-9 mb-7">
@@ -80,8 +80,9 @@
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <input type="text" class="form-control form-control-solid first_name"
-                                            value="{{ $model ? e($model->first_name) : '' }}" placeholder="Enter First Name"
-                                            name="first_name" autocomplete="off" />
+                                               value="{{ $model ? e($model->first_name) : '' }}"
+                                               placeholder="Enter First Name"
+                                               name="first_name" autocomplete="off"/>
                                         <p id="firstNameAlert" class="notifyAlert"></p>
                                         <!--end::Input-->
                                     </div>
@@ -94,9 +95,9 @@
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <input type="text" class="form-control form-control-solid middle_name"
-                                            placeholder="Enter Middle Name"
-                                            value="{{ $model ? e($model->middle_name) : '' }}" name="middle_name"
-                                            autocomplete="off" />
+                                               placeholder="Enter Middle Name"
+                                               value="{{ $model ? e($model->middle_name) : '' }}" name="middle_name"
+                                               autocomplete="off"/>
                                         <!--end::Input-->
                                     </div>
                                     <!--end::Col-->
@@ -107,8 +108,9 @@
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <input type="text" class="form-control form-control-solid last_name"
-                                            placeholder="Enter Last Name" value="{{ $model ? e($model->last_name) : '' }}"
-                                            name="last_name" autocomplete="off" />
+                                               placeholder="Enter Last Name"
+                                               value="{{ $model ? e($model->last_name) : '' }}"
+                                               name="last_name" autocomplete="off"/>
                                         <p id="lastNameAlert" class="notifyAlert"></p>
                                         <!--end::Input-->
                                     </div>
@@ -121,8 +123,8 @@
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <input type="email" class="form-control form-control-solid email"
-                                            placeholder="Enter Email" name="email"
-                                            value="{{ $model ? e($model->email) : '' }}" autocomplete="off" />
+                                               placeholder="Enter Email" name="email"
+                                               value="{{ $model ? e($model->email) : '' }}" autocomplete="off"/>
                                         <p id="emailAlert" class="notifyAlert emailAlert" dataAdded=""></p>
                                         <!--end::Input-->
                                     </div>
@@ -135,10 +137,10 @@
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <input type="number" pattern="/^-?\d+\.?\d*$/"
-                                            onKeyPress="if(this.value.length==10) return false;"
-                                            value="{{ $model ? e($model->mobile) : '' }}"
-                                            class="form-control form-control-solid mobile" placeholder="Enter Mobile"
-                                            name="mobile" autocomplete="off" maxlength="10" />
+                                               onKeyPress="if(this.value.length==10) return false;"
+                                               value="{{ $model ? e($model->mobile) : '' }}"
+                                               class="form-control form-control-solid mobile" placeholder="Enter Mobile"
+                                               name="mobile" autocomplete="off" maxlength="10"/>
                                         <p id="mobileAlert" class="notifyAlert mobileAlert"></p>
                                         <!--end::Input-->
                                     </div>
@@ -151,15 +153,15 @@
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <select class="form-control form-control-solid department deptAndDesg"
-                                            name="department_id">
+                                                name="department_id">
                                             <option value="">Select</option>
                                             @foreach ($departments as $dept)
-                                                <?php
-                                                $selectedDept = '';
-                                                if ($model) {
-                                                    $selectedDept = $model->department_id == $dept['id'] ? 'selected' : '';
-                                                }
-                                                ?>
+                                                    <?php
+                                                    $selectedDept = '';
+                                                    if ($model) {
+                                                        $selectedDept = $model->department_id == $dept['id'] ? 'selected' : '';
+                                                    }
+                                                    ?>
                                                 <option value="{{ e($dept['id']) }}" {{ $selectedDept }}>
                                                     {{ e($dept['name']) }}
                                                 </option>
@@ -177,15 +179,15 @@
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <select class="form-control form-control-solid designation_id deptAndDesg"
-                                            name="designation_id">
+                                                name="designation_id">
                                             <option value="">Select</option>
                                             @foreach ($designation as $des)
-                                                <?php
-                                                $selectedDesi = '';
-                                                if ($model) {
-                                                    $selectedDesi = $model->designation_id == $des['id'] ? 'selected' : '';
-                                                }
-                                                ?>
+                                                    <?php
+                                                    $selectedDesi = '';
+                                                    if ($model) {
+                                                        $selectedDesi = $model->designation_id == $des['id'] ? 'selected' : '';
+                                                    }
+                                                    ?>
                                                 <option value="{{ e($des['id']) }}" {{ $selectedDesi }}>
                                                     {{ e($des['name']) }}
                                                 </option>
@@ -203,8 +205,8 @@
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <input type="text" class="form-control form-control-solid sapId"
-                                            value="{{ $model ? e($model->sap_id) : '' }}" placeholder="Enter SAP-ID"
-                                            name="sap_id" autocomplete="off" />
+                                               value="{{ $model ? e($model->sap_id) : '' }}" placeholder="Enter SAP-ID"
+                                               name="sap_id" autocomplete="off"/>
                                         <p id="sapIdAlert" class="notifyAlert sapIdAlert"></p>
                                         <!--end::Input-->
                                     </div>
@@ -215,15 +217,17 @@
                                     <!--begin::Col-->
                                     <div class="col-md-4 fv-row">
                                         <!--begin::Label-->
-                                        <label class="fs-6 fw-semibold mb-2">Profile Photo</label>
+                                        <label class="fs-6 fw-semibold mb-2">Profile Photo <p id="profileImageAlert"
+                                                                                              class="notifyAlert profileImageAlert"
+                                                                                              dataAdded=""></p></label>
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <input type="file" class="form-control form-control-solid"
-                                            name="profile_image" id="profileImageInputField"
-                                            onchange="document.getElementById('blahnew').src = window.URL.createObjectURL(this.files[0])"
-                                            accept="image/png, image/gif, image/jpeg" />
+                                               name="profile_image" id="profileImageInputField"
+                                               onchange="document.getElementById('blahnew').src = window.URL.createObjectURL(this.files[0])"
+                                               accept="image/png, image/gif, image/jpeg"/>
                                         <img id="blahnew" class="profilePic" style="display:none;" width="100"
-                                            height="100" />
+                                             height="100"/>
                                         <span class="profileRemoveBtnDiv"></span>
                                         <?php
                                         if ($model) {
@@ -237,7 +241,7 @@
                                         }
                                         ?>
                                         <img src="{{ asset('images/Employee/' . e($profilePic)) }}"
-                                            class="profileImageSrcDiv" width="50" height="50" class="w-50">
+                                             class="profileImageSrcDiv" width="50" height="50" class="w-50">
                                         <!--end::Input-->
                                     </div>
                                     <!--end::Col-->
@@ -245,15 +249,17 @@
                                     <div class="col-md-4 fv-row">
                                         <!--begin::Label-->
                                         <label class="fs-6 fw-semibold mb-2">Signature Photo <p id="signImageAlert"
-                                                class="notifyAlert signImageAlert" dataAdded=""></p></label>
+                                                                                                class="notifyAlert signImageAlert"
+                                                                                                dataAdded=""></p>
+                                        </label>
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <input type="file" class="form-control form-control-solid signImageInputField"
-                                            name="sign_image" id="signImageInputField"
-                                            onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0]);signImageSizeValidation();"
-                                            accept="image/png, image/gif, image/jpeg" />
+                                               name="sign_image" id="signImageInputField"
+                                               onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0]);signImageSizeValidation();"
+                                               accept="image/png, image/gif, image/jpeg"/>
                                         <img id="blah" class="signImageShowDiv" style="display:none;"
-                                            width="100" height="100" />
+                                             width="100" height="100"/>
                                         <span class="signImageRemoveBtnDiv"></span>
                                         <?php
                                         if ($model) {
@@ -265,7 +271,7 @@
                                         }
                                         ?>
                                         <img src="{{ asset('images/Employee/' . e($pic)) }}" class="signImageSrcDiv"
-                                            width="50" height="50" class="w-50">
+                                             width="50" height="50" class="w-50">
                                         <!--end::Input-->
                                     </div>
                                     <!--end::Col-->
@@ -276,21 +282,25 @@
                                         <label class="fs-6 fw-semibold mb-2">Official Communication Address</label>
                                         <!--end::Label-->
                                         <!--begin::Input-->
-                                        <textarea class="form-control form-control-solid" name="address" rows="4" cols="50">{{ $model ? e($model->address) : '' }}</textarea>
+                                        <textarea class="form-control form-control-solid" name="address" rows="4"
+                                                  cols="50">{{ $model ? e($model->address) : '' }}</textarea>
                                         <!--end::Input-->
                                     </div>
                                     <!--end::Col-->
                                 </div>
                                 <div class="text-center pt-15">
                                     <button type="reset" class="btn btn-light me-3 reset"
-                                        data-kt-users-modal-action="cancel">Reset</button>
+                                            data-kt-users-modal-action="cancel">Reset
+                                    </button>
                                     <a href="{{ route('employees.index') }}">
-                                        <button type="button" class="btn btn-light-danger me-3">Cancel</button></a>
+                                        <button type="button" class="btn btn-light-danger me-3">Cancel</button>
+                                    </a>
                                     <button type="submit" class="btn switchPrimaryBtn submit"
-                                        data-kt-users-modal-action="submit">
+                                            data-kt-users-modal-action="submit">
                                         <span class="indicator-label">Save and Exit</span>
                                         <span class="indicator-progress">Please wait...
-                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            <span
+                                                class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                     </button>
                                 </div>
                             </form>
@@ -304,11 +314,12 @@
 
 
 
-    <script data-require="jquery@*" data-semver="3.0.0" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
+    <script data-require="jquery@*" data-semver="3.0.0"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js">
     </script>
     <script>
-        $(document).ready(function() {
-            $('.form').submit(function(e) {
+        $(document).ready(function () {
+            $('.form').submit(function (e) {
                 e.preventDefault();
                 var formData = new FormData(this);
                 var namevalidation = nameValidation();
@@ -317,7 +328,7 @@
                 var sapIdvalidation = sapidValidation();
                 var emailvalidation = emailValidation();
                 var SignimageValidation = signImageSizeValidation();
-                setTimeout(function() {
+                setTimeout(function () {
                     console.log("Executing code after function every 2 seconds");
                     console.log("Second Check");
                     var notifyAlert = $(".notifyAlert").is(":visible");
@@ -340,7 +351,7 @@
                             data: formData,
                             processData: false,
                             contentType: false,
-                            success: function(response) {
+                            success: function (response) {
                                 if (response.status == "success") {
                                     let url = "{{ url('employees') }}";
                                     document.location.href = url;
@@ -352,7 +363,7 @@
                                     }
                                 }
                             },
-                            error: function(error) {
+                            error: function (error) {
                                 // Handle any errors that occur during the Ajax request
                             }
                         });
@@ -389,168 +400,173 @@
 
         //     document.getElementById('emailAlert').style.display = "none";
         //     var regex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-    //     var res = regex.test(email);
-    //     if (!email) {
+        //     var res = regex.test(email);
+        //     if (!email) {
 
-    //         raiseAlert('emailAlert', 'Email', 'Mandate');
+        //         raiseAlert('emailAlert', 'Email', 'Mandate');
 
-    //     } else if (!res) {
-    //         raiseAlert('emailAlert', 'Email', 'Incorrect');
-    //     } else {
-    //         document.getElementById('emailAlert').style.display = "none";
-    //     }
+        //     } else if (!res) {
+        //         raiseAlert('emailAlert', 'Email', 'Incorrect');
+        //     } else {
+        //         document.getElementById('emailAlert').style.display = "none";
+        //     }
 
-    //     if (!mobile) {
+        //     if (!mobile) {
 
-    //         raiseAlert('mobileAlert', 'Mobile Name', 'Mandate');
+        //         raiseAlert('mobileAlert', 'Mobile Name', 'Mandate');
 
-    //     } else if (mobile.length < 10) {
-    //         document.getElementById('mobileAlert').style.display = "block";
-    //         document.getElementById('mobileAlert').style.color = "red";
-    //         document.getElementById('mobileAlert').innerHTML = 'Mobile No Is Minimum 10 Digit*';
-    //     } else {
-    //         document.getElementById('mobileAlert').style.display = "none";
-    //     }
+        //     } else if (mobile.length < 10) {
+        //         document.getElementById('mobileAlert').style.display = "block";
+        //         document.getElementById('mobileAlert').style.color = "red";
+        //         document.getElementById('mobileAlert').innerHTML = 'Mobile No Is Minimum 10 Digit*';
+        //     } else {
+        //         document.getElementById('mobileAlert').style.display = "none";
+        //     }
 
-    //     if (!department) {
+        //     if (!department) {
 
-    //         raiseAlert('departmentAlert', 'Department', 'Mandate');
+        //         raiseAlert('departmentAlert', 'Department', 'Mandate');
 
-    //     } else {
-    //         document.getElementById('departmentAlert').style.display = "none";
-    //     }
-    //     if (!designation) {
-
-
-    //         raiseAlert('designationAlert', 'Designation', 'Mandate');
-
-    //     } else {
-    //         document.getElementById('designationAlert').style.display = "none";
-    //     }
-    //     if (!sapId) {
-
-    //         raiseAlert('sapIdAlert', 'SapId', 'Mandate');
-
-    //     } else {
-    //         document.getElementById('sapIdAlert').style.display = "none";
-    //     }
+        //     } else {
+        //         document.getElementById('departmentAlert').style.display = "none";
+        //     }
+        //     if (!designation) {
 
 
-    //     if (firstName && lastName && email && mobile && department && designation && sapId) {
-    //         console.log("true");
-    //         return true;
-    //     } else {
-    //         console.log("false");
-    //         return false;
-    //     }
+        //         raiseAlert('designationAlert', 'Designation', 'Mandate');
+
+        //     } else {
+        //         document.getElementById('designationAlert').style.display = "none";
+        //     }
+        //     if (!sapId) {
+
+        //         raiseAlert('sapIdAlert', 'SapId', 'Mandate');
+
+        //     } else {
+        //         document.getElementById('sapIdAlert').style.display = "none";
+        //     }
 
 
-    // }
-    $(document).ready(function() {
-        var profileImageField = "<?php echo isset($model['profile_image']) ? '1' : '0'; ?>";
-        var signImageField = "<?php echo isset($model['sign_image']) ? '1' : '0'; ?>";
-        console.log(profileImageField);
-        if (profileImageField == 1) {
-            $(".profileRemoveBtnDiv").append("<button type='button' id='profileRemoveBtn'>Remove</button>");
-        }
-        if (signImageField == 1) {
-            $(".signImageRemoveBtnDiv").append("<button type='button' id='signImageRemoveBtn'>Remove</button>");
-        }
-        $(".designation_id").select2({
-            dropdownParent: $("#form")
-        });
-        $(".department").select2({
-            dropdownParent: $("#form")
-        });
-        $('.reset').on('click', function() {
-            $('.deptAndDesg').val("").trigger('change');
-            document.getElementById("form").reset();
-            $('.notifyAlert').hide();
-            $("#signImageRemoveBtn").click();
-            $("#profileRemoveBtn").click();
-            // $('.profilePic').hide();
-            // $('profileImageInputField').val('');
-            // $('#profileRemoveBtn').remove();
-            // $('.signImageShowDiv').hide();
+        //     if (firstName && lastName && email && mobile && department && designation && sapId) {
+        //         console.log("true");
+        //         return true;
+        //     } else {
+        //         console.log("false");
+        //         return false;
+        //     }
 
-        });
 
-        if ($('.id').val()) {
+        // }
+        $(document).ready(function () {
+            var profileImageField = "<?php echo isset($model['profile_image']) ? '1' : '0'; ?>";
+            var signImageField = "<?php echo isset($model['sign_image']) ? '1' : '0'; ?>";
+            console.log(profileImageField);
+            if (profileImageField == 1) {
+                $(".profileRemoveBtnDiv").append("<button type='button' id='profileRemoveBtn'>Remove</button>");
+            }
+            if (signImageField == 1) {
+                $(".signImageRemoveBtnDiv").append("<button type='button' id='signImageRemoveBtn'>Remove</button>");
+            }
+            $(".designation_id").select2({
+                dropdownParent: $("#form")
+            });
+            $(".department").select2({
+                dropdownParent: $("#form")
+            });
+            $('.reset').on('click', function () {
+                $('.deptAndDesg').val("").trigger('change');
+                document.getElementById("form").reset();
+                $('.notifyAlert').hide();
+                $("#signImageRemoveBtn").click();
+                $("#profileRemoveBtn").click();
+                // $('.profilePic').hide();
+                // $('profileImageInputField').val('');
+                // $('#profileRemoveBtn').remove();
+                // $('.signImageShowDiv').hide();
 
-            $('.reset').css('display', 'none');
-        }
-        //sign image
-        $("#signImageInputField").change(function() {
-            $('.signImageShowDiv').empty();
-            $('#signImageRemoveBtn').remove();
-            $('#signImageInputField').empty();
-            $('.signImageShowDiv').removeAttr('style');
-            $('.signImageSrcDiv').remove();
-            $(".signImageRemoveBtnDiv").append(
-                "<button type='button' id='signImageRemoveBtn'>Remove</button>");
-            $("#signImageRemoveBtn").click(function() {
+            });
+
+            if ($('.id').val()) {
+
+                $('.reset').css('display', 'none');
+            }
+            //sign image
+            $("#signImageInputField").change(function () {
+                document.getElementById('signImageAlert').style.display = "none";
+
+                $('.signImageShowDiv').empty();
+                $('#signImageRemoveBtn').remove();
+                $('#signImageInputField').empty();
+                $('.signImageShowDiv').removeAttr('style');
+                $('.signImageSrcDiv').remove();
+                $(".signImageRemoveBtnDiv").append(
+                    "<button type='button' id='signImageRemoveBtn'>Remove</button>");
+                $("#signImageRemoveBtn").click(function () {
+                    $('.signImageShowDiv').hide();
+                    $('#signImageInputField').val('');
+                    $('#signImageRemoveBtn').remove();
+
+                });
+            });
+            $("#signImageRemoveBtn").click(function () {
+                console.log("signImageRemoveBtn");
+                document.getElementById('signImageAlert').style.display = "none";
+
+                $('.signImageSrcDiv').remove();
                 $('.signImageShowDiv').hide();
                 $('#signImageInputField').val('');
                 $('#signImageRemoveBtn').remove();
+                $('.IsSignImage').val("");
 
             });
-        });
-        $("#signImageRemoveBtn").click(function() {
-            console.log("signImageRemoveBtn");
-            $('.signImageSrcDiv').remove();
-            $('.signImageShowDiv').hide();
-            $('#signImageInputField').val('');
-            $('#signImageRemoveBtn').remove();
-            $('.IsSignImage').val("");
+            //profile image
+            $("#profileImageInputField").change(function () {
+                document.getElementById('profileImageAlert').style.display = "none";
+                $('.profilePic').empty();
+                $('#profileRemoveBtn').remove();
+                $('#profileImageInputField').empty();
+                $('.profilePic').removeAttr('style');
+                $('.profileImageSrcDiv').remove();
+                $(".profileRemoveBtnDiv").html("");
+                $(".profileRemoveBtnDiv").append(
+                    "<button type='button' id='profileRemoveBtn'>Remove</button>");
+                $("#profileRemoveBtn").click(function () {
 
-        });
-        //profile image
-        $("#profileImageInputField").change(function() {
-
-            $('.profilePic').empty();
-            $('#profileRemoveBtn').remove();
-            $('#profileImageInputField').empty();
-            $('.profilePic').removeAttr('style');
-            $('.profileImageSrcDiv').remove();
-            $(".profileRemoveBtnDiv").html("");
-            $(".profileRemoveBtnDiv").append(
-                "<button type='button' id='profileRemoveBtn'>Remove</button>");
-            $("#profileRemoveBtn").click(function() {
-
+                    $('.profilePic').hide();
+                    $('#profileImageInputField').val('');
+                    $('#profileRemoveBtn').remove();
+                });
+            });
+            $("#profileRemoveBtn").click(function () {
+                console.log("well");
+                document.getElementById('profileImageAlert').style.display = "none";
                 $('.profilePic').hide();
                 $('#profileImageInputField').val('');
                 $('#profileRemoveBtn').remove();
+                $('.profileImageSrcDiv').remove();
+                $('.IsProfileImage').val("");
             });
-        });
-        $("#profileRemoveBtn").click(function() {
-            console.log("well");
-            $('.profilePic').hide();
-            $('#profileImageInputField').val('');
-            $('#profileRemoveBtn').remove();
-            $('.profileImageSrcDiv').remove();
-            $('.IsProfileImage').val("");
-        });
 
-        // $('.submitBtn').attr('disabled', 'true');
-        // if ($('.id').val()) {
-        //     $('.submitBtn').removeAttr('disabled');
-        // }
+            // $('.submitBtn').attr('disabled', 'true');
+            // if ($('.id').val()) {
+            //     $('.submitBtn').removeAttr('disabled');
+            // }
 
-        $(".email").on('input', function() {
-            var pkey = $('.id').val();
+            $(".email").on('input', function () {
+                var pkey = $('.id').val();
 
 
-            var email = $(this).val();
+                var email = $(this).val();
 
-            var regex =
-                /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+                var regex =
+                    /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
                 var res = regex.test(email);
 
                 if (res) {
                     getValidationResult('email', email);
                 }
             });
-            $(".mobile").on('input', function() {
+            $(".mobile").on('input', function () {
                 var mobile = $(this).val();
                 var pkey = $('.id').val();
 
@@ -559,7 +575,7 @@
                     getValidationResult('mobile', mobile);
                 }
             });
-            $(".sapId1").on('input', function() {
+            $(".sapId1").on('input', function () {
                 var sapId1 = $(this).val();
                 sapIdChecking(sapId1);
             });
@@ -575,7 +591,6 @@
         }
 
 
-
         function getValidationResult(fieldname, fieldData) {
             var pkey = $('.id').val();
             $.ajax({
@@ -588,7 +603,7 @@
                     fieldData: fieldData,
                     pkey: pkey,
                 },
-                success: function(result) {
+                success: function (result) {
                     var data = JSON.parse(result);
 
 
@@ -615,7 +630,8 @@
                 }
             });
         }
-        $(document).on('input', '.department', function() {
+
+        $(document).on('input', '.department', function () {
             if ($(this).val().trim()) {
                 $('.submitBtn').removeAttr('disabled');
             } else {
@@ -647,7 +663,6 @@
 
 
         //     return false;
-
 
 
         // }
@@ -797,7 +812,7 @@
                         fieldData: sapId,
                         pkey: $('.id').val(),
                     },
-                    success: function(result) {
+                    success: function (result) {
                         var data = JSON.parse(result);
 
                         console.log("first check sapid");
@@ -822,205 +837,205 @@
             var email = $('.email').val();
             var regex =
                 /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-        var res = regex.test(email);
+            var res = regex.test(email);
 
-        if (!email) {
-            raiseAlert('emailAlert', 'Email', 'Mandate');
-            $('#emailAlert').attr('dataAdded', "error");
-            return 0;
-        } else if (!res) {
-            raiseAlert('emailAlert', 'Email', 'Incorrect');
-            $('#emailAlert').attr('dataAdded', "error");
-            return 0;
-        } else {
+            if (!email) {
+                raiseAlert('emailAlert', 'Email', 'Mandate');
+                $('#emailAlert').attr('dataAdded', "error");
+                return 0;
+            } else if (!res) {
+                raiseAlert('emailAlert', 'Email', 'Incorrect');
+                $('#emailAlert').attr('dataAdded', "error");
+                return 0;
+            } else {
+                $.ajax({
+                    url: "{{ route('getEmployeeDetailByParams') }}",
+                    type: 'ajax',
+                    method: 'post',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        fieldname: 'email',
+                        fieldData: email,
+                        pkey: $('.id').val(),
+                    },
+                    success: function (result) {
+                        var data = JSON.parse(result);
+                        if (data) {
+                            raiseAlert('emailAlert', 'Email', '');
+                            $('#emailAlert').attr('dataAdded', "error");
+                        } else {
+                            document.getElementById('emailAlert').style.display = "none";
+                            $('#emailAlert').attr('dataAdded', "");
+                        }
+                    }
+                });
+            }
+        }
+
+
+        function mobileValidation() {
+            var mobile = $('.mobile').val();
+            document.getElementById('mobileAlert').style.display = "none";
+            if (!mobile) {
+                raiseAlert('mobileAlert', 'Mobile', 'Mandate');
+            } else if (mobile.length < 10) {
+                document.getElementById('mobileAlert').style.display = "block";
+                document.getElementById('mobileAlert').style.color = "red";
+                document.getElementById('mobileAlert').innerHTML = 'Mobile No Is Minimum 10 Digit*';
+            } else {
+                $.ajax({
+                    url: "{{ route('getEmployeeDetailByParams') }}",
+                    type: 'ajax',
+                    method: 'post',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        fieldname: 'mobile',
+                        fieldData: mobile,
+                        pkey: $('.id').val(),
+                    },
+                    success: function (result) {
+                        var data = JSON.parse(result);
+                        if (data) {
+                            raiseAlert('mobileAlert', 'Mobile', '');
+                        } else {
+                            document.getElementById('mobileAlert').style.display = "none";
+                        }
+                    }
+                });
+
+            }
+
+            return 1;
+        }
+
+
+        function raiseAlert(alertfieldIdName, alertField, alertType) {
+            document.getElementById(alertfieldIdName).style.display = "block";
+            document.getElementById(alertfieldIdName).style.color = "red";
+            if (alertType == "Mandate") {
+                document.getElementById(alertfieldIdName).innerHTML = alertField + ' is mandatory*';
+            } else if (alertType == "Incorrect") {
+                document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Incorrect Format*';
+            } else if (alertType == "largeSize") {
+                document.getElementById(alertfieldIdName).innerHTML = 'Only Allow 100kb*';
+            } else if (alertField == "invalid") {
+                document.getElementById(alertfieldIdName).innerHTML = alertType;
+            } else {
+                document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Exist*';
+            }
+        }
+
+
+        function getValidationResult(fieldname, fieldData) {
+            var pkey = $('.id').val();
+            var result = "";
             $.ajax({
                 url: "{{ route('getEmployeeDetailByParams') }}",
                 type: 'ajax',
                 method: 'post',
                 data: {
                     "_token": "{{ csrf_token() }}",
-                    fieldname: 'email',
-                    fieldData: email,
-                    pkey: $('.id').val(),
+                    fieldname: fieldname,
+                    fieldData: fieldData,
+                    pkey: pkey,
                 },
-                success: function(result) {
+                success: function (result) {
                     var data = JSON.parse(result);
-                    if (data) {
-                        raiseAlert('emailAlert', 'Email', '');
-                        $('#emailAlert').attr('dataAdded', "error");
-                    } else {
-                        document.getElementById('emailAlert').style.display = "none";
-                        $('#emailAlert').attr('dataAdded', "");
-                    }
-                }
-            });
-        }
-    }
 
 
-    function mobileValidation() {
-        var mobile = $('.mobile').val();
-        document.getElementById('mobileAlert').style.display = "none";
-        if (!mobile) {
-            raiseAlert('mobileAlert', 'Mobile', 'Mandate');
-        } else if (mobile.length < 10) {
-            document.getElementById('mobileAlert').style.display = "block";
-            document.getElementById('mobileAlert').style.color = "red";
-            document.getElementById('mobileAlert').innerHTML = 'Mobile No Is Minimum 10 Digit*';
-        } else {
-            $.ajax({
-                url: "{{ route('getEmployeeDetailByParams') }}",
-                type: 'ajax',
-                method: 'post',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    fieldname: 'mobile',
-                    fieldData: mobile,
-                    pkey: $('.id').val(),
-                },
-                success: function(result) {
-                    var data = JSON.parse(result);
                     if (data) {
-                        raiseAlert('mobileAlert', 'Mobile', '');
+
+                        result = 1;
+
+                        // if (data) {
+                        //     Swal.fire({
+                        //         icon: 'error',
+                        //         title: 'Oops...',
+                        //         text: 'This ' + fieldname + ' Already In Employee!'
+
+                        //     });
+                        //     $('.submit').prop('disabled', true);
+                        //     if (fieldname == 'sapId') {
+                        //         $("." + fieldname + "").val("");
+                        //     }
+                        // }
                     } else {
-                        document.getElementById('mobileAlert').style.display = "none";
+                        // $('.submit').prop('disabled', false);
+                        result = 0;
+
                     }
                 }
             });
 
+            return result;
         }
 
-        return 1;
-    }
+        // function finalValidation1() {
+
+        //     var firstname = document.createForm.first_name;
+        //     var lastname = document.createForm.last_name;
+        //     var email = document.createForm.email;
+        //     var mobile = document.createForm.mobile;
+        //     var department_id = document.createForm.department_id;
+        //     var designation_id = document.createForm.designation_id;
+        //     var sap_id = document.createForm.sap_id;
+        //     sapIdChecking(sap_id);
+        //     var firstNameError = validateField('firstNameAlert', 'First Name', firstname.value);
+        //     var lastNameError = validateField('lastNameAlert', 'Last Name', lastname.value);
+        //     var emailError = validateField('emailAlert', 'Email', email.value);
+        //     var mobileError = validateField('mobileAlert', 'Mobile', mobile.value);
+        //     var departmentError = validateField('departmentAlert', 'Department', department_id.value);
+        //     var designationError = validateField('designationAlert', 'Designation', designation_id.value);
+
+        //     var sapidError = validateField('sapIdAlert', 'Sap Id', sap_id.value);
 
 
-
-    function raiseAlert(alertfieldIdName, alertField, alertType) {
-        document.getElementById(alertfieldIdName).style.display = "block";
-        document.getElementById(alertfieldIdName).style.color = "red";
-        if (alertType == "Mandate") {
-            document.getElementById(alertfieldIdName).innerHTML = alertField + ' is mandatory*';
-        } else if (alertType == "Incorrect") {
-            document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Incorrect Format*';
-        } else if (alertType == "largeSize") {
-            document.getElementById(alertfieldIdName).innerHTML = 'Only Allow 100kb*';
-        } else {
-            document.getElementById(alertfieldIdName).innerHTML = alertField + ' Is Exist*';
-        }
-    }
+        //     console.log(firstNameError);
+        //     console.log(lastNameError);
+        //     console.log(emailError);
+        //     console.log(mobileError);
+        //     console.log(departmentError);
+        //     console.log(designationError);
+        //     console.log(sapidError);
 
 
-    function getValidationResult(fieldname, fieldData) {
-        var pkey = $('.id').val();
-        var result = "";
-        $.ajax({
-            url: "{{ route('getEmployeeDetailByParams') }}",
-            type: 'ajax',
-            method: 'post',
-            data: {
-                "_token": "{{ csrf_token() }}",
-                fieldname: fieldname,
-                fieldData: fieldData,
-                pkey: pkey,
-            },
-            success: function(result) {
-                var data = JSON.parse(result);
+        //     if (firstNameError && lastNameError && emailError && mobileError && departmentError && designationError &&
+        //         sapidError) {
 
+        //         $(".form").submit();
+        //         $('.submit').prop('disabled', true);
 
-                if (data) {
+        //         return true;
+        //     } else {
 
-                    result = 1;
+        //         return false;
+        //     }
+        //     return false;
+        // }
 
-                    // if (data) {
-                    //     Swal.fire({
-                    //         icon: 'error',
-                    //         title: 'Oops...',
-                    //         text: 'This ' + fieldname + ' Already In Employee!'
+        function validateField(alertName, fieldname, fieldValue) {
 
-                    //     });
-                    //     $('.submit').prop('disabled', true);
-                    //     if (fieldname == 'sapId') {
-                    //         $("." + fieldname + "").val("");
-                    //     }
-                    // }
-                } else {
-                    // $('.submit').prop('disabled', false);
-                    result = 0;
+            if (fieldValue == "" || fieldValue == null) {
+                document.getElementById(alertName).style.display = "block";
+                document.getElementById(alertName).style.color = "red";
+                document.getElementById(alertName).innerHTML = fieldname + ' is mandatory*';
+                return false;
+            }
+            if (fieldname == "Mobile") {
+                if (fieldValue != "" || fieldValue != null) {
+                    if (fieldValue.length < 10) {
+                        document.getElementById(alertName).style.display = "block";
+                        document.getElementById(alertName).style.color = "red";
+                        document.getElementById(alertName).innerHTML = fieldname + ' Is Minimum 10 Digit*';
+                        return false;
+                    }
 
                 }
             }
-        });
 
-        return result;
-    }
-
-    // function finalValidation1() {
-
-    //     var firstname = document.createForm.first_name;
-    //     var lastname = document.createForm.last_name;
-    //     var email = document.createForm.email;
-    //     var mobile = document.createForm.mobile;
-    //     var department_id = document.createForm.department_id;
-    //     var designation_id = document.createForm.designation_id;
-    //     var sap_id = document.createForm.sap_id;
-    //     sapIdChecking(sap_id);
-    //     var firstNameError = validateField('firstNameAlert', 'First Name', firstname.value);
-    //     var lastNameError = validateField('lastNameAlert', 'Last Name', lastname.value);
-    //     var emailError = validateField('emailAlert', 'Email', email.value);
-    //     var mobileError = validateField('mobileAlert', 'Mobile', mobile.value);
-    //     var departmentError = validateField('departmentAlert', 'Department', department_id.value);
-    //     var designationError = validateField('designationAlert', 'Designation', designation_id.value);
-
-    //     var sapidError = validateField('sapIdAlert', 'Sap Id', sap_id.value);
-
-
-    //     console.log(firstNameError);
-    //     console.log(lastNameError);
-    //     console.log(emailError);
-    //     console.log(mobileError);
-    //     console.log(departmentError);
-    //     console.log(designationError);
-    //     console.log(sapidError);
-
-
-
-    //     if (firstNameError && lastNameError && emailError && mobileError && departmentError && designationError &&
-    //         sapidError) {
-
-    //         $(".form").submit();
-    //         $('.submit').prop('disabled', true);
-
-    //         return true;
-    //     } else {
-
-    //         return false;
-    //     }
-    //     return false;
-    // }
-
-    function validateField(alertName, fieldname, fieldValue) {
-
-        if (fieldValue == "" || fieldValue == null) {
-            document.getElementById(alertName).style.display = "block";
-            document.getElementById(alertName).style.color = "red";
-            document.getElementById(alertName).innerHTML = fieldname + ' is mandatory*';
-            return false;
-        }
-        if (fieldname == "Mobile") {
-            if (fieldValue != "" || fieldValue != null) {
-                if (fieldValue.length < 10) {
-                    document.getElementById(alertName).style.display = "block";
-                    document.getElementById(alertName).style.color = "red";
-                    document.getElementById(alertName).innerHTML = fieldname + ' Is Minimum 10 Digit*';
-                    return false;
-                }
-
-            }
-        }
-
-        if (fieldname == "Email") {
-            var regex =
-                /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+            if (fieldname == "Email") {
+                var regex =
+                    /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
                 var res = regex.test(fieldValue);
 
                 if (!res) {
@@ -1048,10 +1063,9 @@
                     name: name,
                     id: id
                 },
-                success: function(result) {
+                success: function (result) {
 
                     var alertName = 'nameAlert';
-
 
 
                     if (result.response == false) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\UtilsHelper;
 use App\Http\Controllers\Email\EmailController;
 use App\Imports\EmployeeImport;
 use App\Imports\EmployeesImport;
@@ -25,6 +26,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class EmployeeController extends Controller
 {
     protected $ProjectController, $workflowController, $email;
+
     public function __construct(ProjectController $ProjectController, WorkflowController $workflowController, EmailController $email)
     {
         $this->ProjectController = $ProjectController;
@@ -40,6 +42,7 @@ class EmployeeController extends Controller
         $model = array();
         return view('Employee/EmployeeDetails', ['model' => $model, 'departments' => $departments, 'designation' => $designation]);
     }
+
     public function edit($id)
     {
         $departments = Department::where('is_active', 1)->get();
@@ -48,6 +51,7 @@ class EmployeeController extends Controller
         $model = Employee::findOrFail($id);
         return view('Employee/EmployeeDetails', ['model' => $model, 'departments' => $departments, 'designation' => $designation]);
     }
+
     public function employeeEdit(Request $request)
     {
         $id = $request->id;
@@ -57,12 +61,52 @@ class EmployeeController extends Controller
         $model = Employee::findOrFail($id);
         return view('Employee/EmployeeDetails', ['model' => $model, 'departments' => $departments, 'designation' => $designation]);
     }
+
     function employeeValidation(Request $request)
     {
         dd($request->all());
     }
+
     public function store(Request $request)
     {
+
+        $rule_arr = [
+            'first_name' => 'required',
+            'email' => 'required|email',
+            'mobile' => 'required|numeric',
+            'department_id' => 'required',
+            'designation_id' => 'required',
+            'sap_id' => 'required'
+        ];
+
+        if ($request->hasFile('profile_image')) {
+            $rule_arr['profile_image'] = 'mimes:jpeg,jpg,png,gif|required|max:10000';
+        }
+        if ($request->hasFile('sign_image')) {
+            $rule_arr['sign_image'] = 'mimes:jpeg,jpg,png,webp|required|max:10000';
+        }
+
+        $validator = Validator::make($request->all(), $rule_arr, [
+            'profile_image.mimes' => 'Invalid file format',
+            'profile_image.max' => 'Maximum file size is 10MB',
+            'sign_image.mimes' => 'Invalid file format',
+            'sign_image.max' => 'Maximum file size is 10MB'
+        ]);
+
+        if ($validator->fails()) {
+            $err = $validator->errors();
+
+            $errors = [];
+            if ($err->has('profile_image')) {
+                $errors[] = ["alertField" => "profileImageAlert", "name" => "invalid", "type" => $err->first('profile_image')];
+            }
+            if ($err->has('sign_image')) {
+                $errors[] = ["alertField" => "signImageAlert", "name" => "invalid", "type" => $err->first('sign_image')];
+            }
+
+            return response()->json(['status' => "failed", 'errors' => $errors]);
+        }
+
 
         $row = $request->all();
 
@@ -87,7 +131,7 @@ class EmployeeController extends Controller
             return response()->json(['status' => "failed", 'errors' => $errors]);
         } else {
             // try {
-            //     Excel::import(new EmployeesImport, "bulk1.xlsx");  
+            //     Excel::import(new EmployeesImport, "bulk1.xlsx");
 
 
             // } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
@@ -126,7 +170,7 @@ class EmployeeController extends Controller
                 if (file_exists($removeSignImagePath)) {
                     unlink($removeSignImagePath);
 
-                    $model->sign_image =  null;
+                    $model->sign_image = null;
                     $model->save();
                 }
             }
@@ -138,7 +182,7 @@ class EmployeeController extends Controller
                 $destinationPath = public_path('/images/Employee');
                 $image->move($destinationPath, $profile_image);
 
-                $model->profile_image =  $profile_image;
+                $model->profile_image = $profile_image;
                 $model->save();
             }
 
@@ -147,7 +191,7 @@ class EmployeeController extends Controller
                 $sign_image = "s" . time() . '.' . $image->getClientOriginalExtension();
                 $destinationPath = public_path('/images/Employee');
                 $image->move($destinationPath, $sign_image);
-                $model->sign_image =  $sign_image;
+                $model->sign_image = $sign_image;
                 $model->save();
             }
 
@@ -156,6 +200,7 @@ class EmployeeController extends Controller
             // return redirect('employees')->with('success', "Employee " . $msg . " Successfully!.");
         }
     }
+
     public function employeeSearch(Request $request)
     {
 
@@ -188,14 +233,15 @@ class EmployeeController extends Controller
 
         return response()->json($model);
     }
+
     public function getEmployeeDetailByParams(Request $request)
     {
 
         $model = Employee::with('user')->where('id', '!=', $request->pkey)
-        ->where(function ($query) {
-            $query->whereNull('deleted_at')
-                ->orWhere('delete_flag', 1);
-        });
+            ->where(function ($query) {
+                $query->whereNull('deleted_at')
+                    ->orWhere('delete_flag', 1);
+            });
         if ($request->fieldname == "sapId") {
             $model->where('sap_id', $request->fieldData);
         }
@@ -212,6 +258,7 @@ class EmployeeController extends Controller
 
         return json_encode($data);
     }
+
     public function index()
     {
         $employee_all = $this->get_all_employee();
@@ -221,22 +268,23 @@ class EmployeeController extends Controller
         $designation = Designation::where('is_active', 1)->whereNull('deleted_at')->get()->toArray();
         return view('Employee/list', ['employee_all' => $employee_all, 'employee' => $employees, 'departments' => $departments, 'designation' => $designation]);
     }
+
     public function getEmployeeListData()
     {
         $model = $this->get_all_employee();
         return response()->json($model);
     }
+
     public function get_all_employee()
     {
         $models = Employee::with('department', 'designation')
-       
-        ->where(function ($query) {
-            $query->whereNull('deleted_at')
-                ->orWhere('delete_flag', 1);
-        })
-        ->orderBy('id', 'desc')
-        ->get();
-   
+            ->where(function ($query) {
+                $query->whereNull('deleted_at')
+                    ->orWhere('delete_flag', 1);
+            })
+            ->orderBy('id', 'desc')
+            ->get();
+
         $datas = array();
         foreach ($models as $model) {
             $departmentModel = $model->department;
@@ -256,7 +304,6 @@ class EmployeeController extends Controller
             $itsDepend = false;
 
 
-
             $runningProjects = $this->ProjectController->getRunningProjectsByEmpId($id);
             Log::info('get running Projects for empId' . $id . " " . json_encode($runningProjects));
             $runningWorkflow = $this->workflowController->getWorkflowApproverByEmpId($id);
@@ -265,15 +312,14 @@ class EmployeeController extends Controller
                 $itsDepend = true;
             }
 
-            $response = ["deleted_flag"=>$delete_flag,'itsDepend' => $itsDepend, 'id' => $id, 'name' => $name, 'profileImage' => $profileImage, 'email' => $email, 'sapId' => $sapId, 'mobile' => $mobile, 'designationName' => $designationName, 'departmentName' => $departmentName, 'is_active' => $is_active];
+            $response = ["deleted_flag" => $delete_flag, 'itsDepend' => $itsDepend, 'id' => $id, 'name' => $name, 'profileImage' => $profileImage, 'email' => $email, 'sapId' => $sapId, 'mobile' => $mobile, 'designationName' => $designationName, 'departmentName' => $departmentName, 'is_active' => $is_active];
 
             Log::info('getemployee response for empId' . $id . " " . json_encode($response));
             array_push($datas, $response);
         }
 
-    
-          
-        return  $datas;
+
+        return $datas;
     }
 
 
@@ -286,9 +332,10 @@ class EmployeeController extends Controller
             ->get();
         return response()->json($model);
     }
+
     public function employeeDetailByDesDept(Request $request)
     {
-        $model = Employee::select('employees.id','employees.delete_flag', 'employees.first_name', 'employees.email', 'employees.last_name', 'employees.profile_image', 'employees.mobile', 'employees.is_active', 'employees.sap_id', 'departments.name as deptName', 'designations.name as desgName');
+        $model = Employee::select('employees.id', 'employees.delete_flag', 'employees.first_name', 'employees.email', 'employees.last_name', 'employees.profile_image', 'employees.mobile', 'employees.is_active', 'employees.sap_id', 'departments.name as deptName', 'designations.name as desgName');
         $model->leftjoin('departments', 'departments.id', '=', 'employees.department_id');
         $model->leftjoin('designations', 'designations.id', '=', 'employees.designation_id');
         if ($request->deptId) {
@@ -304,6 +351,7 @@ class EmployeeController extends Controller
         $data = $model->get();
         return response()->json($data);
     }
+
     public function getDetailsById(Request $request)
     {
         $id = $request->emp_id;
@@ -315,6 +363,7 @@ class EmployeeController extends Controller
             ->get();
         echo json_encode($employees);
     }
+
     public function store1(Request $request)
     {
 
@@ -326,18 +375,18 @@ class EmployeeController extends Controller
 
         if ($request->id == "") {
             $check_mobile = Employee::where('mobile', $request->mobile)
-            ->whereNull('employees.deleted_at')
-            ->pluck('id')
-            ->first();
+                ->whereNull('employees.deleted_at')
+                ->pluck('id')
+                ->first();
         } else {
             $check_mobile = null;
         }
 
         if ($request->id == "") {
             $check_sap = Employee::where('sap_id', $request->sap_id)
-            ->whereNull('employees.deleted_at')
-            ->pluck('id')
-            ->first();
+                ->whereNull('employees.deleted_at')
+                ->pluck('id')
+                ->first();
         } else {
             $check_sap = null;
         }
@@ -420,7 +469,7 @@ class EmployeeController extends Controller
                 // Update the deleted_at field with the current timestamp
                 $model->deleted_at = Carbon::now();
                 $model->save();
-            
+
                 // If you want to permanently delete the record, you can use: $model->forceDelete();
                 // $model->forceDelete();
             }
@@ -433,12 +482,11 @@ class EmployeeController extends Controller
         return response()->json($data);
 
 
-    
     }
 
     public function changeActiveStatus(Request $request)
     {
-        $id =  $request->id;
+        $id = $request->id;
         $checkChildData = ProjectEmployee::where('employee_id', $id)->first();
         $checkChildData1 = WorkflowLevelDetail::where('employee_id', $id)->first();
 
@@ -466,8 +514,20 @@ class EmployeeController extends Controller
         $model = array();
         return view('Employee/bulkUpload', ['model' => $model, 'departments' => $departments, 'designation' => $designation]);
     }
+
     public function bulkUploadStore(Request $request)
     {
+
+        $validator = Validator::make($request->all(), [
+            'bulkupload' => 'mimes:xlsx,xls|required|max:10000'
+        ], [
+            'bulkupload.mimes' => 'Invalid file format',
+            'bulkupload.max' => 'Maximum file size is 10MB'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['result' => "failed", 'data' => [$validator->errors()->first('bulkupload')]]);
+        }
 
         $employeeImport = new EmployeesImport;
         Log::info("Employee Import" . json_encode($employeeImport));
@@ -519,6 +579,7 @@ class EmployeeController extends Controller
             return response()->json(['result' => "success", 'data' => '']);
         }
     }
+
     public function basicValidation($rowNo, $row, $id = null)
     {
         $errors = array();
@@ -552,25 +613,30 @@ class EmployeeController extends Controller
     {
         return Employee::where('mobile', $mobileNo)->where('id', '!=', $id)->first();
     }
+
     public function emailCheckFunction($email, $id = null)
     {
         return Employee::where('email', $email)->where('id', '!=', $id)->first();
     }
+
     public function sapIdCheckFunction($sapId, $id = null)
     {
         return Employee::where('sap_id', $sapId)->where('id', '!=', $id)->first();
     }
+
     public function departemntCheckFunction($name)
     {
         return Department::where('name', $name)->first();
     }
+
     public function designationCheckFunction($name)
     {
         return Designation::where('name', $name)->first();
     }
+
     public function employeeModel($model, $datas)
     {
-        $datas  = (object)$datas;
+        $datas = (object)$datas;
         $deptId = Department::where('name', $datas->department)->first()->id;
         $descId = Designation::where('name', $datas->designation)->first()->id;
 
@@ -637,7 +703,7 @@ class EmployeeController extends Controller
                 $type = "Approver";
 
                 $wfName = $workflowModel->workflow_name;
-                $level =  $wfLevelModel->levels;
+                $level = $wfLevelModel->levels;
 
                 $response = ['type' => $type, 'wfName' => $wfName, 'projectName' => $projectName, 'level' => $level];
 
@@ -659,7 +725,7 @@ class EmployeeController extends Controller
             $type = "Approver";
             $projectName = "";
             $wfName = $wfModel->workflow_name;
-            $level =  $wfLevelModel->levels;
+            $level = $wfLevelModel->levels;
 
             $response = ['type' => $type, 'wfName' => $wfName, 'projectName' => $projectName, 'level' => $level];
             array_push($responseDatas, $response);
@@ -708,7 +774,7 @@ class EmployeeController extends Controller
             $reAssignedEmployeeModel = $this->convertToModelReAssignedEmployee($wfId, $projectId, $level, $type, $oldEmployeeId, $NewEmployeeId);
         }
         $projectWiseEmployees = $this->ProjectController->getRunningProjectsEmployeesByEmpId($oldEmployeeId);
-       // dd($projectWiseEmployees);
+        // dd($projectWiseEmployees);
         Log::info("Get projectWiseEmployees  By Emp id " . json_encode($projectWiseEmployees));
         $projectIdArrays = [];
         foreach ($projectWiseEmployees as $projectWiseEmployee) {
@@ -739,22 +805,22 @@ class EmployeeController extends Controller
                 $type = "Initiator";
                 Log::info("reAssignEmployeeUpdate  By get type  " . json_encode($type));
 
-                $updateProjectEmployee =  $this->updateProjectEmployees($projectWiseEmployee->id, $NewEmployeeId);
-                $updateProjectApprover =  $this->updateProjectApprovers($projectWiseEmployee->project_id, $projectWiseEmployee->level, $NewEmployeeId);
+                $updateProjectEmployee = $this->updateProjectEmployees($projectWiseEmployee->id, $NewEmployeeId);
+                $updateProjectApprover = $this->updateProjectApprovers($projectWiseEmployee->project_id, $projectWiseEmployee->level, $NewEmployeeId);
             }
             if ($projectWiseEmployee->type == 2) {
                 $type = "Approver";
                 Log::info("reAssignEmployeeUpdate  By get type  " . json_encode($type));
                 if ($toAllowType == 2) {
-                    $updateProjectEmployee =  $this->updateProjectEmployees($projectWiseEmployee->id, $NewEmployeeId);
-                    $updateProjectApprover =  $this->updateProjectApprovers($projectWiseEmployee->project_id, $projectWiseEmployee->level, $NewEmployeeId);
+                    $updateProjectEmployee = $this->updateProjectEmployees($projectWiseEmployee->id, $NewEmployeeId);
+                    $updateProjectApprover = $this->updateProjectApprovers($projectWiseEmployee->project_id, $projectWiseEmployee->level, $NewEmployeeId);
                 } else {
                     $documentStatus = $this->ProjectController->getProjectslevelStatusByProjectIdAndLevelId($projectWiseEmployee->project_id, $projectWiseEmployee->level);
                     if ($documentStatus) {
                         if ($documentStatus->status != 4) {
 
-                            $updateProjectEmployee =  $this->updateProjectEmployees($projectWiseEmployee->id, $NewEmployeeId);
-                            $updateProjectApprover =  $this->updateProjectApprovers($projectWiseEmployee->project_id, $projectWiseEmployee->level, $NewEmployeeId);
+                            $updateProjectEmployee = $this->updateProjectEmployees($projectWiseEmployee->id, $NewEmployeeId);
+                            $updateProjectApprover = $this->updateProjectApprovers($projectWiseEmployee->project_id, $projectWiseEmployee->level, $NewEmployeeId);
                         }
                     }
                 }
@@ -767,9 +833,9 @@ class EmployeeController extends Controller
         if ($employeeModel) {
             if ($actionType == "delete") {
                 $employeeModel->deleted_at = Carbon::now();
-                $employeeModel->deleted_flag =1;
+                $employeeModel->deleted_flag = 1;
                 $employeeModel->save();
-               
+
             }
             if ($actionType == "status") {
                 $employeeModel->is_active = 0;
@@ -800,6 +866,7 @@ class EmployeeController extends Controller
         }
         return $model;
     }
+
     public function updateProjectApprovers($projectId, $level, $newEmployeeId)
     {
         $levelIdModel = ProjectLevels::where('project_id', $projectId)
@@ -815,6 +882,7 @@ class EmployeeController extends Controller
         }
         return true;
     }
+
     public function convertToModelReAssignedEmployee($wfId, $projectId = null, $level, $type, $oldEmployeeId, $NewEmployeeId)
     {
         $model = new ReAssignedEmployee();
