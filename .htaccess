@@ -17,11 +17,12 @@
 </IfModule>
 
 <IfModule mod_headers.c>
- Header always set Content-Security-Policy "upgrade-insecure-requests;"
- Header set Strict-Transport-Security "max-age=631138519; includeSubDomains"
- Header set Expect-CT: max-age=2592000
- Header set Referrer-Policy: "no-referrer"
- Header set X-XSS-Protection: "1; mode=block"
- Header set X-Content-Type-Options: nosniff
- Header always append X-Frame-Options SAMEORIGIN
+  Header always set Content-Security-Policy "upgrade-insecure-requests;"
+  Header set Strict-Transport-Security "max-age=631138519; includeSubDomains"
+  Header set Expect-CT: max-age=2592000
+  Header set Referrer-Policy: "no-referrer"
+  Header set X-XSS-Protection: "1; mode=block"
+  Header set X-Content-Type-Options: nosniff
+  Header set Content-Security-Policy: frame-ancestors 'self'
+  Header set Cache-Control: no-cache
 </IfModule>

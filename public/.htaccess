@@ -23,5 +23,6 @@
   Header set Referrer-Policy: "no-referrer"
   Header set X-XSS-Protection: "1; mode=block"
   Header set X-Content-Type-Options: nosniff
-  Header always append X-Frame-Options SAMEORIGIN
+  Header set Content-Security-Policy: frame-ancestors 'self'
+  Header set Cache-Control: no-cache
 </IfModule>
